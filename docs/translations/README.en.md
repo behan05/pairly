@@ -7,7 +7,7 @@
 
 # Real-Time Chat App
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
-[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](#-contributing)
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](#contributing)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-blue.svg)
 ![Status](https://img.shields.io/badge/status-active-success)
 ![Made with React](https://img.shields.io/badge/Made%20with-React-61DAFB?logo=react)
