@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: 🧾 Checkout repository
         uses: actions/checkout@v4
+        with:
+          path: connect-server
 
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
@@ -26,11 +28,7 @@ jobs:
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env 
 
       - name: 📦 Install dependencies
-        run: |
-          cd connect-server
-          npm install
+        run: npm install
 
       - name: 🧪 Run tests with Jest
-        run: |
-          cd connect-server
-          npm test
+        run: npm test
