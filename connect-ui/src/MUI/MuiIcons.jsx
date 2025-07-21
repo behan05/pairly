@@ -74,7 +74,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 // ==================== Social Icons ====================
 import GoogleIcon from '@mui/icons-material/Google';
-import XIcon from '@mui/icons-material/X';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import AppleIcon from '@mui/icons-material/Apple';
 
@@ -217,7 +216,6 @@ export {
 
   // Social Icon
   GoogleIcon,
-  XIcon,
   FacebookIcon,
   AppleIcon
 };

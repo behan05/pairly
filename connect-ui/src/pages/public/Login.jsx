@@ -20,7 +20,6 @@ import {
   VisibilityOffIcon,
   SendIcon,
   GoogleIcon,
-  XIcon,
   FacebookIcon,
   AppleIcon
 } from '@/MUI/MuiIcons';
@@ -121,10 +120,6 @@ function Login() {
         console.log('Redirecting to Apple login...');
         // Implement Apple login logic here
         break;
-      case 'x':
-        console.log('Redirecting to X (Twitter) login...');
-        // Implement X (Twitter) login logic here
-        break;
       default:
         console.log('Unknown platform');
     }
@@ -211,6 +206,7 @@ function Login() {
             name="email"
             onChange={handleChange}
             value={form.email}
+            autoComplete='email'
             fullWidth
             error={Boolean(error.email)}
             helperText={error.email}
@@ -222,6 +218,7 @@ function Login() {
             variant="outlined"
             label="Password"
             name="password"
+            autoComplete='current-password'
             onChange={handleChange}
             value={form.password}
             fullWidth
@@ -253,7 +250,7 @@ function Login() {
 
           {/* Remember me checkbox and forgot password link */}
           <Stack direction="row" justifyContent="space-between" alignItems="center" flexWrap="wrap">
-            <FormControlLabel control={<Checkbox />} label="Remember me" />
+            <FormControlLabel control={<Checkbox />} name='check box' label="Remember me" />
             <MuiLink
               component={Link}
               to="/forgot-password"
@@ -313,9 +310,6 @@ function Login() {
             </IconButton>
             <IconButton edge="start" onClick={() => handleSocialLogin('apple')}>
               <AppleIcon />
-            </IconButton>
-            <IconButton edge="start" onClick={() => handleSocialLogin('x')}>
-              <XIcon />
             </IconButton>
             <IconButton edge="start" onClick={() => handleSocialLogin('facebook')}>
               <FacebookIcon />

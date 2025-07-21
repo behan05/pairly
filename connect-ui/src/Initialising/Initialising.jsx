@@ -1,4 +1,5 @@
 import { Box, Typography, useMediaQuery, useTheme } from '@/MUI/MuiComponents';
+import StyledText from '@/components/common/StyledText';
 import intro from '../assets/intro/intro.mp4';
 import intro2 from '../assets/intro/intro2.mp4';
 import intro3 from '../assets/intro/intro3.mp4';
@@ -14,10 +15,18 @@ import vertical_intro5 from '../assets/intro/vertical-intro5.mp4';
 const videoList = [intro, intro2, intro3, intro4, intro5];
 const smallScreenvideoList = [
   vertical_intro,
+  vertical_intro,
   vertical_intro2,
+  vertical_intro,
+  vertical_intro,
+  vertical_intro,
   vertical_intro3,
+  vertical_intro,
+  vertical_intro,
   vertical_intro4,
-  vertical_intro5
+  vertical_intro,
+  vertical_intro5,
+  vertical_intro,
 ];
 
 function Initialising() {
@@ -67,9 +76,14 @@ function Initialising() {
           backdropFilter: 'brightness(0.8)'
         }}
       >
-        <Typography variant="h4" sx={{ color: 'text.primary', textAlign: 'center' }}>
+        <Typography
+          variant="h1"
+          letterSpacing={2}
+          sx={{
+            color: 'text.primary', textAlign: 'center'
+          }}>
           <strong>
-            <i>Welcome to Connect</i>
+            <i>Welcome to <StyledText text="Connect" /></i>
           </strong>
           <br />
           Getting things ready...
