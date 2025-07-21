@@ -27,8 +27,10 @@ jobs:
 
       - name: 📦 Install dependencies
         run: |
-           cd connect-server
-           npm install
+          cd connect-server
+          npm install
 
       - name: 🧪 Run tests with Jest
-        run: npm test
+        run: |
+          cd connect-server
+          npm test
