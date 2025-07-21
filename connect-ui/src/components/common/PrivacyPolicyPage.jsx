@@ -14,9 +14,9 @@ function Section({ title, children }) {
       <Typography variant="h6" fontWeight={600} gutterBottom>
         {title}
       </Typography>
-      <Typography variant="body1" color="text.secondary">
+      <Box sx={{ color: 'text.secondary' }}>
         {children}
-      </Typography>
+      </Box>
     </Box>
   );
 }
@@ -47,15 +47,9 @@ function PrivacyPolicyPage() {
       {/* Sections */}
       <Section title="1. What We Collect">
         <ul style={{ paddingLeft: '1.2rem' }}>
-          <li>
-            <strong>Account Info:</strong> Name, email, password, and profile details.
-          </li>
-          <li>
-            <strong>Usage Info:</strong> Device, IP, location, and activity logs.
-          </li>
-          <li>
-            <strong>Communication:</strong> Support requests and limited chat logs (if flagged).
-          </li>
+          <li><strong>Account Info:</strong> Name, email, password, and profile details.</li>
+          <li><strong>Usage Info:</strong> Device, IP, location, and activity logs.</li>
+          <li><strong>Communication:</strong> Support requests and limited chat logs (if flagged).</li>
         </ul>
       </Section>
 
