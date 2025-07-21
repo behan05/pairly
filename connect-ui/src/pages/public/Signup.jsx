@@ -22,7 +22,6 @@ import {
   GoogleIcon,
   FacebookIcon,
   AppleIcon,
-  XIcon
 } from '@/MUI/MuiIcons';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -130,9 +129,9 @@ function Signup() {
     // Toaster notifications
     if (response.success) {
       toast.success('Account created successfully!');
-      setTimeout(() => navigate('/login'), 2000);
+      setTimeout(() => navigate('/login'), 1000);
     } else {
-      toast.error(response.message);
+      toast.error(response.message || 'Signup failed!');
       setButtonDisabled(false);
     }
   };
@@ -156,9 +155,6 @@ function Signup() {
       case 'apple':
         console.log('Redirecting to Apple signup...');
         break;
-      case 'x':
-        console.log('Redirecting to X (Twitter) signup...');
-        break;
       default:
         console.log('Unknown platform');
     }
@@ -178,7 +174,7 @@ function Signup() {
       }}
     >
       {/* Toast Message Container */}
-      <ToastContainer position="top-right" autoClose={2000} theme="colored" />
+      <ToastContainer position="top-right" autoClose={1000} theme="colored" />
 
       {!isLg && (
         <Box flex={1}>
@@ -237,7 +233,7 @@ function Signup() {
           <TextField
             variant="outlined"
             label="Full Name"
-            name="fullName" // UPDATED
+            name="fullName"
             onChange={handleChange}
             value={form.fullName}
             fullWidth
@@ -250,6 +246,8 @@ function Signup() {
             variant="outlined"
             label="Username or Email"
             name="email"
+            aria-label= 'user email'
+            autoComplete="email"
             onChange={handleChange}
             value={form.email}
             fullWidth
@@ -311,7 +309,7 @@ function Signup() {
             </Typography>
           </Stack>
 
-          <FormControlLabel control={<Checkbox />} label="Remember me" />
+          <FormControlLabel name={'check box'} autoComplete='on' control={<Checkbox />} label="Remember me" />
 
           {/* Submit Button */}
           <Button
@@ -358,9 +356,6 @@ function Signup() {
             </IconButton>
             <IconButton edge="start" onClick={() => handleSocialLogin('apple')}>
               <AppleIcon />
-            </IconButton>
-            <IconButton edge="start" onClick={() => handleSocialLogin('x')}>
-              <XIcon />
             </IconButton>
             <IconButton edge="start" onClick={() => handleSocialLogin('facebook')}>
               <FacebookIcon />

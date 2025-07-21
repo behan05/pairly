@@ -1,6 +1,11 @@
 import React, { useEffect } from 'react';
-import { Container, Typography, Box, Divider } from '@/MUI/MuiComponents';
-import StyledText from '@/components/common/StyledText';
+import {
+  Container,
+  Typography,
+  Box,
+  Divider,
+} from '@mui/material';
+import StyledText from './StyledText';
 
 // === Reusable Section Component ===
 function Section({ title, children }) {
@@ -9,9 +14,9 @@ function Section({ title, children }) {
       <Typography variant="h6" fontWeight={600} gutterBottom>
         {title}
       </Typography>
-      <Typography variant="body1" color="text.secondary">
+      <Box sx={{ color: 'text.secondary' }}>
         {children}
-      </Typography>
+      </Box>
     </Box>
   );
 }
@@ -26,7 +31,7 @@ function PrivacyPolicyPage() {
       {/* Page Title */}
       <Box textAlign="start" mb={4}>
         <Typography variant="h4" fontWeight={600} gutterBottom>
-          <StyledText text="Privacy" /> Policy
+          <StyledText text='Privacy' /> Policy
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
           How Connect collects, uses, and protects your information.
@@ -42,15 +47,9 @@ function PrivacyPolicyPage() {
       {/* Sections */}
       <Section title="1. What We Collect">
         <ul style={{ paddingLeft: '1.2rem' }}>
-          <li>
-            <strong>Account Info:</strong> Name, email, password, and profile details.
-          </li>
-          <li>
-            <strong>Usage Info:</strong> Device, IP, location, and activity logs.
-          </li>
-          <li>
-            <strong>Communication:</strong> Support requests and limited chat logs (if flagged).
-          </li>
+          <li><strong>Account Info:</strong> Name, email, password, and profile details.</li>
+          <li><strong>Usage Info:</strong> Device, IP, location, and activity logs.</li>
+          <li><strong>Communication:</strong> Support requests and limited chat logs (if flagged).</li>
         </ul>
       </Section>
 
@@ -84,7 +83,7 @@ function PrivacyPolicyPage() {
 
       <Section title="7. Contact Us">
         If you have any questions or concerns, feel free to contact us at{' '}
-        <StyledText text="support@connectapp.com" />.
+        <Box component="span" color="primary.main">support@connectapp.com</Box>.
       </Section>
 
       <Divider sx={{ my: 4 }} />
