@@ -10,46 +10,33 @@ import FAQs from '@/pages/public/FAQs';
 import { SidebarProvider } from '@/context/SidebarContext';
 import PrivacyPolicyPage from '@/components/common/PrivacyPolicyPage';
 import TermsOfUsePage from '@/components/common/TermsOfUsePage';
-
-// === Common Use components ===
 import PageNotFound from '@/components/common/PageNotFound';
+import ReportBug from '@/components/common/ReportBug';
 
-// === Private Routes ===
 import PrivateRoute from '@/middleware/PrivateRoute';
-import ChatUI from '@/pages/private/chat/ChatUI';
-import ChatSidebar from '@/pages/private/chat/ChatSidebar';
+
+// Settings
 import Settings from '@/pages/private/settings/Settings';
 import SettingsLayout from '@/pages/private/settings/SettingsLayout';
-
-// === Account Settings ===
 import AccountLayout from '@/pages/private/settings/account/AccountLayout';
 import Account from '@/pages/private/settings/account/Account';
 import RequestAccountInfo from '@/pages/private/settings/account/reqAccountInfo/RequestAccountInfo';
 import AccountDelete from '@/pages/private/settings/account/accountDelete/AccountDelete';
 import ChangeCredentials from '../pages/private/settings/account/changeCredentials/ChangeCredentials';
-
-// === Privacy Settings ===
 import PrivacyLayout from '@/pages/private/settings/privacy/PrivacyLayout';
 import Privacy from '@/pages/private/settings/privacy/Privacy';
-
-// === Chats Settings ===
 import ChatsLayout from '@/pages/private/settings/chats/ChatsLayout';
 import Chats from '@/pages/private/settings/chats/Chats';
-
-// === Notification Settings ===
 import NotificationsLayout from '@/pages/private/settings/notifications/NotificationsLayout';
 import Notifications from '@/pages/private/settings/notifications/Notifications';
-
-// === Help Settings ===
 import HelpLayout from '@/pages/private/settings/help/HelpLayout';
 import Help from '@/pages/private/settings/help/Help';
 import HelpFAQs from '@/pages/private/settings/help/HelpFAQs';
 import HelpContact from '@/pages/private/settings/help/HelpContact';
 import HelpPrivacyPolicy from '@/pages/private/settings/help/HelpPrivacyPolicy';
 import HelpReport from '@/pages/private/settings/help/HelpReport';
-import ReportBug from '@/components/common/ReportBug';
 
-// === Profile ===
+// Profile
 import ProfileLayout from '@/pages/private/profile/ProfileLayout';
 import Profile from '@/pages/private/profile/Profile';
 import CompletionAndActivity from '@/pages/private/profile/CompletionAndActivity';
@@ -57,8 +44,16 @@ import GeneralInfo from '@/pages/private/profile/GeneralInfo';
 import MatchingPreferences from '@/pages/private/profile/MatchingPreferences';
 import TagsAndInterests from '@/pages/private/profile/TagsAndInterests';
 
+// Random Chat
+import RandomChatLayout from '../pages/private/connect/random/RandomChatLayout';
+import RandomSidebar from '../pages/private/connect/random/RandomSidebar';
+
+// Chat History
+import ChatSidebar from '../pages/private/connect/normal/ChatSidebar';
+import ChatUI from '../pages/private/connect/normal/ChatUI';
 
 export const routes = createBrowserRouter([
+
   // === Public routes ===
   {
     path: '/',
@@ -88,13 +83,16 @@ export const routes = createBrowserRouter([
     element: <PrivateRoute />,
     children: [
       {
-        // index: true,
-        element: <ChatUI />,
+        element: <RandomChatLayout />,
         children: [
-          { index: true, element: <ChatSidebar /> },
 
+          // Default view at /connect
+          {
+            index: true,
+            element: <RandomSidebar />,
+          },
 
-          //  Settings
+          // Settings
           {
             path: 'settings',
             element: <SettingsLayout />,
@@ -102,7 +100,6 @@ export const routes = createBrowserRouter([
               { index: true, element: <Settings /> },
               { path: 'profile', element: <Profile /> },
 
-              // account
               {
                 path: 'account',
                 element: <AccountLayout />,
@@ -114,28 +111,24 @@ export const routes = createBrowserRouter([
                 ]
               },
 
-              // privacy
               {
                 path: 'privacy',
                 element: <PrivacyLayout />,
                 children: [{ index: true, element: <Privacy /> }]
               },
 
-              // chats
               {
                 path: 'chats',
                 element: <ChatsLayout />,
                 children: [{ index: true, element: <Chats /> }]
               },
 
-              // notifications
               {
                 path: 'notifications',
                 element: <NotificationsLayout />,
                 children: [{ index: true, element: <Notifications /> }]
               },
 
-              // help
               {
                 path: 'help',
                 element: <HelpLayout />,
@@ -150,7 +143,7 @@ export const routes = createBrowserRouter([
             ]
           },
 
-          // Profile
+          // Profile (main section)
           {
             path: 'profile',
             element: <ProfileLayout />,
@@ -159,11 +152,23 @@ export const routes = createBrowserRouter([
               { path: 'activity', element: <CompletionAndActivity /> },
               { path: 'general-info', element: <GeneralInfo /> },
               { path: 'matching-preferences', element: <MatchingPreferences /> },
-              { path: 'interests', element: <TagsAndInterests /> },
+              { path: 'interests', element: <TagsAndInterests /> }
             ]
-          }
+          },
+
         ]
-      }
+      },
+
+      // Chat History
+      {
+        path: 'chat',
+        element: <ChatUI />,
+        children: [
+          { index: true, element: <ChatSidebar /> }
+        ]
+      },
+      // Fallback for unmatched /connect/* routes
+      { path: '*', element: <PageNotFound redirectTo="/connect" /> }
     ]
   }
 ]);
