@@ -10,6 +10,7 @@
   },
   "license": "ISC",
   "scripts": {
+    "lint": "eslint .",
     "test": "jest",
     "dev": "nodemon server.js",
     "start": "node server.js"
