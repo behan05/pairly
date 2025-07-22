@@ -1,15 +1,14 @@
-// eslint.config.js
-export default [
+/** @type {import("eslint").Linter.FlatConfig[]} */
+module.exports = [
   {
-    ignores: ['node_modules/**', 'dist/**'], // Gantikan .eslintignore
-    files: ['**/*.js'], // Atur file yang di-lint
+    ignores: ["dist/", "node_modules/"], // pengganti .eslintignore
     languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
+      ecmaVersion: 2022,
+      sourceType: "module",
     },
     rules: {
-      semi: ['error', 'always'],
-      quotes: ['error', 'single'],
+      semi: "error",
+      quotes: ["error", "double"],
     },
   },
 ];
