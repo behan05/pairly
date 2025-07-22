@@ -11,24 +11,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🧾 Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🟢 Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: 📂 Setup environment variables
+      - name: Setup environment variables
         run: |
           echo "PORT"=5000 >> .env
           echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env 
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env 
 
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         run: |
           cd connect-server
           npm install
+
+      - name: 🧹 Run Linter
+        run: |
+          cd connect-server
+          npm run lint
+      
       
       - name: 🧪 Run tests with Jest
         run: |
