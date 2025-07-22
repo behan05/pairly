@@ -1,5 +1,7 @@
+# Workflow name for linting the backend
 name: Lint Backend
 
+# Triggers on push or pull request that affects files in connect-server/
 on:
   push:
     paths:
@@ -9,23 +11,29 @@ on:
       - 'connect-server/**'
 
 jobs:
+  # Uses Ubuntu runner
   lint:
     runs-on: ubuntu-latest
     defaults:
       run:
+         # Sets connect-server as the default working directory
         working-directory: connect-server
 
     steps:
+        # Checks out code from the repository
       - name: Checkout repo
         uses: actions/checkout@v3
 
+        # Sets up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
+        # Installs Node.js dependencies
       - name: Install dependencies
         run: npm install
 
+        # Runs the lint script from package.json
       - name: Run ESLint
         run: npm run lint

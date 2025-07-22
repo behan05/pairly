@@ -1,0 +1,45 @@
+# Sets the workflow name displayed in GitHub Actions UI
+name: CI - Connect Server
+
+# Triggers the workflow on push or pull request to the main branch
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    # Uses the latest Ubuntu runner
+    runs-on: ubuntu-latest
+
+    # Sets the default working directory for all steps
+    defaults:
+      run:
+        working-directory: connect-server
+
+    # Checks out the repository code
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+        # Installs Node.js version 18
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+        # Creates the .env file and injects environment variables securely
+      - name: Setup environment variables
+        run: |
+          echo "PORT=5000" >> .env
+          echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env 
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env 
+
+        # Installs project dependencies
+      - name: Install dependencies
+        run: npm install
+
+        # Executes test suite using Jest
+      - name: Run tests with Jest
+        run: npm test

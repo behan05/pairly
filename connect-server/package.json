@@ -10,10 +10,12 @@
   },
   "license": "ISC",
   "scripts": {
-    "lint": "eslint . --config eslint.config.js",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "format": "prettier --write ."
+
   },
   "homepage": "https://connect-link-three.vercel.app",
   "engines": {
