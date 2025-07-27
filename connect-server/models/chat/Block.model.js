@@ -6,7 +6,7 @@ blockedAt	= Timestamp for auditing/block duration checks
 timestamps	= Adds createdAt and updatedAt automatically
 */
 
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const blockSchema = new mongoose.Schema(
     {
@@ -36,4 +36,4 @@ blockSchema.index({ blocker: 1, blocked: 1 }, { unique: true });
 
 const Block = mongoose.model('Block', blockSchema);
 
-export default Block;
+module.exports = Block;

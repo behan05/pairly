@@ -4,7 +4,7 @@ we don’t want to mutate our permanent Profile model every second.
 It's short-lived — once a match is made, entry is deleted or marked isSearching: false.
 */
 
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const matchQueueSchema = new mongoose.Schema(
     {
@@ -32,5 +32,5 @@ const matchQueueSchema = new mongoose.Schema(
 
 const MatchQueue = mongoose.model('MatchQueue', matchQueueSchema);
 
-export default MatchQueue;
+module.exports =  MatchQueue;
 

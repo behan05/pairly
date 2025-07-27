@@ -1,11 +1,12 @@
 
-module.exports = (io, socket) => {
+function privateChatHandler(io, socket) {
     socket.on('private:join', ({ userId }) => {
-        
+
     });
 
     socket.on('private:message', ({ toUserId, message }) => {
-        const room = `room:${toUserId}`;
-        
+
     });
 };
+
+module.exports = privateChatHandler;

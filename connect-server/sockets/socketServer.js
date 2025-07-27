@@ -6,7 +6,7 @@ const verifyToken = require('../utils/verifyToken');
 function setupSocket(server) {
     const io = new Server(server, {
         cors: {
-            origin: ['https://connect-link-three.vercel.app', 'http://localhost:5173'],
+            origin: ['https://connect-link-three.vercel.app', 'http://localhost:5173/connect'],
             credentials: true
         }
     });

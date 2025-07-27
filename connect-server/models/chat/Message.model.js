@@ -8,7 +8,7 @@ delivered & seen	=   For future enhancements like message status (WhatsApp-style
 timestamps	=   Adds createdAt (useful for chat logs/sorting)
 */
 
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema(
     {
@@ -45,4 +45,4 @@ const messageSchema = new mongoose.Schema(
 
 const Message = mongoose.model('Message', messageSchema);
 
-export default Message;
+module.exports = Message;

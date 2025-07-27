@@ -7,7 +7,7 @@ isActive		=   Whether the chat is currently live or ended (like disconnected, sk
 timestamps		=   Automatically adds createdAt and updatedAt. Helps in sorting chats by time.
 */
 
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const conversationSchema = new mongoose.Schema(
     {
@@ -36,4 +36,4 @@ const conversationSchema = new mongoose.Schema(
 
 const Conversation = mongoose.model('Conversation', conversationSchema);
 
-export default Conversation;
+module.exports = Conversation;
