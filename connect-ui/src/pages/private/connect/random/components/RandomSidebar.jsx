@@ -13,32 +13,47 @@ import NextButton from './NextButton';
 import StyledText from '@/components/common/StyledText';
 import SettingsAction from '@/components/private/SettingsAction';
 
-// we can read from Redux state (like connected, partnerId)
-import { useDispatch } from "react-redux";
-import { socket } from '@/services/socket';
-
 // Images
 import friendsChatBigScreen from '@/assets/images/friends-chat-bigScreen.png'
 import friendsChatSmallScreen from '@/assets/images/friends-chat-smallScreen.png'
+import CountdownTimer from './CountdownTimer';
 
+// we can read from Redux state (like connected, partnerId)
+import { useDispatch, useSelector } from "react-redux";
+import { socket } from '@/services/socket';
 import { resetRandomChat } from '@/redux/slices/chat/randomChatSlice';
 
 function RandomSidebar() {
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const dispatch = useDispatch();
+    const { waiting: isWaiting } = useSelector(state => state.randomChat);
 
     // === Handler Functions ===
     const handleConnect = () => {
-        // socket.connect();
+
+        // Ensure socket is connected
+        if (!socket.connected) {
+            socket.connect();
+        }
+
+        // emit join-request
         socket.emit("join-random");
     };
 
     const handleNext = () => {
+
+        // Ensure socket is connected
+        if (!socket.connected) {
+            socket.connect();
+        }
+
+        // emit next-request
         socket.emit("random:next");
     };
 
     const handleDisconnect = () => {
+        // emit disconnect-request
         socket.emit("random:disconnect");
         dispatch(resetRandomChat());
     };
@@ -72,20 +87,32 @@ function RandomSidebar() {
                     height: '100%'
                 }}
             >
-                {/* Chat image display. */}
-                <Stack
-                    component={'img'}
-                    src={isSm ? friendsChatSmallScreen : friendsChatBigScreen}
-                    alt='random chat screen illustrations'
-                    aria-label='random chat screen illustrations'
-                    sx={{
-                        minWidth: '100%',
-                        maxHeight: '100%',
-                        width: '100%',
-                        objectFit: 'cover',
-                        filter: ' contrast(110%) brightness(110%)',
-                    }}
-                />
+                {/* Chat image display. and Waiting circle dispaly */}
+                {isWaiting ? (
+                    <Stack
+                        sx={{
+                            minWidth: '100%',
+                            maxHeight: '100%',
+                            width: '100%',
+                        }}
+                    >
+                        <CountdownTimer startFrom={10} autoRestart={true} />
+                    </Stack>
+                ) : (
+                    < Stack
+                        component={'img'}
+                        src={isSm ? friendsChatSmallScreen : friendsChatBigScreen}
+                        alt='random chat screen illustrations'
+                        aria-label='random chat screen illustrations'
+                        sx={{
+                            minWidth: '100%',
+                            maxHeight: '100%',
+                            width: '100%',
+                            objectFit: 'cover',
+                            filter: ' contrast(110%) brightness(110%)',
+                        }}
+                    />
+                )}
 
                 <Typography
                     variant="h6"

@@ -7,21 +7,29 @@ import {
   addMessage,
   resetRandomChat,
   clearMessages,
-} from "../../../../redux/slices/chat/randomChatSlice";
+  setPartnerProfile,
+  setWaiting,
+} from "@/redux/slices/chat/randomChatSlice";
 
 const RandomController = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    socket.connect(); // Ensure connection is established
+    // Reconnect socket if not connected
+    if (!socket.connected) {
+      socket.connect();
+    }
 
     socket.on("random:waiting", () => {
       console.log("Waiting for a partner...");
+      dispatch(setWaiting(true));
     });
 
-    socket.on("random:matched", ({ partnerId }) => {
+    socket.on("random:matched", ({ partnerId, partnerProfile }) => {
       dispatch(setPartnerId(partnerId));
       dispatch(setConnected(true));
+      dispatch(setWaiting(false));
+      dispatch(setPartnerProfile(partnerProfile));
     });
 
     socket.on("random:message", ({ message, from }) => {
@@ -38,12 +46,15 @@ const RandomController = () => {
     socket.on("random:disconnected", () => {
       dispatch(setConnected(false));
       dispatch(setPartnerId(null));
+      dispatch(setPartnerProfile(null));
       dispatch(clearMessages());
+      dispatch(setWaiting(false));
     });
 
     socket.on("random:ended", () => {
       dispatch(setConnected(false));
       dispatch(setPartnerId(null));
+      dispatch(setPartnerProfile(null));
       dispatch(clearMessages());
     });
 

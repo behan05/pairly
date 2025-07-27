@@ -5,7 +5,7 @@ import RandomController from './RandomController';
 
 function RandomChatLayout() {
     const theme = useTheme(); // Access theme (for breakpoints, colors, etc.)
-    const isSM = useMediaQuery(theme.breakpoints.down('sm')); // true if screen is small
+    const isMd = useMediaQuery('(max-width:663px)'); // custom breakpoint
 
     return (
         <Box
@@ -31,7 +31,7 @@ function RandomChatLayout() {
             <Stack
                 flex={2.5}
                 sx={{
-                    display: isSM ? 'none' : 'block',
+                    display: isMd ? 'none' : 'block',
                 }}
             >
                 <RandomChatWindow />
