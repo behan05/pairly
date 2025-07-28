@@ -6,20 +6,28 @@ const verifyToken = require('../utils/verifyToken');
 function setupSocket(server) {
     const io = new Server(server, {
         cors: {
-            origin: ['https://connect-link-three.vercel.app', 'http://localhost:5173/connect'],
+            origin: ['http://localhost:5173', 'https://connect-link-three.vercel.app'],
             credentials: true
         }
     });
 
     // Auth Middleware for Socket.IO
     io.use(async (socket, next) => {
-        const token = socket.handshake.auth.token;
-        const user = await verifyToken(token);
-        if (!user) return next(new Error('Authentication error'));
+        try {
+            const token = socket.handshake.auth.token;
+            if (!token) return next(new Error("Token missing"));
 
-        socket.userId = user._id;
-        socket.user = user;
-        next();
+            // Custom utils function
+            const user = await verifyToken(token);
+            if (!user) return next(new Error("Authentication failed"));
+
+            socket.userId = user._id;
+            socket.user = user;
+            next();
+        } catch (err) {
+            console.error("Socket auth error:", err.message);
+            next(new Error("Authentication error"));
+        }
     });
 
     // Main connection handler

@@ -11,7 +11,12 @@ function randomChatHandler(io, socket) {
     // === Join random chat ===
     socket.on('join-random', async () => {
         // Prevent duplicate matching or multiple queue entries
-        if (activeMatches.has(socket.id) || waitingQueue.includes(socket)) return;
+        const isInQueue = waitingQueue.some(s => s.id === socket.id);
+
+        if (activeMatches.has(socket.id) || isInQueue) {
+            socket.emit('random:waiting'); // Emit even if already matched or queued
+            return;
+        }
 
         const currentUserProfile = await Profile.findOne({ user: socket.userId });
         if (!currentUserProfile) return;
@@ -66,6 +71,22 @@ function randomChatHandler(io, socket) {
         console.log(`Waiting: ${socket.id}`);
     });
 
+
+    // === Handle messaging ===
+    socket.on('random:message', ({ message }) => {
+        const partnerSocketId = activeMatches.get(socket.id);
+
+        if (!partnerSocketId) {
+            return socket.emit('random:error', { error: 'You are not connected to anyone yet.' });
+        };
+
+        io.to(partnerSocketId).emit('random:message', {
+            message,
+            senderId: socket.userId,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        })
+    });
+
     // === Next chat ===
     socket.on('random:next', () => {
         const partnerId = activeMatches.get(socket.id);
@@ -92,26 +113,10 @@ function randomChatHandler(io, socket) {
         }
     });
 
-    // === Handle messaging ===
-    socket.on('random:message', ({ message }) => {
-        const partnerId = activeMatches.get(socket.id);
-
-        if (!partnerId) {
-            return socket.emit('random:error', { error: "You are not connected to anyone." });
-        }
-
-        io.to(partnerId).emit('random:message', {
-            message,
-            from: socket.id,
-            timestamp: Date.now(),
-        });
-    });
-
     // === Disconnect ===
-    socket.on('disconnect', () => {
-        console.log(`User disconnected: ${socket.id}`);
+    socket.on('random:disconnect', () => {
+        console.log(`Manual random disconnect: ${socket.id}`);
 
-        // Notify partner if matched
         const partnerId = activeMatches.get(socket.id);
         if (partnerId) {
             const partnerSocket = io.sockets.sockets.get(partnerId);
@@ -122,13 +127,13 @@ function randomChatHandler(io, socket) {
         }
         activeMatches.delete(socket.id);
 
-        // Remove from waitingQueue
         const index = waitingQueue.findIndex(s => s.id === socket.id);
         if (index !== -1) {
             waitingQueue.splice(index, 1);
             console.log(`Removed ${socket.id} from waitingQueue`);
         }
     });
+
 
 }
 
