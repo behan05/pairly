@@ -27,18 +27,23 @@ function RandomSidebar() {
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const dispatch = useDispatch();
-    const { waiting: isWaiting } = useSelector(state => state.randomChat);
+    const { waiting: isWaiting, connected: isConnected } = useSelector(state => state.randomChat);
 
     // === Handler Functions ===
     const handleConnect = () => {
         if (!socket.connected) {
             socket.connect();
         }
-        // emit join-random-request
-        socket.emit("join-random");
-        dispatch(setWaiting(true));
-    };
 
+        // Prevent re-trigger if already in a match
+        if (isConnected) {
+            console.log("Already connected. Ignoring connect request.");
+            return;
+        }
+
+        dispatch(setWaiting(true));
+        socket.emit("join-random");
+    };
 
     const handleNext = () => {
         // emit next-request
