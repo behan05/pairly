@@ -18,9 +18,9 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import Picker from '@emoji-mart/react';
 import data from '@emoji-mart/data';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addMessage } from '@/redux/slices/chat/randomChatSlice';
-import { socket } from '@/services/socket'; // Your actual socket instance
+import { socket } from '@/services/socket';
 
 function RandomMessageInput() {
   const theme = useTheme();
@@ -29,6 +29,7 @@ function RandomMessageInput() {
   const [message, setMessage] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const userId = useSelector(state => state.profile.profileData?._id);
   const open = Boolean(anchorEl);
 
   const handleAttachClick = (event) => {
@@ -51,15 +52,14 @@ function RandomMessageInput() {
     // Update local Redux
     dispatch(
       addMessage({
-        senderId: socket.id,
-        content: message,
+        message,
+        senderId: userId,
         timestamp: new Date().toLocaleTimeString([], {
           hour: '2-digit',
           minute: '2-digit',
         }),
       })
     );
-
 
     // Clear input
     setMessage('');

@@ -19,7 +19,6 @@ function RandomChatWindow() {
         backgroundColor: theme.palette.background.default,
       }}
     >
-      {/* ! removed it later once ui design completed */}
       {isConnected ? (
         <React.Fragment>
 
@@ -35,9 +34,9 @@ function RandomChatWindow() {
               maxHeight: `calc(100vh - 160px)`,
             }}
           >
-            <Stack spacing={1.5}>
+            <Stack spacing={1}>
               {messages.map((msg, index) => {
-                const isOwnMessage = msg.senderId !== userId;
+                const isOwnMessage = msg.senderId === userId;
 
                 return (
                   <Box
@@ -45,18 +44,22 @@ function RandomChatWindow() {
                     alignSelf={isOwnMessage ? 'flex-end' : 'flex-start'}
                     sx={{
                       backgroundColor: isOwnMessage
-                        ? theme.palette.background.paper
-                        : theme.palette.grey[300],
-                      color: isOwnMessage ? 'text.primary' : theme.palette.text.secondary,
+                        ? theme.palette.background.default
+                        : theme.palette.background.paper,
+                      color: isOwnMessage
+                        ? 'text.primary'
+                        : theme.palette.text.secondary,
                       borderRadius: 1,
                       px: 2,
                       py: 1,
                       maxWidth: '70%',
-                      boxShadow: `inset 0 0 2px ${theme.palette.success.main}`
+                      border: isOwnMessage
+                        ? `1px solid ${theme.palette.success.main}`
+                        : `1px solid ${theme.palette.info.main}`,
                     }}
                   >
                     <Typography variant="body1" sx={{ wordBreak: 'break-word' }}>
-                      {msg.content}
+                      {msg.message}
                     </Typography>
                     <Typography
                       variant="caption"

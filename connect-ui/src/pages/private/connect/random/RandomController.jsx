@@ -32,11 +32,11 @@ const RandomController = () => {
       dispatch(setPartnerProfile(partnerProfile));
     });
 
-    socket.on("random:message", ({ message, from }) => {
+    socket.on("random:message", ({ message, senderId, timestamp }) => {
       dispatch(addMessage({
-        content: message,
-        senderId: from,
-        timestamp: new Date().toLocaleTimeString([], {
+        message,
+        senderId,
+        timestamp: timestamp || new Date().toLocaleTimeString([], {
           hour: '2-digit',
           minute: '2-digit'
         })

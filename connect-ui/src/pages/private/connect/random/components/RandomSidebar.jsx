@@ -21,7 +21,7 @@ import CountdownTimer from './CountdownTimer';
 // we can read from Redux state (like connected, partnerId)
 import { useDispatch, useSelector } from "react-redux";
 import { socket } from '@/services/socket';
-import { resetRandomChat } from '@/redux/slices/chat/randomChatSlice';
+import { resetRandomChat, setWaiting } from '@/redux/slices/chat/randomChatSlice';
 
 function RandomSidebar() {
     const theme = useTheme();
@@ -31,23 +31,16 @@ function RandomSidebar() {
 
     // === Handler Functions ===
     const handleConnect = () => {
-
-        // Ensure socket is connected
         if (!socket.connected) {
             socket.connect();
         }
-
-        // emit join-request
+        // emit join-random-request
         socket.emit("join-random");
+        dispatch(setWaiting(true));
     };
 
+
     const handleNext = () => {
-
-        // Ensure socket is connected
-        if (!socket.connected) {
-            socket.connect();
-        }
-
         // emit next-request
         socket.emit("random:next");
     };

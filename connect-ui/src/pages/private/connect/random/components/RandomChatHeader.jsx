@@ -32,7 +32,6 @@ function RandomChatHeader() {
 
   const handleAction = (action) => {
     handleMenuClose();
-    console.log('Selected action:', action);
 
     if (action === 'copy') {
       navigator.clipboard.writeText(partnerId)
@@ -93,6 +92,7 @@ function RandomChatHeader() {
           <IconButton onClick={handleMenuOpen} size="small">
             <MoreVertIcon />
           </IconButton>
+
           <Menu
             anchorEl={anchorEl}
             open={open}
@@ -123,7 +123,7 @@ function RandomChatHeader() {
             </MenuItem>
             <MenuItem onClick={() => handleAction('copy')} sx={menuItemStyle}>
               <ContentCopyIcon fontSize="small" sx={{ mr: 1, color: 'success.main' }} />
-              Copy User ID
+              Copy Partner ID
             </MenuItem>
             <MenuItem onClick={() => handleAction('mute')} sx={menuItemStyle}>
               <NotificationsOffIcon fontSize="small" sx={{ mr: 1, color: 'info.main' }} />
