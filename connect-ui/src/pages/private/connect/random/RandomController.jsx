@@ -33,13 +33,19 @@ const RandomController = () => {
     });
 
     socket.on("random:message", ({ message, senderId, type, timestamp }) => {
+      const formattedTime = new Date(timestamp).toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+
       dispatch(addMessage({
         message,
         senderId,
         type,
-        timestamp: timestamp || new Date().toISOString(),
+        timestamp: formattedTime,
       }));
     });
+
 
     // === Typing Events ===
     socket.on("random:partner-typing", (isTyping) => {
