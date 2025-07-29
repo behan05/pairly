@@ -13,7 +13,7 @@ import NextButton from './NextButton';
 import StyledText from '@/components/common/StyledText';
 import SettingsAction from '@/components/private/SettingsAction';
 import CountdownTimer from './CountdownTimer';
-import RandomLandingLottie from '@/components/private/chat/RandomLandingPageLottie';
+import RandomChatWelcomeLottie from '@/components/private/chat/RandomChatWelcomeLottie';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -110,7 +110,7 @@ function RandomSidebar() {
                         <CountdownTimer startFrom={10} autoRestart={true} />
                     </Stack>
                 ) : (
-                    <RandomLandingLottie />
+                    <RandomChatWelcomeLottie />
                 )}
 
                 <Typography

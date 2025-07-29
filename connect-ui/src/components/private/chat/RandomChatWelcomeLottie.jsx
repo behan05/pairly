@@ -1,8 +1,8 @@
 import { Player } from "@lottiefiles/react-lottie-player";
-import landingLottieJson from "@/assets/lottie/RandomLandingPageMessage";
+import randomChatWelcome from "@/assets/lottie/randomChatWelcome.json";
 import { useMediaQuery, useTheme, Box } from "@/MUI/MuiComponents";
 
-const RandomLandingLottie = () => {
+const RandomChatWelcomeLottie = () => {
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.down("sm"));
     const isMd = useMediaQuery(theme.breakpoints.between("sm", "md"));
@@ -24,7 +24,7 @@ const RandomLandingLottie = () => {
             <Player
                 autoplay
                 loop
-                src={landingLottieJson}
+                src={randomChatWelcome}
                 style={{
                     width: "100%",
                     height: "100%",
@@ -36,4 +36,4 @@ const RandomLandingLottie = () => {
         </Box>
     );
 };
-export default RandomLandingLottie;
+export default RandomChatWelcomeLottie;
