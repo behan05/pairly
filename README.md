@@ -1,3 +1,5 @@
+![version](https://img.shields.io/badge/version-v1.0.0--beta-blue)
+
 ---
 
 # Random Real-Time Chat App
