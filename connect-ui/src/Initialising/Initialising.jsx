@@ -1,41 +1,15 @@
 import { Box, Typography, useMediaQuery, useTheme } from '@/MUI/MuiComponents';
 import StyledText from '@/components/common/StyledText';
-import intro from '../assets/intro/intro.mp4';
-import intro2 from '../assets/intro/intro2.mp4';
 import intro3 from '../assets/intro/intro3.mp4';
-import intro4 from '../assets/intro/intro4.mp4';
-import intro5 from '../assets/intro/intro5.mp4';
-
 import vertical_intro from '../assets/intro/vertical-intro.mp4';
-import vertical_intro2 from '../assets/intro/vertical-intro2.mp4';
-import vertical_intro3 from '../assets/intro/vertical-intro3.mp4';
-import vertical_intro4 from '../assets/intro/vertical-intro4.mp4';
-import vertical_intro5 from '../assets/intro/vertical-intro5.mp4';
-
-const videoList = [intro, intro2, intro3, intro4, intro5];
-const smallScreenvideoList = [
-  vertical_intro,
-  vertical_intro,
-  vertical_intro2,
-  vertical_intro,
-  vertical_intro,
-  vertical_intro,
-  vertical_intro3,
-  vertical_intro,
-  vertical_intro,
-  vertical_intro4,
-  vertical_intro,
-  vertical_intro5,
-  vertical_intro,
-];
 
 function Initialising() {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
   const currentVideo = isSm
-    ? smallScreenvideoList[Math.floor(Math.random() * smallScreenvideoList.length)]
-    : videoList[Math.floor(Math.random() * videoList.length)];
+    ? vertical_intro
+    : intro3;
 
   return (
     <Box
@@ -71,23 +45,27 @@ function Initialising() {
           width: '100%',
           display: 'flex',
           justifyContent: 'center',
-          alignItems: 'center',
+          alignItems: isSm ? 'center' : 'flex-end',
           zIndex: 1,
           backdropFilter: 'brightness(0.8)'
         }}
       >
         <Typography
-          variant="h1"
-          letterSpacing={2}
+          variant={isSm ? "h5" : "h2"}
+          letterSpacing={1.5}
           sx={{
-            color: 'text.primary', textAlign: 'center'
-          }}>
+            color: 'text.primary',
+            textAlign: 'center',
+          }}
+        >
           <strong>
-            <i>Welcome to <StyledText text="Connect" /></i>
+            <i>Floating through the stars to <StyledText text="Connect" /></i>
           </strong>
           <br />
-          Getting things ready...
+          Searching the galaxy for someone special...
         </Typography>
+
+
       </Box>
     </Box>
   );
