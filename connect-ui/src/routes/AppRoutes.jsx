@@ -45,12 +45,12 @@ import MatchingPreferences from '@/pages/private/profile/MatchingPreferences';
 import TagsAndInterests from '@/pages/private/profile/TagsAndInterests';
 
 // Random Chat
-import RandomChatLayout from '../pages/private/connect/random/RandomChatLayout';
-import RandomSidebar from '../pages/private/connect/random/RandomSidebar';
+import RandomChatLayout from '@/pages/private/connect/random/RandomChatLayout';
+import RandomSidebar from '@/pages/private/connect/random/components/RandomSidebar';
 
 // Chat History
-import ChatSidebar from '../pages/private/connect/normal/ChatSidebar';
-import ChatUI from '../pages/private/connect/normal/ChatUI';
+import ChatSidebar from '@/pages/private/connect/normal/ChatSidebar';
+import ChatUI from '@/pages/private/connect/normal/ChatUI';
 
 export const routes = createBrowserRouter([
 

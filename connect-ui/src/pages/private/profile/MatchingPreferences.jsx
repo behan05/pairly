@@ -43,7 +43,7 @@ function MatchingPreferences() {
     country: '',
     state: '',
     city: '',
-    matchScope: 'nearby',
+    matchScope: 'global',
   });
 
   const [error, setError] = React.useState({

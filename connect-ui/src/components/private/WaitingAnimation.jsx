@@ -1,4 +1,4 @@
-import { Box, Typography, CircularProgress } from '@mui/material';
+import { Box, Typography, CircularProgress } from '@/MUI/MuiComponents';
 import SearchIcon from '@mui/icons-material/Search';
 
 const WaitingAnimation = () => {
