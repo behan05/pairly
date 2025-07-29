@@ -107,10 +107,13 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
-
+import ForumRoundedIcon from '@mui/icons-material/ForumRounded';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 // ==================== Export All ====================
 export {
   // Setting Icons
+  ForumRoundedIcon,
+  ArrowDropDownIcon,
   KeyIcon,
   EditNoteIcon,
   KeyboardReturnIcon,

@@ -1,15 +1,58 @@
-import React from 'react';
-import { Box, Stack, Tooltip, Typography, useTheme } from '@mui/material';
-import { useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import {
+  Box,
+  Stack,
+  Tooltip,
+  Typography,
+  useTheme,
+  useMediaQuery,
+  IconButton,
+  Menu,
+  MenuItem,
+} from '@/MUI/MuiComponents';
+import {
+  ArrowDropDownIcon, ForumRoundedIcon
+} from '@/MUI/MuiIcons';
+import { useDispatch, useSelector } from "react-redux";
+
+// Custom Components
 import RandomChatHeader from './RandomChatHeader';
 import RandomMessageInput from './RandomMessageInput';
-import ForumRoundedIcon from '@mui/icons-material/ForumRounded';
+import NextButton from './NextButton';
+import DisconnectButton from './DisconnectButton';
+import { socket } from '@/services/socket';
+import { resetRandomChat } from '@/redux/slices/chat/randomChatSlice';
+import CountdownTimer from './CountdownTimer';
 
 function RandomChatWindow() {
   const theme = useTheme();
+  const isSm = useMediaQuery('(max-width:663px)');
+  const dispatch = useDispatch();
+
   const userId = useSelector((state) => state.profile.profileData?._id);
-  const { messages, connected: isConnected } = useSelector((state) => state.randomChat);
-  
+  const { messages, connected: isConnected, waiting: isWaiting, } = useSelector((state) => state.randomChat);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  // === Socket Event Handlers ===
+  const handleNext = () => {
+    socket.emit("random:next");
+  };
+
+  const handleDisconnect = () => {
+    socket.emit("random:disconnect");
+    dispatch(resetRandomChat());
+  };
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <Stack
       height="100%"
@@ -17,15 +60,55 @@ function RandomChatWindow() {
       sx={{
         borderLeft: `2px solid ${theme.palette.divider}`,
         backgroundColor: theme.palette.background.default,
+        position: 'relative',
       }}
     >
-      {isConnected ? (
-        <React.Fragment>
+      {/* === Mobile Only: Floating menu for Next/Disconnect === */}
+      {isSm && isConnected && (
+        <>
+          <IconButton
+            onClick={handleMenuOpen}
+            sx={{ position: 'absolute', top: 58, right: 0, zIndex: 10 }}
+          >
+            <ArrowDropDownIcon />
+          </IconButton>
 
-          {/* Chat Header */}
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleMenuClose}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            PaperProps={{
+              sx: {
+                background: theme.palette.background.paper,
+                boxShadow: theme.shadows[6],
+                border: `1px solid ${theme.palette.success.main}`,
+                borderRadius: 1,
+                minWidth: 180,
+                mb: 1,
+                px: 1,
+                py: 0.75,
+              },
+            }}
+          >
+            <MenuItem>
+              <NextButton onClick={() => { handleMenuClose(); handleNext(); }} />
+            </MenuItem>
+            <MenuItem>
+              <DisconnectButton onClick={() => { handleMenuClose(); handleDisconnect(); }} />
+            </MenuItem>
+          </Menu>
+        </>
+      )}
+
+      {/* === Connected State: Chat Window === */}
+      {isConnected ? (
+        <>
+          {/* Header */}
           <RandomChatHeader />
 
-          {/* Messages Display Area */}
+          {/* Messages Area */}
           <Box
             flex={1}
             p={2}
@@ -37,7 +120,6 @@ function RandomChatWindow() {
             <Stack spacing={1}>
               {messages.map((msg, index) => {
                 const isOwnMessage = String(msg.senderId) === String(userId);
-
                 return (
                   <Box
                     key={index}
@@ -53,9 +135,10 @@ function RandomChatWindow() {
                       px: 2,
                       py: 1,
                       maxWidth: '70%',
-                      border: isOwnMessage
-                        ? `1px solid ${theme.palette.success.main}`
-                        : `1px solid ${theme.palette.info.main}`,
+                      border: `1px solid ${isOwnMessage
+                        ? theme.palette.success.main
+                        : theme.palette.info.main
+                        }`,
                     }}
                   >
                     <Typography variant="body1" sx={{ wordBreak: 'break-word' }}>
@@ -74,10 +157,11 @@ function RandomChatWindow() {
             </Stack>
           </Box>
 
-          {/* Message Input */}
+          {/* Input */}
           <RandomMessageInput />
-        </React.Fragment>
+        </>
       ) : (
+        // === Not Connected Placeholder ===
         <Box
           sx={{
             display: 'flex',
@@ -89,18 +173,25 @@ function RandomChatWindow() {
             textAlign: 'center',
           }}
         >
-          <Tooltip title="Your chat will appear here once you're matched">
-            <ForumRoundedIcon sx={{ fontSize: 80, color: 'text.secondary', mb: 2 }} />
-          </Tooltip>
-          <Typography variant="h5" color="text.secondary" gutterBottom>
-            You're not connected yet
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Click <strong>“Connect”</strong> to meet someone new and start a random chat!
-          </Typography>
+          {(isSm && isWaiting) ? (
+            <Stack sx={{ minWidth: '100%', maxHeight: '100%', width: '100%' }}>
+              <CountdownTimer startFrom={10} autoRestart={true} />
+            </Stack>
+          ) : (
+            <>
+              <Tooltip title="Your chat will appear here once you're matched">
+                <ForumRoundedIcon sx={{ fontSize: 80, color: 'text.secondary', mb: 2 }} />
+              </Tooltip>
+              <Typography variant="h5" color="text.secondary" gutterBottom>
+                You're not connected yet
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                Click <strong>“Connect”</strong> to meet someone new and start a random chat!
+              </Typography>
+            </>
+          )}
         </Box>
       )}
-
     </Stack>
   );
 }

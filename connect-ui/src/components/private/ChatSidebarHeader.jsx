@@ -77,6 +77,9 @@ const ChatSidebarHeader = () => {
                 position: 'sticky',
                 top: 0,
                 zIndex: 999,
+                backgroundColor: 'transparent',
+                backdropFilter: 'blur(4px)',
+                WebkitBackdropFilter: 'blur(4px)'
             }}
         >
             <ToastContainer position="top-center" autoClose={1000} theme="colored" />

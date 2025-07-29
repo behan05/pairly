@@ -1,11 +1,13 @@
-import { Box, Stack, useTheme, useMediaQuery } from '@mui/material';
+import { Box, Stack, useTheme, useMediaQuery } from '@/MUI/MuiComponents';
 import { Outlet } from 'react-router-dom';
 import RandomChatWindow from './components/RandomChatWindow';
 import RandomController from './RandomController';
+import { useState } from 'react';
 
 function RandomChatLayout() {
-    const theme = useTheme(); // Access theme (for breakpoints, colors, etc.)
-    const isMd = useMediaQuery('(max-width:663px)'); // custom breakpoint
+    const theme = useTheme();
+    const isMd = useMediaQuery('(max-width:663px)');
+    const [showChatWindow, setShowChatWindow] = useState(false);
 
     return (
         <Box
@@ -22,16 +24,17 @@ function RandomChatLayout() {
                 sx={{
                     background: theme.palette.background.paper,
                     borderRight: `2px solid ${theme.palette.divider}`,
+                    display: isMd ? (showChatWindow ? 'none' : 'flex') : 'flex',
                 }}
             >
-                <Outlet /> {/* This will render RandomSidebar based on route */}
+                <Outlet context={{ setShowChatWindow, showChatWindow }} />
             </Stack>
 
             {/* Right Chat Area (hidden on small screens) */}
             <Stack
                 flex={2.5}
                 sx={{
-                    display: isMd ? 'none' : 'block',
+                    display: !isMd || showChatWindow ? 'block' : 'none',
                 }}
             >
                 <RandomChatWindow />

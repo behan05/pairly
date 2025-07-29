@@ -77,7 +77,7 @@ function RandomChatHeader() {
               {partnerProfile?.fullName || 'Stranger'}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              📍 {fullStateName}, {fullCountryName}
+              {fullStateName}, {fullCountryName}
             </Typography>
           </Box>
         </Stack>

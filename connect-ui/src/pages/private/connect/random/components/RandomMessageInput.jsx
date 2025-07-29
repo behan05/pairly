@@ -8,7 +8,7 @@ import {
   Paper,
   Tooltip,
   useTheme,
-} from '@mui/material';
+} from '@/MUI/MuiComponents';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 import SendIcon from '@mui/icons-material/Send';

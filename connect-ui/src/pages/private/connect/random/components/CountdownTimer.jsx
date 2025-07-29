@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Paper, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Stack, Typography, useTheme } from '@/MUI/MuiComponents';
 import gsap from 'gsap';
 
 const CountdownTimer = ({ startFrom = 10, autoRestart = false }) => {
