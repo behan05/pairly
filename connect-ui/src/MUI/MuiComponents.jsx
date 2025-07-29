@@ -1,4 +1,3 @@
-// src/mui/MuiComponents.jsx
 
 import {
   AppBar, // Top navigation bar
@@ -33,6 +32,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Checkbox,
+  InputBase,
   FormControlLabel,
   Link as MuiLink,
   Menu,
@@ -49,6 +49,7 @@ import {
   DialogActions,
   FormLabel,
   Chip,
+  Paper,
 } from '@mui/material';
 
 export {
@@ -63,6 +64,8 @@ export {
   DialogActions,
   FormLabel,
   Badge,
+  InputBase,
+  Paper,
   FormHelperText,
   Box,
   Button,
