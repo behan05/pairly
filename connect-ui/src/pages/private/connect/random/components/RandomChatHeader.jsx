@@ -21,11 +21,14 @@ import { Country, State } from 'country-state-city';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import TypingIndicator from '@/components/private/chat/TypingIndicator';
+import WaitingIndicator from '@/components/private/chat/WaitingIndicator';
+
 function RandomChatHeader() {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const { partnerProfile, partnerId } = useSelector(state => state.randomChat);
+  const { partnerProfile, partnerId, partnerTyping } = useSelector(state => state.randomChat);
 
   const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
@@ -57,7 +60,7 @@ function RandomChatHeader() {
         justifyContent="space-between"
         spacing={2}
         px={2}
-        py={1}
+        py={0}
         sx={{
           borderBottom: `1px solid ${theme.palette.divider}`,
           backgroundColor: theme.palette.background.paper,
@@ -80,14 +83,8 @@ function RandomChatHeader() {
         </Stack>
 
         {/* Right: Typing + Menu */}
-        <Stack direction="row" alignItems="center" spacing={1}>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ fontStyle: 'italic' }}
-          >
-            typing...
-          </Typography>
+        <Stack direction="row" alignItems="center" justifyContent={'center'}>
+          {partnerTyping ? <TypingIndicator /> : <WaitingIndicator />}
 
           <IconButton onClick={handleMenuOpen} size="small">
             <MoreVertIcon />

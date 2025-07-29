@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     connected: false,
     waiting: false,
+    partnerTyping: false,
     partnerId: null,
     partnerProfile: null,
     messages: [],
@@ -22,13 +23,25 @@ const randomChatSlice = createSlice({
             state.waiting = action.payload;
         },
         addMessage: (state, action) => {
-            state.messages.push(action.payload);
+            const {
+                message,
+                senderId,
+                type = 'text',
+                timestamp = new Date().toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+            } = action.payload;
+            state.messages.push({ message, senderId, type, timestamp });
         },
         setPartnerProfile: (state, action) => {
             state.partnerProfile = action.payload;
         },
         clearMessages: (state) => {
             state.messages = [];
+        },
+        setPartnerTyping: (state, action) => {
+            state.partnerTyping = action.payload;
         },
         resetRandomChat: () => initialState,
     },
@@ -42,5 +55,7 @@ export const {
     clearMessages,
     resetRandomChat,
     setPartnerProfile,
+    setPartnerTyping,
 } = randomChatSlice.actions;
+
 export default randomChatSlice.reducer;

@@ -9,7 +9,7 @@ function RandomChatWindow() {
   const theme = useTheme();
   const userId = useSelector((state) => state.profile.profileData?._id);
   const { messages, connected: isConnected } = useSelector((state) => state.randomChat);
-
+  
   return (
     <Stack
       height="100%"
@@ -36,7 +36,7 @@ function RandomChatWindow() {
           >
             <Stack spacing={1}>
               {messages.map((msg, index) => {
-                const isOwnMessage = msg.senderId === userId;
+                const isOwnMessage = String(msg.senderId) === String(userId);
 
                 return (
                   <Box

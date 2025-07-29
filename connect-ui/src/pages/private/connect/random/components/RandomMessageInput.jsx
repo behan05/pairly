@@ -40,13 +40,29 @@ function RandomMessageInput() {
     setAnchorEl(null);
   };
 
+  let typingTimeout;
+
+  const handleInputChange = (e) => {
+    const { value } = e.target;
+    setMessage(value);
+
+    socket.emit('random:typing');
+
+    if (typingTimeout) clearTimeout(typingTimeout);
+    
+    typingTimeout = setTimeout(() => {
+      socket.emit('random:stop-typing');
+    }, 1000);
+  };
+
   const handleSend = () => {
     if (message.trim() === '') return;
 
     // Emit to backend
     socket.emit('random:message', {
       message,
-      from: socket.id,
+      senderId: userId,
+      type: 'text' // temp text
     });
 
     // Update local Redux
@@ -54,6 +70,7 @@ function RandomMessageInput() {
       addMessage({
         message,
         senderId: userId,
+        type: 'text',// temp text
         timestamp: new Date().toLocaleTimeString([], {
           hour: '2-digit',
           minute: '2-digit',
@@ -150,9 +167,9 @@ function RandomMessageInput() {
           fullWidth
           multiline
           maxRows={4}
-          placeholder="Type a message"
+          placeholder="Type a message..."
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={handleInputChange}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();

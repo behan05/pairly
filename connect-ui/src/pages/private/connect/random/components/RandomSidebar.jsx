@@ -13,10 +13,8 @@ import NextButton from './NextButton';
 import StyledText from '@/components/common/StyledText';
 import SettingsAction from '@/components/private/SettingsAction';
 
-// Images
-import friendsChatBigScreen from '@/assets/images/friends-chat-bigScreen.png'
-import friendsChatSmallScreen from '@/assets/images/friends-chat-smallScreen.png'
 import CountdownTimer from './CountdownTimer';
+import RandomLandingLottie from '@/components/private/chat/RandomLandingPageLottie';
 
 // we can read from Redux state (like connected, partnerId)
 import { useDispatch, useSelector } from "react-redux";
@@ -97,19 +95,7 @@ function RandomSidebar() {
                         <CountdownTimer startFrom={10} autoRestart={true} />
                     </Stack>
                 ) : (
-                    < Stack
-                        component={'img'}
-                        src={isSm ? friendsChatSmallScreen : friendsChatBigScreen}
-                        alt='random chat screen illustrations'
-                        aria-label='random chat screen illustrations'
-                        sx={{
-                            minWidth: '100%',
-                            maxHeight: '100%',
-                            width: '100%',
-                            objectFit: 'cover',
-                            filter: ' contrast(110%) brightness(110%)',
-                        }}
-                    />
+                    <RandomLandingLottie />
                 )}
 
                 <Typography

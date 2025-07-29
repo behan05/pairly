@@ -9,38 +9,55 @@ import {
   clearMessages,
   setPartnerProfile,
   setWaiting,
+  setPartnerTyping,
 } from "@/redux/slices/chat/randomChatSlice";
 
 const RandomController = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Reconnect socket if not connected
     if (!socket.connected) {
       socket.connect();
     }
 
+    // === Match and Connection Events ===
     socket.on("random:waiting", () => {
-      console.log("Waiting for a partner...");
       dispatch(setWaiting(true));
     });
 
     socket.on("random:matched", ({ partnerId, partnerProfile }) => {
-      dispatch(setPartnerId(partnerId));
       dispatch(setConnected(true));
-      dispatch(setWaiting(false));
+      dispatch(setPartnerId(partnerId));
       dispatch(setPartnerProfile(partnerProfile));
+      dispatch(setWaiting(false));
     });
 
-    socket.on("random:message", ({ message, senderId, timestamp }) => {
+    socket.on("random:message", ({ message, senderId, type, timestamp }) => {
       dispatch(addMessage({
         message,
         senderId,
-        timestamp: timestamp || new Date().toLocaleTimeString([], {
-          hour: '2-digit',
-          minute: '2-digit'
-        })
+        type,
+        timestamp: timestamp || new Date().toISOString(),
       }));
+    });
+
+    // === Typing Events ===
+    socket.on("random:partner-typing", (isTyping) => {
+      dispatch(setPartnerTyping(isTyping));
+    });
+
+
+    // === Disconnection Events ===
+    socket.on("random:partner-disconnected", () => {
+      dispatch(setConnected(false));
+      dispatch(setPartnerId(null));
+      dispatch(setPartnerProfile(null));
+      dispatch(clearMessages());
+      dispatch(setWaiting(false));
+    });
+
+    socket.on("random:error", ({ message }) => {
+      console.error("Random Chat Error:", message);
     });
 
     socket.on("random:disconnected", () => {
@@ -51,6 +68,7 @@ const RandomController = () => {
       dispatch(setWaiting(false));
     });
 
+    // === Manual disconnect ===
     socket.on("random:ended", () => {
       dispatch(setConnected(false));
       dispatch(setPartnerId(null));
@@ -62,6 +80,10 @@ const RandomController = () => {
       socket.off("random:waiting");
       socket.off("random:matched");
       socket.off("random:message");
+      socket.off("random:partner-typing");
+      socket.off("random:partner-stop-typing");
+      socket.off("random:partner-disconnected");
+      socket.off("random:error");
       socket.off("random:disconnected");
       socket.off("random:ended");
       dispatch(resetRandomChat());
