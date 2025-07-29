@@ -61,6 +61,8 @@ function randomChatHandler(io, socket) {
                 sender: socket?.userId,
                 content: message,
                 messageType: type,
+                delivered: true,
+                seen: false
             });
 
             await newMessage.save();
@@ -76,6 +78,15 @@ function randomChatHandler(io, socket) {
         } catch (error) {
             console.error('Error handling random message:', error);
             socket.emit('random:error', { message: 'Failed to send message.' });
+        }
+    });
+
+    // === Emit message Seen ===
+    socket.on("random:seen", async ({ messageId }) => {
+        try {
+            await Message.findByIdAndUpdate(messageId, { seen: true });
+        } catch (err) {
+            console.error("Error marking message as seen", err);
         }
     });
 
