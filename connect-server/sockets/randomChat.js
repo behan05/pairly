@@ -3,138 +3,110 @@ const Settings = require('../models/settings.model');
 const MatchQueue = require('../models/chat/MatchQueue.model');
 const Block = require('../models/chat/Block.model');
 
-const waitingQueue = []; //  waiting queue
-const activeMatches = new Map(); // socket.id => partner socket.id
+// Message Storage.
+const Conversation = require('../models/chat/Conversation.model')
+const Message = require('../models/chat/Message.model')
+
+// waiting queue and map for socket id or socket store
+const waitingQueue = [];
+const activeMatches = new Map();
+
+// utils properties
+const matchRandomUser = require('../utils/socket/matchRandomUser');
+const disconnectMatchedUser = require('../utils/socket/disconnectMatchedUser');
 
 function randomChatHandler(io, socket) {
 
     // === Join random chat ===
     socket.on('join-random', async () => {
-        // Prevent duplicate matching or multiple queue entries
-        const isInQueue = waitingQueue.some(s => s.id === socket.id);
-
-        if (activeMatches.has(socket.id) || isInQueue) {
-            socket.emit('random:waiting'); // Emit even if already matched or queued
-            return;
-        }
-
-        const currentUserProfile = await Profile.findOne({ user: socket.userId });
-        if (!currentUserProfile) return;
-
-        for (let index = 0; index < waitingQueue.length; index++) {
-            const partnerSocket = waitingQueue[index];
-            const partnerProfile = await Profile.findOne({ user: partnerSocket.userId });
-            if (!partnerProfile) continue;
-
-            // === MATCH IMMEDIATELY (without conditions) ===
-            activeMatches.set(socket.id, partnerSocket.id);
-            activeMatches.set(partnerSocket.id, socket.id);
-
-            const emitMatch = (toSocket, partnerData) => {
-                toSocket.emit('random:matched', {
-                    partnerId: partnerData.id,
-                    partnerProfile: {
-                        fullName: partnerData.fullName,
-                        location: {
-                            country: partnerData.country,
-                            state: partnerData.state,
-                        },
-                        profileImage: partnerData.profileImage,
-                    }
-                });
-            };
-
-            emitMatch(partnerSocket, {
-                id: socket.id,
-                fullName: currentUserProfile.fullName,
-                country: currentUserProfile.country,
-                state: currentUserProfile.state,
-                profileImage: currentUserProfile.profileImage,
-            });
-
-            emitMatch(socket, {
-                id: partnerSocket.id,
-                fullName: partnerProfile.fullName,
-                country: partnerProfile.country,
-                state: partnerProfile.state,
-                profileImage: partnerProfile.profileImage,
-            });
-
-            console.log(`Matched (No Filters): ${socket.id} <--> ${partnerSocket.id}`);
-            waitingQueue.splice(index, 1); // remove matched partner from queue
-            return;
-        }
-
-        // No one to match with, go to waiting queue
-        waitingQueue.push(socket);
-        socket.emit('random:waiting');
-        console.log(`Waiting: ${socket.id}`);
+        await matchRandomUser(socket, waitingQueue, activeMatches, Profile, io);
     });
 
-
     // === Handle messaging ===
-    socket.on('random:message', ({ message }) => {
-        const partnerSocketId = activeMatches.get(socket.id);
+    socket.on('random:message', async ({ message, type }) => {
+        // Get partner's socket ID from activeMatches map
+        const partnerId = activeMatches.get(socket.id);
 
-        if (!partnerSocketId) {
-            return socket.emit('random:error', { error: 'You are not connected to anyone yet.' });
-        };
+        // If no partner, emit error back to sender and return
+        if (!partnerId) {
+            socket.emit('random:error', { message: 'No active match found. you are not connected to a partner.' });
+            return;
+        }
 
-        io.to(partnerSocketId).emit('random:message', {
-            message,
-            senderId: socket.userId,
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        })
+        try {
+            // Get partner's userId using their socket
+            const partnerSocket = io.sockets.sockets.get(partnerId);
+            const partnerUserId = partnerSocket?.userId;
+
+            // Find or create a Conversation document
+            const conversation = await Conversation.findOne({
+                participants: { $all: [partnerUserId, socket.userId] },
+                isRandomChat: true
+            });
+
+            // Create and save a new Message document
+            const newConversation = conversation || new Conversation({
+                participants: [partnerUserId, socket.userId],
+                isRandomChat: true,
+                isActive: true,
+                matchedAt: new Date()
+            });
+
+            if (!conversation) {
+                await newConversation.save();
+            }
+
+            const newMessage = await new Message({
+                conversation: newConversation._id,
+                sender: socket?.userId,
+                content: message,
+                messageType: type,
+            });
+
+            await newMessage.save();
+
+            // Emit the message to the partner
+            partnerSocket.emit('random:message', {
+                message,
+                senderId: socket.userId,
+                type,
+                timestamp: newMessage.createdAt
+            });
+
+        } catch (error) {
+            console.error('Error handling random message:', error);
+            socket.emit('random:error', { message: 'Failed to send message.' });
+        }
     });
 
     // === Next chat ===
-    socket.on('random:next', () => {
-        const partnerId = activeMatches.get(socket.id);
-
-        if (partnerId) {
-            activeMatches.delete(socket.id);
-            activeMatches.delete(partnerId);
-
-            io.to(partnerId).emit('random:ended');
-            socket.emit('random:ended');
-        }
-
-        // Look for new match
-        if (waitingQueue.length > 0) {
-            const partnerSocket = waitingQueue.shift();
-
-            activeMatches.set(socket.id, partnerSocket.id);
-            activeMatches.set(partnerSocket.id, socket.id);
-
-            socket.emit('random:matched', { partnerId: partnerSocket.id });
-            partnerSocket.emit('random:matched', { partnerId: socket.id });
-        } else {
-            waitingQueue.push(socket);
-        }
+    socket.on('random:next', async () => {
+        await disconnectMatchedUser(socket, io, activeMatches, waitingQueue, Conversation);
+        await matchRandomUser(socket, waitingQueue, activeMatches, Profile, io);
     });
 
     // === Disconnect ===
-    socket.on('random:disconnect', () => {
-        console.log(`Manual random disconnect: ${socket.id}`);
+    socket.on('random:disconnect', async () => {
+        await disconnectMatchedUser(socket, io, activeMatches, waitingQueue, Conversation);
+    });
 
+    // Typing started ===
+    socket.on('random:typing', () => {
         const partnerId = activeMatches.get(socket.id);
         if (partnerId) {
             const partnerSocket = io.sockets.sockets.get(partnerId);
-            if (partnerSocket) {
-                partnerSocket.emit('random:partner-disconnected');
-            }
-            activeMatches.delete(partnerId);
-        }
-        activeMatches.delete(socket.id);
-
-        const index = waitingQueue.findIndex(s => s.id === socket.id);
-        if (index !== -1) {
-            waitingQueue.splice(index, 1);
-            console.log(`Removed ${socket.id} from waitingQueue`);
+            partnerSocket?.emit('random:partner-typing', true);
         }
     });
 
-
+    // Typing stopped ===
+    socket.on('random:stop-typing', () => {
+        const partnerId = activeMatches.get(socket.id);
+        if (partnerId) {
+            const partnerSocket = io.sockets.sockets.get(partnerId);
+            partnerSocket?.emit('random:partner-typing', false);
+        }
+    });
 }
 
 module.exports = randomChatHandler;

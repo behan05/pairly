@@ -1,7 +1,7 @@
 const { Server } = require('socket.io');
 const randomChatHandler = require('./randomChat');
 const privateChatHandler = require('./privateChat');
-const verifyToken = require('../utils/verifyToken');
+const verifyToken = require('../utils/socket/verifyToken');
 
 function setupSocket(server) {
     const io = new Server(server, {
@@ -11,13 +11,14 @@ function setupSocket(server) {
         }
     });
 
-    // Auth Middleware for Socket.IO
+    // === Socket.IO authentication middleware ===
     io.use(async (socket, next) => {
         try {
+            // Extract token from client auth
             const token = socket.handshake.auth.token;
             if (!token) return next(new Error("Token missing"));
 
-            // Custom utils function
+            // Verify token and attach user info to socket
             const user = await verifyToken(token);
             if (!user) return next(new Error("Authentication failed"));
 
@@ -30,16 +31,19 @@ function setupSocket(server) {
         }
     });
 
-    // Main connection handler
+    // === Main connection listener ===
     io.on('connection', (socket) => {
-        console.log(' User connected:', socket.id);
+        console.log('User connected:', socket.id);
 
-        // Custom event handlers
+        // Register random chat events
         randomChatHandler(io, socket);
+
+        // Register private chat events
         privateChatHandler(io, socket);
 
+        // Handle disconnection
         socket.on('disconnect', () => {
-            console.log(' User disconnected:', socket.id);
+            console.log('User disconnected:', socket.id);
         });
     });
 }
