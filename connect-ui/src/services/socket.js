@@ -1,2 +1,11 @@
+import { io } from 'socket.io-client';
 
-// All socket.io logic (join, match, offer/answer)
+const URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:8000'
+
+export const socket = io(URL, {
+    autoConnect: false,
+    transports: ['websocket'],
+    auth: (cb) => {
+        cb({ token: localStorage.getItem("token") });
+    }
+});

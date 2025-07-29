@@ -77,6 +77,9 @@ const ChatSidebarHeader = () => {
                 position: 'sticky',
                 top: 0,
                 zIndex: 999,
+                backgroundColor: 'transparent',
+                backdropFilter: 'blur(4px)',
+                WebkitBackdropFilter: 'blur(4px)'
             }}
         >
             <ToastContainer position="top-center" autoClose={1000} theme="colored" />
@@ -142,13 +145,12 @@ const ChatSidebarHeader = () => {
                 open={isMenuOpen}
                 onClose={() => setMenuAnchorEl(null)}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+                transformOrigin={{ vertical: 'right', horizontal: 'right' }}
                 PaperProps={{
                     sx: {
                         background: `${theme.palette.background.paper}`,
                         boxShadow: theme.shadows[6],
-                        borderRight: `1px dotted ${theme.palette.success.main}`,
-                        borderBottom: `1px dotted ${theme.palette.success.main}`,
+                        border: `1px solid ${theme.palette.success.main}`,
                         borderRadius: 1,
                         minWidth: 200,
                         mt: 1,
@@ -188,9 +190,7 @@ const ChatSidebarHeader = () => {
                             mb: 0.5,
                             transition: 'all 0.2s',
                             '&:hover': {
-                                background: `${theme.palette.background.default}`,
                                 transform: `translateY(-5px)`,
-                                borderBottom: `1px dotted ${theme.palette.success.main}`,
                             },
                         }}
                     >
@@ -212,8 +212,6 @@ const ChatSidebarHeader = () => {
                         color: theme.palette.error.main,
                         '&:hover': {
                             transform: `translateY(-5px)`,
-                            borderBottom: `1px dotted ${theme.palette.success.main}`,
-                            background: `${theme.palette.background.default}`,
                         },
                     }}
                 >
