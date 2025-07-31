@@ -161,7 +161,6 @@ exports.updateGeneralInfoController = async (req, res) => {
         })
 
     } catch (error) {
-        // if there is an error while updating the profile
         res.setHeader('Content-Type', 'application/json');
         res.status(500).json({
             success: false,
