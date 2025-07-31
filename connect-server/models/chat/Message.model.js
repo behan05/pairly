@@ -1,12 +1,3 @@
-/*
-Field	=   Purpose
-conversation	=   Reference to the Conversation this message belongs to
-sender	=   The user who sent this message
-content	=   The message content (text, image URL, etc.)
-messageType	=   Useful later if you support images, videos, files
-delivered & seen	=   For future enhancements like message status (WhatsApp-style)
-timestamps	=   Adds createdAt (useful for chat logs/sorting)
-*/
 
 const mongoose = require('mongoose');
 

@@ -1,10 +1,3 @@
-/*
-blocker	= The user who initiated the block
-blocked	= The user who is blocked
-reason	= Optional reason for blocking (for future admin tools)
-blockedAt	= Timestamp for auditing/block duration checks
-timestamps	= Adds createdAt and updatedAt automatically
-*/
 
 const mongoose = require('mongoose');
 

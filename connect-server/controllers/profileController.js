@@ -1,5 +1,6 @@
 const Profile = require('../models/Profile.model');
 const User = require('../models/User.model');
+const cloudinary = require('cloudinary').v2;
 
 exports.getMyProfileController = async (req, res) => {
     const userId = req.user.id;
@@ -63,6 +64,7 @@ exports.updateGeneralInfoController = async (req, res) => {
 
     // get user id from request object
     const userId = req.user.id;
+
     // if no user id is found, send 401 Unauthorized response
     if (!userId) {
         return res.status(401).json({
@@ -124,7 +126,6 @@ exports.updateGeneralInfoController = async (req, res) => {
             })
     }
 
-    // check if user exists
     try {
 
         const updateProfile = {
@@ -134,8 +135,18 @@ exports.updateGeneralInfoController = async (req, res) => {
             pronouns,
             shortBio,
         }
+
         if (req.file && req.file.path) {
+
+            // delete previous profile image
+            const userProfile = await Profile.findOne({ user: userId });
+            if (userProfile.profileImagePublicId) {
+                await cloudinary.uploader.destroy(userProfile.profileImagePublicId);
+            }
+
+            // update new profile image
             updateProfile.profileImage = req.file.path;
+            updateProfile.profileImagePublicId = req.file.filename;
         };
 
         // Find the profile by user ID and update it.

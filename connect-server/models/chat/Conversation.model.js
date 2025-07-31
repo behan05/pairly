@@ -1,11 +1,3 @@
-/*
-Field	=   Purpose
-participants	= 	Array of exactly 2 users (1-on-1). We use ref: 'User' to link back to your main User model.
-isRandomChat	=   Tells whether this was a random match or a saved (normal) conversation.
-matchedAt       =   When the match or chat started. Used in history or analytics.
-isActive		=   Whether the chat is currently live or ended (like disconnected, skipped, blocked, etc).
-timestamps		=   Automatically adds createdAt and updatedAt. Helps in sorting chats by time.
-*/
 
 const mongoose = require('mongoose');
 

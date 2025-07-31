@@ -1,8 +1,3 @@
-/*
-You need fast read access to users looking for a match.
-we don’t want to mutate our permanent Profile model every second.
-It's short-lived — once a match is made, entry is deleted or marked isSearching: false.
-*/
 
 const mongoose = require('mongoose');
 
