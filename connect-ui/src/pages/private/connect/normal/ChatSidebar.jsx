@@ -6,13 +6,15 @@ import {
   ListItemAvatar,
   ListItemText,
   Avatar,
+  TextField
 } from '@/MUI/MuiComponents';
-
+import { SearchIcon } from '@/MUI/MuiIcons';
 import ChatSidebarHeader from '@/components/private/ChatSidebarHeader';
 import { chatPartners } from './mockData';
 import SettingsAction from '@/components/private/SettingsAction';
 
 const ChatSidebar = ({ onUserSelect }) => {
+  const [searchValue, setSearchValue] = React.useState('');
   return (
     <Box
       position="relative"
@@ -24,10 +26,24 @@ const ChatSidebar = ({ onUserSelect }) => {
       sx={{
         minHeight: '100vh',
         maxHeight: '100vh',
-        overflowY: 'auto',
+        overflowY: 'auto'
       }}
     >
-      <ChatSidebarHeader />
+      <ChatSidebarHeader>
+        {/* Search Bar */}
+        <Box mt={1}>
+          <TextField
+            size="small"
+            fullWidth
+            placeholder="Search settings..."
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            InputProps={{
+              startAdornment: <SearchIcon fontSize="small" sx={{ mr: 1 }} />
+            }}
+          />
+        </Box>
+      </ChatSidebarHeader>
 
       <List disablePadding>
         {chatPartners.map((user) => (

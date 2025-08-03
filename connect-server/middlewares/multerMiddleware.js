@@ -1,12 +1,12 @@
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const cloudinary = require('../utils/cloudinary');
+const cloudinary = require('../utils/cloudinary/cloudinary');
 
 // Create Storage
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-        folder: 'profileImage',
+        folder: 'connect/profileImage',
         allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
         public_id: (req, file) => {
             return `user_${req.user.id}_${Date.now()}`;
@@ -14,7 +14,7 @@ const storage = new CloudinaryStorage({
     }
 });
 
-// Correct place for fileFilter is here
+// Multer Upload Middleware
 const upload = multer({
     storage,
     fileFilter: (req, file, cb) => {

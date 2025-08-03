@@ -24,7 +24,7 @@ import { useDispatch } from 'react-redux';
 
 function Profile() {
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     dispatch(getProfile());
   }, []);
@@ -51,7 +51,6 @@ function Profile() {
       path: 'activity'
     }
   ];
-
 
   return (
     <Box component={'section'}>

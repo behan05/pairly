@@ -1,16 +1,13 @@
 const Routers = require('express').Router();
-const {
-    getRandomChatStatusController,
-    startRandomChatController,
-    nextRandomChatController,
-    endRandomChatController
-} = require('../../controllers/chat/randomChatController');
-
+const { uploadRandomChatMediaController } = require('../../controllers/chat/randomChatController');
 const authMiddleware = require('../../middlewares/authMiddleware');
+const upload = require('../../middlewares/uploadRandomMedia');
 
-Routers.get('/status', authMiddleware, getRandomChatStatusController);
-Routers.post('/start', authMiddleware, startRandomChatController);
-Routers.post('/next', authMiddleware, nextRandomChatController);
-Routers.post('/end', authMiddleware, endRandomChatController);
+Routers.post(
+    '/media',
+    authMiddleware,
+    upload.single('media'),
+    uploadRandomChatMediaController
+);
 
 module.exports = Routers;

@@ -14,7 +14,7 @@ import {
   Checkbox,
   Switch,
   FormHelperText,
-  Chip,
+  Chip
 } from '@/MUI/MuiComponents';
 import { SendIcon } from '@/MUI/MuiIcons';
 
@@ -32,11 +32,24 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // Predefined interest and chat style options
 const interestOptions = [
-  'Movies', 'Music', 'Gaming', 'Sports', 'Art', 'Coding', 'Reading', 'Traveling', 'Fitness', 'Cooking',
+  'Movies',
+  'Music',
+  'Gaming',
+  'Sports',
+  'Art',
+  'Coding',
+  'Reading',
+  'Traveling',
+  'Fitness',
+  'Cooking'
 ];
 
 const chatPreferences = [
-  'Deep Talks', 'Casual Chat', 'Learning & Knowledge', 'Humor / Memes', 'No Small Talk',
+  'Deep Talks',
+  'Casual Chat',
+  'Learning & Knowledge',
+  'Humor / Memes',
+  'No Small Talk'
 ];
 
 function TagsAndInterests() {
@@ -48,7 +61,7 @@ function TagsAndInterests() {
     interests: [],
     personality: '',
     chatStyles: [],
-    strictInterestMatch: false,
+    strictInterestMatch: false
   });
 
   // Error state for validation messages
@@ -61,28 +74,28 @@ function TagsAndInterests() {
         interests: profileData?.interests || [],
         personality: profileData?.personality || '',
         chatStyles: profileData?.chatStyles || [],
-        strictInterestMatch: profileData?.strictInterestMatch || false,
+        strictInterestMatch: profileData?.strictInterestMatch || false
       });
     }
   }, [profileData]);
 
   // Toggle interest tags (chips)
   const handleTagToggle = (tag) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       interests: prev.interests.includes(tag)
-        ? prev.interests.filter(t => t !== tag)
-        : [...prev.interests, tag],
+        ? prev.interests.filter((t) => t !== tag)
+        : [...prev.interests, tag]
     }));
   };
 
   // Toggle chat styles (checkboxes)
   const handleChatStyleToggle = (style) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       chatStyles: prev.chatStyles.includes(style)
-        ? prev.chatStyles.filter(s => s !== style)
-        : [...prev.chatStyles, style],
+        ? prev.chatStyles.filter((s) => s !== style)
+        : [...prev.chatStyles, style]
     }));
   };
 
@@ -121,11 +134,10 @@ function TagsAndInterests() {
     try {
       const response = await dispatch(updateTagsAndInterests(formData));
       setTimeout(() => {
-        toast.success(response?.message || "Preferences updated successfully!");
+        toast.success(response?.message || 'Preferences updated successfully!');
       }, 500);
-
     } catch (error) {
-      toast.error(error?.error || "An error occurred while updating preferences.");
+      toast.error(error?.error || 'An error occurred while updating preferences.');
     }
   };
 
@@ -148,7 +160,8 @@ function TagsAndInterests() {
 
           {/* Subheading/Instructions */}
           <Typography variant="body2" textAlign="center" color="text.secondary">
-            Select and share your top interests. Our intelligent algorithm will use them to improve your matching experience.
+            Select and share your top interests. Our intelligent algorithm will use them to improve
+            your matching experience.
           </Typography>
 
           {/* Interests Chips */}
@@ -177,7 +190,7 @@ function TagsAndInterests() {
               name="personality"
               value={formData.personality}
               label="Personality Type"
-              onChange={(e) => setFormData(prev => ({ ...prev, personality: e.target.value }))}
+              onChange={(e) => setFormData((prev) => ({ ...prev, personality: e.target.value }))}
             >
               <MenuItem value="introvert">Introvert</MenuItem>
               <MenuItem value="extrovert">Extrovert</MenuItem>
@@ -190,7 +203,7 @@ function TagsAndInterests() {
           <FormControl component="fieldset" error={Boolean(error?.chatStyles)}>
             <Typography gutterBottom>Preferred Chat Style</Typography>
             <FormGroup>
-              {chatPreferences.map(style => (
+              {chatPreferences.map((style) => (
                 <FormControlLabel
                   key={style}
                   control={
@@ -212,10 +225,12 @@ function TagsAndInterests() {
               control={
                 <Switch
                   checked={formData.strictInterestMatch}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    strictInterestMatch: e.target.checked,
-                  }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      strictInterestMatch: e.target.checked
+                    }))
+                  }
                 />
               }
               label={
@@ -227,11 +242,7 @@ function TagsAndInterests() {
           </FormControl>
 
           {/* Submit Button */}
-          <StyledActionButton
-            endIcon={<SendIcon />}
-            type="submit"
-            disabled={loading}
-          >
+          <StyledActionButton endIcon={<SendIcon />} type="submit" disabled={loading}>
             {loading ? 'Saving...' : 'Save Preferences'}
           </StyledActionButton>
         </Stack>

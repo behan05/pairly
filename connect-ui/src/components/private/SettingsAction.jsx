@@ -1,9 +1,11 @@
-import React from 'react'
+import React from 'react';
 import { Box, Tooltip, IconButton } from '@/MUI/MuiComponents';
 import { SettingsIcon } from '@/MUI/MuiIcons';
 import { Link } from 'react-router-dom';
 
-{/* Floating Settings icon at bottom of sidebar */ }
+{
+  /* Floating Settings icon at bottom of sidebar */
+}
 function SettingsAction() {
   return (
     <Box
@@ -34,7 +36,7 @@ function SettingsAction() {
         </IconButton>
       </Tooltip>
     </Box>
-  )
+  );
 }
 
-export default SettingsAction
+export default SettingsAction;

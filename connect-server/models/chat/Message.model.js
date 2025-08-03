@@ -21,6 +21,11 @@ const messageSchema = new mongoose.Schema(
             type: String,
             default: 'text'
         },
+        publicMediaId: {
+            type: String,
+            default: null
+        },
+
         delivered: {
             type: Boolean,
             default: false

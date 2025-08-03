@@ -1,4 +1,4 @@
-
+require('dotenv').config();
 const cloudinary = require('cloudinary').v2
 
 cloudinary.config({
@@ -8,3 +8,4 @@ cloudinary.config({
 });
 
 module.exports = cloudinary;
+

@@ -98,7 +98,7 @@ function randomChatHandler(io, socket) {
 
     // === Disconnect ===
     socket.on('random:disconnect', async () => {
-        await disconnectMatchedUser(socket, io, activeMatches, waitingQueue, Conversation);
+        await disconnectMatchedUser(socket, io, activeMatches, waitingQueue, Conversation, Message);
     });
 
     // Typing started ===

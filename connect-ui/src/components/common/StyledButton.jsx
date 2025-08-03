@@ -2,15 +2,7 @@ import React from 'react';
 import { Button, useTheme } from '@/MUI/MuiComponents';
 import { Link } from 'react-router-dom';
 
-function StyledButton({
-  icon,
-  className,
-  variant = 'outlined',
-  type,
-  text,
-  redirectUrl,
-  ...props
-}) {
+function StyledButton({ icon, variant = 'outlined', type, text, redirectUrl, ...props }) {
   const theme = useTheme();
 
   return (

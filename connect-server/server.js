@@ -19,36 +19,39 @@ const blockRoutes = require('./routers/chat/blockRoutes');
 // PORT
 const PORT = process.env.PORT || 8000;
 
-// Connect Database
+// Connect to MongoDB database
 connectDB();
 
-// create native server
+// Create native HTTP server and attach Express app
 const server = createServer(app);
+
+// Setup WebSocket server for real-time communication
 setupSocket(server); // pass raw server to websocket to bi-directional communication
 
-// Middlewares
+// Enable CORS for specified origins
 app.use(cors({
     origin: ['https://connect-link-three.vercel.app', 'http://localhost:5173'],
     credentials: true
 }));
 
-// Increased body size limit
-app.use(express.json({ limit: '5mb' }));
-app.use(express.urlencoded({ limit: '5mb', extended: true }));
+// Increase body size limit for large payloads (e.g., media uploads)
+app.use(express.json({ limit: '500mb' }));
+app.use(express.urlencoded({ limit: '500mb', extended: true }));
 
-// Routes
-app.use('/api/auth', authRoutes); // For auth
-app.use('/api/settings', settingsRoutes); // For settings
-app.use('/api/profile', profileRoutes); //  for profile
-app.use('/api/private-chat', privateChatRoutes) // for private chat
-app.use('/api/random-chat', randomChatRoutes) // for random chat
-app.use('/api/block', blockRoutes); // for block users
+// Register API routes
+app.use('/api/auth', authRoutes); // Authentication routes
+app.use('/api/settings', settingsRoutes); // User settings routes
+app.use('/api/profile', profileRoutes); // User profile routes
+app.use('/api/private-chat', privateChatRoutes); // Private chat routes
+app.use('/api/random-chat', randomChatRoutes); // Random chat routes
+app.use('/api/block', blockRoutes); // Block user routes
 
+// Health check endpoint
 app.get('/', (req, res) => {
     res.status(200).json({
         message: "Hey Server is running on render."
     });
 })
 
-// App listne
+// Start the server and listen on specified port
 server.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));

@@ -1,6 +1,6 @@
-import { Player } from "@lottiefiles/react-lottie-player";
-import waitingAnimation from "@/assets/lottie/waiting.json";
-import { Box } from "@mui/material"; // or from "@/MUI/MuiComponents"
+import { Player } from '@lottiefiles/react-lottie-player';
+import waitingAnimation from '@/assets/lottie/waiting.json';
+import { Box } from '@mui/material'; // or from "@/MUI/MuiComponents"
 
 const WaitingIndicator = () => {
   const size = 70;
@@ -10,11 +10,11 @@ const WaitingIndicator = () => {
       sx={{
         width: `${size}px`,
         height: `${size}px`,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         overflowY: 'hidden',
-        position: 'relative',
+        position: 'relative'
       }}
     >
       <Player
@@ -22,11 +22,11 @@ const WaitingIndicator = () => {
         loop
         src={waitingAnimation}
         style={{
-          width: "100%",
-          height: "100%",
+          width: '100%',
+          height: '100%',
           marginTop: '1rem',
-          objectFit: "contain",
-          display: "block",
+          objectFit: 'contain',
+          display: 'block'
         }}
         renderer="svg"
       />

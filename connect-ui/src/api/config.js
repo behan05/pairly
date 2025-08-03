@@ -1,5 +1,17 @@
-const BASE_ENDPOINT = import.meta.env.VITE_API_URL || 'https://connect-server-rroo.onrender.com/api';
+// API endpoint configuration for client-side requests.
+// Uses environment variable for base URL, falls back to production server if not set.
 
+const BASE_ENDPOINT =
+  import.meta.env.VITE_API_URL || 'https://connect-server-rroo.onrender.com/api';
+
+// Authentication API endpoint
 export const AUTH_API = `${BASE_ENDPOINT}/auth`;
+
+// User settings API endpoint
 export const SETTINGS_API = `${BASE_ENDPOINT}/settings`;
+
+// User profile API endpoint
 export const PROFILE_API = `${BASE_ENDPOINT}/profile`;
+
+// Random chat API endpoint
+export const RANDOM_API = `${BASE_ENDPOINT}/random-chat`;

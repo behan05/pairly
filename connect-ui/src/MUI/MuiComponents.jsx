@@ -1,106 +1,149 @@
+// ───────────────────────────────────────────────────────────
+// 📦 MUI Components - Centralized Exports
+// This file imports commonly used MUI components and re-exports
+// them for cleaner, unified access across the app.
+// ───────────────────────────────────────────────────────────
 
 import {
-  AppBar, // Top navigation bar
-  Avatar, // User profile avatar
-  Badge, // Notification badges (e.g., unread messages)
-  Box, // Generic layout container (div replacement)
-  Button, // Action buttons
-  CircularProgress, // Loading spinners
-  Container, // Centered page content wrapper
-  Divider, // Section separators
-  Drawer, // Sidebar / navigation drawer
-  IconButton, // Icon-only button (e.g., toggle, close)
-  InputAdornment, // Adds icon/text to input fields
-  List, // Sidebar or menu list container
-  ListItem, // Individual list item
-  ListItemButton, // Clickable list item
-  ListItemIcon, // Icon inside list item
-  ListItemText, // Text label inside list item
-  Snackbar, // Toast-style notifications
-  Stack, // Vertical or horizontal spacing layout
-  TextField, // Input fields (email, password, etc.)
-  Toolbar, // AppBar content wrapper
-  Typography, // Headings, paragraphs, and text
-  Tooltip, // hover hint
-  useMediaQuery, // Breakpoints
-  useTheme, // Mui theme access or centralized styling
-  Grid,
-  FormGroup,
-  Slider,
-  Accordion,
-  Switch,
-  AccordionDetails,
-  AccordionSummary,
-  Checkbox,
-  InputBase,
-  FormControlLabel,
-  Link as MuiLink,
-  Menu,
-  MenuItem,
-  ListItemAvatar,
-  FormControl,
-  InputLabel,
-  Select,
-  FormHelperText,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  FormLabel,
-  Chip,
-  Paper,
+  // ─── Layout & Structure ─────────────────────────────────
+  AppBar,            // Top navigation bar
+  Box,               // Generic layout container (div replacement)
+  Container,         // Centers page content with responsive padding
+  Drawer,            // Sidebar / navigation drawer
+  Grid,              // Responsive grid layout
+  Paper,             // Surface background for cards, sections
+  Stack,             // Vertical/horizontal layout spacing
+  Toolbar,           // AppBar content wrapper
+  Divider,           // Section separator
+
+  // ─── Typography & Text ──────────────────────────────────
+  Typography,        // Headings, paragraphs, and text
+  FormLabel,         // Label for form groups
+  InputLabel,        // Label for input fields
+  FormHelperText,    // Helper/error text below inputs
+
+  // ─── Form Controls ──────────────────────────────────────
+  TextField,         // Input fields (text, email, password, etc.)
+  InputBase,         // Low-level custom input field
+  InputAdornment,    // Icons/text inside input fields
+  Button,            // Form or action buttons
+  Switch,            // Toggle switch
+  Checkbox,          // Checkbox field
+  Slider,            // Range/slider input
+  Select,            // Dropdown select
+  FormGroup,         // Groups of form fields
+  FormControl,       // Wraps inputs with label, error, etc.
+  FormControlLabel,  // Label paired with Switch/Checkbox/etc.
+
+  // ─── Dialogs & Alerts ───────────────────────────────────
+  Dialog,            // Modal dialog
+  DialogTitle,       // Dialog header
+  DialogContent,     // Dialog body wrapper
+  DialogContentText, // Dialog text block
+  DialogActions,     // Footer action buttons
+  Snackbar,          // Toast-style notifications
+
+  // ─── Lists & Menus ──────────────────────────────────────
+  List,              // Container for list items
+  ListItem,          // Individual list item
+  ListItemButton,    // Clickable list item
+  ListItemIcon,      // Icon inside list item
+  ListItemText,      // Text label inside list item
+  ListItemAvatar,    // Avatar inside list item
+  Menu,              // Context or dropdown menu
+  MenuItem,          // Option inside a Menu
+
+  // ─── Media & Avatars ────────────────────────────────────
+  Avatar,            // User profile picture
+  Badge,             // Badge over icon (e.g., unread count)
+  IconButton,        // Button with icon only (e.g., close)
+  Tooltip,           // Hover popover hints
+  Chip,              // Small pill-style labels
+
+  // ─── Expand/Collapse ────────────────────────────────────
+  Accordion,         // Collapsible container
+  AccordionDetails,  // Hidden content inside Accordion
+  AccordionSummary,  // Visible heading of Accordion
+
+  // ─── Utils & Hooks ──────────────────────────────────────
+  CircularProgress,  // Loading spinner
+  useMediaQuery,     // Responsive breakpoint hook
+  useTheme,          // Access the current MUI theme
+
+  // ─── Links ──────────────────────────────────────────────
+  Link as MuiLink    // Styled link from MUI (renamed to avoid conflict)
 } from '@mui/material';
 
+// ───────────────────────────────────────────────────────────
+// Export all components for use across the app
+// ───────────────────────────────────────────────────────────
+
 export {
+  // Layout
   AppBar,
-  Avatar,
-  Chip,
-  Dialog,
+  Box,
+  Container,
+  Drawer,
+  Grid,
+  Paper,
+  Stack,
+  Toolbar,
+  Divider,
+
+  // Typography
+  Typography,
+  FormLabel,
+  InputLabel,
+  FormHelperText,
+
+  // Forms
+  TextField,
+  InputBase,
+  InputAdornment,
+  Button,
+  Switch,
+  Checkbox,
   Slider,
+  Select,
+  FormGroup,
+  FormControl,
+  FormControlLabel,
+
+  // Dialogs & Alerts
+  Dialog,
   DialogTitle,
   DialogContent,
   DialogContentText,
   DialogActions,
-  FormLabel,
-  Badge,
-  InputBase,
-  Paper,
-  FormHelperText,
-  Box,
-  Button,
-  FormGroup,
-  FormControl,
-  InputLabel,
-  Select,
-  ListItemAvatar,
-  CircularProgress,
-  Container,
-  Menu,
-  MenuItem,
-  Divider,
-  Drawer,
-  IconButton,
-  InputAdornment,
-  Switch,
+  Snackbar,
+
+  // Lists & Menus
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Snackbar,
-  Stack,
-  TextField,
-  Toolbar,
-  Grid,
-  Typography,
-  useMediaQuery,
-  useTheme,
+  ListItemAvatar,
+  Menu,
+  MenuItem,
+
+  // Media
+  Avatar,
+  Badge,
+  IconButton,
   Tooltip,
-  MuiLink,
+  Chip,
+
+  // Expandables
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Checkbox,
-  FormControlLabel
+
+  // Utils & Hooks
+  CircularProgress,
+  useMediaQuery,
+  useTheme,
+
+  // Links
+  MuiLink
 };

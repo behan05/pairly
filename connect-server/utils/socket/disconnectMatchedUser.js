@@ -1,6 +1,14 @@
+const deleteMediaFromCloudinary = require('../../utils/cloudinary/deleteMedia');
 
-async function disconnectMatchedUser(socket, io, activeMatches, waitingQueue, Conversation) {
-    //  Get current user's ID (must be set at connection time)
+async function disconnectMatchedUser(
+    socket,
+    io,
+    activeMatches,
+    waitingQueue,
+    Conversation,
+    Message
+) {
+    //  Get current user's ID
     const userId = socket.userId;
 
     //  Check if user is currently matched with someone
@@ -11,9 +19,56 @@ async function disconnectMatchedUser(socket, io, activeMatches, waitingQueue, Co
         const partnerSocket = io.sockets.sockets.get(partnerId);
         const partnerUserId = partnerSocket?.userId;
 
+        // Notify partner about disconnection
         if (partnerSocket) {
-            // Notify partner about disconnection
             partnerSocket.emit('random:partner-disconnected');
+        }
+
+        /* 
+         At this place, we can delete all media files from cloudinary 
+        which were uploaded by the user in the current conversation &
+        we also delete all messages in the current conversation except 
+        the both users id that will be used for private chat listing
+        */
+
+        try {
+            if (userId && partnerUserId) {
+                const conversation = await Conversation.findOne({
+                    participants: { $all: [userId, partnerUserId] },
+                    isRandomChat: true,
+                    isActive: true
+                });
+
+                if (!conversation) return;
+
+                const mediaMessage = await Message.find({
+                    conversation: conversation._id,
+                    content: { $ne: '' },
+                    publicId: { $ne: '' }
+                });
+
+                for (let msg of mediaMessage) {
+                    if (msg.publicId) {
+                        await deleteMediaFromCloudinary(msg.publicId);
+                    }
+                }
+
+                /* 
+                Delete the message from the database
+                We are not deleting the message if it is not sent by the current user
+                because we want to keep the messages for the partner user
+                and also we are not deleting the message if it is not sent by the partner user
+                */
+                await Message.deleteMany(
+                    {
+                        _id: {
+                            $in: mediaMessage.map(msg => msg._id)
+                        }
+                    }
+                )
+            }
+        } catch (error) {
+            console.error('Error deleting media files or messages:', error);
         }
 
         // Mark the current conversation inactive in DB

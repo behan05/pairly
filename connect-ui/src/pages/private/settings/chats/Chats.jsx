@@ -7,7 +7,7 @@ import {
   Typography,
   Switch as MuiSwitch,
   Select,
-  MenuItem,
+  MenuItem
 } from '../../../../MUI/MuiComponents';
 import {
   EditNoteIcon,
@@ -15,7 +15,7 @@ import {
   Brightness4Icon,
   TextFieldsIcon,
   VisibilityIcon,
-  NotificationsActiveIcon,
+  NotificationsActiveIcon
 } from '../../../../MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import BlurWrapper from '@/components/common/BlurWrapper';
@@ -35,7 +35,7 @@ function Chats() {
     showOnlineStatus: true,
     enterToSend: true,
     chatTheme: 'dark',
-    chatFontSize: 'medium',
+    chatFontSize: 'medium'
   });
 
   useEffect(() => {
@@ -59,7 +59,6 @@ function Chats() {
     } else {
       toast.error(response.error || 'Failed to update settings');
     }
-
   };
 
   // Helper functions to generate UI components
@@ -74,7 +73,6 @@ function Chats() {
       label={switchLabelText}
     />
   );
-
 
   // Helper function to generate select dropdown
   const getSelect = (label, options) => (
@@ -97,43 +95,43 @@ function Chats() {
       icon: <NotificationsActiveIcon sx={{ color: 'success.main' }} />,
       title: 'Message Sound',
       description: 'Play a sound when a new message arrives.',
-      children: getSwitch('messageSound', 'Enable message sound'),
+      children: getSwitch('messageSound', 'Enable message sound')
     },
     {
       label: 'showTypingStatus',
       icon: <EditNoteIcon sx={{ color: 'info.main' }} />,
       title: 'Typing Indicator',
       description: 'Show when you are typing in a chat.',
-      children: getSwitch('showTypingStatus', 'Show typing indicator'),
+      children: getSwitch('showTypingStatus', 'Show typing indicator')
     },
     {
       label: 'showOnlineStatus',
       icon: <VisibilityIcon sx={{ color: 'text.success' }} />,
       title: 'Online Status',
       description: 'Display your online presence to others.',
-      children: getSwitch('showOnlineStatus', 'Show online status'),
+      children: getSwitch('showOnlineStatus', 'Show online status')
     },
     {
       label: 'enterToSend',
       icon: <KeyboardReturnIcon sx={{ color: 'primary.main' }} />,
       title: 'Enter to Send',
       description: 'Press "Enter" to send messages.',
-      children: getSwitch('enterToSend', 'Use Enter to send message'),
+      children: getSwitch('enterToSend', 'Use Enter to send message')
     },
     {
       label: 'chatTheme',
       icon: <Brightness4Icon sx={{ color: 'purple' }} />,
       title: 'Chat Theme',
       description: 'Toggle between light and dark chat themes.',
-      children: getSelect('chatTheme', ['light', 'dark']),
+      children: getSelect('chatTheme', ['light', 'dark'])
     },
     {
       label: 'chatFontSize',
       icon: <TextFieldsIcon sx={{ color: 'orange' }} />,
       title: 'Font Size',
       description: 'Choose your preferred chat font size.',
-      children: getSelect('chatFontSize', ['small', 'medium', 'large']),
-    },
+      children: getSelect('chatFontSize', ['small', 'medium', 'large'])
+    }
   ];
 
   return (

@@ -4,7 +4,6 @@ import {
   Stack,
   TextField,
   Typography,
-  useTheme,
   FormControl,
   InputLabel,
   Select,
@@ -23,8 +22,6 @@ import { SETTINGS_API } from '@/api/config';
 import axios from 'axios';
 
 function HelpContact() {
-  const theme = useTheme();
-
   const [isDisabled, setIsDisabled] = React.useState(false);
 
   const [formData, setFormData] = React.useState({

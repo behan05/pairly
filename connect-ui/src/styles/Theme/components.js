@@ -2,7 +2,7 @@ export const components = {
   MuiTooltip: {
     defaultProps: {
       arrow: true,
-      placement: 'top',
+      placement: 'top'
     },
     styleOverrides: {
       tooltip: {
@@ -16,10 +16,10 @@ export const components = {
         backdropFilter: 'blur(6px)',
         WebkitBackdropFilter: 'blur(6px)',
         maxWidth: 220,
-        transition: 'all 0.2s ease-in-out',
+        transition: 'all 0.2s ease-in-out'
       },
       arrow: {
-        color: 'rgba(5,18,34,0.85)',
+        color: 'rgba(5,18,34,0.85)'
       }
     }
   },
@@ -48,7 +48,7 @@ export const components = {
   MuiSlider: {
     styleOverrides: {
       root: {
-        height: 8,
+        height: 8
       },
       thumb: {
         width: 20,
@@ -56,20 +56,20 @@ export const components = {
         backgroundColor: '#fff',
         border: '2px dotted currentColor',
         '&:hover': {
-          boxShadow: 'inset 0px 0px 0px 8px rgba(25, 118, 210, 0.16)',
+          boxShadow: 'inset 0px 0px 0px 8px rgba(25, 118, 210, 0.16)'
         },
         '&.Mui-active': {
-          boxShadow: ' inset 0px 0px 0px 14px rgba(25, 118, 210, 0.16)',
-        },
+          boxShadow: ' inset 0px 0px 0px 14px rgba(25, 118, 210, 0.16)'
+        }
       },
       track: {
         height: 8,
-        borderRadius: 4,
+        borderRadius: 4
       },
       rail: {
         height: 8,
         borderRadius: 4,
-        opacity: 0.3,
+        opacity: 0.3
       },
       valueLabel: {
         fontSize: '0.75rem',
@@ -81,14 +81,13 @@ export const components = {
         transition: 'opacity 0.2s ease',
         opacity: 0, // hide by default
         '&.MuiSlider-valueLabelOpen': {
-          opacity: 1, // show when active (hover or drag)
+          opacity: 1 // show when active (hover or drag)
         },
         '& *': {
           background: 'transparent',
-          color: '#fff',
+          color: '#fff'
         }
       }
-
     }
   }
 };

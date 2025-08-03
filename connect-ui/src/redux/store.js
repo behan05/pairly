@@ -9,6 +9,6 @@ export const store = configureStore({
     auth: authReducer,
     profile: profileReducer,
     settings: settingsReducer,
-    randomChat: randomChatReducer,
+    randomChat: randomChatReducer
   }
 });

@@ -3,6 +3,8 @@ const randomChatHandler = require('./randomChat');
 const privateChatHandler = require('./privateChat');
 const verifyToken = require('../utils/socket/verifyToken');
 
+let ioInstance = null;
+
 function setupSocket(server) {
     const io = new Server(server, {
         cors: {
@@ -10,6 +12,8 @@ function setupSocket(server) {
             credentials: true
         }
     });
+
+    ioInstance = io;
 
     // === Socket.IO authentication middleware ===
     io.use(async (socket, next) => {
@@ -48,4 +52,11 @@ function setupSocket(server) {
     });
 }
 
-module.exports = { setupSocket };
+function getIO() {
+    if (!ioInstance) {
+        throw new Error('Socket.io not initialized. Call setupSocket() first.');
+    }
+    return ioInstance;
+}
+
+module.exports = { setupSocket, getIO };

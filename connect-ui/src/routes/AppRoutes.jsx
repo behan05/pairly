@@ -53,7 +53,6 @@ import ChatSidebar from '@/pages/private/connect/normal/ChatSidebar';
 import ChatUI from '@/pages/private/connect/normal/ChatUI';
 
 export const routes = createBrowserRouter([
-
   // === Public routes ===
   {
     path: '/',
@@ -85,11 +84,10 @@ export const routes = createBrowserRouter([
       {
         element: <RandomChatLayout />,
         children: [
-
           // Default view at /connect
           {
             index: true,
-            element: <RandomSidebar />,
+            element: <RandomSidebar />
           },
 
           // Settings
@@ -154,8 +152,7 @@ export const routes = createBrowserRouter([
               { path: 'matching-preferences', element: <MatchingPreferences /> },
               { path: 'interests', element: <TagsAndInterests /> }
             ]
-          },
-
+          }
         ]
       },
 
@@ -163,9 +160,7 @@ export const routes = createBrowserRouter([
       {
         path: 'chat',
         element: <ChatUI />,
-        children: [
-          { index: true, element: <ChatSidebar /> }
-        ]
+        children: [{ index: true, element: <ChatSidebar /> }]
       },
       // Fallback for unmatched /connect/* routes
       { path: '*', element: <PageNotFound redirectTo="/connect" /> }

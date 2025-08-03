@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Avatar,
   Box,
@@ -7,14 +7,15 @@ import {
   MenuItem,
   Stack,
   Typography,
-  useTheme,
-} from '@mui/material';
-
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import BlockIcon from '@mui/icons-material/Block';
-import ReportIcon from '@mui/icons-material/Report';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import NotificationsOffIcon from '@mui/icons-material/NotificationsOff';
+  useTheme
+} from '@/MUI/MuiComponents';
+import {
+  MoreVertIcon,
+  BlockIcon,
+  ReportIcon,
+  ContentCopyIcon,
+  NotificationsOffIcon
+} from '@/MUI/MuiIcons';
 
 import { useSelector } from 'react-redux';
 import { Country, State } from 'country-state-city';
@@ -24,28 +25,42 @@ import 'react-toastify/dist/ReactToastify.css';
 import TypingIndicator from '@/components/private/chat/TypingIndicator';
 import WaitingIndicator from '@/components/private/chat/WaitingIndicator';
 
+/**
+ * RandomChatHeader component
+ * - Displays partner's avatar, name, and location
+ * - Shows typing/waiting indicator
+ * - Provides menu for block, report, copy ID, and mute actions
+ */
 function RandomChatHeader() {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const { partnerProfile, partnerId, partnerTyping } = useSelector(state => state.randomChat);
 
+  // Redux state for partner profile, ID, and typing status
+  const { partnerProfile, partnerId, partnerTyping } = useSelector((state) => state.randomChat);
+
+  // Open/close menu handlers
   const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
 
+  /**
+   * Handles menu actions (block, report, copy, mute)
+   * @param {string} action
+   */
   const handleAction = (action) => {
     handleMenuClose();
 
     if (action === 'copy') {
-      navigator.clipboard.writeText(partnerId)
-      toast.success('Partner ID copied!')
+      navigator.clipboard.writeText(partnerId);
+      toast.success('Partner ID copied!');
     }
     // TODO: Add actual logic for each action
   };
 
-  // Convert ISO codes to full names
+  // Convert ISO codes to full state/country names
   const fullStateName = partnerProfile?.location?.state
-    ? State.getStateByCodeAndCountry(partnerProfile.location.state, partnerProfile.location.country)?.name
+    ? State.getStateByCodeAndCountry(partnerProfile.location.state, partnerProfile.location.country)
+        ?.name
     : '';
   const fullCountryName = partnerProfile?.location?.country
     ? Country.getCountryByCode(partnerProfile.location.country)?.name
@@ -53,6 +68,7 @@ function RandomChatHeader() {
 
   return (
     <Box position={'relative'}>
+      {/* Toast notifications for feedback */}
       <ToastContainer position="top-right" autoClose={1000} theme="colored" />
       <Stack
         direction="row"
@@ -63,7 +79,7 @@ function RandomChatHeader() {
         py={0}
         sx={{
           borderBottom: `1px solid ${theme.palette.divider}`,
-          backgroundColor: theme.palette.background.paper,
+          backgroundColor: theme.palette.background.paper
         }}
       >
         {/* Left: Avatar + Info */}
@@ -77,15 +93,16 @@ function RandomChatHeader() {
               {partnerProfile?.fullName || 'Stranger'}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {fullStateName}, {fullCountryName}
+              {fullStateName} {fullCountryName}
             </Typography>
           </Box>
         </Stack>
 
-        {/* Right: Typing + Menu */}
+        {/* Right: Typing/Waiting Indicator + Menu */}
         <Stack direction="row" alignItems="center" justifyContent={'center'}>
           {partnerTyping ? <TypingIndicator /> : <WaitingIndicator />}
 
+          {/* Menu for actions */}
           <IconButton onClick={handleMenuOpen} size="small">
             <MoreVertIcon />
           </IconButton>
@@ -106,8 +123,8 @@ function RandomChatHeader() {
                 mb: 1,
                 px: 1,
                 py: 0.75,
-                overflow: 'hidden',
-              },
+                overflow: 'hidden'
+              }
             }}
           >
             <MenuItem onClick={() => handleAction('block')} sx={menuItemStyle}>
@@ -130,16 +147,16 @@ function RandomChatHeader() {
         </Stack>
       </Stack>
     </Box>
-
   );
 }
 
+// Common style for menu items
 const menuItemStyle = {
   borderRadius: 1,
   transition: 'all 0.2s',
   '&:hover': {
-    transform: `translateY(-5px)`,
-  },
+    transform: `translateY(-5px)`
+  }
 };
 
 export default RandomChatHeader;

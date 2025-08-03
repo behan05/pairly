@@ -5,7 +5,6 @@ import {
   Stack,
   TextField,
   Typography,
-  useTheme,
   FormControl,
   InputLabel,
   Select,
@@ -33,8 +32,6 @@ function ReportBug() {
       deviceInfo: `${platform}, ${userAgent}`
     }));
   }, []);
-
-  const theme = useTheme();
 
   const [isDisabled, setIsDisabled] = React.useState(false);
   const [formData, setFormData] = React.useState({
@@ -125,10 +122,7 @@ function ReportBug() {
     <Box flexDirection="column">
       <ToastContainer position="top-right" autoClose={2000} theme="colored" />
 
-      <BlurWrapper
-        component="form"
-        onSubmit={handleSubmit}
-      >
+      <BlurWrapper component="form" onSubmit={handleSubmit}>
         <Stack direction={'column'} textAlign="center">
           <Typography variant="h4" fontWeight={600} mb={1}>
             Report a <StyledText text="Problem" />
@@ -244,14 +238,13 @@ function ReportBug() {
               fontWeight: 500,
               '&:hover': {
                 borderColor: 'primary.main',
-                backgroundColor: 'action.hover',
-              },
+                backgroundColor: 'action.hover'
+              }
             }}
           >
             Upload screenshot (Optional)
             <input type="file" hidden onChange={handleFileChange} />
           </Button>
-
 
           <StyledActionButton
             type="submit"
