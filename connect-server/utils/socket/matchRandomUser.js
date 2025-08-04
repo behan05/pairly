@@ -1,11 +1,23 @@
+/**
+ * Attempts to match a user with another random user in the waiting queue.
+ * - Prevents duplicate matches or queue entries
+ * - Emits match info to both users if a partner is found
+ * - Falls back to waiting if no match is available
+ * 
+ * @param {Object} socket - The current user socket
+ * @param {Array} waitingQueue - List of user waiting to matched
+ * @param {Map} activeMatches - Map of active socket ID pair
+ * @param {Model} Profile - Mongoose model for user profile
+ * @param {Object} io - Socket.io server instance
+*/
 
 async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io) {
 
     //Prevent duplicate matching or multiple queue entries
     const isInQueue = waitingQueue.some(s => s.id === socket.id);
 
+    // If already matched or in queue, just re-emit waiting status
     if (activeMatches.has(socket.id) || isInQueue) {
-        // If already matched or in queue, just re-emit waiting status
         socket.emit('random:waiting');
         return;
     }
@@ -20,7 +32,7 @@ async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io)
         const partnerProfile = await Profile.findOne({ user: partnerSocket.userId });
         if (!partnerProfile) continue;
 
-        // === MATCH FOUND Temp: IMMEDIATELY MATCH WITHOUT FILTERS ===
+        // === MATCH FOUND TEMP: IMMEDIATELY MATCH WITHOUT FILTERS DUE TO SOME USERS===
 
         // Save match info in activeMatches
         activeMatches.set(socket.id, partnerSocket.id);
@@ -41,6 +53,7 @@ async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io)
             });
         };
 
+        // Emit match info to partnerSocket sockets
         emitMatch(partnerSocket, {
             id: socket.id,
             fullName: currentUserProfile.fullName,
@@ -49,6 +62,7 @@ async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io)
             profileImage: currentUserProfile.profileImage,
         });
 
+        // Emit match info to current socket
         emitMatch(socket, {
             id: partnerSocket.id,
             fullName: partnerProfile.fullName,
@@ -56,8 +70,6 @@ async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io)
             state: partnerProfile.state,
             profileImage: partnerProfile.profileImage,
         });
-
-        console.log(`Matched (No Filters): ${socket.id} <--> ${partnerSocket.id}`);
 
         // Remove matched partner from queue
         waitingQueue.splice(index, 1);
@@ -67,7 +79,6 @@ async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io)
     // If no match found, add current user to waiting queue
     waitingQueue.push(socket);
     socket.emit('random:waiting');
-    console.log(`Waiting: ${socket.id}`);
 }
 
 module.exports = matchRandomUser;

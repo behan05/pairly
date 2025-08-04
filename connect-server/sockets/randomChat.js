@@ -1,19 +1,29 @@
-const Profile = require('../models/Profile.model');
-const Settings = require('../models/settings.model');
-const MatchQueue = require('../models/chat/MatchQueue.model');
-const Block = require('../models/chat/Block.model');
+/**
+ * @file Handles all Socket.IO events for random chat feature.
+ * @module socket/randomChat
+ */
 
-// Message Storage.
+// Profile Model
+const Profile = require('../models/Profile.model');
+
+// Message Storage
 const Conversation = require('../models/chat/Conversation.model')
 const Message = require('../models/chat/Message.model')
+
+// utils properties
+const matchRandomUser = require('../utils/socket/matchRandomUser');
+const disconnectMatchedUser = require('../utils/socket/disconnectMatchedUser');
 
 // waiting queue and map for socket id or socket store
 const waitingQueue = [];
 const activeMatches = new Map();
 
-// utils properties
-const matchRandomUser = require('../utils/socket/matchRandomUser');
-const disconnectMatchedUser = require('../utils/socket/disconnectMatchedUser');
+/**
+ * Handles all random chat related socket events for a connected user.
+ *
+ * @param {import('socket.io').Server} io - The main Socket.IO server instance
+ * @param {import('socket.io').Socket} socket - The connected client socket
+ */
 
 function randomChatHandler(io, socket) {
 
@@ -22,7 +32,7 @@ function randomChatHandler(io, socket) {
         await matchRandomUser(socket, waitingQueue, activeMatches, Profile, io);
     });
 
-    // === Handle messaging ===
+    // === Handle sending messages ===
     socket.on('random:message', async ({ message, type }) => {
         // Get partner's socket ID from activeMatches map
         const partnerId = activeMatches.get(socket.id);
@@ -55,14 +65,17 @@ function randomChatHandler(io, socket) {
             if (!conversation) {
                 await newConversation.save();
             }
-
+            // Create a new message
+            // Set a deleteAt date for the message to expire after 30 days
+            const THIRTY_DAYS = 1000 * 60 * 60 * 24 * 30;
             const newMessage = await new Message({
                 conversation: newConversation._id,
                 sender: socket?.userId,
                 content: message,
                 messageType: type,
                 delivered: true,
-                seen: false
+                seen: false,
+                deleteAt: new Date(Date.now() + THIRTY_DAYS),
             });
 
             await newMessage.save();
@@ -81,7 +94,7 @@ function randomChatHandler(io, socket) {
         }
     });
 
-    // === Emit message Seen ===
+    // === Mark message as seen ===
     socket.on("random:seen", async ({ messageId }) => {
         try {
             await Message.findByIdAndUpdate(messageId, { seen: true });
@@ -90,18 +103,18 @@ function randomChatHandler(io, socket) {
         }
     });
 
-    // === Next chat ===
+    // === Move to next chat ===
     socket.on('random:next', async () => {
-        await disconnectMatchedUser(socket, io, activeMatches, waitingQueue, Conversation);
+        await disconnectMatchedUser(socket, io, activeMatches, waitingQueue, Conversation, Message);
         await matchRandomUser(socket, waitingQueue, activeMatches, Profile, io);
     });
 
-    // === Disconnect ===
+    // === Handle manual disconnect ===
     socket.on('random:disconnect', async () => {
         await disconnectMatchedUser(socket, io, activeMatches, waitingQueue, Conversation, Message);
     });
 
-    // Typing started ===
+    // === Typing indicator: started ===
     socket.on('random:typing', () => {
         const partnerId = activeMatches.get(socket.id);
         if (partnerId) {
@@ -110,7 +123,7 @@ function randomChatHandler(io, socket) {
         }
     });
 
-    // Typing stopped ===
+    // === Typing indicator: stopped ===
     socket.on('random:stop-typing', () => {
         const partnerId = activeMatches.get(socket.id);
         if (partnerId) {
@@ -120,4 +133,8 @@ function randomChatHandler(io, socket) {
     });
 }
 
-module.exports = randomChatHandler;
+module.exports = {
+    randomChatHandler,
+    activeMatches,
+    waitingQueue
+};

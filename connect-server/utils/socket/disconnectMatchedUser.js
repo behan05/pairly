@@ -1,5 +1,20 @@
 const deleteMediaFromCloudinary = require('../../utils/cloudinary/deleteMedia');
 
+/**
+ * Handles user disconnection from a random chat match.
+ * - Notifies the partner user
+ * - Deletes all messages and associated media from the conversation after 1 month
+ * - Marks the conversation as inactive
+ * - Maintains participant IDs for future match tracking
+ * 
+ * @param {Object} socket - The disconnecting user's socket instance
+ * @param {Object} io - The Socket.IO server instance
+ * @param {Map} activeMatches - Map of active user socket pairs
+ * @param {Array} waitingQueue - Queue of users waiting for match
+ * @param {Model} Conversation - Mongoose model for conversations
+ * @param {Model} Message - Mongoose model for messages
+ */
+
 async function disconnectMatchedUser(
     socket,
     io,
@@ -8,28 +23,17 @@ async function disconnectMatchedUser(
     Conversation,
     Message
 ) {
-    //  Get current user's ID
     const userId = socket.userId;
-
-    //  Check if user is currently matched with someone
     const partnerId = activeMatches.get(socket.id);
 
     if (partnerId) {
-        // Get partner's socket instance
         const partnerSocket = io.sockets.sockets.get(partnerId);
         const partnerUserId = partnerSocket?.userId;
 
-        // Notify partner about disconnection
+        // Notify the matched partner about disconnection
         if (partnerSocket) {
             partnerSocket.emit('random:partner-disconnected');
         }
-
-        /* 
-         At this place, we can delete all media files from cloudinary 
-        which were uploaded by the user in the current conversation &
-        we also delete all messages in the current conversation except 
-        the both users id that will be used for private chat listing
-        */
 
         try {
             if (userId && partnerUserId) {
@@ -37,63 +41,51 @@ async function disconnectMatchedUser(
                     participants: { $all: [userId, partnerUserId] },
                     isRandomChat: true,
                     isActive: true
-                });
+                }).sort({ createdAt: -1 });
 
                 if (!conversation) return;
 
-                const mediaMessage = await Message.find({
-                    conversation: conversation._id,
-                    content: { $ne: '' },
-                    publicId: { $ne: '' }
-                });
+                const messages = await Message.find({ conversation: conversation._id });
 
-                for (let msg of mediaMessage) {
-                    if (msg.publicId) {
-                        await deleteMediaFromCloudinary(msg.publicId);
+                // Delete all media files uploaded during the conversation
+                for (let msg of messages) {
+                    try {
+                        if (msg.publicMediaId && msg.publicMediaId.trim() !== '') {
+                            await deleteMediaFromCloudinary(msg.publicMediaId)
+                            await Message.findByIdAndDelete(msg._id)
+                        }
+                    } catch (_) {
+                        continue;
                     }
                 }
-
-                /* 
-                Delete the message from the database
-                We are not deleting the message if it is not sent by the current user
-                because we want to keep the messages for the partner user
-                and also we are not deleting the message if it is not sent by the partner user
-                */
-                await Message.deleteMany(
-                    {
-                        _id: {
-                            $in: mediaMessage.map(msg => msg._id)
-                        }
-                    }
-                )
             }
-        } catch (error) {
-            console.error('Error deleting media files or messages:', error);
+        } catch (_) {
+            return;
         }
 
-        // Mark the current conversation inactive in DB
+        // Mark the current conversation as inactive for future tracking
         if (userId && partnerUserId) {
             try {
                 await Conversation.findOneAndUpdate(
                     {
                         participants: { $all: [userId, partnerUserId] },
                         isRandomChat: true,
-                        isActive: true,
                     },
                     { isActive: false }
                 );
             } catch (err) {
-                console.error('Error updating conversation status:', err);
+                return;
             }
         }
-        // Remove partner from activeMatches map
+
+        // Remove partner from active match map
         activeMatches.delete(partnerId);
     }
 
-    // Remove current user from activeMatches map
+    // Remove user from active match map
     activeMatches.delete(socket.id);
 
-    // Remove user from waiting queue if present
+    // Remove user from waiting queue if they exist there
     const index = waitingQueue.findIndex(s => s.id === socket.id);
     if (index !== -1) {
         waitingQueue.splice(index, 1);

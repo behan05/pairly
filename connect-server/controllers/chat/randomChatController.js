@@ -60,7 +60,7 @@ exports.uploadRandomChatMediaController = async (req, res) => {
             if (mimetype.startsWith('audio/')) return 'audio';
             return 'file';
         };
-        
+
         const messageType = getType(media.mimetype);
 
         // Get Cloudinary public URL
@@ -100,7 +100,7 @@ exports.uploadRandomChatMediaController = async (req, res) => {
                 content: newMessage.content,
                 fileName: media.originalname || '',
                 messageType: newMessage.messageType,
-                publicId: newMessage.publicId,
+                publicMediaId: newMessage.publicMediaId,
                 delivered: newMessage.delivered,
                 seen: newMessage.seen,
                 createdAt: newMessage.createdAt,

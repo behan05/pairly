@@ -25,7 +25,6 @@ const messageSchema = new mongoose.Schema(
             type: String,
             default: null
         },
-
         delivered: {
             type: Boolean,
             default: false
@@ -33,6 +32,10 @@ const messageSchema = new mongoose.Schema(
         seen: {
             type: Boolean,
             default: false
+        },
+        deleteAt: {
+            type: Date,
+            default: null
         }
     },
     { timestamps: true }

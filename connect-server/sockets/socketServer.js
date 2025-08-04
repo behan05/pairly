@@ -1,10 +1,24 @@
 const { Server } = require('socket.io');
-const randomChatHandler = require('./randomChat');
 const privateChatHandler = require('./privateChat');
 const verifyToken = require('../utils/socket/verifyToken');
+const Message = require('../models/chat/Message.model');
+const Conversation = require('../models/chat/Conversation.model');
+const disconnectMatchedUser = require('../utils/socket/disconnectMatchedUser');
+const { randomChatHandler, waitingQueue, activeMatches } = require('./randomChat')
+
+/**
+ * Initializes and configures the Socket.IO server.
+*
+* @param {http.Server} server - The HTTP server instance to attach Socket.IO to.
+* @returns {void}
+*
+* - Applies CORS settings for allowed origins.
+* - Adds authentication middleware to verify token and attach user info.
+* - Sets up random and private chat handlers.
+* - Handles cleanup on client disconnect (including DB and Cloudinary cleanup).
+*/
 
 let ioInstance = null;
-
 function setupSocket(server) {
     const io = new Server(server, {
         cors: {
@@ -46,11 +60,19 @@ function setupSocket(server) {
         privateChatHandler(io, socket);
 
         // Handle disconnection
-        socket.on('disconnect', () => {
+        socket.on('disconnect', async () => {
             console.log('User disconnected:', socket.id);
+            // await disconnectMatchedUser(socket, io, activeMatches, waitingQueue, Conversation, Message);
         });
     });
 }
+
+/**
+ * Returns the initialized Socket.IO server instance.
+ *
+ * @returns {Server} The Socket.IO server instance.
+ * @throws {Error} If Socket.IO has not been initialized via setupSocket().
+ */
 
 function getIO() {
     if (!ioInstance) {
