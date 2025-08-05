@@ -10,6 +10,7 @@ import {
 } from '@/MUI/MuiComponents';
 import { ArrowBackIcon } from '@/MUI/MuiIcons';
 
+// Components
 import ChatSidebarHeader from '@/components/private/ChatSidebarHeader';
 import ConnectButton from './ConnectButton';
 import DisconnectButton from './DisconnectButton';
@@ -17,8 +18,9 @@ import NextButton from './NextButton';
 import StyledText from '@/components/common/StyledText';
 import SettingsAction from '@/components/private/SettingsAction';
 import CountdownTimer from './CountdownTimer';
-import RandomLandingLottie from '@/components/private/chat/RandomLandingPageLottie';
+import RandomLandingLottie from '@/components/private/randomChat/RandomLandingPageLottie';
 
+// Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '@/services/socket';
 import { resetRandomChat, setWaiting } from '@/redux/slices/chat/randomChatSlice';

@@ -7,7 +7,7 @@ const BlurWrapper = ({ children, component = 'div', onSubmit, sx = {}, ...rest }
 
   return (
     <Box
-      component={component} // The HTML element type to render (e.g., 'div', 'form')
+      component={component} // The HTML element type to render
       onSubmit={onSubmit}   // Optional submit handler for forms
       mt={4}                // Margin top
       display="flex"        // Flexbox layout

@@ -21,14 +21,18 @@ import {
   DescriptionIcon
 } from '@/MUI/MuiIcons';
 
+// Emoji Picker and Toast Notifications
 import Picker from '@emoji-mart/react';
 import data from '@emoji-mart/data';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// Redux and Socket
 import { useDispatch, useSelector } from 'react-redux';
 import { addMessage } from '@/redux/slices/chat/randomChatSlice';
 import { socket } from '@/services/socket';
+
+// Axios for media upload and API calls
 import axios from 'axios';
 import { RANDOM_API } from '@/api/config';
 
@@ -37,7 +41,9 @@ import { RANDOM_API } from '@/api/config';
  * - Handles text and media input for random chat
  * - Supports emoji picker, file/media preview, and optimistic UI updates
  * - Uploads media to server and emits messages via socket
+ * @returns {JSX.Element} The rendered component.
  */
+
 function RandomMessageInput() {
   const theme = useTheme();
   const dispatch = useDispatch();

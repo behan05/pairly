@@ -1,1 +1,0 @@
-default-avatar.png for Default avatars or empty state graphics

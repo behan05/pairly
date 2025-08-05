@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -7,7 +7,9 @@ import {
   MenuItem,
   Stack,
   Typography,
-  useTheme
+  useTheme,
+  Tooltip,
+  useMediaQuery
 } from '@/MUI/MuiComponents';
 import {
   MoreVertIcon,
@@ -17,35 +19,57 @@ import {
   NotificationsOffIcon
 } from '@/MUI/MuiIcons';
 
+// Components
+import TypingIndicator from '@/components/private/randomChat/TypingIndicator';
+import WaitingIndicator from '@/components/private/randomChat/WaitingIndicator';
+import PartnerProfileModal from '@/components/private/randomChat/PartnerProfileModal';
+import StyledText from "@/components/common/StyledText";
+
+// Redux
 import { useSelector } from 'react-redux';
+// Country and State utilities
 import { Country, State } from 'country-state-city';
+// Toast notifications
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import TypingIndicator from '@/components/private/chat/TypingIndicator';
-import WaitingIndicator from '@/components/private/chat/WaitingIndicator';
-
 /**
  * RandomChatHeader component
- * - Displays partner's avatar, name, and location
- * - Shows typing/waiting indicator
- * - Provides menu for block, report, copy ID, and mute actions
+ *
+ * Displays:
+ * - Partner's avatar, name, and location
+ * - Typing or waiting indicator
+ * - Options menu for block, report, copy ID, and mute
+ * - Modal for viewing full partner profile
+ *
+ * @component
+ * @returns {JSX.Element}
  */
+
 function RandomChatHeader() {
   const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+
+  // Local state
+  const [openProfileModal, setOpenProfileModal] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
-  // Redux state for partner profile, ID, and typing status
+  // Redux state
   const { partnerProfile, partnerId, partnerTyping } = useSelector((state) => state.randomChat);
 
-  // Open/close menu handlers
+  /**
+   * Opens menu
+   * @param {React.MouseEvent<HTMLButtonElement>} event
+   */
   const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
+
+  /** Closes menu */
   const handleMenuClose = () => setAnchorEl(null);
 
   /**
-   * Handles menu actions (block, report, copy, mute)
-   * @param {string} action
+   * Handles action selection from menu
+   * @param {'block'|'report'|'copy'|'mute'} action
    */
   const handleAction = (action) => {
     handleMenuClose();
@@ -54,22 +78,41 @@ function RandomChatHeader() {
       navigator.clipboard.writeText(partnerId);
       toast.success('Partner ID copied!');
     }
-    // TODO: Add actual logic for each action
+    // TODO: Implement other actions (block, report, mute)
   };
 
-  // Convert ISO codes to full state/country names
-  const fullStateName = partnerProfile?.location?.state
-    ? State.getStateByCodeAndCountry(partnerProfile.location.state, partnerProfile.location.country)
+  /**
+ * Common menu item styling
+ */
+  const menuItemStyle = {
+    borderRadius: 1,
+    transition: 'all 0.2s',
+    '&:hover': {
+      transform: `translateY(-5px)`
+    }
+  };
+
+  /** Full readable state name */
+  const fullStateName = useMemo(() => {
+    return partnerProfile?.location?.state
+      ? State.getStateByCodeAndCountry(partnerProfile.location.state, partnerProfile.location.country)
         ?.name
-    : '';
-  const fullCountryName = partnerProfile?.location?.country
-    ? Country.getCountryByCode(partnerProfile.location.country)?.name
-    : '';
+      : ''
+  }, [partnerProfile]);
+
+  /** Full readable country name */
+  const fullCountryName = useMemo(() => {
+    return partnerProfile?.location?.country
+      ? Country.getCountryByCode(partnerProfile.location.country)?.name
+      : ''
+  }, [partnerProfile]);
 
   return (
     <Box position={'relative'}>
-      {/* Toast notifications for feedback */}
+      {/* Toast container for notifications */}
       <ToastContainer position="top-right" autoClose={1000} theme="colored" />
+
+      {/* Header wrapper */}
       <Stack
         direction="row"
         alignItems="center"
@@ -82,31 +125,49 @@ function RandomChatHeader() {
           backgroundColor: theme.palette.background.paper
         }}
       >
-        {/* Left: Avatar + Info */}
-        <Stack direction="row" spacing={2} alignItems="center">
-          <Avatar
-            alt={partnerProfile?.fullName || 'Stranger'}
-            src={partnerProfile?.profileImage || '/dummy-avatar.jpg'}
-          />
+        {/* Left Section: Avatar + Name + Location */}
+        <Stack
+          direction="row"
+          spacing={2}
+          alignItems="center"
+          sx={{ cursor: 'pointer' }}
+          onClick={() => setOpenProfileModal(true)}
+        >
+          <Tooltip title={<StyledText text={'Partner Profile'} />}>
+            <Avatar
+              alt={partnerProfile?.fullName || 'Stranger'}
+              src={partnerProfile?.profileImage}
+            />
+          </Tooltip>
           <Box>
-            <Typography variant="subtitle1" fontWeight={600}>
-              {partnerProfile?.fullName || 'Stranger'}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Tooltip title={<StyledText text={'Partner Profile'} />}>
+              <Typography variant="subtitle1" fontWeight={600}>
+                {partnerProfile?.fullName || 'Stranger'}
+              </Typography>
+            </Tooltip>
+
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{
+                fontSize: isSm ? '0.8rem' : '0.9rem'
+              }}
+            >
               {fullStateName} {fullCountryName}
             </Typography>
           </Box>
         </Stack>
 
-        {/* Right: Typing/Waiting Indicator + Menu */}
+        {/* Right Section: Typing Indicator + Menu */}
         <Stack direction="row" alignItems="center" justifyContent={'center'}>
           {partnerTyping ? <TypingIndicator /> : <WaitingIndicator />}
 
-          {/* Menu for actions */}
+          {/* Action Menu Icon */}
           <IconButton onClick={handleMenuOpen} size="small">
             <MoreVertIcon />
           </IconButton>
 
+          {/* Dropdown Menu */}
           <Menu
             anchorEl={anchorEl}
             open={open}
@@ -146,17 +207,15 @@ function RandomChatHeader() {
           </Menu>
         </Stack>
       </Stack>
+
+      {/* Modal to view partner profile */}
+      <PartnerProfileModal
+        open={openProfileModal}
+        onClose={() => setOpenProfileModal(false)}
+        partner={partnerProfile}
+      />
     </Box>
   );
 }
-
-// Common style for menu items
-const menuItemStyle = {
-  borderRadius: 1,
-  transition: 'all 0.2s',
-  '&:hover': {
-    transform: `translateY(-5px)`
-  }
-};
 
 export default RandomChatHeader;

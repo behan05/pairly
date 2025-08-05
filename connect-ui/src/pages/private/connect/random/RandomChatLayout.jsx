@@ -11,9 +11,10 @@ import { useState } from 'react';
  * - Passes state to child components via Outlet context
  * - Includes RandomController for socket/event logic
  */
+
 function RandomChatLayout() {
   const theme = useTheme();
-  const isMd = useMediaQuery('(max-width:663px)');
+  const isMd = useMediaQuery('(max-width:936px)');
   const [showChatWindow, setShowChatWindow] = useState(false);
 
   return (

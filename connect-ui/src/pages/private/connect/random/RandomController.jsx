@@ -1,6 +1,12 @@
 import { useEffect } from 'react';
+
+// Path: connect-ui/src/pages/private/connect/random/RandomController.jsx
 import { socket } from '@/services/socket';
+
+// Redux imports
 import { useDispatch } from 'react-redux';
+
+// Redux actions
 import {
   setConnected,
   setPartnerId,

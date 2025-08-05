@@ -15,18 +15,22 @@ import {
   ForumRoundedIcon,
   DownloadIcon,
 } from '@/MUI/MuiIcons';
-import { useDispatch, useSelector } from 'react-redux';
 
 // Custom Components
-import { styled } from '@mui/material/styles';
 import RandomChatHeader from './RandomChatHeader';
 import RandomMessageInput from './RandomMessageInput';
 import NextButton from './NextButton';
 import DisconnectButton from './DisconnectButton';
-import { socket } from '@/services/socket';
-import { resetRandomChat } from '@/redux/slices/chat/randomChatSlice';
 import CountdownTimer from './CountdownTimer';
 import StyledText from '@/components/common/StyledText';
+
+// Socket and Redux actions
+import { socket } from '@/services/socket';
+import { resetRandomChat } from '@/redux/slices/chat/randomChatSlice';
+import { useDispatch, useSelector } from 'react-redux';
+
+// Styled components
+import { styled } from '@mui/material/styles';
 
 /**
  * RandomChatWindow component
@@ -107,6 +111,7 @@ function RandomChatWindow({ setShowChatWindow }) {
    * @param {string} url - Media URL
    * @param {string} fileName - Desired filename
    */
+
   const handleDownload = async (url, fileName = 'file') => {
     try {
       // Check if it's a base64 data URL
@@ -249,15 +254,19 @@ function RandomChatWindow({ setShowChatWindow }) {
                       backgroundColor: isOwnMessage
                         ? theme.palette.background.default
                         : theme.palette.background.paper,
-                      color: isOwnMessage ? 'text.primary' : theme.palette.text.secondary,
-                      boxShadow: isOwnMessage
-                        ? ` 0 0 2px ${theme.palette.background.paper}`
-                        : ` 0 0 2px ${theme.palette.background.default}`,
-                      px: 1,
+                      color: isOwnMessage ? 'text.primary' : 'text.secondary',
+                      px: isOwnMessage ? 2 : 1,
                       py: 1,
                       maxWidth: '70%',
-                      borderBottom: `1px dotted ${isOwnMessage ? theme.palette.success.main : theme.palette.info.main
-                        }`
+                      borderRadius: isOwnMessage ? '1.2rem 0px 1.2rem 1.2rem' : '0px 1.2rem 1.2rem 1.2rem',
+                      position: 'relative',
+                      borderColor: isOwnMessage
+                        ? theme.palette.success.main
+                        : theme.palette.primary.main,
+                      borderWidth: 1,
+                      borderStyle: 'solid',
+                      wordBreak: 'break-word',
+                      overflowWrap: 'break-word',
                     }}
                   >
                     {/* Text Message */}
@@ -283,11 +292,14 @@ function RandomChatWindow({ setShowChatWindow }) {
                             {msg.message}
                           </Typography>
                         )}
-
                         <Typography
                           variant="caption"
                           color="text.secondary"
-                          sx={{ display: 'block', textAlign: 'right', mt: 0.5 }}
+                          sx={{
+                            display: 'block',
+                            textAlign: 'right',
+                            mt: 0.5,
+                          }}
                         >
                           {msg.timestamp}
                         </Typography>

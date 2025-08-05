@@ -119,6 +119,20 @@ import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
 import UploadIcon from '@mui/icons-material/Upload';
 
+// ==================== Partner Profile Icons ====================
+import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
+import LockPersonOutlinedIcon from '@mui/icons-material/LockPersonOutlined';
+import defaultAvatar from '@/assets/placeholders/defaultAvatar.png';
+import GraphicEqIcon from '@mui/icons-material/GraphicEq';
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+import WcOutlinedIcon from '@mui/icons-material/WcOutlined';
+import RecordVoiceOverOutlinedIcon from '@mui/icons-material/RecordVoiceOverOutlined';
+import SubjectOutlinedIcon from '@mui/icons-material/SubjectOutlined';
+import InterestsOutlinedIcon from '@mui/icons-material/InterestsOutlined';
+import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
+import Diversity3OutlinedIcon from '@mui/icons-material/Diversity3Outlined';
+import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined';
+
 // ==================== Export All ====================
 export {
   // Navigation & Layout
@@ -150,12 +164,27 @@ export {
   ShuffleIcon,
   SmsIcon,
   AttachFileIcon,
+
   // Media Controls
   MicIcon,
   MicOffIcon,
   PublicIcon,
   VideocamIcon,
 
+  // Partner Profile Icons
+  LocalOfferOutlinedIcon,
+  LockPersonOutlinedIcon,
+  defaultAvatar,
+  GraphicEqIcon,
+  LocationOnOutlinedIcon,
+  WcOutlinedIcon,
+  RecordVoiceOverOutlinedIcon,
+  SubjectOutlinedIcon,
+  InterestsOutlinedIcon,
+  ForumOutlinedIcon,
+  Diversity3OutlinedIcon,
+  TranslateOutlinedIcon,
+  
   // Input UI
   SearchIcon,
   VisibilityIcon,

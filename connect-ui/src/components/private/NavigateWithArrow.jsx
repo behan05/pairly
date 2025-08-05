@@ -1,4 +1,3 @@
-import React from 'react';
 import { Stack } from '../../MUI/MuiComponents';
 import { ArrowBackIcon } from '../../MUI/MuiIcons';
 

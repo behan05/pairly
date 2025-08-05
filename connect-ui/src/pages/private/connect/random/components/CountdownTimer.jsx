@@ -2,6 +2,15 @@ import { useEffect, useRef, useState } from 'react';
 import { Box, Stack, Typography, useTheme } from '@/MUI/MuiComponents';
 import gsap from 'gsap';
 
+/**
+ * CountdownTimer Component
+ *
+ * Displays a countdown with animation, optionally auto-restarting.
+ *
+ * @param {number} startFrom - The number to start counting down from (default: 10)
+ * @param {boolean} autoRestart - Whether to restart countdown after reaching 0 (default: false)
+ */
+
 const CountdownTimer = ({ startFrom = 10, autoRestart = false }) => {
   const [time, setTime] = useState(startFrom);
   const numberRef = useRef(null);
@@ -10,6 +19,7 @@ const CountdownTimer = ({ startFrom = 10, autoRestart = false }) => {
   useEffect(() => {
     let timer;
 
+    // Animate countdown number using GSAP
     const animate = () => {
       gsap.fromTo(
         numberRef.current,
@@ -24,12 +34,15 @@ const CountdownTimer = ({ startFrom = 10, autoRestart = false }) => {
     };
 
     if (time > 0) {
+      // Animate each number
       animate();
+      // Decrease time every second
       timer = setTimeout(() => setTime((prev) => prev - 1), 1000);
     } else if (autoRestart) {
       setTimeout(() => setTime(startFrom), 1000);
     }
 
+    // Restart countdown if autoRestart is true
     return () => clearTimeout(timer);
   }, [time, startFrom, autoRestart]);
 
