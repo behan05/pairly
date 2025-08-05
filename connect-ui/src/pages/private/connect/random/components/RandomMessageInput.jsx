@@ -251,12 +251,9 @@ function RandomMessageInput() {
       {/* Toast notifications for feedback */}
       <ToastContainer
         position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
+        autoClose={1000}
         closeOnClick
         pauseOnHover
-        draggable
-        pauseOnFocusLoss
         theme="colored"
       />
 

@@ -173,7 +173,7 @@ function RandomChatHeader() {
             open={open}
             onClose={handleMenuClose}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            transformOrigin={{ vertical: 'right', horizontal: 'right' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             PaperProps={{
               sx: {
                 background: `${theme.palette.background.paper}`,

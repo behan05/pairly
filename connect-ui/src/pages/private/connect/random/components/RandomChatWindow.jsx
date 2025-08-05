@@ -40,7 +40,7 @@ import { styled } from '@mui/material/styles';
 
 function RandomChatWindow({ setShowChatWindow }) {
   const theme = useTheme();
-  const isSm = useMediaQuery('(max-width:663px)');
+  const isSm = useMediaQuery('(max-width:936px)');
   const dispatch = useDispatch();
 
   // Redux state

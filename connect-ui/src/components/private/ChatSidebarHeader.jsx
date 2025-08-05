@@ -150,7 +150,7 @@ const ChatSidebarHeader = ({ children }) => {
         open={isMenuOpen}
         onClose={() => setMenuAnchorEl(null)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'right', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         PaperProps={{
           sx: {
             background: `${theme.palette.background.paper}`,
