@@ -44,11 +44,20 @@ async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io)
                 partnerId: partnerData.id,
                 partnerProfile: {
                     fullName: partnerData.fullName,
+                    profileImage: partnerData.profileImage,
+                    age: partnerData.age,
+                    gender: partnerData.gender,
+                    pronouns: partnerData.pronouns,
+                    bio: partnerData.bio,
+                    interests: partnerData.interests,
+                    personalityType: partnerData.personalityType,
+                    lookingFor: partnerData.lookingFor,
+                    preferredLanguage: partnerData.preferredLanguage,
+                    preferredChatStyle: partnerData.preferredChatStyle,
                     location: {
                         country: partnerData.country,
                         state: partnerData.state,
                     },
-                    profileImage: partnerData.profileImage,
                 }
             });
         };
@@ -60,6 +69,15 @@ async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io)
             country: currentUserProfile.country,
             state: currentUserProfile.state,
             profileImage: currentUserProfile.profileImage,
+            age: currentUserProfile.age,
+            gender: currentUserProfile.gender,
+            pronouns: currentUserProfile.pronouns,
+            bio: currentUserProfile.shortBio,
+            interests: currentUserProfile.interests,
+            personalityType: currentUserProfile.personality,
+            lookingFor: currentUserProfile.lookingFor,
+            preferredLanguage: currentUserProfile.preferredLanguage,
+            preferredChatStyle: currentUserProfile.chatStyles
         });
 
         // Emit match info to current socket
@@ -69,6 +87,15 @@ async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io)
             country: partnerProfile.country,
             state: partnerProfile.state,
             profileImage: partnerProfile.profileImage,
+            age: partnerProfile.age,
+            gender: partnerProfile.gender,
+            pronouns: partnerProfile.pronouns,
+            bio: partnerProfile.shortBio,
+            interests: partnerProfile.interests,
+            personalityType: partnerProfile.personality,
+            lookingFor: partnerProfile.lookingFor,
+            preferredLanguage: partnerProfile.preferredLanguage,
+            preferredChatStyle: partnerProfile.chatStyles
         });
 
         // Remove matched partner from queue
