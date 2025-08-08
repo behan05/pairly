@@ -60,36 +60,36 @@ function ReportUserModal({ open, onClose, partner, partnerId }) {
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
   // Redux state for loading
-  const { setIsReporting } = useSelector(state => state.moderation);
+  const { setIsReporting } = useSelector((state) => state.moderation);
 
   // Form state
   const [formData, setFormData] = useState({
     reason: '',
-    customReason: '',
+    customReason: ''
   });
 
   // Error state for form validation
   const [error, setError] = useState({
     reason: '',
-    customReason: '',
+    customReason: ''
   });
 
   /**
- * Handle input change for form fields
- */
+   * Handle input change for form fields
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
     // Clear reason error if user selects a reason
-    if (name === 'reason' && value.trim() !== "") {
-      setError(prev => ({ ...prev, reason: '' }));
+    if (name === 'reason' && value.trim() !== '') {
+      setError((prev) => ({ ...prev, reason: '' }));
     }
   };
 
   /**
- * Handle modal cancel and reset state
- */
+   * Handle modal cancel and reset state
+   */
   const handleCancel = () => {
     onClose();
     setFormData({ reason: '', customReason: '' });
@@ -102,23 +102,24 @@ function ReportUserModal({ open, onClose, partner, partnerId }) {
   const handleReportConfirm = async () => {
     // If reason is 'other', ensure customReason has at least 5 chars
     if (formData.reason === 'other' && formData.customReason.trim().length < 5) {
-      setError(prev => ({
+      setError((prev) => ({
         ...prev,
-        customReason: 'Please provide a meaningful explanation for selecting "Other" (min 5 characters).'
+        customReason:
+          'Please provide a meaningful explanation for selecting "Other" (min 5 characters).'
       }));
       return;
     }
 
     // If no reason selected, set error
     if (formData.reason.trim() === '') {
-      setError(prev => ({ ...prev, reason: 'Reporting reason is required.' }));
+      setError((prev) => ({ ...prev, reason: 'Reporting reason is required.' }));
       return;
     }
 
     // Payload for API call
     const payload = {
       ...formData,
-      reportPartnerSocketId: partnerId,
+      reportPartnerSocketId: partnerId
     };
 
     try {
@@ -195,18 +196,8 @@ function ReportUserModal({ open, onClose, partner, partnerId }) {
         )}
 
         {/* Action buttons */}
-        <Stack
-          direction="row"
-          spacing={1}
-          mt={3}
-          flexWrap={isXs ? 'wrap' : 'nowrap'}
-        >
-          <Button
-            variant="outlined"
-            color="primary"
-            fullWidth
-            onClick={handleCancel}
-          >
+        <Stack direction="row" spacing={1} mt={3} flexWrap={isXs ? 'wrap' : 'nowrap'}>
+          <Button variant="outlined" color="primary" fullWidth onClick={handleCancel}>
             Cancel
           </Button>
           <Button

@@ -6,7 +6,7 @@ import SkipNextIcon from '@mui/icons-material/SkipNext';
  * @param {Function} onClick - Function to execute when the button is clicked.
  * @param {boolean} [disabled=false] - If true, disables the button.
  * @return {JSX.Element} A button with an icon and text.
-*/
+ */
 function NextButton({ onClick, disabled = false }) {
   return (
     <Button

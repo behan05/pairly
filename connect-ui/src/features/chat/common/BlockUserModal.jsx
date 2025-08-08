@@ -64,28 +64,28 @@ function BlockUserModal({ open, onClose, partner, partnerId }) {
   // Form state
   const [formData, setFormData] = useState({
     reason: '',
-    customReason: '',
+    customReason: ''
   });
 
   // Error state for form validation
   const [error, setError] = useState({
     reason: '',
-    customReason: '',
+    customReason: ''
   });
 
   // Redux state for loading
-  const { isBlocking } = useSelector(state => state.moderation);
+  const { isBlocking } = useSelector((state) => state.moderation);
 
   /**
    * Handle input change for form fields
    */
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
     // Clear reason error if user selects a reason
-    if (name === 'reason' && value.trim() !== "") {
-      setError(prev => ({ ...prev, reason: '' }));
+    if (name === 'reason' && value.trim() !== '') {
+      setError((prev) => ({ ...prev, reason: '' }));
     }
   };
 
@@ -104,23 +104,24 @@ function BlockUserModal({ open, onClose, partner, partnerId }) {
   const handleBlockConfirm = async () => {
     // If reason is 'other', ensure customReason has at least 10 chars
     if (formData.reason === 'other' && formData.customReason.trim().length < 10) {
-      setError(prev => ({
+      setError((prev) => ({
         ...prev,
-        customReason: 'Please provide a meaningful explanation for selecting "Other" (min 10 characters).'
+        customReason:
+          'Please provide a meaningful explanation for selecting "Other" (min 10 characters).'
       }));
       return;
     }
 
     // If no reason selected, set error
     if (formData.reason.trim() === '') {
-      setError(prev => ({ ...prev, reason: 'Blocking reason is required.' }));
+      setError((prev) => ({ ...prev, reason: 'Blocking reason is required.' }));
       return;
     }
 
     // Payload for API call
     const payload = {
       ...formData,
-      blockPartnerSocketId: partnerId,
+      blockPartnerSocketId: partnerId
     };
 
     try {
@@ -156,7 +157,8 @@ function BlockUserModal({ open, onClose, partner, partnerId }) {
 
         {/* Confirmation text */}
         <Typography variant="body2" sx={{ mt: 1, mb: 2 }}>
-          Are you sure you want to block <strong>{partner?.fullName}</strong>? You will no longer be able to send or receive messages from this user.
+          Are you sure you want to block <strong>{partner?.fullName}</strong>? You will no longer be
+          able to send or receive messages from this user.
         </Typography>
 
         {/* Reason dropdown */}
@@ -203,18 +205,8 @@ function BlockUserModal({ open, onClose, partner, partnerId }) {
         )}
 
         {/* Action buttons */}
-        <Stack
-          direction="row"
-          spacing={1}
-          mt={3}
-          flexWrap={isXs ? 'wrap' : 'nowrap'}
-        >
-          <Button
-            variant="outlined"
-            color="primary"
-            fullWidth
-            onClick={handleCancel}
-          >
+        <Stack direction="row" spacing={1} mt={3} flexWrap={isXs ? 'wrap' : 'nowrap'}>
+          <Button variant="outlined" color="primary" fullWidth onClick={handleCancel}>
             Cancel
           </Button>
           <Button

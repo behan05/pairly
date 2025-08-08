@@ -104,7 +104,7 @@ function RandomMessageInput() {
 
         const sanitizedFile = new File([file], sanitizedName, {
           type: file.type,
-          lastModified: file.lastModified,
+          lastModified: file.lastModified
         });
 
         const filePreview = {
@@ -185,7 +185,6 @@ function RandomMessageInput() {
     // Optimistic UI update for media
     if (hasMedia) {
       previews.forEach((file) => {
-
         dispatch(
           addMessage({
             senderId: userId,
@@ -195,7 +194,7 @@ function RandomMessageInput() {
             timestamp: new Date().toLocaleTimeString([], {
               hour: '2-digit',
               minute: '2-digit'
-            }),
+            })
           })
         );
       });

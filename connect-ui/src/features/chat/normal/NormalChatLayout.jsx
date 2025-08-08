@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 function NormalChatLayout() {
-  return (
-    <div>NormalChatLayout</div>
-  )
+  return <div>NormalChatLayout</div>;
 }
 
 export default NormalChatLayout;

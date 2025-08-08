@@ -184,7 +184,7 @@ export {
   ForumOutlinedIcon,
   Diversity3OutlinedIcon,
   TranslateOutlinedIcon,
-  
+
   // Input UI
   SearchIcon,
   VisibilityIcon,
@@ -268,5 +268,5 @@ export {
   SosIcon,
   SupportAgentIcon,
   TextFieldsIcon,
-  UploadIcon,
+  UploadIcon
 };

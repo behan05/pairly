@@ -8,13 +8,9 @@ import {
   useMediaQuery,
   IconButton,
   Menu,
-  MenuItem,
+  MenuItem
 } from '@/MUI/MuiComponents';
-import {
-  ArrowDropDownIcon,
-  ForumRoundedIcon,
-  DownloadIcon,
-} from '@/MUI/MuiIcons';
+import { ArrowDropDownIcon, ForumRoundedIcon, DownloadIcon } from '@/MUI/MuiIcons';
 
 // Custom Components
 import RandomChatHeader from './RandomChatHeader';
@@ -258,7 +254,9 @@ function RandomChatWindow({ setShowChatWindow }) {
                       px: isOwnMessage ? 2 : 1,
                       py: 1,
                       maxWidth: '70%',
-                      borderRadius: isOwnMessage ? '1.2rem 0px 1.2rem 1.2rem' : '0px 1.2rem 1.2rem 1.2rem',
+                      borderRadius: isOwnMessage
+                        ? '1.2rem 0px 1.2rem 1.2rem'
+                        : '0px 1.2rem 1.2rem 1.2rem',
                       position: 'relative',
                       borderColor: isOwnMessage
                         ? theme.palette.success.main
@@ -266,7 +264,7 @@ function RandomChatWindow({ setShowChatWindow }) {
                       borderWidth: 1,
                       borderStyle: 'solid',
                       wordBreak: 'break-word',
-                      overflowWrap: 'break-word',
+                      overflowWrap: 'break-word'
                     }}
                   >
                     {/* Text Message */}
@@ -298,7 +296,7 @@ function RandomChatWindow({ setShowChatWindow }) {
                           sx={{
                             display: 'block',
                             textAlign: 'right',
-                            mt: 0.5,
+                            mt: 0.5
                           }}
                         >
                           {msg.timestamp}
@@ -396,7 +394,6 @@ function RandomChatWindow({ setShowChatWindow }) {
                         >
                           {msg.timestamp}
                         </Typography>
-
 
                         <IconButton
                           onClick={() => handleDownload(msg.message, msg.fileName || 'video.mp4')}

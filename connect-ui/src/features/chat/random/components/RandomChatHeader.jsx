@@ -23,7 +23,7 @@ import {
 import TypingIndicator from '@/components/private/randomChat/TypingIndicator';
 import WaitingIndicator from '@/components/private/randomChat/WaitingIndicator';
 import PartnerProfileModal from '@/components/private/randomChat/PartnerProfileModal';
-import StyledText from "@/components/common/StyledText";
+import StyledText from '@/components/common/StyledText';
 import BlockUserModal from '../../common/BlockUserModal';
 import ReportUserModal from '../../common/ReportUserModal';
 
@@ -34,7 +34,6 @@ import { Country, State } from 'country-state-city';
 // Toast notifications
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 
 /**
  * RandomChatHeader component
@@ -81,12 +80,12 @@ function RandomChatHeader() {
   /** Handle Report Partner */
   const handleReportPartner = () => {
     setOpenReportDialog(true);
-  }
+  };
 
   /** Handle Report Partner */
   const handleBlockPartner = () => {
     setOpenBlockDialog(true);
-  }
+  };
 
   /**
    * Handles action selection from menu
@@ -114,8 +113,8 @@ function RandomChatHeader() {
   };
 
   /**
- * Common menu item styling
- */
+   * Common menu item styling
+   */
   const menuItemStyle = {
     borderRadius: 1,
     transition: 'all 0.2s',
@@ -127,16 +126,18 @@ function RandomChatHeader() {
   /** Full readable state name */
   const fullStateName = useMemo(() => {
     return partnerProfile?.location?.state
-      ? State.getStateByCodeAndCountry(partnerProfile.location.state, partnerProfile.location.country)
-        ?.name
-      : ''
+      ? State.getStateByCodeAndCountry(
+          partnerProfile.location.state,
+          partnerProfile.location.country
+        )?.name
+      : '';
   }, [partnerProfile]);
 
   /** Full readable country name */
   const fullCountryName = useMemo(() => {
     return partnerProfile?.location?.country
       ? Country.getCountryByCode(partnerProfile.location.country)?.name
-      : ''
+      : '';
   }, [partnerProfile]);
 
   return (

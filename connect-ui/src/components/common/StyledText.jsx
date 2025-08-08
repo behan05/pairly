@@ -10,9 +10,9 @@ function StyledText({ text }) {
         background: `
                 linear-gradient(270deg, #b355d1, #ccc, 
                 ${theme.palette.warning.main}, #B047ED)`, // Gradient background
-        WebkitBackgroundClip: 'text',      // Clip background to text
-        WebkitTextFillColor: 'transparent',// Make text fill transparent for gradient effect
-        fontWeight: 'bold'                 // Bold font weight
+        WebkitBackgroundClip: 'text', // Clip background to text
+        WebkitTextFillColor: 'transparent', // Make text fill transparent for gradient effect
+        fontWeight: 'bold' // Bold font weight
       }}
     >
       {text}

@@ -6,7 +6,7 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
  * @param {Function} onClick - Function to call when the button is clicked.
  * @param {Boolean} [disabled=false] - Whether the button is disabled.
  * @returns {JSX.Element} A button with an icon and text.
-*/
+ */
 function DisconnectButton({ onClick, disabled = false }) {
   return (
     <Button

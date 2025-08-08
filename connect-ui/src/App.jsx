@@ -16,7 +16,7 @@ function App() {
       <ToastContainer position="top-right" autoClose={1000} theme="colored" />
       {initialising ? <Initialising /> : <RouterProvider router={routes} />}
     </>
-  )
+  );
 }
 
 export default App;
