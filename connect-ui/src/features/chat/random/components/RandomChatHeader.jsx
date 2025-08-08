@@ -24,6 +24,7 @@ import TypingIndicator from '@/components/private/randomChat/TypingIndicator';
 import WaitingIndicator from '@/components/private/randomChat/WaitingIndicator';
 import PartnerProfileModal from '@/components/private/randomChat/PartnerProfileModal';
 import StyledText from "@/components/common/StyledText";
+import BlockUserModal from '../../common/BlockUserModal';
 
 // Redux
 import { useSelector } from 'react-redux';
@@ -33,14 +34,15 @@ import { Country, State } from 'country-state-city';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 /**
  * RandomChatHeader component
  *
  * Displays:
- * - Partner's avatar, name, and location
- * - Typing or waiting indicator
- * - Options menu for block, report, copy ID, and mute
- * - Modal for viewing full partner profile
+ * Partner's avatar, name, and location
+ * Typing or waiting indicator
+ * Options menu for block, report, copy ID, and mute
+ * Modal for viewing full partner profile
  *
  * @component
  * @returns {JSX.Element}
@@ -51,8 +53,9 @@ function RandomChatHeader() {
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
   // Local state
+  const [openBlockDialog, setOpenBlockDialog] = useState(false);
   const [openProfileModal, setOpenProfileModal] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(false);
   const open = Boolean(anchorEl);
 
   // Redux state
@@ -65,7 +68,23 @@ function RandomChatHeader() {
   const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
 
   /** Closes menu */
-  const handleMenuClose = () => setAnchorEl(null);
+  const handleMenuClose = () => setAnchorEl(false);
+
+  /** Copy Partner Id */
+  const copyPartnerId = () => {
+    navigator.clipboard.writeText(partnerId);
+    toast.success('Partner ID copied!');
+  };
+
+  /** Handle Report Partner */
+  const handleReportPartner = () => {
+
+  }
+
+  /** Handle Report Partner */
+  const handleBlockPartner = () => {
+    setOpenBlockDialog(true);
+  }
 
   /**
    * Handles action selection from menu
@@ -74,11 +93,22 @@ function RandomChatHeader() {
   const handleAction = (action) => {
     handleMenuClose();
 
-    if (action === 'copy') {
-      navigator.clipboard.writeText(partnerId);
-      toast.success('Partner ID copied!');
+    switch (action) {
+      case 'copyPartnerId':
+        copyPartnerId();
+        break;
+
+      case 'blockPartner':
+        handleBlockPartner();
+        break;
+
+      case 'reportPartner':
+        handleReportPartner();
+        break;
+
+      default:
+        break;
     }
-    // TODO: Implement other actions (block, report, mute)
   };
 
   /**
@@ -109,9 +139,6 @@ function RandomChatHeader() {
 
   return (
     <Box position={'relative'}>
-      {/* Toast container for notifications */}
-      <ToastContainer position="top-right" autoClose={1000} theme="colored" />
-
       {/* Header wrapper */}
       <Stack
         direction="row"
@@ -188,15 +215,15 @@ function RandomChatHeader() {
               }
             }}
           >
-            <MenuItem onClick={() => handleAction('block')} sx={menuItemStyle}>
+            <MenuItem onClick={() => handleAction('blockPartner')} sx={menuItemStyle}>
               <BlockIcon fontSize="small" sx={{ mr: 1, color: 'error.main' }} />
               Block User
             </MenuItem>
-            <MenuItem onClick={() => handleAction('report')} sx={menuItemStyle}>
+            <MenuItem onClick={() => handleAction('reportPartner')} sx={menuItemStyle}>
               <ReportIcon fontSize="small" sx={{ mr: 1, color: 'warning.main' }} />
               Report
             </MenuItem>
-            <MenuItem onClick={() => handleAction('copy')} sx={menuItemStyle}>
+            <MenuItem onClick={() => handleAction('copyPartnerId')} sx={menuItemStyle}>
               <ContentCopyIcon fontSize="small" sx={{ mr: 1, color: 'success.main' }} />
               Copy Partner ID
             </MenuItem>
@@ -213,6 +240,13 @@ function RandomChatHeader() {
         open={openProfileModal}
         onClose={() => setOpenProfileModal(false)}
         partner={partnerProfile}
+      />
+
+      <BlockUserModal
+        open={openBlockDialog}
+        onClose={() => setOpenBlockDialog(false)}
+        partner={partnerProfile}
+        partnerId={partnerId}
       />
     </Box>
   );

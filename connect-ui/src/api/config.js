@@ -15,3 +15,6 @@ export const PROFILE_API = `${BASE_ENDPOINT}/profile`;
 
 // Random chat API endpoint
 export const RANDOM_API = `${BASE_ENDPOINT}/random-chat`;
+
+// Random chat API endpoint
+export const BLOCK_API = `${BASE_ENDPOINT}/random-block`;

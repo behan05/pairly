@@ -70,6 +70,9 @@ import {
   useMediaQuery,     // Responsive breakpoint hook
   useTheme,          // Access the current MUI theme
 
+  // ─── Popup Model ──────────────────────────────────────
+  Modal,  // Popup Model
+
   // ─── Links ──────────────────────────────────────────────
   Link as MuiLink    // Styled link from MUI (renamed to avoid conflict)
 } from '@mui/material';
@@ -89,6 +92,9 @@ export {
   Stack,
   Toolbar,
   Divider,
+
+  // Popup Model
+  Modal,
 
   // Typography
   Typography,

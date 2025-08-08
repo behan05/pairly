@@ -1,24 +1,32 @@
-const Routers = require('express').Router();
+const express = require('express');
+const Routers = express.Router();
+
 const {
     blockUserControllerById,
     unblockUserControllerById,
     getBlockedUsersController,
-    isUserBlockedControllerById
-} = require('../../controllers/chat/blockController');
+} = require('../../controllers/randomChatControllers/blockController');
 
 // middleware to identify user
 const authMiddleware = require('../../middlewares/authMiddleware');
 
-// Get all blocked users
-Routers.get('/list-all-users', authMiddleware, getBlockedUsersController);
+/**
+ * @route   GET /api/block/users
+ * @desc    Get list of users blocked by the current user
+ */
+Routers.get('/users', authMiddleware, getBlockedUsersController);
 
-// Block a user
-Routers.post('/:userId', authMiddleware, blockUserControllerById);
+/**
+ * @route   POST /api/block/user
+ * @desc    Block a user by socket ID (in body)
+ */
+Routers.post('/user', authMiddleware, blockUserControllerById);
 
-// Unblock a user
-Routers.delete('/:userId', authMiddleware, unblockUserControllerById);
+/**
+ * @route   DELETE /api/block/user
+ * @desc    Unblock a user by socket ID (in body)
+ */
+Routers.delete('/user', authMiddleware, unblockUserControllerById);
 
-// Check if a user is blocked (optional)
-Routers.get('/isBlocked/:userId', authMiddleware, isUserBlockedControllerById);
+module.exports = Routers;
 
-module.exports =  Routers;

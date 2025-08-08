@@ -45,8 +45,8 @@ import MatchingPreferences from '@/pages/private/profile/MatchingPreferences';
 import TagsAndInterests from '@/pages/private/profile/TagsAndInterests';
 
 // Random Chat
-import RandomChatLayout from '@/pages/private/connect/random/RandomChatLayout';
-import RandomSidebar from '@/pages/private/connect/random/components/RandomSidebar';
+import RandomChatLayout from '@/features/chat/random/RandomChatLayout';
+import RandomSidebar from '@/features/chat/random/components/RandomSidebar';
 
 // Chat History
 import ChatSidebar from '@/pages/private/connect/normal/ChatSidebar';

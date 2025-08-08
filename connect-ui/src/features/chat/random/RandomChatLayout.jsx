@@ -1,7 +1,7 @@
 import { Box, Stack, useTheme, useMediaQuery } from '@/MUI/MuiComponents';
 import { Outlet } from 'react-router-dom';
 import RandomChatWindow from './components/RandomChatWindow';
-import RandomController from './RandomController';
+import RandomChatController from './RandomChatController';
 import { useState } from 'react';
 
 /**
@@ -50,7 +50,7 @@ function RandomChatLayout() {
       </Stack>
 
       {/* RandomController: handles socket events and chat logic in background */}
-      <RandomController />
+      <RandomChatController />
     </Box>
   );
 }

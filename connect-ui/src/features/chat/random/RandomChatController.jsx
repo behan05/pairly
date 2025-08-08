@@ -24,7 +24,7 @@ import {
  * - Updates Redux state based on socket events (match, message, typing, disconnect, etc.)
  * - Cleans up socket listeners on unmount
  */
-const RandomController = () => {
+const RandomChatController = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -120,4 +120,4 @@ const RandomController = () => {
   return null;
 };
 
-export default RandomController;
+export default RandomChatController;
