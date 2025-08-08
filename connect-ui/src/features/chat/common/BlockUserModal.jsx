@@ -1,3 +1,31 @@
+/**
+ * @file BlockUserModal.jsx
+ * @description
+ * A modal component that allows the current user to block another user (partner) during a chat.
+ * The modal prompts for a reason (predefined list or custom) before confirming the block.
+ * Upon confirmation, the block request is sent via Redux action and the chat is disconnected using Socket.IO.
+ *
+ * @component
+ * @param {boolean} open - Controls whether the modal is open or closed.
+ * @param {Function} onClose - Callback to close the modal.
+ * @param {Object} partner - The partner user's data (e.g., fullName).
+ * @param {string} partnerId - The partner's socket ID for real-time disconnect.
+ *
+ * @requires react
+ * @requires @mui/material
+ * @requires react-redux
+ * @requires socket.io-client
+ * @requires react-toastify
+ *
+ * @example
+ * <BlockUserModal
+ *   open={isModalOpen}
+ *   onClose={handleCloseModal}
+ *   partner={selectedUser}
+ *   partnerId={selectedUserSocketId}
+ * />
+ */
+
 import { useState } from 'react';
 import {
   Modal,
@@ -33,54 +61,63 @@ function BlockUserModal({ open, onClose, partner, partnerId }) {
   const isXs = useMediaQuery(theme.breakpoints.down('xs'));
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
+  // Form state
   const [formData, setFormData] = useState({
     reason: '',
     customReason: '',
   });
+
+  // Error state for form validation
   const [error, setError] = useState({
     reason: '',
     customReason: '',
-  })
+  });
+
+  // Redux state for loading
   const { isBlocking } = useSelector(state => state.moderation);
 
+  /**
+   * Handle input change for form fields
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
 
-    if (formData.reason.trim() !== '') {
-      setError((prev) => (
-        { ...prev, reason: '' }
-      ));
+    // Clear reason error if user selects a reason
+    if (name === 'reason' && value.trim() !== "") {
+      setError(prev => ({ ...prev, reason: '' }));
     }
   };
 
+  /**
+   * Handle modal cancel and reset state
+   */
   const handleCancel = () => {
     onClose();
-    setFormData({
-      reason: '',
-      customReason: '',
-    });
-    setError({
-      reason: '',
-      customReason: '',
-    });
-  }
+    setFormData({ reason: '', customReason: '' });
+    setError({ reason: '', customReason: '' });
+  };
 
+  /**
+   * Handle block confirmation and trigger API call
+   */
   const handleBlockConfirm = async () => {
+    // If reason is 'other', ensure customReason has at least 10 chars
     if (formData.reason === 'other' && formData.customReason.trim().length < 10) {
-      setError((prev) => (
-        { ...prev, customReason: 'Please provide a meaningful explanation for selecting "Other" (min 10 characters).' }
-      ))
+      setError(prev => ({
+        ...prev,
+        customReason: 'Please provide a meaningful explanation for selecting "Other" (min 10 characters).'
+      }));
       return;
     }
 
+    // If no reason selected, set error
     if (formData.reason.trim() === '') {
-      setError((prev) => (
-        { ...prev, reason: 'Blocking reason is required.' }
-      ));
+      setError(prev => ({ ...prev, reason: 'Blocking reason is required.' }));
       return;
     }
 
+    // Payload for API call
     const payload = {
       ...formData,
       blockPartnerSocketId: partnerId,
@@ -92,20 +129,13 @@ function BlockUserModal({ open, onClose, partner, partnerId }) {
       if (response?.success) {
         toast.success(response.message || 'User blocked successfully');
         onClose();
-        socket.emit('random:disconnect');
-        setFormData({
-          reason: '',
-          customReason: '',
-        });
+        socket.emit('random:disconnect'); // Disconnect chat after blocking
       } else {
-        toast.error(response?.error);
+        toast.error(response?.error || 'Something went wrong');
         onClose();
-        setFormData({
-          reason: '',
-          customReason: '',
-        });
       }
     } catch (_) {
+      // Fail silently for now
       return null;
     }
   };
@@ -115,18 +145,21 @@ function BlockUserModal({ open, onClose, partner, partnerId }) {
       open={open}
       onClose={handleCancel}
       aria-labelledby="block-user-modal"
-      aria-describedby="block-user-description"
+      aria-describedby="reason-error"
       sx={{ mt: 10, px: isSm ? 2 : 4 }}
     >
       <BlurWrapper>
+        {/* Title */}
         <Typography variant="body1">
           Block <StyledText text={partner?.fullName} />
         </Typography>
 
+        {/* Confirmation text */}
         <Typography variant="body2" sx={{ mt: 1, mb: 2 }}>
           Are you sure you want to block <strong>{partner?.fullName}</strong>? You will no longer be able to send or receive messages from this user.
         </Typography>
 
+        {/* Reason dropdown */}
         <FormControl fullWidth margin="normal" error={Boolean(error.reason)}>
           <InputLabel id="blockReason-label">Block Reason</InputLabel>
           <Select
@@ -151,6 +184,7 @@ function BlockUserModal({ open, onClose, partner, partnerId }) {
           {error.reason && <FormHelperText>{error.reason}</FormHelperText>}
         </FormControl>
 
+        {/* Custom reason text field when 'Other' is selected */}
         {formData.reason === 'other' && (
           <TextField
             label="Please specify a valid reason"
@@ -168,6 +202,7 @@ function BlockUserModal({ open, onClose, partner, partnerId }) {
           />
         )}
 
+        {/* Action buttons */}
         <Stack
           direction="row"
           spacing={1}
