@@ -19,7 +19,8 @@ import {
   SettingsIcon,
   BlockIcon,
   ChatIcon,
-  ShareIcon
+  ShareIcon,
+  ShuffleIcon
 } from '@/MUI/MuiIcons';
 import { NavLink, useNavigate } from 'react-router-dom';
 import StyledText from '@/components/common/StyledText';
@@ -44,6 +45,11 @@ const ChatSidebarHeader = ({ children }) => {
 
   const navItems = [
     {
+      path: '/connect',
+      icon: <ShuffleIcon sx={{ color: theme.palette.info.main }} />, // Shuffle icon fits the "random" idea
+      label: 'Random Chat'
+    },
+    {
       path: '/connect/chat',
       icon: <ChatIcon sx={{ color: theme.palette.text.primary }} />,
       label: 'Chat'
@@ -54,7 +60,7 @@ const ChatSidebarHeader = ({ children }) => {
       label: 'Favorites'
     },
     {
-      path: '/connect/blocked',
+      path: '/connect/blocked-users',
       icon: <BlockIcon sx={{ color: theme.palette.error.main }} />,
       label: 'Blocked Users'
     }

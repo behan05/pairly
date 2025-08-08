@@ -53,10 +53,11 @@ exports.getBlockedUsersController = async (req, res) => {
                 if (!blockedProfile) return null;
 
                 return {
+                    blockedUserId: block.blocked,
                     profileImage: blockedProfile?.profileImage,
                     fullName: blockedProfile?.fullName,
-                    blockedAt: block?.blockedAt?.toISOString(), // ISO string format
-                    reason: block?.reason || block.customReason
+                    blockedAt: block?.blockedAt?.toISOString(),
+                    reason: block?.reason || block.customReason,
                 };
             })
         );
@@ -200,11 +201,7 @@ exports.blockUserControllerById = async (req, res) => {
  */
 exports.unblockUserControllerById = async (req, res) => {
     const currentUserId = req.user.id;
-    const { blockedPartnerSocketId } = req.body;
-
-    // Get the socket connection of the blocked user
-    const partnerSocket = io.sockets.sockets.get(blockedPartnerSocketId);
-    const partnerUserId = partnerSocket?.userId;
+    const { blockedPartnerId } = req.body;
 
     // Check for authenticated user ID
     if (!currentUserId) {
@@ -218,7 +215,7 @@ exports.unblockUserControllerById = async (req, res) => {
         // Check if block entry exists between current user and partner
         const blockedUser = await Block.findOne({
             blocker: currentUserId,
-            blocked: partnerUserId,
+            blocked: blockedPartnerId,
             isRandomChat: true
         });
 
@@ -232,7 +229,7 @@ exports.unblockUserControllerById = async (req, res) => {
         // Delete the block record from DB
         await Block.findOneAndDelete({
             blocker: currentUserId,
-            blocked: partnerUserId,
+            blocked: blockedPartnerId,
             isRandomChat: true
         });
 

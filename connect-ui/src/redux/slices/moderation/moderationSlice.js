@@ -40,6 +40,11 @@ const moderationSlice = createSlice({
             state.isBlocking = false;
             state.error = action.payload;
         },
+
+        clearBlockedState: (state, action) => {
+            state.isBlocking = false;
+            state.blockedUsers = state.blockedUsers.filter(block => block.blockedUserId !== action.payload);
+        },
     }
 });
 
@@ -49,6 +54,7 @@ export const {
     setReportedUsers,
     setIsReporting,
     setModerationError,
-    setBlockingDone
+    setBlockingDone,
+    clearBlockedState
 } = moderationSlice.actions;
 export default moderationSlice.reducer;

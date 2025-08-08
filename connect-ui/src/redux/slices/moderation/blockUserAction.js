@@ -1,5 +1,5 @@
 import { getAuthHeaders } from '@/utils/authHeaders';
-import { setBlockedUsers, setBlockingDone, setIsBlocking, setModerationError } from '../moderation/moderationSlice';
+import { setBlockedUsers, setBlockingDone, setIsBlocking, setModerationError, clearBlockedState } from '../moderation/moderationSlice';
 import { BLOCK_API } from '@/api/config';
 import axios from 'axios';
 
@@ -22,29 +22,25 @@ export function fetchBlockedUsers() {
             const headers = getAuthHeaders();
 
             if (!headers) {
-                dispatch(setBlockingDone());
                 dispatch(setModerationError("Unauthorized: Token not found"));
                 return { success: false };
             }
 
-            const response = await axios.get(`${BLOCK_API}/user`, {
-                headers
-            });
+            const response = await axios.get(`${BLOCK_API}/users`, { headers });
 
             if (response.data?.success) {
-                const responseData = response.data?.blockedUsers;
-                dispatch(setBlockingDone());
+                const responseData = response.data?.blockedUsers || [];
                 dispatch(setBlockedUsers(responseData));
                 return { success: true };
             } else {
-                dispatch(setBlockingDone());
-                dispatch(setModerationError(`${response.data?.error}`));
+                dispatch(setModerationError(response.data?.error || "Failed to fetch blocked users"));
                 return { success: false };
             }
         } catch (error) {
-            dispatch(setBlockingDone());
             dispatch(setModerationError(error.message || "Something went wrong"));
             return { success: false };
+        } finally {
+            dispatch(setBlockingDone());
         }
     };
 }
@@ -105,7 +101,7 @@ export function blockUser(formData) {
  *            - { success: true, message: string } on success
  *            - { success: false } on failure
  */
-export function unblockUser(blockedPartnerSocketId) {
+export function unblockUser(blockedPartnerId) {
     return async (dispatch) => {
         dispatch(setIsBlocking());
 
@@ -119,11 +115,12 @@ export function unblockUser(blockedPartnerSocketId) {
 
             const response = await axios.delete(`${BLOCK_API}/user`, {
                 headers,
-                data: { blockedPartnerSocketId }
+                data: { blockedPartnerId }
             });
 
             if (response.data.success) {
                 dispatch(setBlockingDone());
+                dispatch(clearBlockedState(blockedPartnerId));
                 return { success: true, message: response.data?.message }
 
             } else {

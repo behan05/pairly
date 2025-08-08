@@ -11,7 +11,7 @@ import {
 import { ArrowBackIcon } from '@/MUI/MuiIcons';
 
 // Components
-import ChatSidebarHeader from '@/components/private/ChatSidebarHeader';
+import ChatSidebarHeader from '@/features/chat/common/ChatSidebarHeader';
 import ConnectButton from './ConnectButton';
 import DisconnectButton from './DisconnectButton';
 import NextButton from './NextButton';

@@ -9,7 +9,7 @@ import {
   TextField
 } from '@/MUI/MuiComponents';
 import { SearchIcon } from '@/MUI/MuiIcons';
-import ChatSidebarHeader from '@/components/private/ChatSidebarHeader';
+import ChatSidebarHeader from '@/features/chat/common/ChatSidebarHeader';
 import { chatPartners } from './mockData';
 import SettingsAction from '@/components/private/SettingsAction';
 
