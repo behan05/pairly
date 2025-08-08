@@ -25,6 +25,7 @@ import WaitingIndicator from '@/components/private/randomChat/WaitingIndicator';
 import PartnerProfileModal from '@/components/private/randomChat/PartnerProfileModal';
 import StyledText from "@/components/common/StyledText";
 import BlockUserModal from '../../common/BlockUserModal';
+import ReportUserModal from '../../common/ReportUserModal';
 
 // Redux
 import { useSelector } from 'react-redux';
@@ -54,6 +55,7 @@ function RandomChatHeader() {
 
   // Local state
   const [openBlockDialog, setOpenBlockDialog] = useState(false);
+  const [openReportDialog, setOpenReportDialog] = useState(false);
   const [openProfileModal, setOpenProfileModal] = useState(false);
   const [anchorEl, setAnchorEl] = useState(false);
   const open = Boolean(anchorEl);
@@ -78,7 +80,7 @@ function RandomChatHeader() {
 
   /** Handle Report Partner */
   const handleReportPartner = () => {
-
+    setOpenReportDialog(true);
   }
 
   /** Handle Report Partner */
@@ -245,6 +247,13 @@ function RandomChatHeader() {
       <BlockUserModal
         open={openBlockDialog}
         onClose={() => setOpenBlockDialog(false)}
+        partner={partnerProfile}
+        partnerId={partnerId}
+      />
+
+      <ReportUserModal
+        open={openReportDialog}
+        onClose={() => setOpenReportDialog(false)}
         partner={partnerProfile}
         partnerId={partnerId}
       />

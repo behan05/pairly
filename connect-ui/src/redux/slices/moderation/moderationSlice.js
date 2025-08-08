@@ -32,17 +32,30 @@ const moderationSlice = createSlice({
             state.isBlocking = false;
         },
 
-        setReportedUsers: (state, action) => { },
+        setReportedUsers: (state, action) => {
+            state.reportedUsers = action.payload;
+            state.isReporting = false;
+            state.error = null
+        },
 
-        setIsReporting: (state, action) => { },
+        setIsReporting: (state, action) => {
+            state.isReporting = true;
+            state.error = null
+        },
+
+        setReportingDone: (state) => {
+            state.isReporting = false;
+        },
 
         setModerationError: (state, action) => {
             state.isBlocking = false;
+            state.isReporting = false;
             state.error = action.payload;
         },
 
         clearBlockedState: (state, action) => {
             state.isBlocking = false;
+            state.isReporting = false;
             state.blockedUsers = state.blockedUsers.filter(block => block.blockedUserId !== action.payload);
         },
     }
@@ -55,6 +68,7 @@ export const {
     setIsReporting,
     setModerationError,
     setBlockingDone,
-    clearBlockedState
+    clearBlockedState,
+    setReportingDone
 } = moderationSlice.actions;
 export default moderationSlice.reducer;
