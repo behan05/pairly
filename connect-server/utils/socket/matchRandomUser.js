@@ -11,7 +11,7 @@
  * @param {Object} io - Socket.io server instance
 */
 
-async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io) {
+async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io, Block) {
 
     //Prevent duplicate matching or multiple queue entries
     const isInQueue = waitingQueue.some(s => s.id === socket.id);
@@ -33,6 +33,24 @@ async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io)
         if (!partnerProfile) continue;
 
         // === MATCH FOUND TEMP: IMMEDIATELY MATCH WITHOUT FILTERS DUE TO SOME USERS===
+
+        // Check Block conditions.
+        const blockUsers = await Block.findOne({
+            $or: [
+                { blocker: socket.userId, blocked: partnerSocket.userId },
+                { blocker: partnerSocket.userId, blocked: socket.userId }
+            ]
+        });
+
+        if (blockUsers) {
+            waitingQueue.push(socket);
+            return;
+        }
+
+        if (blockUsers) {
+            waitingQueue.push(socket);
+            return;
+        }
 
         // Save match info in activeMatches
         activeMatches.set(socket.id, partnerSocket.id);

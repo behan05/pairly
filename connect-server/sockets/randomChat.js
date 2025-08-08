@@ -9,6 +9,7 @@ const Profile = require('../models/Profile.model');
 // Message Storage
 const Conversation = require('../models/chat/Conversation.model')
 const Message = require('../models/chat/Message.model')
+const Block = require('../models/chat/Block.model');
 
 // utils properties
 const matchRandomUser = require('../utils/socket/matchRandomUser');
@@ -29,7 +30,7 @@ function randomChatHandler(io, socket) {
 
     // === Join random chat ===
     socket.on('join-random', async () => {
-        await matchRandomUser(socket, waitingQueue, activeMatches, Profile, io);
+        await matchRandomUser(socket, waitingQueue, activeMatches, Profile, io, Block);
     });
 
     // === Handle sending messages ===
