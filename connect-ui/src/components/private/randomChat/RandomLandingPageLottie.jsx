@@ -1,5 +1,5 @@
 import { Player } from '@lottiefiles/react-lottie-player'; // Lottie animation player
-import landingLottieJson from '@/assets/lottie/RandomLandingPageMessage'; // Animation JSON file
+import landingLottieJson from '@/assets/lottie/randomChatWelcome'; // Animation JSON file
 import { useMediaQuery, useTheme, Box } from '@/MUI/MuiComponents'; // MUI hooks and Box
 
 // RandomLandingLottie component displays a responsive Lottie animation on the landing page
