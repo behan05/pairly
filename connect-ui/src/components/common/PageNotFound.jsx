@@ -3,13 +3,16 @@ import { Box, Typography, Button, Container, useTheme } from '@/MUI/MuiComponent
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 
+// PageNotFound component displays a styled 404 error page with animation and a redirect button.
 const PageNotFound = ({ redirectTo }) => {
   const theme = useTheme();
 
+  // Set the document title when the component mounts
   useEffect(() => {
     document.title = 'PAGE NOT FOUND';
   }, []);
 
+  // Animate the title, text, and button using GSAP when the component mounts
   useEffect(() => {
     gsap.fromTo(
       '.notfound-title',
@@ -31,19 +34,20 @@ const PageNotFound = ({ redirectTo }) => {
   return (
     <Box
       sx={{
-        height: '70vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backdropFilter: 'blur(14px)',
-        color: 'text.primary',
-        textAlign: 'center',
-        borderRadius: 2,
-        boxShadow: `inset 0 10px 1rem ${theme.palette.text.secondary}`
+        height: '70vh', // Set height of the container
+        display: 'flex', // Use flexbox for layout
+        flexDirection: 'column', // Stack children vertically
+        alignItems: 'center', // Center children horizontally
+        justifyContent: 'center', // Center children vertically
+        backdropFilter: 'blur(14px)', // Apply blur effect to background
+        color: 'text.primary', // Set text color
+        textAlign: 'center', // Center text
+        borderRadius: 2, // Rounded corners
+        boxShadow: `inset 0 10px 1rem ${theme.palette.text.secondary}` // Inner shadow
       }}
     >
       <Container>
+        {/* 404 Title */}
         <Typography
           variant="h1"
           component="h2"
@@ -52,13 +56,16 @@ const PageNotFound = ({ redirectTo }) => {
         >
           404
         </Typography>
+        {/* Subtitle */}
         <Typography variant="h4" className="notfound-text" sx={{ fontStyle: 'italic', mb: 3 }}>
           Oops! The page you're looking for doesn't exist.
         </Typography>
+        {/* Description */}
         <Typography variant="body1" className="notfound-text" sx={{ mb: 4 }}>
           Sorry, we couldn't find the page you're looking for. Maybe the URL is incorrect, or the
           page has been moved.
         </Typography>
+        {/* Redirect Button */}
         <Link to={redirectTo} style={{ textDecoration: 'none' }}>
           <Button
             variant="outlined"

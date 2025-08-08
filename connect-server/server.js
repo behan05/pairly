@@ -5,50 +5,70 @@ const { createServer } = require('node:http');
 const { setupSocket } = require('./sockets/socketServer');
 require('dotenv').config();
 
-// DB Connection
+// ==========================
+// Database Connection
+// ==========================
 const connectDB = require('./config/db');
 
+// ==========================
 // Route Imports
+// ==========================
 const authRoutes = require('./routers/authRoutes');
 const settingsRoutes = require('./routers/settingsRoutes');
 const profileRoutes = require('./routers/profileRoutes');
 const privateChatRoutes = require('./routers/chat/privateChatRoutes');
 const randomChatRoutes = require('./routers/chat/randomChatRoutes');
 const blockRoutes = require('./routers/chat/blockRoutes');
+const reportRoutes = require('./routers/chat/reportRoutes');
 
-// PORT
+// ==========================
+// App Configuration
+// ==========================
 const PORT = process.env.PORT || 8000;
 
-// Connect Database
+// Connect to MongoDB
 connectDB();
 
-// create native server
+// Create HTTP server and attach Express app
 const server = createServer(app);
-setupSocket(server); // pass raw server to websocket to bi-directional communication
 
-// Middlewares
+// Setup WebSocket server for real-time communication
+setupSocket(server); // Attach WebSocket to raw HTTP server
+
+// Enable CORS for allowed origins
 app.use(cors({
     origin: ['https://connect-link-three.vercel.app', 'http://localhost:5173'],
     credentials: true
 }));
 
-// Increased body size limit
-app.use(express.json({ limit: '5mb' }));
-app.use(express.urlencoded({ limit: '5mb', extended: true }));
+// Handle JSON & URL-encoded bodies with large payloads (e.g., media)
+app.use(express.json({ limit: '500mb' }));
+app.use(express.urlencoded({ limit: '500mb', extended: true }));
 
-// Routes
-app.use('/api/auth', authRoutes); // For auth
-app.use('/api/settings', settingsRoutes); // For settings
-app.use('/api/profile', profileRoutes); //  for profile
-app.use('/api/private-chat', privateChatRoutes) // for private chat
-app.use('/api/random-chat', randomChatRoutes) // for random chat
-app.use('/api/block', blockRoutes); // for block users
+// Schedule daily cleanup of expired messages and media
+require('./cron/deleteRandomExpiredMessages.cron');
 
+// ==========================
+// Register API Routes
+// ==========================
+app.use('/api/auth', authRoutes);
+app.use('/api/settings', settingsRoutes);
+app.use('/api/profile', profileRoutes);
+app.use('/api/private-chat', privateChatRoutes);
+app.use('/api/random-chat', randomChatRoutes);
+app.use('/api/random-block', blockRoutes);
+app.use('/api/random-report', reportRoutes);
+
+// ==========================
+// Health Check Route
+// ==========================
 app.get('/', (req, res) => {
     res.status(200).json({
-        message: "Hey Server is running on render."
+        message: "Hey! Server is running on Render."
     });
-})
+});
 
-// App listne
+// ==========================
+// Start Server
+// ==========================
 server.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));

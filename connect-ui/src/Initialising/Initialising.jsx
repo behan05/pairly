@@ -7,9 +7,7 @@ function Initialising() {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const currentVideo = isSm
-    ? vertical_intro
-    : intro3;
+  const currentVideo = isSm ? vertical_intro : intro3;
 
   return (
     <Box
@@ -51,21 +49,21 @@ function Initialising() {
         }}
       >
         <Typography
-          variant={isSm ? "h5" : "h2"}
+          variant={isSm ? 'h5' : 'h2'}
           letterSpacing={1.5}
           sx={{
             color: 'text.primary',
-            textAlign: 'center',
+            textAlign: 'center'
           }}
         >
           <strong>
-            <i>Floating through the stars to <StyledText text="Connect" /></i>
+            <i>
+              Floating through the stars to <StyledText text="Connect" />
+            </i>
           </strong>
           <br />
           Searching the galaxy for someone special...
         </Typography>
-
-
       </Box>
     </Box>
   );

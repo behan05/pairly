@@ -1,5 +1,6 @@
 const Profile = require('../models/Profile.model');
 const User = require('../models/User.model');
+const deleteMediaFromCloudinary = require('../utils/cloudinary/deleteMedia');
 
 exports.getMyProfileController = async (req, res) => {
     const userId = req.user.id;
@@ -63,6 +64,7 @@ exports.updateGeneralInfoController = async (req, res) => {
 
     // get user id from request object
     const userId = req.user.id;
+
     // if no user id is found, send 401 Unauthorized response
     if (!userId) {
         return res.status(401).json({
@@ -124,7 +126,6 @@ exports.updateGeneralInfoController = async (req, res) => {
             })
     }
 
-    // check if user exists
     try {
 
         const updateProfile = {
@@ -134,8 +135,18 @@ exports.updateGeneralInfoController = async (req, res) => {
             pronouns,
             shortBio,
         }
+
         if (req.file && req.file.path) {
+
+            // delete previous profile image
+            const userProfile = await Profile.findOne({ user: userId });
+            if (userProfile.profileImagePublicId) {
+                await deleteMediaFromCloudinary(userProfile.profileImagePublicId);
+            }
+
+            // update new profile image
             updateProfile.profileImage = req.file.path;
+            updateProfile.profileImagePublicId = req.file.filename;
         };
 
         // Find the profile by user ID and update it.
@@ -150,7 +161,6 @@ exports.updateGeneralInfoController = async (req, res) => {
         })
 
     } catch (error) {
-        // if there is an error while updating the profile
         res.setHeader('Content-Type', 'application/json');
         res.status(500).json({
             success: false,

@@ -5,8 +5,7 @@ const User = require('../models/User.model');
 const bcrypt = require('bcryptjs');
 const zlib = require('zlib');
 const Profile = require('../models/Profile.model');
-
-//... [all your require/import statements remain unchanged]
+const cloudinary = require('cloudinary').v2;
 
 exports.contactHelp = async (req, res) => {
     const { fullName, email, category, subject, message } = req.body;
@@ -181,20 +180,35 @@ exports.requestInfo = async (req, res) => {
 };
 
 exports.deleteAccount = async (req, res) => {
-    const user = await User.findById(req.user.id);
-    if (!user) {
-        return res.status(404).json({
-            error: 'User not found.',
-            success: false
-        });
-    }
 
     try {
-        await User.findByIdAndDelete(user._id);
+        const userId = req.user.id;
+
+        // Deleting user
+        const user = await User.findByIdAndDelete(userId);
+        if (!user) {
+            return res.status(404).json({
+                error: 'User not found.',
+                success: false
+            });
+        };
+
+        const userProfile = await Profile.findOne({user: userId});
+
+        // delete profile image from Cloudinary
+        if (userProfile?.profileImagePublicId) {
+            await cloudinary.uploader.destroy(userProfile.profileImagePublicId);
+        };
+
+        // Delete profile and settings if they exist
+        await Profile.findOneAndDelete({user: userId});
+        await Settings.findOneAndDelete({user: userId});
+
         return res.status(200).json({
             message: 'Your account has been deleted successfully.',
             success: true
         });
+
     } catch (error) {
         return res.status(500).json({
             error: 'An error occurred while processing your request.',
@@ -489,7 +503,7 @@ exports.updateChatSettings = async (req, res) => {
             chatSettings: updatedSettings,
             success: true
         });
-        
+
     } catch (error) {
         return res.status(500).json({
             error: 'An error occurred while updating chat settings.',

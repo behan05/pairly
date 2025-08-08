@@ -1,13 +1,5 @@
 import * as React from 'react';
-import {
-  Box,
-  Stack,
-  Typography,
-  useTheme,
-  TextField,
-  InputAdornment,
-  IconButton
-} from '@/MUI/MuiComponents';
+import { Box, Stack, Typography, TextField, InputAdornment, IconButton } from '@/MUI/MuiComponents';
 
 import { SendIcon, VisibilityIcon, VisibilityOffIcon } from '@/MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
@@ -22,8 +14,6 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function ChangeCredentials() {
-  const theme = useTheme();
-
   const [isDisabled, setIsDisabled] = React.useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = React.useState(false);
   const [showNewPassword, setShowNewPassword] = React.useState(false);
@@ -133,8 +123,7 @@ function ChangeCredentials() {
       </Stack>
 
       {/* Form */}
-      <BlurWrapper component={'form'} onSubmit={handleSubmit}
-      >
+      <BlurWrapper component={'form'} onSubmit={handleSubmit}>
         <Stack direction="column" textAlign="center">
           <Typography variant="h5" fontWeight={600} mb={1}>
             Manage <StyledText text="Credentials" />

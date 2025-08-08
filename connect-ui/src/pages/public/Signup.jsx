@@ -21,7 +21,7 @@ import {
   SendIcon,
   GoogleIcon,
   FacebookIcon,
-  AppleIcon,
+  AppleIcon
 } from '@/MUI/MuiIcons';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -246,7 +246,7 @@ function Signup() {
             variant="outlined"
             label="Username or Email"
             name="email"
-            aria-label= 'user email'
+            aria-label="user email"
             autoComplete="email"
             onChange={handleChange}
             value={form.email}
@@ -309,7 +309,12 @@ function Signup() {
             </Typography>
           </Stack>
 
-          <FormControlLabel name={'check box'} autoComplete='on' control={<Checkbox />} label="Remember me" />
+          <FormControlLabel
+            name={'check box'}
+            autoComplete="on"
+            control={<Checkbox />}
+            label="Remember me"
+          />
 
           {/* Submit Button */}
           <Button

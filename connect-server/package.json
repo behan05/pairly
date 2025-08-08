@@ -1,6 +1,6 @@
 {
   "name": "connect-server",
-  "version": "1.0.0",
+  "version": "0.1.0-beta",
   "description": "Backend API for Connect - real-time random chat app with authentication and user settings",
   "main": "server.js",
   "type": "commonjs",
@@ -32,6 +32,7 @@
     "mongoose": "^8.16.2",
     "multer": "^2.0.1",
     "multer-storage-cloudinary": "^4.0.0",
+    "node-cron": "^4.2.1",
     "socket.io": "^4.8.1"
   },
   "devDependencies": {

@@ -59,7 +59,7 @@ function AccountDelete() {
         <NavigateWithArrow redirectTo={'/connect/settings/account'} text={'Delete Account'} />
       </Stack>
 
-     <BlurWrapper>
+      <BlurWrapper>
         <Typography textAlign="center" variant="h5" fontWeight={600} mb={1}>
           Delete <span style={{ color: theme.palette.error.main }}>Account</span>
         </Typography>

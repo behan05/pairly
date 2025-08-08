@@ -5,7 +5,6 @@ import {
   Stack,
   TextField,
   Typography,
-  useTheme,
   FormControl,
   InputLabel,
   Select,
@@ -22,10 +21,11 @@ import { SETTINGS_API } from '@/api/config';
 import axios from 'axios';
 
 function ReportBug() {
+  // Set document title and prefill device info on mount
   React.useEffect(() => {
     document.title = 'Connect - Report Bug';
 
-    // Prefill device info
+    // Get platform and user agent for device info
     const platform = navigator.platform;
     const userAgent = navigator.userAgent;
     setFormData((prev) => ({
@@ -34,9 +34,10 @@ function ReportBug() {
     }));
   }, []);
 
-  const theme = useTheme();
-
+  // State for disabling submit button during request
   const [isDisabled, setIsDisabled] = React.useState(false);
+
+  // State for form data
   const [formData, setFormData] = React.useState({
     issueType: '',
     title: '',
@@ -48,6 +49,7 @@ function ReportBug() {
     email: ''
   });
 
+  // State for form validation errors
   const [error, setError] = React.useState({
     issueType: '',
     title: '',
@@ -55,11 +57,13 @@ function ReportBug() {
     email: ''
   });
 
+  // Handle input field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Handle screenshot file upload
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && !file.type.startsWith('image/')) {
@@ -69,12 +73,14 @@ function ReportBug() {
     setFormData((prev) => ({ ...prev, screenshot: file || null }));
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     let isValid = true;
     let newErrors = {};
 
+    // Validate required fields
     if (formData.issueType.trim() === '') {
       newErrors.issueType = 'Please select an issue type.';
       isValid = false;
@@ -100,6 +106,7 @@ function ReportBug() {
 
     setIsDisabled(true);
 
+    // Submit bug report to API
     try {
       const response = await axios.post(`${SETTINGS_API}/report-problem`, formData);
       toast.success(response.data.message);
@@ -107,6 +114,7 @@ function ReportBug() {
       toast.error(error.response?.data?.error || 'Something went wrong.');
     }
 
+    // Reset form after submission
     setFormData({
       issueType: '',
       title: '',
@@ -121,14 +129,15 @@ function ReportBug() {
     setIsDisabled(false);
   };
 
+  // Render bug report form UI
   return (
     <Box flexDirection="column">
+      {/* Toast notifications container */}
       <ToastContainer position="top-right" autoClose={2000} theme="colored" />
 
-      <BlurWrapper
-        component="form"
-        onSubmit={handleSubmit}
-      >
+      {/* Form wrapper with blur effect */}
+      <BlurWrapper component="form" onSubmit={handleSubmit}>
+        {/* Header section */}
         <Stack direction={'column'} textAlign="center">
           <Typography variant="h4" fontWeight={600} mb={1}>
             Report a <StyledText text="Problem" />
@@ -140,7 +149,9 @@ function ReportBug() {
           </Typography>
         </Stack>
 
+        {/* Form fields */}
         <Stack direction={'column'} gap={1}>
+          {/* Issue type dropdown */}
           <FormControl fullWidth error={Boolean(error.issueType)}>
             <InputLabel id="issueType-label">Issue Type</InputLabel>
             <Select
@@ -162,6 +173,7 @@ function ReportBug() {
             {error.issueType && <FormHelperText>{error.issueType}</FormHelperText>}
           </FormControl>
 
+          {/* Bug title input */}
           <TextField
             label="Bug Title"
             placeholder="e.g., Chat freezes after sending image"
@@ -173,6 +185,7 @@ function ReportBug() {
             fullWidth
           />
 
+          {/* Description input */}
           <TextField
             label="Description"
             placeholder="e.g., The chat screen freezes when I send an image over mobile data."
@@ -186,6 +199,7 @@ function ReportBug() {
             fullWidth
           />
 
+          {/* Expected behavior input (optional) */}
           <TextField
             label="Expected Behavior (Optional)"
             placeholder="e.g., The message should appear instantly after hitting send."
@@ -197,6 +211,7 @@ function ReportBug() {
             fullWidth
           />
 
+          {/* Actual behavior input (optional) */}
           <TextField
             label="Actual Behavior (Optional)"
             placeholder="e.g., The message stays stuck on 'Sending...' and never delivers."
@@ -208,6 +223,7 @@ function ReportBug() {
             fullWidth
           />
 
+          {/* Device info input (optional) */}
           <TextField
             label="Device Info (Optional)"
             placeholder="e.g., Android 13, Chrome 114, Samsung Galaxy S21"
@@ -217,6 +233,7 @@ function ReportBug() {
             fullWidth
           />
 
+          {/* Email input */}
           <TextField
             label="Email"
             placeholder="connect@support.com"
@@ -228,11 +245,12 @@ function ReportBug() {
             fullWidth
           />
 
+          {/* Screenshot upload button */}
           <Button
             variant="outlined"
             component="label"
             fullWidth
-            startIcon={<UploadIcon />} // optional icon
+            startIcon={<UploadIcon />}
             sx={{
               color: 'text.primary',
               borderColor: 'divider',
@@ -244,15 +262,15 @@ function ReportBug() {
               fontWeight: 500,
               '&:hover': {
                 borderColor: 'primary.main',
-                backgroundColor: 'action.hover',
-              },
+                backgroundColor: 'action.hover'
+              }
             }}
           >
             Upload screenshot (Optional)
             <input type="file" hidden onChange={handleFileChange} />
           </Button>
 
-
+          {/* Submit button */}
           <StyledActionButton
             type="submit"
             disabled={isDisabled}

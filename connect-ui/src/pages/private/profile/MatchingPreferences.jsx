@@ -12,7 +12,7 @@ import {
   Slider,
   Switch,
   FormLabel,
-  FormControlLabel,
+  FormControlLabel
 } from '@/MUI/MuiComponents';
 
 import { SendIcon } from '@/MUI/MuiIcons';
@@ -43,7 +43,7 @@ function MatchingPreferences() {
     country: '',
     state: '',
     city: '',
-    matchScope: 'global',
+    matchScope: 'global'
   });
 
   const [error, setError] = React.useState({
@@ -51,7 +51,7 @@ function MatchingPreferences() {
     preferredLanguage: '',
     country: '',
     state: '',
-    city: '',
+    city: ''
   });
 
   // Load profile data and populate form on mount
@@ -65,9 +65,10 @@ function MatchingPreferences() {
       const states = selectedCountry ? State.getStatesOfCountry(selectedCountry) : [];
       setStateOptions(states);
 
-      const cities = (selectedCountry && selectedState)
-        ? City.getCitiesOfState(selectedCountry, selectedState)
-        : [];
+      const cities =
+        selectedCountry && selectedState
+          ? City.getCitiesOfState(selectedCountry, selectedState)
+          : [];
       setStateCity(cities);
 
       // Set all form fields
@@ -76,12 +77,12 @@ function MatchingPreferences() {
         preferredLanguage: profileData?.preferredLanguage || '',
         preferredAgeRange: {
           min: profileData?.preferredAgeRange?.min || 18,
-          max: profileData?.preferredAgeRange?.max || 30,
+          max: profileData?.preferredAgeRange?.max || 30
         },
         country: selectedCountry,
         state: selectedState,
         city: selectedCity,
-        matchScope: profileData?.matchScope || '',
+        matchScope: profileData?.matchScope || 'global'
       });
 
       setPreferredAgeRange([
@@ -131,7 +132,7 @@ function MatchingPreferences() {
         ...prev,
         country: value,
         state: '',
-        city: '',
+        city: ''
       }));
     } else if (name === 'state') {
       const cities = City.getCitiesOfState(formData.country, value);
@@ -139,7 +140,7 @@ function MatchingPreferences() {
       setFormData((prev) => ({
         ...prev,
         state: value,
-        city: '',
+        city: ''
       }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -151,7 +152,7 @@ function MatchingPreferences() {
     const { checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      matchScope: checked ? 'global' : 'nearby',
+      matchScope: checked ? 'global' : 'nearby'
     }));
   };
 
@@ -160,7 +161,7 @@ function MatchingPreferences() {
     setPreferredAgeRange(newRange);
     setFormData((prev) => ({
       ...prev,
-      preferredAgeRange: { min: newRange[0], max: newRange[1] },
+      preferredAgeRange: { min: newRange[0], max: newRange[1] }
     }));
   };
 
@@ -295,7 +296,7 @@ function MatchingPreferences() {
                 { value: 60, label: '60' },
                 { value: 70, label: '70' },
                 { value: 80, label: '80' },
-                { value: 95, label: '95' },
+                { value: 95, label: '95' }
               ]}
             />
             <Typography variant="body2" mt={2} color="text.secondary">

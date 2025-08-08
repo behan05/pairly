@@ -1,5 +1,5 @@
 import { Player } from "@lottiefiles/react-lottie-player";
-import randomChatWelcome from "@/assets/lottie/randomChatWelcome.json";
+import randomChatWelcome from "../../../assets/lottie/randomChatWelcome.json";
 import { useMediaQuery, useTheme, Box } from "@/MUI/MuiComponents";
 
 const RandomChatWelcomeLottie = () => {

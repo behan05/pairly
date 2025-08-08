@@ -21,5 +21,4 @@ function ProfileLayout() {
   );
 }
 
-
 export default ProfileLayout;

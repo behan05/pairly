@@ -1,27 +1,23 @@
-import React, { useEffect } from 'react';
-import {
-  Container,
-  Typography,
-  Box,
-  Divider,
-} from '@mui/material';
+import { useEffect } from 'react';
+import { Container, Typography, Box, Divider } from '@mui/material';
 import StyledText from './StyledText';
 
 // === Reusable Section Component ===
 function Section({ title, children }) {
   return (
     <Box mt={5}>
+      {/* Section Title */}
       <Typography variant="h6" fontWeight={600} gutterBottom>
         {title}
       </Typography>
-      <Box sx={{ color: 'text.secondary' }}>
-        {children}
-      </Box>
+      {/* Section Content */}
+      <Box sx={{ color: 'text.secondary' }}>{children}</Box>
     </Box>
   );
 }
 
 function PrivacyPolicyPage() {
+  // Set document title on mount
   useEffect(() => {
     document.title = 'Connect - Privacy Policy';
   }, []);
@@ -31,25 +27,31 @@ function PrivacyPolicyPage() {
       {/* Page Title */}
       <Box textAlign="start" mb={4}>
         <Typography variant="h4" fontWeight={600} gutterBottom>
-          <StyledText text='Privacy' /> Policy
+          <StyledText text="Privacy" /> Policy
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
           How Connect collects, uses, and protects your information.
         </Typography>
       </Box>
 
-      {/* Intro */}
+      {/* Intro Paragraph */}
       <Typography paragraph>
         This Privacy Policy outlines how Connect handles your data. By using our platform, you agree
         to the practices described below.
       </Typography>
 
-      {/* Sections */}
+      {/* Sections of the Privacy Policy */}
       <Section title="1. What We Collect">
         <ul style={{ paddingLeft: '1.2rem' }}>
-          <li><strong>Account Info:</strong> Name, email, password, and profile details.</li>
-          <li><strong>Usage Info:</strong> Device, IP, location, and activity logs.</li>
-          <li><strong>Communication:</strong> Support requests and limited chat logs (if flagged).</li>
+          <li>
+            <strong>Account Info:</strong> Name, email, password, and profile details.
+          </li>
+          <li>
+            <strong>Usage Info:</strong> Device, IP, location, and activity logs.
+          </li>
+          <li>
+            <strong>Communication:</strong> Support requests and limited chat logs (if flagged).
+          </li>
         </ul>
       </Section>
 
@@ -62,32 +64,42 @@ function PrivacyPolicyPage() {
       </Section>
 
       <Section title="3. Third-Party Sharing">
+        {/* Third-party sharing policy */}
         We never sell your data. We only share limited information with trusted partners (e.g.,
         analytics, legal compliance) when absolutely necessary.
       </Section>
 
       <Section title="4. Your Rights">
+        {/* User rights section */}
         You have full control over your data. You may request to view, update, or delete your
         information by contacting our support team.
       </Section>
 
       <Section title="5. Security">
+        {/* Security practices section */}
         We use encryption, secure storage, and account protections. While no system is 100% immune,
         we strive to keep your data safe.
       </Section>
 
       <Section title="6. Policy Updates">
+        {/* Policy update notification section */}
         This policy may change as Connect evolves. Significant changes will be communicated via app
         banners or emails.
       </Section>
 
       <Section title="7. Contact Us">
+        {/* Contact information section */}
         If you have any questions or concerns, feel free to contact us at{' '}
-        <Box component="span" color="primary.main">support@connectapp.com</Box>.
+        <Box component="span" color="primary.main">
+          support@connect.com
+        </Box>
+        .
       </Section>
 
+      {/* Divider before footer */}
       <Divider sx={{ my: 4 }} />
 
+      {/* Footer notice */}
       <Typography textAlign="center" variant="body2" color="text.secondary">
         By continuing to use Connect, you accept this Privacy Policy.
       </Typography>

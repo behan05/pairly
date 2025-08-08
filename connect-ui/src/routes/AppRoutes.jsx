@@ -45,15 +45,15 @@ import MatchingPreferences from '@/pages/private/profile/MatchingPreferences';
 import TagsAndInterests from '@/pages/private/profile/TagsAndInterests';
 
 // Random Chat
-import RandomChatLayout from '@/pages/private/connect/random/RandomChatLayout';
-import RandomSidebar from '@/pages/private/connect/random/components/RandomSidebar';
+import RandomChatLayout from '@/features/chat/random/RandomChatLayout';
+import RandomSidebar from '@/features/chat/random/components/RandomSidebar';
+import BlockedList from '@/features/chat/common/BlockedList';
 
 // Chat History
 import ChatSidebar from '@/pages/private/connect/normal/ChatSidebar';
 import ChatUI from '@/pages/private/connect/normal/ChatUI';
 
 export const routes = createBrowserRouter([
-
   // === Public routes ===
   {
     path: '/',
@@ -85,12 +85,9 @@ export const routes = createBrowserRouter([
       {
         element: <RandomChatLayout />,
         children: [
-
           // Default view at /connect
-          {
-            index: true,
-            element: <RandomSidebar />,
-          },
+          { index: true, element: <RandomSidebar /> },
+          { path: 'blocked-users', element: <BlockedList /> },
 
           // Settings
           {
@@ -154,8 +151,7 @@ export const routes = createBrowserRouter([
               { path: 'matching-preferences', element: <MatchingPreferences /> },
               { path: 'interests', element: <TagsAndInterests /> }
             ]
-          },
-
+          }
         ]
       },
 
@@ -163,9 +159,7 @@ export const routes = createBrowserRouter([
       {
         path: 'chat',
         element: <ChatUI />,
-        children: [
-          { index: true, element: <ChatSidebar /> }
-        ]
+        children: [{ index: true, element: <ChatSidebar /> }]
       },
       // Fallback for unmatched /connect/* routes
       { path: '*', element: <PageNotFound redirectTo="/connect" /> }

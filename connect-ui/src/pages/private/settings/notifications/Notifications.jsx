@@ -6,7 +6,7 @@ import {
   Divider,
   FormControlLabel,
   Switch,
-  useTheme,
+  useTheme
 } from '@/MUI/MuiComponents';
 
 import {
@@ -14,7 +14,7 @@ import {
   MessageIcon,
   ReportIcon,
   PersonAddIcon,
-  BlockIcon,
+  BlockIcon
 } from '@/MUI/MuiIcons';
 
 import BlurWrapper from '@/components/common/BlurWrapper';
@@ -25,7 +25,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import {
   getSettingsNotification,
-  updateSettingsNotification,
+  updateSettingsNotification
 } from '@/redux/slices/settings/settingsAction';
 
 function Notifications() {
@@ -39,7 +39,7 @@ function Notifications() {
     newMessage: false,
     warningAlerts: false,
     friendRequest: false,
-    blockNotification: false,
+    blockNotification: false
   });
 
   // 1. Fetch settings from backend on mount
@@ -102,10 +102,7 @@ function Notifications() {
         >
           <FormControlLabel
             control={
-              <Switch
-                checked={notifSettings.newMatch}
-                onChange={() => handleToggle('newMatch')}
-              />
+              <Switch checked={notifSettings.newMatch} onChange={() => handleToggle('newMatch')} />
             }
             label="Enable match notifications"
           />

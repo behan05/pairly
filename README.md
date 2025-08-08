@@ -1,11 +1,11 @@
-![version](https://img.shields.io/badge/version-v1.0.0--beta-blue)
+![version](https://img.shields.io/badge/version-v0.1.0--beta-blue)
 
 ---
 
 # Random Real-Time Chat App
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
-[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](#contributing)
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](./contributing)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-blue.svg)
 ![Status](https://img.shields.io/badge/status-active-success)
 ![Made with React](https://img.shields.io/badge/Made%20with-React-61DAFB?logo=react)
@@ -19,7 +19,7 @@ A full-stack random real-time chat application that connects users anonymously f
 
 ---
 
-#### _Read this in in other languanges._
+#### _Read docs in other languanges._
 
 <kbd>[<img title="Bahasa Indonesia" alt="Bahasa Indonesia" src="https://cdn.statically.io/gh/hjnilsson/country-flags/master/svg/id.svg" width="22">](docs/translations/README.id.md)</kbd>
 <kbd>[<img title="Español" alt="Español" src="https://cdn.statically.io/gh/hjnilsson/country-flags/master/svg/es.svg" width="22">](docs/translations/README.es.md)

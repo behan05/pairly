@@ -14,6 +14,7 @@ const profileSchema = new mongoose.Schema({
     gender: String,
     shortBio: String,
     profileImage: String,
+    profileImagePublicId: String,
 
     lookingFor: String,
     preferredLanguage: String,

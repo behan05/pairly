@@ -8,11 +8,7 @@ import {
   IconButton,
   Tooltip
 } from '@/MUI/MuiComponents';
-import {
-  MenuIcon,
-  LockOpenIcon,
-  LockIcon,
-} from '@/MUI/MuiIcons';
+import { MenuIcon, LockOpenIcon, LockIcon } from '@/MUI/MuiIcons';
 import StyledButton from '../common/StyledButton';
 import { useSidebar } from '@/context/SidebarContext';
 import { Link } from 'react-router-dom';
@@ -74,7 +70,6 @@ function Navbar() {
           </Stack>
         ) : (
           <Box sx={{ display: 'flex', gap: 1 }}>
-            
             {/* === Bg Toggle Component === */}
             <BgToggle />
 

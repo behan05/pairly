@@ -4,7 +4,7 @@ const {
     getPrivateChatMessagesControllerById,
     sendPrivateChatMessageControllerById,
     deletePrivateChatWithUserControllerById
-} = require('../../controllers/chat/privateChatController')
+} = require('../../controllers/privateChatControllers/privateChatController')
 
 // middleware to identify user
 const authMiddleware = require('../../middlewares/authMiddleware');

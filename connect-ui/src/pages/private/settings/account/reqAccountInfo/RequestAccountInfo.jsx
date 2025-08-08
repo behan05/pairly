@@ -57,10 +57,7 @@ function RequestAccountInfo() {
       </Stack>
 
       {/* Form Box */}
-      <BlurWrapper
-        component={'form'}
-        onSubmit={handleRequest}
-      >
+      <BlurWrapper component={'form'} onSubmit={handleRequest}>
         <Stack spacing={3} alignItems="center">
           <Typography textAlign="center" variant="h5" fontWeight={600}>
             Account <StyledText text="Information" />

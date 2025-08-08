@@ -1,12 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  Box,
-  Stack,
-  Switch,
-  Typography,
-  Divider,
-  FormControlLabel,
-} from '@/MUI/MuiComponents';
+import { Box, Stack, Switch, Typography, Divider, FormControlLabel } from '@/MUI/MuiComponents';
 import {
   VisibilityIcon,
   TuneIcon,
@@ -46,7 +39,7 @@ function Privacy() {
   // Sync Redux state -> Local form state
   useEffect(() => {
     if (settingsData?.privacySettings) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         ...settingsData.privacySettings
       }));
@@ -73,7 +66,6 @@ function Privacy() {
     } catch (error) {
       toast.error(error?.message || 'Something went wrong');
     }
-
   };
 
   const Section = ({ icon, title, description, children }) => (

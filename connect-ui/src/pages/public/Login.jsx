@@ -206,7 +206,7 @@ function Login() {
             name="email"
             onChange={handleChange}
             value={form.email}
-            autoComplete='email'
+            autoComplete="email"
             fullWidth
             error={Boolean(error.email)}
             helperText={error.email}
@@ -218,7 +218,7 @@ function Login() {
             variant="outlined"
             label="Password"
             name="password"
-            autoComplete='current-password'
+            autoComplete="current-password"
             onChange={handleChange}
             value={form.password}
             fullWidth
@@ -250,7 +250,7 @@ function Login() {
 
           {/* Remember me checkbox and forgot password link */}
           <Stack direction="row" justifyContent="space-between" alignItems="center" flexWrap="wrap">
-            <FormControlLabel control={<Checkbox />} name='check box' label="Remember me" />
+            <FormControlLabel control={<Checkbox />} name="check box" label="Remember me" />
             <MuiLink
               component={Link}
               to="/forgot-password"
