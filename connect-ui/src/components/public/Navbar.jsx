@@ -15,8 +15,8 @@ import { Link } from 'react-router-dom';
 import BgToggle from './BgToggle';
 
 const navListBtn = [
-  { path: '/login', text: 'Login', icon: <LockOpenIcon /> },
-  { path: '/register', text: 'Unlock Access', icon: <LockIcon /> }
+  { path: '/login', text: 'Login', icon: <LockOpenIcon sx={{ color: 'success.main' }} /> },
+  { path: '/register', text: 'Unlock Access', icon: <LockIcon sx={{ color: 'success.main' }} /> }
 ];
 
 function Navbar() {
@@ -53,7 +53,7 @@ function Navbar() {
             src={'/logo.png'}
             alt="connect logo"
             aria-label="Connect logo"
-            maxWidth={isSm ? 79 : 80}
+            maxWidth={isSm ? 48 : 55}
             boxShadow={3}
           />
         </Stack>

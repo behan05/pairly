@@ -1,0 +1,23 @@
+{
+  "name": "connect",
+  "short_name": "connect",
+  "start_url": "/",
+  "display": "fullscreen",
+  "background_color": "#ffffff",
+  "theme_color": "#0c101aff",
+  "description": "Connect instantly with strangers worldwide through random chat.",
+  "categories": ["social", "communication"],
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
