@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, useTheme } from '@/MUI/MuiComponents';
+import { Button, Tooltip, useTheme } from '../MUI/MuiComponents';
 import { GetAppIcon } from '@/MUI/MuiIcons';
 
 export default function InstallPrompt() {
@@ -36,25 +36,36 @@ export default function InstallPrompt() {
     if (!visible) return null;
 
     return (
-        <Button
-            variant='outlined'
-            startIcon={<GetAppIcon sx={{ color: 'success.main' }} />}
-            sx={{
-                position: 'fixed',
-                bottom: 20,
-                right: 20,
-                padding: '10px 20px',
-                color: 'white',
-                border: 'none',
-                borderRadius: 4,
-                cursor: 'pointer',
-                background: theme.palette.background.paper,
-                zIndex: 1000,
-            }}
-            onClick={handleInstallClick}
-            aria-label="Install Connect App"
-        >
-            Install App
-        </Button>
+        <Tooltip title={'Add Connect to your device for a faster, app-like experience'}>
+            <Button
+                variant='outlined'
+                startIcon={<GetAppIcon sx={{ color: 'success.main' }} />}
+                sx={{
+                    position: 'fixed',
+                    bottom: 110,
+                    right: 10,
+                    px: { xs: 2, sm: 3 },
+                    py: { xs: 1, sm: 1 },
+                    background: 'transparent',
+                    backdropFilter: 'blur(14px)',
+                    border: 'none',
+                    borderRadius: 10,
+                    border: `1px solid ${theme.palette.divider}`,
+                    textTransform: 'none',
+                    color: 'primary.contrastText',
+                    letterSpacing: 0.2,
+                    textDecoration: 'none',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                        transform: 'translateY(-5px)'
+                    },
+                    zIndex: 1000,
+                }}
+                onClick={handleInstallClick}
+                aria-label="Install Connect App"
+            >
+                Install App
+            </Button>
+        </Tooltip>
     );
 }

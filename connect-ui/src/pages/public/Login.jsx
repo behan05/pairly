@@ -92,7 +92,13 @@ function Login() {
     // Toaster notifications
     if (response.success) {
       setIsDisabled(true);
-      toast.success('Login successfully!');
+      toast.success('Login successfully!', {
+        style: {
+          backdropFilter: 'blur(14px)',
+          background: theme.palette.divider,
+          color: theme.palette.text.primary,
+        }
+      });
       setTimeout(() => navigate('/connect'), 2000);
     } else {
       toast.error(response.message);
@@ -138,8 +144,6 @@ function Login() {
         py: isLg ? theme.spacing(3) : theme.spacing(10)
       }}
     >
-      {/* ToastContainer */}
-      <ToastContainer position="top-right" autoClose={2000} theme="colored" />
       {/* Left side content for larger screens */}
       {!isLg && (
         <Box flex={1}>

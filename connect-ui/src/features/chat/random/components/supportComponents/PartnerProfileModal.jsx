@@ -32,9 +32,10 @@ import {
 } from '@/MUI/MuiIcons';
 
 // components
-import BlurWrapper from '../../common/BlurWrapper';
-import StyledText from '../../common/StyledText';
+import BlurWrapper from '@/components/common/BlurWrapper';
+import StyledText from '@/components/common/StyledText';
 
+import { toast } from 'react-toastify';
 // Redux
 import { useSelector } from 'react-redux';
 
@@ -43,7 +44,8 @@ import { Country, State } from 'country-state-city';
 
 // custom textFormatting.
 import toCapitalCase from '@/utils/textFormatting';
-
+// socket instance
+import { socket } from '@/services/socket'
 /**
  * PartnerProfileModal Component
  *
@@ -67,6 +69,7 @@ function PartnerProfileModal({ open, onClose, partner }) {
 
   // Current user's profile data from Redux store
   const { profileData } = useSelector((state) => state.profile);
+  const { incomingRequest } = useSelector((state) => state.randomChat);
 
   // Close modal handler
   const handleProfileClose = () => {
@@ -188,6 +191,22 @@ function PartnerProfileModal({ open, onClose, partner }) {
       transform: 'scale(1.02)'
     }
   };
+
+  // handle friend request
+  const handleFriendRequest = () => {
+    setRequestingPrivateChat(true)
+    // Emiting parivate chat requesting.
+    socket.emit('privateChat:request');
+    if (!incomingRequest) {
+      toast.success('Private chat request sent. Awaiting partner approval.', {
+        style: {
+          backdropFilter: 'blur(14px)',
+          background: theme.palette.divider,
+          color: theme.palette.text.primary,
+        }
+      });
+    }
+  }
 
   return (
     <Box sx={{ px: isSm ? 2 : 3 }}>
@@ -333,7 +352,7 @@ function PartnerProfileModal({ open, onClose, partner }) {
                 color="primary"
                 endIcon={<SendIcon sx={{ color: 'text.secondary' }} />}
                 aria-label="Send Private Chat Request"
-                onClick={() => setRequestingPrivateChat(true)}
+                onClick={handleFriendRequest}
                 disabled={requestingPrivateChat}
                 sx={{
                   mt: 2,

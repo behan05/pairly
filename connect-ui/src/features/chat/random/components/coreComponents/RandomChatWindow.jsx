@@ -15,9 +15,9 @@ import { ArrowDropDownIcon, ForumRoundedIcon, DownloadIcon } from '@/MUI/MuiIcon
 // Custom Components
 import RandomChatHeader from './RandomChatHeader';
 import RandomMessageInput from './RandomMessageInput';
-import NextButton from './NextButton';
-import DisconnectButton from './DisconnectButton';
-import CountdownTimer from './CountdownTimer';
+import NextButton from '../supportComponents/NextButton';
+import DisconnectButton from '../supportComponents/DisconnectButton';
+import CountdownTimer from '../supportComponents/CountdownTimer';
 import StyledText from '@/components/common/StyledText';
 
 // Socket and Redux actions

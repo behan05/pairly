@@ -21,10 +21,10 @@ import {
   useMediaQuery,
   Paper
 } from '@/MUI/MuiComponents';
-import { BlockIcon, LockOpenIcon } from '@/MUI/MuiIcons';
+import { LockOpenIcon } from '@/MUI/MuiIcons';
 
 // components
-import ChatSidebarHeader from '../common/ChatSidebarHeader';
+import ChatSidebarHeader from './ChatSidebarHeader';
 
 // redux
 import { fetchBlockedUsers, unblockUser } from '@/redux/slices/moderation/blockUserAction';

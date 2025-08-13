@@ -46,7 +46,7 @@ import TagsAndInterests from '@/pages/private/profile/TagsAndInterests';
 
 // Random Chat
 import RandomChatLayout from '@/features/chat/random/RandomChatLayout';
-import RandomSidebar from '@/features/chat/random/components/RandomSidebar';
+import RandomSidebar from '@/features/chat/random/components/coreComponents/RandomSidebar';
 import BlockedList from '@/features/chat/common/BlockedList';
 
 // Chat History

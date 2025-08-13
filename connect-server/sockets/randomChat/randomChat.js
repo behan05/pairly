@@ -4,16 +4,24 @@
  */
 
 // Profile Model
-const Profile = require('../models/Profile.model');
+const Profile = require('../../models/Profile.model');
 
 // Message Storage
-const Conversation = require('../models/chat/Conversation.model')
-const Message = require('../models/chat/Message.model')
-const Block = require('../models/chat/Block.model');
+const Conversation = require('../../models/chat/Conversation.model')
+const Message = require('../../models/chat/Message.model')
+const Block = require('../../models/chat/Block.model');
+const PrivateChatRequest = require('../../models/chat/PrivateChatRequest.model');
 
 // utils properties
-const matchRandomUser = require('../utils/socket/matchRandomUser');
-const disconnectMatchedUser = require('../utils/socket/disconnectMatchedUser');
+const matchRandomUser = require('../../utils/socket/matchRandomUser');
+const disconnectMatchedUser = require('../../utils/socket/disconnectMatchedUser');
+
+// separate modules
+const requestHandler = require('./friendRequest/request');
+const acceptHandler = require('./friendRequest/accept');
+const rejectHandler = require('./friendRequest/reject');
+const cancelHandler = require('./friendRequest/cancel');
+const typingHandler = require('./typing/typingStatus');
 
 // waiting queue and map for socket id or socket store
 const waitingQueue = [];
@@ -116,22 +124,19 @@ function randomChatHandler(io, socket) {
     });
 
     // === Typing indicator: started ===
-    socket.on('random:typing', () => {
-        const partnerId = activeMatches.get(socket.id);
-        if (partnerId) {
-            const partnerSocket = io.sockets.sockets.get(partnerId);
-            partnerSocket?.emit('random:partner-typing', true);
-        }
-    });
+    typingHandler(io, socket, activeMatches)
 
-    // === Typing indicator: stopped ===
-    socket.on('random:stop-typing', () => {
-        const partnerId = activeMatches.get(socket.id);
-        if (partnerId) {
-            const partnerSocket = io.sockets.sockets.get(partnerId);
-            partnerSocket?.emit('random:partner-typing', false);
-        }
-    });
+    // === Friend Request Send ===
+    requestHandler(io, socket, Conversation, PrivateChatRequest, activeMatches);
+
+    // === Accepting the request ===
+    acceptHandler(io, socket, PrivateChatRequest);
+
+    // === Rejecting the request ===
+    rejectHandler(io, socket, PrivateChatRequest);
+
+    // === Cancel request ===
+    cancelHandler(io, socket, PrivateChatRequest);
 }
 
 module.exports = {

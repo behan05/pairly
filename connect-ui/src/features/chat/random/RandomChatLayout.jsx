@@ -1,8 +1,8 @@
 import { Box, Stack, useTheme, useMediaQuery } from '@/MUI/MuiComponents';
 import { Outlet } from 'react-router-dom';
-import RandomChatWindow from './components/RandomChatWindow';
+import RandomChatWindow from './components/coreComponents/RandomChatWindow';
 import RandomChatController from './RandomChatController';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 /**
  * RandomChatLayout component
@@ -16,6 +16,10 @@ function RandomChatLayout() {
   const theme = useTheme();
   const isMd = useMediaQuery('(max-width:936px)');
   const [showChatWindow, setShowChatWindow] = useState(false);
+
+  React.useEffect(() => {
+    document.title = 'Connect - Start a Random Chat';
+  }, []);
 
   return (
     <Box

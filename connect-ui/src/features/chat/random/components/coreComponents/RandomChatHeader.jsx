@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import {
   Avatar,
   Box,
@@ -15,6 +15,7 @@ import {
   MoreVertIcon,
   BlockIcon,
   ReportIcon,
+  HandshakeIcon,
   ContentCopyIcon,
   NotificationsOffIcon
 } from '@/MUI/MuiIcons';
@@ -22,19 +23,21 @@ import {
 // Components
 import TypingIndicator from '@/components/private/randomChat/TypingIndicator';
 import WaitingIndicator from '@/components/private/randomChat/WaitingIndicator';
-import PartnerProfileModal from '@/components/private/randomChat/PartnerProfileModal';
+import PartnerProfileModal from '../../components/supportComponents/PartnerProfileModal';
 import StyledText from '@/components/common/StyledText';
-import BlockUserModal from '../../common/BlockUserModal';
-import ReportUserModal from '../../common/ReportUserModal';
+import BlockUserModal from '../../../common/BlockUserModal';
+import ReportUserModal from '../../../common/ReportUserModal';
+import PrivateChatRequestPopupModal from '../supportComponents/PrivateChatRequestPopupModal';
 
 // Redux
 import { useSelector } from 'react-redux';
 // Country and State utilities
 import { Country, State } from 'country-state-city';
 // Toast notifications
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+// socket instance
+import { socket } from '@/services/socket';
 /**
  * RandomChatHeader component
  *
@@ -56,11 +59,12 @@ function RandomChatHeader() {
   const [openBlockDialog, setOpenBlockDialog] = useState(false);
   const [openReportDialog, setOpenReportDialog] = useState(false);
   const [openProfileModal, setOpenProfileModal] = useState(false);
+  const [isFriendRequestSend, setIsFriendRequestSend] = useState(false);
   const [anchorEl, setAnchorEl] = useState(false);
   const open = Boolean(anchorEl);
 
   // Redux state
-  const { partnerProfile, partnerId, partnerTyping } = useSelector((state) => state.randomChat);
+  const { partnerProfile, partnerId, partnerTyping, incomingRequest } = useSelector((state) => state.randomChat);
 
   /**
    * Opens menu
@@ -74,7 +78,13 @@ function RandomChatHeader() {
   /** Copy Partner Id */
   const copyPartnerId = () => {
     navigator.clipboard.writeText(partnerId);
-    toast.success('Partner ID copied!');
+    toast.success('Partner ID copied!', {
+      style: {
+        backdropFilter: 'blur(14px)',
+        background: theme.palette.divider,
+        color: theme.palette.text.primary,
+      }
+    });
   };
 
   /** Handle Report Partner */
@@ -85,6 +95,24 @@ function RandomChatHeader() {
   /** Handle Report Partner */
   const handleBlockPartner = () => {
     setOpenBlockDialog(true);
+  };
+
+  /** Handle Private Chat Request */
+  const handlePrivateChatRequest = () => {
+
+    // Emiting parivate chat requesting.
+    socket.emit('privateChat:request');
+    setIsFriendRequestSend(true)
+
+    if (!incomingRequest) {
+      toast.success('Private chat request sent. Awaiting partner approval.', {
+        style: {
+          backdropFilter: 'blur(14px)',
+          background: theme.palette.divider,
+          color: theme.palette.text.primary,
+        }
+      });
+    }
   };
 
   /**
@@ -107,6 +135,10 @@ function RandomChatHeader() {
         handleReportPartner();
         break;
 
+      case 'requestForPrivateChat':
+        handlePrivateChatRequest();
+        break;
+
       default:
         break;
     }
@@ -127,9 +159,9 @@ function RandomChatHeader() {
   const fullStateName = useMemo(() => {
     return partnerProfile?.location?.state
       ? State.getStateByCodeAndCountry(
-          partnerProfile.location.state,
-          partnerProfile.location.country
-        )?.name
+        partnerProfile.location.state,
+        partnerProfile.location.country
+      )?.name
       : '';
   }, [partnerProfile]);
 
@@ -226,6 +258,10 @@ function RandomChatHeader() {
               <ReportIcon fontSize="small" sx={{ mr: 1, color: 'warning.main' }} />
               Report
             </MenuItem>
+            <MenuItem disabled={isFriendRequestSend} onClick={() => handleAction('requestForPrivateChat')} sx={menuItemStyle}>
+              <HandshakeIcon fontSize="small" sx={{ mr: 1, color: 'info.main' }} />
+              {isFriendRequestSend ? 'Request Sent' : 'Add Friend'}
+            </MenuItem>
             <MenuItem onClick={() => handleAction('copyPartnerId')} sx={menuItemStyle}>
               <ContentCopyIcon fontSize="small" sx={{ mr: 1, color: 'success.main' }} />
               Copy Partner ID
@@ -258,6 +294,8 @@ function RandomChatHeader() {
         partner={partnerProfile}
         partnerId={partnerId}
       />
+
+      <PrivateChatRequestPopupModal />
     </Box>
   );
 }

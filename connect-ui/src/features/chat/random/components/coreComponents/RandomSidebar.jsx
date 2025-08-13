@@ -11,14 +11,14 @@ import {
 import { ArrowBackIcon } from '@/MUI/MuiIcons';
 
 // Components
-import ChatSidebarHeader from '@/features/chat/common/ChatSidebarHeader';
-import ConnectButton from './ConnectButton';
-import DisconnectButton from './DisconnectButton';
-import NextButton from './NextButton';
+import ChatSidebarHeader from '../../../common/ChatSidebarHeader';
+import ConnectButton from '../supportComponents/ConnectButton';
+import DisconnectButton from '../supportComponents/DisconnectButton';
+import NextButton from '../supportComponents/NextButton';
 import StyledText from '@/components/common/StyledText';
 import SettingsAction from '@/components/private/SettingsAction';
-import CountdownTimer from './CountdownTimer';
-import RandomLandingLottie from '@/components/private/randomChat/RandomLandingPageLottie';
+import CountdownTimer from '../supportComponents/CountdownTimer';
+import RandomLandingLottie from '../supportComponents/RandomLandingPageLottie';
 
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
