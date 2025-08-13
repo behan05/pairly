@@ -5,7 +5,7 @@ import {
   setIsBlocking,
   setModerationError,
   clearBlockedState
-} from '../moderation/moderationSlice';
+} from './moderationSlice';
 import { BLOCK_API } from '@/api/config';
 import axios from 'axios';
 

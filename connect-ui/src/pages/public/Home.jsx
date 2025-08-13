@@ -42,7 +42,7 @@ import ReusableVideo from '@/components/public/ReusableVideo';
 
 function Home() {
   React.useEffect(() => {
-    document.title = 'Connect - Random Chat Only';
+    document.title = 'Connect - The heart of the strangers';
   }, []);
 
   const features = [

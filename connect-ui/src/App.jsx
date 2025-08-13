@@ -14,7 +14,7 @@ function App() {
 
   return (
     <>
-      <ToastContainer position="top-right" autoClose={1000} theme="colored" />
+      <ToastContainer draggable position="top-right" autoClose={1000} theme="colored" />
       <InstallPrompt />
       {initialising ? <Initialising /> : <RouterProvider router={routes} />}
     </>

@@ -15,7 +15,11 @@ import {
   clearMessages,
   setPartnerProfile,
   setWaiting,
-  setPartnerTyping
+  setPartnerTyping,
+  setIncomingRequest,
+  clearIncomingRequest,
+  setOutgoingRequest,
+  clearOutgoingRequest
 } from '@/redux/slices/chat/randomChatSlice';
 
 /**
@@ -80,10 +84,9 @@ const RandomChatController = () => {
       dispatch(setWaiting(false));
     });
 
-    // Handle socket errors (removed debug console.log)
+    // Handle socket errors
     socket.on('random:error', ({ message }) => {
-      // Error handling can be added here
-      console.log(message);
+      // Error prompt will added later..
     });
 
     socket.on('random:disconnected', () => {
@@ -102,6 +105,30 @@ const RandomChatController = () => {
       dispatch(clearMessages());
     });
 
+    // Friend Request events
+    socket.on('privateChat:requestReceived', (data) => {
+      dispatch(setIncomingRequest({
+        requestId: data.requestId,
+        from: data.from,
+        status: data.status,
+        createdAt: data.createdAt
+      }));
+    });
+
+    socket.on('privateChat:requestAccepted', () => {
+      dispatch(setOutgoingRequest({
+        message: 'Request Accepted'
+      }))
+    });
+
+    socket.on('privateChat:requestReject', () => {
+      dispatch(clearOutgoingRequest());
+    });
+
+    socket.on('privateChat:requestCancel', () => {
+      dispatch(clearIncomingRequest())
+    });
+
     // Cleanup socket listeners and reset chat state on unmount
     return () => {
       socket.off('random:waiting');
@@ -113,6 +140,10 @@ const RandomChatController = () => {
       socket.off('random:error');
       socket.off('random:disconnected');
       socket.off('random:ended');
+      socket.off('privateChat:requestReceived');
+      socket.off('privateChat:requestAccepted');
+      socket.off('privateChat:requestReject');
+      socket.off('privateChat:requestCancel');
       dispatch(resetRandomChat());
     };
   }, [dispatch]);

@@ -128,7 +128,13 @@ function Signup() {
 
     // Toaster notifications
     if (response.success) {
-      toast.success('Account created successfully!');
+      toast.success('Account created successfully!', {
+        style: {
+          backdropFilter: 'blur(14px)',
+          background: theme.palette.divider,
+          color: theme.palette.text.primary,
+        }
+      });
       setTimeout(() => navigate('/login'), 1000);
     } else {
       toast.error(response.message || 'Signup failed!');
@@ -173,9 +179,6 @@ function Signup() {
         py: isLg ? theme.spacing(3) : theme.spacing(10)
       }}
     >
-      {/* Toast Message Container */}
-      <ToastContainer position="top-right" autoClose={1000} theme="colored" />
-
       {!isLg && (
         <Box flex={1}>
           <Typography

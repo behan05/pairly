@@ -133,6 +133,7 @@ import InterestsOutlinedIcon from '@mui/icons-material/InterestsOutlined';
 import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 import Diversity3OutlinedIcon from '@mui/icons-material/Diversity3Outlined';
 import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined';
+import HandshakeIcon from '@mui/icons-material/Handshake';
 
 // ==================== Export All ====================
 export {
@@ -165,6 +166,7 @@ export {
   ShuffleIcon,
   SmsIcon,
   AttachFileIcon,
+  HandshakeIcon,
 
   // Media Controls
   MicIcon,

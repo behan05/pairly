@@ -12,7 +12,7 @@ import {
   Avatar
 } from '@/MUI/MuiComponents';
 import {
-  FavoriteBorderIcon,
+  PersonAddIcon,
   PersonIcon,
   LogoutIcon,
   HelpOutlineIcon,
@@ -27,7 +27,7 @@ import StyledText from '@/components/common/StyledText';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@/redux/slices/auth/authAction';
 import { getProfile } from '@/redux/slices/profile/profileAction';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const ChatSidebarHeader = ({ children }) => {
@@ -46,7 +46,7 @@ const ChatSidebarHeader = ({ children }) => {
   const navItems = [
     {
       path: '/connect',
-      icon: <ShuffleIcon sx={{ color: theme.palette.info.main }} />, // Shuffle icon fits the "random" idea
+      icon: <ShuffleIcon sx={{ color: theme.palette.info.main }} />,
       label: 'Random Chat'
     },
     {
@@ -56,8 +56,8 @@ const ChatSidebarHeader = ({ children }) => {
     },
     {
       path: '/connect/favorites',
-      icon: <FavoriteBorderIcon sx={{ color: theme.palette.warning.main }} />,
-      label: 'Favorites'
+      icon: <PersonAddIcon sx={{ color: theme.palette.success.main }} />,
+      label: 'Request Pending'
     },
     {
       path: '/connect/blocked-users',
@@ -107,7 +107,6 @@ const ChatSidebarHeader = ({ children }) => {
         WebkitBackdropFilter: 'blur(4px)'
       }}
     >
-      <ToastContainer position="top-center" autoClose={1000} theme="colored" />
 
       {/* Header */}
       <Stack direction="row" justifyContent="space-between" alignItems="center">

@@ -19,7 +19,7 @@ A full-stack random real-time chat application that connects users anonymously f
 
 ---
 
-#### _Read docs in other languanges._
+#### _Read docs in other languages._
 
 <kbd>[<img title="Bahasa Indonesia" alt="Bahasa Indonesia" src="https://cdn.statically.io/gh/hjnilsson/country-flags/master/svg/id.svg" width="22">](docs/translations/README.id.md)</kbd>
 <kbd>[<img title="Español" alt="Español" src="https://cdn.statically.io/gh/hjnilsson/country-flags/master/svg/es.svg" width="22">](docs/translations/README.es.md)

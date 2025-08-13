@@ -1,10 +1,7 @@
 const { Server } = require('socket.io');
-const privateChatHandler = require('./privateChat');
+const privateChatHandler = require('./privateChat/privateChat');
 const verifyToken = require('../utils/socket/verifyToken');
-const Message = require('../models/chat/Message.model');
-const Conversation = require('../models/chat/Conversation.model');
-const disconnectMatchedUser = require('../utils/socket/disconnectMatchedUser');
-const { randomChatHandler, waitingQueue, activeMatches } = require('./randomChat')
+const { randomChatHandler } = require('./randomChat/randomChat')
 
 /**
  * Initializes and configures the Socket.IO server.
@@ -62,7 +59,6 @@ function setupSocket(server) {
         // Handle disconnection
         socket.on('disconnect', async () => {
             console.log('User disconnected:', socket.id);
-            // await disconnectMatchedUser(socket, io, activeMatches, waitingQueue, Conversation, Message);
         });
     });
 }

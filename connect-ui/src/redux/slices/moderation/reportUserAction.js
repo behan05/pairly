@@ -3,7 +3,7 @@ import {
   setModerationError,
   setReportingDone,
   setIsReporting
-} from '../moderation/moderationSlice';
+} from './moderationSlice';
 import { REPORT_API } from '@/api/config';
 import axios from 'axios';
 
