@@ -20,6 +20,7 @@ const privateChatRoutes = require('./routers/chat/privateChatRoutes');
 const randomChatRoutes = require('./routers/chat/randomChatRoutes');
 const blockRoutes = require('./routers/chat/blockRoutes');
 const reportRoutes = require('./routers/chat/reportRoutes');
+const friendRequestRoutes = require('./routers/chat/friendRequestRoutes');
 
 // ==========================
 // App Configuration
@@ -58,6 +59,7 @@ app.use('/api/private-chat', privateChatRoutes);
 app.use('/api/random-chat', randomChatRoutes);
 app.use('/api/random-block', blockRoutes);
 app.use('/api/random-report', reportRoutes);
+app.use('/api/friend-request', friendRequestRoutes)
 
 // ==========================
 // Health Check Route

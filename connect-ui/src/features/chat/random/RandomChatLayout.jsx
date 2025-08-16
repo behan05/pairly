@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import RandomChatWindow from './components/coreComponents/RandomChatWindow';
 import RandomChatController from './RandomChatController';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 /**
  * RandomChatLayout component
@@ -16,10 +17,12 @@ function RandomChatLayout() {
   const theme = useTheme();
   const isMd = useMediaQuery('(max-width:936px)');
   const [showChatWindow, setShowChatWindow] = useState(false);
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
     document.title = 'Connect - Start a Random Chat';
-  }, []);
+
+  }, [dispatch]);
 
   return (
     <Box

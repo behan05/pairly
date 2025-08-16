@@ -16,10 +16,6 @@ const initialState = {
   partnerId: null,
   partnerProfile: null,
   messages: [],
-
-  // new for private chat requests
-  incomingRequest: null,
-  outgoingRequest: null,
 };
 
 /**
@@ -70,22 +66,6 @@ const randomChatSlice = createSlice({
     },
     // Reset all random chat state to initial
     resetRandomChat: () => ({ ...initialState }),
-
-    // Incoming friend request
-    setIncomingRequest: (state, action) => {
-      state.incomingRequest = action.payload;
-    },
-    clearIncomingRequest: (state) => {
-      state.incomingRequest = null;
-    },
-
-    // Outgoing friend request
-    setOutgoingRequest: (state, action) => {
-      state.outgoingRequest = action.payload;
-    },
-    clearOutgoingRequest: (state) => {
-      state.outgoingRequest = null;
-    },
   }
 
 });
@@ -100,10 +80,6 @@ export const {
   resetRandomChat,
   setPartnerProfile,
   setPartnerTyping,
-  setIncomingRequest,
-  clearIncomingRequest,
-  setOutgoingRequest,
-  clearOutgoingRequest
 } = randomChatSlice.actions;
 
 // Export reducer for store

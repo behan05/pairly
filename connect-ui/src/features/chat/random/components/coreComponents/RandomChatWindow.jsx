@@ -22,7 +22,7 @@ import StyledText from '@/components/common/StyledText';
 
 // Socket and Redux actions
 import { socket } from '@/services/socket';
-import { resetRandomChat } from '@/redux/slices/chat/randomChatSlice';
+import { resetRandomChat } from '@/redux/slices/randomChat/randomChatSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 // Styled components

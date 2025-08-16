@@ -38,7 +38,7 @@ const moderationSlice = createSlice({
       state.error = null;
     },
 
-    setIsReporting: (state, action) => {
+    setIsReporting: (state) => {
       state.isReporting = true;
       state.error = null;
     },

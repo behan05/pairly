@@ -16,11 +16,13 @@ import {
   setPartnerProfile,
   setWaiting,
   setPartnerTyping,
+} from '@/redux/slices/randomChat/randomChatSlice';
+import {
   setIncomingRequest,
   clearIncomingRequest,
   setOutgoingRequest,
-  clearOutgoingRequest
-} from '@/redux/slices/chat/randomChatSlice';
+  clearOutgoingRequest,
+} from '@/redux/slices/randomChat/friendRequestSlice';
 
 /**
  * RandomController component
@@ -105,7 +107,7 @@ const RandomChatController = () => {
       dispatch(clearMessages());
     });
 
-    // Friend Request events
+    // Friend request events
     socket.on('privateChat:requestReceived', (data) => {
       dispatch(setIncomingRequest({
         requestId: data.requestId,
@@ -115,17 +117,21 @@ const RandomChatController = () => {
       }));
     });
 
-    socket.on('privateChat:requestAccepted', () => {
+    socket.on('privateChat:requestAccepted', (data) => {
       dispatch(setOutgoingRequest({
-        message: 'Request Accepted'
-      }))
+        requestId: data._id,
+        from: data.from,
+        to: data.to,
+        status: data.status,
+        updatedAt: data.updatedAt
+      }));
     });
 
     socket.on('privateChat:requestReject', () => {
       dispatch(clearOutgoingRequest());
     });
 
-    socket.on('privateChat:requestCancel', () => {
+    socket.on('privateChat:requestCancelled', () => {
       dispatch(clearIncomingRequest())
     });
 

@@ -29,7 +29,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // Redux and Socket
 import { useDispatch, useSelector } from 'react-redux';
-import { addMessage } from '@/redux/slices/chat/randomChatSlice';
+import { addMessage } from '@/redux/slices/randomChat/randomChatSlice';
 import { socket } from '@/services/socket';
 
 // Axios for media upload and API calls

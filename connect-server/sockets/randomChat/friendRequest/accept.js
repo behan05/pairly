@@ -6,8 +6,8 @@ async function acceptHandler(io, socket, PrivateChatRequest) {
             // Find pending request for this user
             const request = await PrivateChatRequest.findOne({
                 $or: [
-                    { from: currentUserId, status: 'pending' },
-                    { to: currentUserId, status: 'pending' }
+                    { from: currentUserId, status: { $in: ['pending', 'cancelled'] } },
+                    { to: currentUserId, status: { $in: ['pending', 'cancelled'] } }
                 ]
             });
 

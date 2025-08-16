@@ -23,7 +23,7 @@ import RandomLandingLottie from '../supportComponents/RandomLandingPageLottie';
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '@/services/socket';
-import { resetRandomChat, setWaiting } from '@/redux/slices/chat/randomChatSlice';
+import { resetRandomChat, setWaiting } from '@/redux/slices/randomChat/randomChatSlice';
 import { useOutletContext } from 'react-router-dom';
 
 /**

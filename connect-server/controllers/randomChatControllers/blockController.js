@@ -37,10 +37,10 @@ exports.getBlockedUsersController = async (req, res) => {
         });
 
         // If user hasn't blocked anyone
-        if (blocksByUser.length === 0) {
+        if (!blocksByUser.length) {
             return res.status(404).json({
-                message: "You haven't blocked any users.",
-                success: true
+                success: true,
+                blockedUsers: [],
             });
         }
 
@@ -57,7 +57,6 @@ exports.getBlockedUsersController = async (req, res) => {
                     profileImage: blockedProfile?.profileImage,
                     fullName: blockedProfile?.fullName,
                     blockedAt: block?.blockedAt?.toISOString(),
-                    reason: block?.reason || block.customReason,
                 };
             })
         );

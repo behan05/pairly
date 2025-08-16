@@ -9,7 +9,8 @@ import {
   Typography,
   Divider,
   useTheme,
-  Avatar
+  Avatar,
+  Badge
 } from '@/MUI/MuiComponents';
 import {
   PersonAddIcon,
@@ -20,7 +21,8 @@ import {
   BlockIcon,
   ChatIcon,
   ShareIcon,
-  ShuffleIcon
+  ShuffleIcon,
+  defaultAvatar
 } from '@/MUI/MuiIcons';
 import { NavLink, useNavigate } from 'react-router-dom';
 import StyledText from '@/components/common/StyledText';
@@ -30,10 +32,15 @@ import { getProfile } from '@/redux/slices/profile/profileAction';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// friend request selector
+import { fetchFriendRequests } from '@/redux/slices/randomChat/friendRequestAction';
+import { pendingFriendRequestCount } from '@/redux/slices/randomChat/friendRequestSlice'
+
 const ChatSidebarHeader = ({ children }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { profileData } = useSelector((state) => state.profile);
+  const pendingCount = useSelector(pendingFriendRequestCount);
   const theme = useTheme();
 
   const [menuAnchorEl, setMenuAnchorEl] = React.useState(null);
@@ -41,6 +48,7 @@ const ChatSidebarHeader = ({ children }) => {
 
   useEffect(() => {
     dispatch(getProfile());
+    dispatch(fetchFriendRequests());
   }, [dispatch]);
 
   const navItems = [
@@ -52,12 +60,16 @@ const ChatSidebarHeader = ({ children }) => {
     {
       path: '/connect/chat',
       icon: <ChatIcon sx={{ color: theme.palette.text.primary }} />,
-      label: 'Chat'
+      label: 'Private Chat'
     },
     {
-      path: '/connect/favorites',
-      icon: <PersonAddIcon sx={{ color: theme.palette.success.main }} />,
-      label: 'Request Pending'
+      path: '/connect/friend-requests',
+      icon: (
+        <Badge badgeContent={pendingCount} color="error" invisible={pendingCount === 0}>
+          <PersonAddIcon sx={{ color: theme.palette.success.main }} />
+        </Badge>
+      ),
+      label: 'Friend Requests'
     },
     {
       path: '/connect/blocked-users',
@@ -125,7 +137,7 @@ const ChatSidebarHeader = ({ children }) => {
           ))}
           <Tooltip title="Menu" arrow>
             <Avatar
-              src={profileData?.profileImage}
+              src={profileData?.profileImage || defaultAvatar}
               alt="user profile with dropdown menu"
               onClick={(e) => setMenuAnchorEl(e.currentTarget)}
               sx={{

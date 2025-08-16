@@ -19,8 +19,9 @@ import StyledText from '@/components/common/StyledText';
 import defaultAvatar from '@/assets/placeholders/defaultAvatar.png'
 
 // Redux
+import { fetchFriendRequests } from '@/redux/slices/randomChat/friendRequestAction';
 import { useSelector, useDispatch } from 'react-redux';
-import { setIncomingRequest } from '@/redux/slices/chat/randomChatSlice';
+import { setIncomingRequest } from '@/redux/slices/randomChat/friendRequestSlice';;
 import { socket } from '@/services/socket';
 
 // utils
@@ -32,7 +33,8 @@ function PrivateChatRequestPopupModal() {
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
     // Get incoming request from Redux
-    const { incomingRequest, partnerProfile, partnerId, outgoingRequest } = useSelector((state) => state.randomChat);
+    const { partnerProfile, partnerId } = useSelector((state) => state.randomChat);
+    const { incomingRequest } = useSelector((state) => state.friendRequest);
 
     const handleClose = () => {
         dispatch(setIncomingRequest(null));
@@ -41,18 +43,21 @@ function PrivateChatRequestPopupModal() {
     if (!incomingRequest) return null;
 
     const handleAccept = () => {
-        socket.emit('privateChat:accept');
+        socket.emit('privateChat:accept', { partnerId });
         dispatch(setIncomingRequest(null));
+        dispatch(fetchFriendRequests());
     };
 
     const handleReject = () => {
         socket.emit('privateChat:reject', { partnerId });
         dispatch(setIncomingRequest(null));
+        dispatch(fetchFriendRequests());
     };
 
     const handleCancel = () => {
-        socket.emit('privateChat:cancel');
+        socket.emit('privateChat:cancel', { partnerId });
         dispatch(setIncomingRequest(null));
+        dispatch(fetchFriendRequests());
     };
 
     const commonBtnStyle = {
@@ -85,7 +90,7 @@ function PrivateChatRequestPopupModal() {
                 width: '100%',
             }}>
                 <Typography variant="body2" textAlign='center' color="textSecondary">
-                    {<StyledText text={partnerProfile.fullName || 'unknown'} />}{' '}wants to start a private chat with you.
+                    {<StyledText text={partnerProfile?.fullName ?? 'unknown'} />}{' '}wants to start a private chat with you.
                 </Typography>
                 <Stack sx={{
                     display: 'flex',
@@ -118,7 +123,7 @@ function PrivateChatRequestPopupModal() {
                             {partnerProfile?.fullName}
                         </Typography>
                         <Typography variant='body1' gutterBottom>
-                            {partnerProfile?.age || 18} {toCapitalCase(partnerProfile?.gender)}
+                            {partnerProfile?.age ?? 18} {toCapitalCase(partnerProfile?.gender)}
                         </Typography>
                     </Stack>
                 </Stack>

@@ -36,8 +36,8 @@ async function requestHandler(io, socket, Conversation, PrivateChatRequest, acti
 
             const existing = await PrivateChatRequest.findOne({
                 $or: [
-                    { from: currentUserId, to: partnerUserId, status: 'pending' },
-                    { from: partnerUserId, to: currentUserId, status: 'pending' },
+                    { from: currentUserId, to: partnerUserId, status: { $in: ['pending', 'accepted', 'cancelled'] } },
+                    { from: partnerUserId, to: currentUserId, status: { $in: ['pending', 'accepted', 'cancelled'] } },
                 ],
             });
 
@@ -45,7 +45,7 @@ async function requestHandler(io, socket, Conversation, PrivateChatRequest, acti
                 socket.emit('random:error', { message: 'A request is already pending.' });
                 return;
             }
-            
+
             const THIRTY_DAYS = 1000 * 60 * 60 * 24 * 30;
             // Create or update (upsert) request
             const request = await PrivateChatRequest.findOneAndUpdate(
@@ -68,7 +68,7 @@ async function requestHandler(io, socket, Conversation, PrivateChatRequest, acti
             );
 
             partnerSocket.emit('privateChat:requestReceived', {
-                requestId: partnerUserId,
+                requestId: request._id,
                 from: currentUserId,
                 status: 'pending',
                 createdAt: request.createdAt
