@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Button, Tooltip, useTheme } from '../MUI/MuiComponents';
 import { GetAppIcon } from '@/MUI/MuiIcons';
+import { useSelector } from 'react-redux';
 
 export default function InstallPrompt() {
     const [deferredPrompt, setDeferredPrompt] = useState(null);
     const [visible, setVisible] = useState(false);
     const theme = useTheme();
+    const { connected } = useSelector(state => state.randomChat);
 
     useEffect(() => {
         function handleBeforeInstallPrompt(e) {
@@ -42,21 +44,21 @@ export default function InstallPrompt() {
                 startIcon={<GetAppIcon sx={{ color: 'success.main' }} />}
                 sx={{
                     position: 'fixed',
-                    bottom: 110,
-                    right: 10,
-                    px: { xs: 2, sm: 3 },
-                    py: { xs: 1, sm: 1 },
+                    bottom: 115,
+                    right: 40,
+                    display: connected && 'none',
                     background: 'transparent',
                     backdropFilter: 'blur(14px)',
-                    border: 'none',
-                    borderRadius: 10,
-                    border: `1px solid ${theme.palette.divider}`,
-                    textTransform: 'none',
-                    color: 'primary.contrastText',
-                    letterSpacing: 0.2,
-                    textDecoration: 'none',
+                    color: theme.palette.text.secondary,
+                    borderColor: theme.palette.divider,
                     transition: 'all 0.3s ease',
+                    '&:focus': {
+                        outline: 'none',
+                        boxShadow: `0 0 0 2px ${theme.palette.primary.main}`
+                    },
                     '&:hover': {
+                        background: theme.palette.action.hover,
+                        color: theme.palette.text.primary,
                         transform: 'translateY(-5px)'
                     },
                     zIndex: 1000,

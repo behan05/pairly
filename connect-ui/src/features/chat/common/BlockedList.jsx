@@ -1,27 +1,19 @@
-/**
- * @file BlockedList.jsx
- * @description
- * A visually enhanced BlockedList component for displaying and managing blocked users.
- * Users can view blocked profiles with details and easily unblock them.
- */
-
 import { useEffect } from 'react';
 import {
   Box,
   Stack,
   Button,
   Typography,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Avatar,
-  Divider,
+  Tooltip,
+  IconButton,
+  CircularProgress,
   useTheme,
-  useMediaQuery,
-  Paper
+  useMediaQuery
 } from '@/MUI/MuiComponents';
-import { LockOpenIcon } from '@/MUI/MuiIcons';
+import {
+  LockOpenIcon,
+  defaultAvatar,
+} from '@/MUI/MuiIcons';
 
 // components
 import ChatSidebarHeader from './ChatSidebarHeader';
@@ -30,14 +22,11 @@ import ChatSidebarHeader from './ChatSidebarHeader';
 import { fetchBlockedUsers, unblockUser } from '@/redux/slices/moderation/blockUserAction';
 import { useDispatch, useSelector } from 'react-redux';
 
-// Toast notifications
-import { toast } from 'react-toastify';
-
 function BlockedList() {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const dispatch = useDispatch();
-  const { blockedUsers } = useSelector((state) => state.moderation);
+  const { blockedUsers, isBlocking } = useSelector((state) => state.moderation);
 
   useEffect(() => {
     document.title = 'Connect - Blocked Users';
@@ -53,82 +42,101 @@ function BlockedList() {
 
     const result = await dispatch(unblockUser(userId));
     if (result?.success) {
-      toast.success('User unblocked successfully');
       dispatch(fetchBlockedUsers());
     }
   };
 
   return (
-    <Box sx={{ px: 2, pb: 2 }}>
+    <Box sx={{ px: 2, pb: 2, overflowY: 'auto' }}>
       <ChatSidebarHeader />
+
+      {isBlocking && (
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <CircularProgress size={18} />
+          <Typography variant="body2" color="text.secondary">
+            Loading blocked users...
+          </Typography>
+        </Stack>
+      )}
 
       {blockedUsers.length === 0 ? (
         <Typography variant="body1" color="text.secondary" sx={{ mt: 3, textAlign: 'center' }}>
           You have not blocked any users yet.
         </Typography>
       ) : (
-        <Paper
-          elevation={0}
-          sx={{
-            borderRadius: 2,
-            overflow: 'hidden',
-            border: `1px solid ${theme.palette.divider}`,
-            background: theme.palette.background.paper
-          }}
-        >
-          <List disablePadding>
-            {blockedUsers.map((blockUser, index) => (
-              <Box key={index}>
-                <ListItem>
-                  <ListItemAvatar>
-                    <Avatar
-                      src={blockUser?.profileImage}
-                      alt={blockUser?.fullName}
-                      sx={{
-                        border: `2px solid ${theme.palette.error.main}`
-                      }}
-                    />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <Typography variant="subtitle1" fontWeight={600}>
-                        {blockUser?.fullName}
-                      </Typography>
-                    }
-                    secondary={
-                      <Stack spacing={0.5}>
-                        {blockUser.reason && (
-                          <Typography variant="body2" color="text.secondary">
-                            Reason: {blockUser.reason}
-                          </Typography>
-                        )}
-                        <Typography variant="caption" color="text.disabled" gutterBottom>
-                          Blocked on{' '}
-                          {new Date(blockUser.blockedAt).toLocaleDateString([], {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: '2-digit'
-                          })}
-                        </Typography>
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          startIcon={<LockOpenIcon />}
-                          color="success"
-                          onClick={() => handleUnblock(blockUser.blockedUserId)}
-                          sx={{ maxWidth: 'fit-content' }}
-                        >
-                          Unblock
-                        </Button>
-                      </Stack>
-                    }
+        <Box>
+          {blockedUsers.map((user, index) => (
+            <Stack
+              key={index}
+              sx={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                border: `1px solid ${theme.palette.divider}`,
+                boxShadow: `inset 0 0 0.2rem ${theme.palette.divider}`,
+                borderRadius: 0.5,
+                p: 1,
+                mb: index !== blockedUsers.length - 1 ? 1 : 0
+              }}
+            >
+              <Stack sx={{ flexDirection: 'row', gap: 2 }}>
+                <Tooltip title={user?.fullName}>
+                  <Stack
+                    component={'img'}
+                    src={user?.profileImage || defaultAvatar}
+                    alt={user?.fullName + ' profile image'}
+                    maxWidth={35}
+                    sx={{
+                      objectFit: 'cover',
+                      borderRadius: 0.5
+                    }}
                   />
-                </ListItem>
-                {index < blockedUsers.length - 1 && <Divider />}
-              </Box>
-            ))}
-          </List>
-        </Paper>
+                </Tooltip>
+
+                <Stack>
+                  <Typography
+                    variant={isSm ? 'body2' : 'body1'}
+                    sx={{ fontSize: isSm ? '14px' : 'initial' }}
+                  >
+                    {user?.fullName}
+                  </Typography>
+                  <Typography
+                    variant='body2'
+                    color={'text.secondary'}
+                    sx={{
+                      fontSize: isSm ? '14px' : 'inital'
+                    }}
+                  >
+                    Blocked on{' '}
+                    {new Date(user.blockedAt).toLocaleDateString([], {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: '2-digit'
+                    })}
+                  </Typography>
+                </Stack>
+              </Stack>
+
+              {isSm ? (
+                <Tooltip title="Unblock User">
+                  <IconButton color="success" onClick={() => handleUnblock(user.blockedUserId)}>
+                    <LockOpenIcon />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <Button
+                  variant="outlined"
+                  color="success"
+                  sx={{ fontSize: isSm ? '14px' : 'initial' }}
+                  startIcon={<LockOpenIcon />}
+                  onClick={() => handleUnblock(user.blockedUserId)}
+                >
+                  Unblock
+                </Button>
+              )}
+            </Stack>
+          ))}
+        </Box>
       )}
     </Box>
   );

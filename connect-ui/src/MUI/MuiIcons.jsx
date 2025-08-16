@@ -139,7 +139,7 @@ import HandshakeIcon from '@mui/icons-material/Handshake';
 export {
   // Navigation & Layout
   ArrowBackIcon,
-  CheckCircleOutlineIcon,
+  CheckCircleIcon,
   CloseIcon,
   MenuIcon,
   ShareIcon,
@@ -195,9 +195,9 @@ export {
   GetAppIcon,
 
   // Status Feedback
-  CheckCircleIcon,
   ErrorOutlineIcon,
-
+  CheckCircleOutlineIcon,
+  
   // User Profile
   PersonAddIcon,
   PersonIcon,

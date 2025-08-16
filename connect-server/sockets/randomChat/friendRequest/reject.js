@@ -15,8 +15,8 @@ async function rejectHandler(io, socket, PrivateChatRequest) {
             if (!partnerUserId) {
                 const pendingRequest = await PrivateChatRequest.findOne({
                     $or: [
-                        { from: currentUserId, status: 'pending' },
-                        { to: currentUserId, status: 'pending' }
+                        { from: currentUserId, status: { $in: ['pending', 'cancelled'] } },
+                        { to: currentUserId, status: { $in: ['pending', 'cancelled'] } }
                     ]
                 });
 
@@ -34,8 +34,8 @@ async function rejectHandler(io, socket, PrivateChatRequest) {
             // Find and update request
             const request = await PrivateChatRequest.findOne({
                 $or: [
-                    { from: currentUserId, to: partnerUserId, status: 'pending' },
-                    { from: partnerUserId, to: currentUserId, status: 'pending' }
+                    { from: currentUserId, to: partnerUserId, status: { $in: ['pending', 'cancelled'] } },
+                    { from: partnerUserId, to: currentUserId, status: { $in: ['pending', 'cancelled'] } }
                 ]
             });
 

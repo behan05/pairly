@@ -48,6 +48,7 @@ import TagsAndInterests from '@/pages/private/profile/TagsAndInterests';
 import RandomChatLayout from '@/features/chat/random/RandomChatLayout';
 import RandomSidebar from '@/features/chat/random/components/coreComponents/RandomSidebar';
 import BlockedList from '@/features/chat/common/BlockedList';
+import FriendRequestList from '@/features/chat/random/components/supportComponents/FriendRequestList';
 
 // Chat History
 import ChatSidebar from '@/pages/private/connect/normal/ChatSidebar';
@@ -88,6 +89,7 @@ export const routes = createBrowserRouter([
           // Default view at /connect
           { index: true, element: <RandomSidebar /> },
           { path: 'blocked-users', element: <BlockedList /> },
+          { path: 'friend-requests', element: <FriendRequestList /> },
 
           // Settings
           {

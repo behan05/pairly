@@ -17,7 +17,8 @@ import {
   ReportIcon,
   HandshakeIcon,
   ContentCopyIcon,
-  NotificationsOffIcon
+  NotificationsOffIcon,
+  defaultAvatar,
 } from '@/MUI/MuiIcons';
 
 // Components
@@ -64,7 +65,7 @@ function RandomChatHeader() {
   const open = Boolean(anchorEl);
 
   // Redux state
-  const { partnerProfile, partnerId, partnerTyping, incomingRequest } = useSelector((state) => state.randomChat);
+  const { partnerProfile, partnerId, partnerTyping } = useSelector((state) => state.randomChat);
 
   /**
    * Opens menu
@@ -103,16 +104,6 @@ function RandomChatHeader() {
     // Emiting parivate chat requesting.
     socket.emit('privateChat:request');
     setIsFriendRequestSend(true)
-
-    if (!incomingRequest) {
-      toast.success('Private chat request sent. Awaiting partner approval.', {
-        style: {
-          backdropFilter: 'blur(14px)',
-          background: theme.palette.divider,
-          color: theme.palette.text.primary,
-        }
-      });
-    }
   };
 
   /**
@@ -197,14 +188,14 @@ function RandomChatHeader() {
         >
           <Tooltip title={<StyledText text={'Partner Profile'} />}>
             <Avatar
-              alt={partnerProfile?.fullName || 'Stranger'}
-              src={partnerProfile?.profileImage}
+              alt={partnerProfile?.fullName ?? 'Stranger'}
+              src={partnerProfile?.profileImage || defaultAvatar}
             />
           </Tooltip>
           <Box>
             <Tooltip title={<StyledText text={'Partner Profile'} />}>
               <Typography variant="subtitle1" fontWeight={600}>
-                {partnerProfile?.fullName || 'Stranger'}
+                {partnerProfile?.fullName ?? 'Stranger'}
               </Typography>
             </Tooltip>
 

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import {
+  Modal,
   Box,
   Button,
   Divider,
@@ -35,7 +36,6 @@ import {
 import BlurWrapper from '@/components/common/BlurWrapper';
 import StyledText from '@/components/common/StyledText';
 
-import { toast } from 'react-toastify';
 // Redux
 import { useSelector } from 'react-redux';
 
@@ -69,7 +69,6 @@ function PartnerProfileModal({ open, onClose, partner }) {
 
   // Current user's profile data from Redux store
   const { profileData } = useSelector((state) => state.profile);
-  const { incomingRequest } = useSelector((state) => state.randomChat);
 
   // Close modal handler
   const handleProfileClose = () => {
@@ -178,8 +177,8 @@ function PartnerProfileModal({ open, onClose, partner }) {
 
   // Styles shared between both user and partner profile image
   const profileImageCommonStyle = {
-    maxWidth: isSm ? 110 : 180,
-    maxHeight: isSm ? 110 : 180,
+    maxWidth: isSm ? 100 : 160,
+    maxHeight: isSm ? 100 : 160,
     width: '100%',
     height: 'auto',
     mb: 2,
@@ -197,23 +196,17 @@ function PartnerProfileModal({ open, onClose, partner }) {
     setRequestingPrivateChat(true)
     // Emiting parivate chat requesting.
     socket.emit('privateChat:request');
-    if (!incomingRequest) {
-      toast.success('Private chat request sent. Awaiting partner approval.', {
-        style: {
-          backdropFilter: 'blur(14px)',
-          background: theme.palette.divider,
-          color: theme.palette.text.primary,
-        }
-      });
-    }
   }
 
   return (
-    <Box sx={{ px: isSm ? 2 : 3 }}>
+    <Modal
+      open={open}
+      onClose={onClose}
+      sx={{ px: isSm ? 2 : 3, mt: 8 }}
+    >
       {/* Wrapper with blur and scrollable area */}
       <BlurWrapper
         sx={{
-          display: open ? 'block' : 'none',
           overflowY: 'auto',
           maxHeight: '70vh',
           width: 'auto'
@@ -225,6 +218,7 @@ function PartnerProfileModal({ open, onClose, partner }) {
           flexDirection={'row'}
           alignItems={'center'}
           justifyContent={'space-between'}
+          maxHeight={'fit-content'}
         >
           <Tooltip title={<StyledText text={`${'Close Profile'}`} />}>
             <IconButton onClick={handleProfileClose}>
@@ -236,7 +230,7 @@ function PartnerProfileModal({ open, onClose, partner }) {
           </Typography>
         </Stack>
 
-        <Divider sx={{ color: theme.palette.divider, my: 2 }} />
+        <Divider sx={{ color: theme.palette.divider }} />
 
         {/* Profile images side-by-side */}
         <Stack
@@ -245,7 +239,7 @@ function PartnerProfileModal({ open, onClose, partner }) {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: 2
+            gap: 0.2
           }}
         >
           <Stack
@@ -266,7 +260,7 @@ function PartnerProfileModal({ open, onClose, partner }) {
         </Stack>
 
         {/* Tabs (general, interests, private chat) */}
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, my: 2, flexWrap: 'wrap' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1.5, flexWrap: 'wrap' }}>
           <Tooltip title={<StyledText text={`${'View Info'}`} />}>
             <IconButton onClick={() => handleClick('general')}>
               <InfoOutlinedIcon
@@ -293,13 +287,13 @@ function PartnerProfileModal({ open, onClose, partner }) {
           </Tooltip>
         </Box>
 
-        <Divider sx={{ color: theme.palette.divider, my: 2 }} />
+        <Divider sx={{ color: theme.palette.divider }} />
 
         {/* Main content based on tab */}
-        <Stack mt={2}>
+        <Stack>
           {activeSection === 'general' && (
             <Box flexDirection={'column'}>
-              <Typography gutterBottom letterSpacing={1} fontWeight={600} variant="h6" mb={2}>
+              <Typography letterSpacing={1} fontWeight={600} variant="h6" mb={1}>
                 <StyledText text={'General Info'} />
               </Typography>
               {generalInfo.map((info, index) => (
@@ -307,7 +301,7 @@ function PartnerProfileModal({ open, onClose, partner }) {
                   <Stack sx={detailsStyles}>
                     {info.icon}
                     <Typography variant="body1" color="text.primary">
-                      <strong>{info.label}</strong>:
+                      {info.label}:
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       {info.value}
@@ -319,7 +313,7 @@ function PartnerProfileModal({ open, onClose, partner }) {
           )}
           {activeSection === 'interests' && (
             <Box flexDirection={'column'}>
-              <Typography gutterBottom letterSpacing={1} fontWeight={600} variant="h6" mb={2}>
+              <Typography letterSpacing={1} fontWeight={600} variant="h6" mb={1}>
                 <StyledText text={'Interests'} />
               </Typography>
               {partnerInterests.map((interests, index) => (
@@ -327,7 +321,7 @@ function PartnerProfileModal({ open, onClose, partner }) {
                   <Stack sx={detailsStyles}>
                     {interests.icon}
                     <Typography variant="body1" color="text.primary">
-                      <strong>{interests.label}</strong>:
+                      {interests.label}:
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       {interests.value}
@@ -339,10 +333,10 @@ function PartnerProfileModal({ open, onClose, partner }) {
           )}
           {activeSection === 'privateChat' && (
             <Box flexDirection={'column'}>
-              <Typography gutterBottom letterSpacing={1} fontWeight={600} variant="h6" mb={2}>
+              <Typography letterSpacing={1} fontWeight={600} variant="h6" mb={1}>
                 <StyledText text={'Private Chat'} />
               </Typography>
-              <Typography variant="body2" color="text.secondary" gutterBottom>
+              <Typography variant="body2" color="text.secondary">
                 {requestingPrivateChat
                   ? 'Requested for a private chat.'
                   : 'Click the button below to send a request for a private chat with your partner.'}
@@ -379,7 +373,7 @@ function PartnerProfileModal({ open, onClose, partner }) {
         </Stack>
 
         {/* Close button at the bottom */}
-        <Stack width={'100%'} mt={2}>
+        <Stack width={'100%'}>
           <Button
             onClick={handleProfileClose}
             variant="outlined"
@@ -405,7 +399,7 @@ function PartnerProfileModal({ open, onClose, partner }) {
           </Button>
         </Stack>
       </BlurWrapper>
-    </Box>
+    </Modal>
   );
 }
 
