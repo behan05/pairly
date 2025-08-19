@@ -247,14 +247,6 @@ function RandomMessageInput() {
 
   return (
     <Box position="relative">
-      {/* Toast notifications for feedback */}
-      <ToastContainer
-        position="top-right"
-        autoClose={1000}
-        closeOnClick
-        pauseOnHover
-        theme="colored"
-      />
 
       {/* Media preview area */}
       <Box

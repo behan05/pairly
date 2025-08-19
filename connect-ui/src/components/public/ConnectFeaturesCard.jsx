@@ -38,8 +38,10 @@ const iconMap = {
 const cardContainerSx = (theme) => ({
   minWidth: 300,
   maxWidth: 600,
-  bgcolor: 'transparent',
-  backdropFilter: 'blur(14px)',
+  backgroundColor: 'transparent',
+  backdropFilter: 'blur(4px)',
+  WebkitBackdropFilter: 'blur(4px)',
+  border: `1px solid ${theme.palette.divider}`,
   display: 'flex',
   flexDirection: 'column',
   gap: 4,

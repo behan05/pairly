@@ -98,7 +98,7 @@ function Contact() {
           label="Full Name"
           variant="outlined"
           name="name"
-          placeholder="Shiv Sankar"
+          placeholder="Behan Kumar"
           value={formData.name}
           onChange={handleChange}
           error={!!error.name}

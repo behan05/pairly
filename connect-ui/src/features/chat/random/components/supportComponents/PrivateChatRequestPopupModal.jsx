@@ -45,13 +45,11 @@ function PrivateChatRequestPopupModal() {
     const handleAccept = () => {
         socket.emit('privateChat:accept', { partnerId });
         dispatch(setIncomingRequest(null));
-        dispatch(fetchFriendRequests());
     };
 
     const handleReject = () => {
         socket.emit('privateChat:reject', { partnerId });
         dispatch(setIncomingRequest(null));
-        dispatch(fetchFriendRequests());
     };
 
     const handleCancel = () => {

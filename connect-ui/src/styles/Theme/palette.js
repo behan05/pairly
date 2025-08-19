@@ -54,8 +54,8 @@ export const palette = {
 
   // Background – Matte navy-based dark
   background: {
-    default: '#0c101aff',
-    paper: '#111620ff'
+    default: '#090b13ff',
+    paper: '#0c1118ff'
   },
 
   // Divider – Very soft line
