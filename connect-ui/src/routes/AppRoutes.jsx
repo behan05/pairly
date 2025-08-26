@@ -51,8 +51,8 @@ import BlockedList from '@/features/chat/common/BlockedList';
 import FriendRequestList from '@/features/chat/random/components/supportComponents/FriendRequestList';
 
 // Chat History
-import ChatSidebar from '@/pages/private/connect/normal/ChatSidebar';
-import ChatUI from '@/pages/private/connect/normal/ChatUI';
+import PrivateChatLayout from '@/features/chat/normal/PrivateChatLayout';
+import PrivateChatSidebar from '@/features/chat/normal/components/coreComponents/PrivateChatSidebar';
 
 export const routes = createBrowserRouter([
   // === Public routes ===
@@ -160,8 +160,8 @@ export const routes = createBrowserRouter([
       // Chat History
       {
         path: 'chat',
-        element: <ChatUI />,
-        children: [{ index: true, element: <ChatSidebar /> }]
+        element: <PrivateChatLayout />,
+        children: [{ index: true, element: <PrivateChatSidebar /> }]
       },
       // Fallback for unmatched /connect/* routes
       { path: '*', element: <PageNotFound redirectTo="/connect" /> }

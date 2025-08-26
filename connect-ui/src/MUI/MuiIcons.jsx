@@ -135,6 +135,12 @@ import Diversity3OutlinedIcon from '@mui/icons-material/Diversity3Outlined';
 import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined';
 import HandshakeIcon from '@mui/icons-material/Handshake';
 
+// // ==================== Private Chat Icons ====================
+import ClearAllIcon from '@mui/icons-material/ClearAll';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import NoteAltIcon from '@mui/icons-material/NoteAlt';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+
 // ==================== Export All ====================
 export {
   // Navigation & Layout
@@ -167,6 +173,10 @@ export {
   SmsIcon,
   AttachFileIcon,
   HandshakeIcon,
+  ClearAllIcon,
+  FavoriteIcon,
+  NoteAltIcon,
+  LocationOnIcon,
 
   // Media Controls
   MicIcon,
@@ -197,7 +207,7 @@ export {
   // Status Feedback
   ErrorOutlineIcon,
   CheckCircleOutlineIcon,
-  
+
   // User Profile
   PersonAddIcon,
   PersonIcon,

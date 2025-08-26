@@ -14,12 +14,10 @@ import {
 import {
   ArrowBackIcon,
   CloseIcon,
-  SendIcon,
   PersonIcon,
   InfoOutlinedIcon,
   PsychologyOutlinedIcon,
   LocalOfferOutlinedIcon,
-  LockPersonOutlinedIcon,
   defaultAvatar,
   GraphicEqIcon,
   LocationOnOutlinedIcon,
@@ -29,7 +27,8 @@ import {
   InterestsOutlinedIcon,
   ForumOutlinedIcon,
   Diversity3OutlinedIcon,
-  TranslateOutlinedIcon
+  TranslateOutlinedIcon,
+  FavoriteBorderIcon
 } from '@/MUI/MuiIcons';
 
 // components
@@ -46,58 +45,55 @@ import { Country, State } from 'country-state-city';
 import toCapitalCase from '@/utils/textFormatting';
 // socket instance
 import { socket } from '@/services/socket'
-/**
- * PartnerProfileModal Component
- *
- * Displays the detailed profile of a connected partner during a random chat.
- * Shows general info, interests, and a button to request private chat.
- *
- * @param {Boolean} open - Controls visibility of the modal
- * @param {Function} onClose - Callback to close the modal
- * @param {Object} partner - Partner's profile data
- * @param {JSX.Element}
- */
 
-function PartnerProfileModal({ open, onClose, partner }) {
-  // Theme and responsive check
+function PrivatePartnerProfileModel({ userId, open, onClose }) {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.between('xs', 'sm'));
 
-  // Local state
   const [activeSection, setActiveSection] = useState('general');
-  const [requestingPrivateChat, setRequestingPrivateChat] = useState(false);
+  const [requestingCouple, setRequestingCouple] = useState(false);
 
-  // Current user's profile data from Redux store
   const { profileData } = useSelector((state) => state.profile);
+
+  // get all users from redux
+  const users = useSelector(state => state.privateChat.users);
+
+  // partner profile (already flat, no nested .profile)
+  const partnerProfile = useMemo(() => {
+    return users.find((u) => u.userId === userId)?.profile || {};
+  }, [users, userId]);
 
   // Close modal handler
   const handleProfileClose = () => {
     onClose();
   };
 
-  // Switch between section tabs
   const handleClick = (target) => {
     setActiveSection(target);
   };
 
-  // Split partner name for display
-  const splitPartnerFullName = partner.fullName?.split(' ');
+  // Split partner name
+  const splitPartnerFullName = partnerProfile?.fullName
+    ? partnerProfile.fullName.split(' ')
+    : ['Stranger'];
 
-  // Get full state name from code
-  const fullStateName = useMemo(() => {
-    return partner?.location?.state
-      ? State.getStateByCodeAndCountry(partner.location.state, partner.location.country)?.name
+  // State name
+  const location = useMemo(() => {
+    const state = partnerProfile?.state
+      ? State.getStateByCodeAndCountry(
+        partnerProfile.state,
+        partnerProfile.country
+      )?.name
       : '';
-  }, [partner]);
 
-  // Get full country name from code
-  const fullCountryName = useMemo(() => {
-    return partner?.location?.country
-      ? Country.getCountryByCode(partner.location.country)?.name
+    const country = partnerProfile?.country
+      ? Country.getCountryByCode(partnerProfile?.country)?.name
       : '';
-  }, [partner]);
 
-  // Shared styles for displaying key-value pairs
+    return [state, country].filter(Boolean).join(' ');
+  }, [partnerProfile]);
+
+
   const detailsStyles = {
     display: 'flex',
     flexDirection: 'row',
@@ -108,74 +104,73 @@ function PartnerProfileModal({ open, onClose, partner }) {
     flexWrap: 'wrap'
   };
 
-  // General info to display in "General" tab
   const generalInfo = [
     {
       label: 'Name',
-      value: partner?.fullName || 'Unknown',
+      value: partnerProfile?.fullName || 'Unknown',
       icon: <PersonIcon fontSize="small" color="primary" />
     },
     {
       label: 'Age',
-      value: partner?.age || 'Unknown',
+      value: partnerProfile?.age || 'Unknown',
       icon: <InfoOutlinedIcon fontSize="small" color="info" />
     },
     {
       label: 'Location',
-      value: `${fullStateName} ${fullCountryName}` || 'Unknown',
+      value: `${location}` || 'Unknown',
       icon: <LocationOnOutlinedIcon fontSize="small" color="success" />
     },
     {
       label: 'Gender',
-      value: toCapitalCase(partner?.gender) || 'Unknown',
+      value: toCapitalCase(partnerProfile?.gender) || 'Unknown',
       icon: <WcOutlinedIcon fontSize="small" color="secondary" />
     },
     {
       label: 'Pronouns',
-      value: toCapitalCase(partner?.pronouns) || 'Unknown',
+      value: toCapitalCase(partnerProfile?.pronouns) || 'Unknown',
       icon: <RecordVoiceOverOutlinedIcon fontSize="small" color="warning" />
     },
     {
       label: 'Bio',
-      value: partner?.bio || 'No bio available',
+      value: partnerProfile?.shortBio || 'No bio available',
       icon: <SubjectOutlinedIcon fontSize="small" color="action" />
     }
   ];
 
-  // Interests and chat preferences to show in "Interests" tab
   const partnerInterests = [
     {
       label: 'Interests',
       value:
-        partner?.interests?.length > 0 ? partner.interests.join(', ') : 'No Interests Provided',
+        partnerProfile?.interests?.length > 0
+          ? partnerProfile.interests.join(', ')
+          : 'No Interests Provided',
       icon: <InterestsOutlinedIcon fontSize="small" color="primary" />
     },
     {
       label: 'Personality Type',
-      value: toCapitalCase(partner?.personalityType) || 'Personality Type Not Provided',
+      value: toCapitalCase(partnerProfile?.personality) || 'Personality Type Not Provided',
       icon: <PsychologyOutlinedIcon fontSize="small" color="secondary" />
     },
     {
       label: 'Preferred Chat Style',
       value:
-        partner?.preferredChatStyle?.length > 0
-          ? partner.preferredChatStyle.join(', ')
+        partnerProfile?.preferredChatStyle?.length > 0
+          ? partnerProfile.preferredChatStyle.join(', ')
           : 'Preferred Chat Style Not Provided',
       icon: <ForumOutlinedIcon fontSize="small" color="success" />
     },
     {
       label: 'Looking For',
-      value: toCapitalCase(partner?.lookingFor) || 'Looking For Not Provided',
+      value: toCapitalCase(partnerProfile?.lookingFor) || 'Looking For Not Provided',
       icon: <Diversity3OutlinedIcon fontSize="small" color="warning" />
     },
     {
       label: 'Preferred Language',
-      value: toCapitalCase(partner?.preferredLanguage) || 'Preferred Language Not Provided',
+      value: toCapitalCase(partnerProfile?.preferredLanguage) || 'Preferred Language Not Provided',
       icon: <TranslateOutlinedIcon fontSize="small" color="info" />
     }
   ];
 
-  // Styles shared between both user and partner profile image
   const profileImageCommonStyle = {
     maxWidth: isSm ? 100 : 160,
     maxHeight: isSm ? 100 : 160,
@@ -191,28 +186,20 @@ function PartnerProfileModal({ open, onClose, partner }) {
     }
   };
 
-  // handle friend request
-  const handleFriendRequest = () => {
-    setRequestingPrivateChat(true)
-    // Emiting parivate chat requesting.
-    socket.emit('privateChat:request');
-  }
+  const handleCoupleRequest = () => {
+    setRequestingCouple(true);
+    // socket.emit('couple:request');
+  };
 
   return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      sx={{ px: isSm ? 2 : 3, mt: 8 }}
-    >
-      {/* Wrapper with blur and scrollable area */}
+    <Modal open={open} onClose={onClose} sx={{ px: isSm ? 2 : 3, mt: 8 }}>
       <BlurWrapper
         sx={{
           overflowY: 'auto',
           maxHeight: '70vh',
-          width: 'auto'
+          width: 'auto',
         }}
       >
-        {/* Top header with back button and name */}
         <Stack
           display={'flex'}
           flexDirection={'row'}
@@ -220,19 +207,18 @@ function PartnerProfileModal({ open, onClose, partner }) {
           justifyContent={'space-between'}
           maxHeight={'fit-content'}
         >
-          <Tooltip title={<StyledText text={`${'Close Profile'}`} />}>
+          <Tooltip title={<StyledText text={'Close Profile'} />}>
             <IconButton onClick={handleProfileClose}>
               <ArrowBackIcon fontSize="small" />
             </IconButton>
           </Tooltip>
           <Typography variant="h6" color="text.secondary" letterSpacing={0.5} fontWeight={600}>
-            {<StyledText text={splitPartnerFullName[0]} />} {splitPartnerFullName[1]}
+            {<StyledText text={splitPartnerFullName[0]}/>} {splitPartnerFullName[1] || ''}
           </Typography>
         </Stack>
 
         <Divider sx={{ color: theme.palette.divider }} />
 
-        {/* Profile images side-by-side */}
         <Stack
           sx={{
             display: 'flex',
@@ -244,24 +230,22 @@ function PartnerProfileModal({ open, onClose, partner }) {
         >
           <Stack
             component={'img'}
-            src={partner?.profileImage || defaultAvatar}
+            src={partnerProfile?.profileImage || defaultAvatar}
             alt="Partner Profile Image"
-            aria-label="Partner Profile Image"
             sx={profileImageCommonStyle}
           />
           <GraphicEqIcon fontSize="large" sx={{ color: 'success.main' }} />
           <Stack
             component={'img'}
-            src={profileData?.profileImage || defaultAvatar}
-            alt="Partner Profile Image"
-            aria-label="Partner Profile Image"
+            src={profileData.profileImage || defaultAvatar}
+            alt="Your Profile Image"
             sx={profileImageCommonStyle}
           />
         </Stack>
 
-        {/* Tabs (general, interests, private chat) */}
+        {/* Tabs */}
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1.5, flexWrap: 'wrap' }}>
-          <Tooltip title={<StyledText text={`${'View Info'}`} />}>
+          <Tooltip title={<StyledText text={'View Info'} />}>
             <IconButton onClick={() => handleClick('general')}>
               <InfoOutlinedIcon
                 fontSize="small"
@@ -269,7 +253,7 @@ function PartnerProfileModal({ open, onClose, partner }) {
               />
             </IconButton>
           </Tooltip>
-          <Tooltip title={<StyledText text={`${'Interests'}`} />}>
+          <Tooltip title={<StyledText text={'Interests'} />}>
             <IconButton onClick={() => handleClick('interests')}>
               <LocalOfferOutlinedIcon
                 fontSize="small"
@@ -277,11 +261,11 @@ function PartnerProfileModal({ open, onClose, partner }) {
               />
             </IconButton>
           </Tooltip>
-          <Tooltip title={<StyledText text={`${'Request Private Chat'}`} />}>
-            <IconButton onClick={() => handleClick('privateChat')}>
-              <LockPersonOutlinedIcon
+          <Tooltip title={<StyledText text={'Couple Request'} />}>
+            <IconButton onClick={() => handleClick('coupleRequest')}>
+              <FavoriteBorderIcon
                 fontSize="small"
-                sx={{ color: activeSection === 'privateChat' ? 'success.main' : 'text.secondary' }}
+                sx={{ color: activeSection === 'coupleRequest' ? 'success.main' : 'text.secondary' }}
               />
             </IconButton>
           </Tooltip>
@@ -289,7 +273,7 @@ function PartnerProfileModal({ open, onClose, partner }) {
 
         <Divider sx={{ color: theme.palette.divider }} />
 
-        {/* Main content based on tab */}
+        {/* Content */}
         <Stack>
           {activeSection === 'general' && (
             <Box flexDirection={'column'}>
@@ -316,38 +300,80 @@ function PartnerProfileModal({ open, onClose, partner }) {
               <Typography letterSpacing={1} fontWeight={600} variant="h6" mb={1}>
                 <StyledText text={'Interests'} />
               </Typography>
-              {partnerInterests.map((interests, index) => (
+              {partnerInterests.map((interest, index) => (
                 <Stack key={index}>
                   <Stack sx={detailsStyles}>
-                    {interests.icon}
+                    {interest.icon}
                     <Typography variant="body2" color="text.primary">
-                      {interests.label}:
+                      {interest.label}:
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {interests.value}
+                      {interest.value}
                     </Typography>
                   </Stack>
                 </Stack>
               ))}
             </Box>
           )}
-          {activeSection === 'privateChat' && (
+          {activeSection === 'coupleRequest' && (
             <Box flexDirection={'column'}>
               <Typography letterSpacing={1} fontWeight={600} variant="h6" mb={1}>
-                <StyledText text={'Private Chat'} />
+                <StyledText text={'Couple Request'} />
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {requestingPrivateChat
-                  ? 'Requested for a private chat.'
-                  : 'Click the button below to send a request for a private chat with your partner.'}
-              </Typography>
+
+              <Stack sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+                gap: 2,
+                px: 2
+              }}>
+                <Box
+                  borderRight={`1px solid ${theme.palette.divider}`}
+                  px={2}
+                >
+                  <Typography
+                    variant="body2"
+                    color="text.primany"
+                    mb={2}
+                  >
+                    Propose to your partner for:
+                    <ul style={{ marginLeft: '16px', paddingLeft: '16px' }}>
+                      <li><Typography variant="body2" color="text.secondary">Relationship</Typography></li>
+                      <li><Typography variant="body2" color="text.secondary">Marriage</Typography></li>
+                      <li><Typography variant="body2" color="text.secondary">Long-distance Bond</Typography></li>
+                      <li><Typography variant="body2" color="text.secondary">Casual | Fun & more</Typography></li>
+                    </ul>
+                  </Typography>
+                </Box>
+
+                <Box
+                  borderLeft={`1px solid ${theme.palette.divider}`}
+                  px={2}
+                >
+                  <Typography
+                    variant="body2"
+                    color="text.primany"
+                    mt={1}
+                  >
+                    Once accepted, both unlock:
+                    <ul style={{ marginLeft: '16px', paddingLeft: '16px' }}>
+                      <li><Typography variant="body2" color="text.secondary">Watch together (Netflix, YouTube, etc.)</Typography></li>
+                      <li><Typography variant="body2" color="text.secondary">Private audio/video calls</Typography></li>
+                      <li><Typography variant="body2" color="text.secondary">Shared gallery & notes</Typography></li>
+                      <li><Typography variant="body2" color="text.secondary">Incognito mode & more</Typography></li>
+                    </ul>
+                  </Typography>
+                </Box>
+              </Stack>
+
               <Button
                 variant="outlined"
                 color="primary"
-                endIcon={<SendIcon sx={{ color: 'text.secondary' }} />}
-                aria-label="Send Private Chat Request"
-                onClick={handleFriendRequest}
-                disabled={requestingPrivateChat}
+                endIcon={<FavoriteBorderIcon sx={{ color: 'warning.main' }} />}
+                onClick={handleCoupleRequest}
+                disabled={requestingCouple}
                 sx={{
                   mt: 2,
                   width: 'fit-content',
@@ -366,19 +392,17 @@ function PartnerProfileModal({ open, onClose, partner }) {
                   }
                 }}
               >
-                {requestingPrivateChat ? 'Request Sent' : 'Send Private Chat Request'}
+                {requestingCouple ? 'Request Sent' : 'Send Couple Request'}
               </Button>
             </Box>
           )}
         </Stack>
 
-        {/* Close button at the bottom */}
         <Stack width={'100%'}>
           <Button
             onClick={handleProfileClose}
             variant="outlined"
             endIcon={<CloseIcon fontSize="small" sx={{ color: theme.palette.secondary.light }} />}
-            aria-label="Close Profile"
             sx={{
               maxWidth: 'fit-content',
               alignSelf: 'flex-end',
@@ -403,4 +427,4 @@ function PartnerProfileModal({ open, onClose, partner }) {
   );
 }
 
-export default PartnerProfileModal;
+export default PrivatePartnerProfileModel;

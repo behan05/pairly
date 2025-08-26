@@ -5,6 +5,7 @@ import settingsReducer from './slices/settings/settingsSlice';
 import randomChatReducer from './slices/randomChat/randomChatSlice';
 import friendRequestReducer from './slices/randomChat/friendRequestSlice';
 import moderationReducer from './slices/moderation/moderationSlice';
+import privateChatReducer from './slices/privateChat/privateChatSlice';
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     settings: settingsReducer,
     randomChat: randomChatReducer,
     friendRequest: friendRequestReducer,
-    moderation: moderationReducer
+    moderation: moderationReducer,
+    privateChat: privateChatReducer,
   }
 });
