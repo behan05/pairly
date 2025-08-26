@@ -24,3 +24,6 @@ export const REPORT_API = `${BASE_ENDPOINT}/random-report`;
 
 // Friend request API endpoint
 export const FRIEND_REQUEST_API = `${BASE_ENDPOINT}/friend-request`;
+
+// Friend request API endpoint
+export const PRIVATE_CHAT_API = `${BASE_ENDPOINT}/private-chat`;
