@@ -434,10 +434,10 @@ function RandomMessageInput() {
         sx={{
           display: 'flex',
           alignItems: 'center',
-          p: 1.5,
-          mx: 2,
+          p: 1.2,
+          mx: 1,
           mb: 1,
-          borderRadius: 4,
+          borderRadius: 0.5,
           backgroundColor: theme.palette.background.paper
         }}
       >
@@ -523,7 +523,7 @@ function RandomMessageInput() {
         <InputBase
           fullWidth
           multiline
-          maxRows={4}
+          maxRows={2}
           placeholder="Type a message..."
           value={message}
           onChange={handleInputChange}

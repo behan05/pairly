@@ -41,6 +41,7 @@ function RandomChatWindow({ setShowChatWindow }) {
 
   // Redux state
   const userId = useSelector((state) => state.profile.profileData?._id);
+
   const {
     messages,
     connected: isConnected,
@@ -248,23 +249,31 @@ function RandomChatWindow({ setShowChatWindow }) {
                     alignSelf={isOwnMessage ? 'flex-end' : 'flex-start'}
                     sx={{
                       backgroundColor: isOwnMessage
-                        ? theme.palette.background.default
+                        ? theme.palette.background.paper
                         : theme.palette.background.paper,
                       color: isOwnMessage ? 'text.primary' : 'text.secondary',
-                      px: isOwnMessage ? 2 : 1,
+                      px: 2,
                       py: 1,
                       maxWidth: '70%',
                       borderRadius: isOwnMessage
-                        ? '1.2rem 0px 1.2rem 1.2rem'
-                        : '0px 1.2rem 1.2rem 1.2rem',
+                        ? '1.2rem 0 1.2rem 1.2rem'
+                        : '0 1.2rem 1.2rem 1.2rem',
                       position: 'relative',
                       borderColor: isOwnMessage
                         ? theme.palette.success.main
                         : theme.palette.primary.main,
-                      borderWidth: 1,
+                      borderWidth: 0,
                       borderStyle: 'solid',
                       wordBreak: 'break-word',
-                      overflowWrap: 'break-word'
+                      overflowWrap: 'break-word',
+
+                      '&:hover': {
+                        backgroundColor: isOwnMessage
+                          ? theme.palette.primary.paper
+                          : theme.palette.background.paper,
+                        color: theme.palette.text.primary,
+                        boxShadow: isOwnMessage ? `0 2px 8px ${theme.palette.action.hover}` : `0 2px 8px ${theme.palette.divider}`,
+                      },
                     }}
                   >
                     {/* Text Message */}
@@ -279,7 +288,7 @@ function RandomChatWindow({ setShowChatWindow }) {
                             rel="noopener noreferrer"
                             sx={{
                               wordBreak: 'break-word',
-                              color: 'primary.main',
+                              color: 'success.main',
                               textDecoration: 'underline'
                             }}
                           >
