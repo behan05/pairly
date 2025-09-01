@@ -8,7 +8,8 @@ export default function InstallPrompt() {
     const [visible, setVisible] = useState(false);
     const theme = useTheme();
     const { connected } = useSelector(state => state.randomChat);
-
+    const activeChat = useSelector(state => state.privateChat.activeChat);
+    
     useEffect(() => {
         function handleBeforeInstallPrompt(e) {
             e.preventDefault();
@@ -46,7 +47,7 @@ export default function InstallPrompt() {
                     position: 'fixed',
                     bottom: 115,
                     right: 40,
-                    display: connected && 'none',
+                    display: connected || activeChat && 'none',
                     background: 'transparent',
                     backdropFilter: 'blur(14px)',
                     color: theme.palette.text.secondary,

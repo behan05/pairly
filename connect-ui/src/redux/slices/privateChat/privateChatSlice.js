@@ -22,6 +22,10 @@ const privateChatSlice = createSlice({
             if (!exists) state.chatUsers.push(newUser);
             else Object.assign(exists, newUser);
         },
+        setConversationMessages: (state, action) => {
+            const { conversationId, messages } = action.payload;
+            state.conversations[conversationId] = { messages };
+        },
         setActiveChat: (state, action) => {
             state.activeChat = action.payload;
         },
@@ -61,7 +65,8 @@ export const {
     addMessage,
     setError,
     reset,
-    setLoading
+    setLoading,
+    setConversationMessages
 } = privateChatSlice.actions;
 
 export default privateChatSlice.reducer;

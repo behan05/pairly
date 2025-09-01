@@ -1,8 +1,7 @@
 import axios from 'axios';
 import {
     setAllUsers,
-    setActiveChat,
-    addMessage,
+    setConversationMessages,
     setLoading,
     setError,
     reset
@@ -35,4 +34,21 @@ export function fetchAllUser() {
             dispatch(setLoading(false));
         }
     };
-}
+};
+
+export const fetchConversationMessages = (conversationId) => async (dispatch) => {
+    dispatch(setLoading(true));
+    try {
+        const headers = getAuthHeaders();
+        const res = await axios.get(`${PRIVATE_CHAT_API}/user/${conversationId}`, { headers });
+        if (res.data.success) {
+            dispatch(setConversationMessages({ conversationId, messages: res.data.messages }));
+        } else {
+            dispatch(setError(res.data.error || 'Failed to fetch conversation'));
+        }
+    } catch (err) {
+        dispatch(setError(err.message || 'Server error fetching messages'));
+    } finally {
+        dispatch(setLoading(false));
+    }
+};

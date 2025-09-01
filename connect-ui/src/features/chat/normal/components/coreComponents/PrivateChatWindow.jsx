@@ -39,8 +39,13 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
   const user = chatUsers.find(u => u.partnerId === selectedUserId);
   const conversationId = user?.conversationId;
 
+  // Map content/messageType to text/type for rendering
   const messages = conversationId && conversations[conversationId]?.messages
-    ? conversations[conversationId].messages
+    ? conversations[conversationId].messages.map(msg => ({
+        ...msg,
+        text: msg.content,
+        type: msg.messageType
+      }))
     : [];
 
   // Scroll to bottom when messages update
@@ -99,16 +104,14 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
           )}
 
           {messages.map((msg, index) => {
-            const isOwnMessage = msg.senderId === currentUserId;
+            const isOwnMessage = msg.sender === currentUserId;
 
             return (
               <Box
                 key={index}
                 alignSelf={isOwnMessage ? 'flex-end' : 'flex-start'}
                 sx={{
-                  backgroundColor: isOwnMessage
-                    ? theme.palette.background.paper
-                    : theme.palette.background.paper,
+                  backgroundColor: theme.palette.background.paper,
                   color: isOwnMessage ? 'text.primary' : 'text.secondary',
                   px: 2,
                   py: 1,
@@ -117,20 +120,10 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                     ? '1.2rem 0 1.2rem 1.2rem'
                     : '0 1.2rem 1.2rem 1.2rem',
                   position: 'relative',
-                  borderColor: isOwnMessage
-                    ? theme.palette.success.main
-                    : theme.palette.primary.main,
-                  borderWidth: 0,
-                  borderStyle: 'solid',
                   wordBreak: 'break-word',
                   overflowWrap: 'break-word',
-
                   '&:hover': {
-                    backgroundColor: isOwnMessage
-                      ? theme.palette.primary.paper
-                      : theme.palette.background.paper,
-                    color: theme.palette.text.primary,
-                    boxShadow: isOwnMessage ? `0 2px 8px ${theme.palette.action.hover}` : `0 2px 8px ${theme.palette.divider}`,
+                    backgroundColor: theme.palette.action.hover
                   },
                 }}
               >
@@ -152,7 +145,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                       <Typography variant="body1">{msg.text}</Typography>
                     )}
                     <Typography variant="caption" color="text.secondary" sx={{ display: 'block', textAlign: 'right', mt: 0.5 }}>
-                      {msg.timestamp}
+                      {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </Typography>
                   </>
                 )}
@@ -170,7 +163,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                       <DownloadIcon />
                     </IconButton>
                     <Typography variant="caption" color="text.secondary" sx={{ position: 'absolute', bottom: 4, right: 8 }}>
-                      {msg.timestamp}
+                      {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </Typography>
                   </Box>
                 )}
@@ -183,7 +176,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                       <DownloadIcon />
                     </IconButton>
                     <Typography variant="caption" color="text.secondary" sx={{ position: 'absolute', bottom: 8, right: 8 }}>
-                      {msg.timestamp}
+                      {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </Typography>
                   </Box>
                 )}
@@ -193,7 +186,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                   <Stack sx={{ position: 'relative' }}>
                     <StyledAudio src={msg.text} controls />
                     <Typography variant="caption" color="text.secondary" sx={{ mt: 1, alignSelf: 'flex-end' }}>
-                      {msg.timestamp}
+                      {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </Typography>
                   </Stack>
                 )}

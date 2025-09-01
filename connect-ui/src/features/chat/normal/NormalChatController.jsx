@@ -9,6 +9,7 @@ import {
     setError,
     reset
 } from '@/redux/slices/privateChat/privateChatSlice';
+import {fetchConversationMessages} from '@/redux/slices/privateChat/privateChatAction'
 
 function NormalChatController() {
     const dispatch = useDispatch();
@@ -48,6 +49,11 @@ function NormalChatController() {
                     timestamp: formatted
                 }
             }));
+
+            // Fetch previous messages if conversationId exists
+            if (conversationId) {
+                dispatch(fetchConversationMessages(conversationId));
+            }
         });
 
         // typing / stops / disconnected / read / presence - keep stubs

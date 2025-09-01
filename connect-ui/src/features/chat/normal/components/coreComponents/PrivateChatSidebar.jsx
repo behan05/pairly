@@ -20,11 +20,10 @@ import textFormater from '@/utils/textFormatting';
 import SettingsAction from '@/components/private/SettingsAction';
 
 // redux and Socket
-import { fetchAllUser } from '@/redux/slices/privateChat/privateChatAction';
+import { fetchAllUser, fetchConversationMessages } from '@/redux/slices/privateChat/privateChatAction';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 
-import { addMessage } from '@/redux/slices/privateChat/privateChatSlice';
 import { socket } from '@/services/socket';
 
 function PrivateChatSidebar() {
@@ -32,8 +31,8 @@ function PrivateChatSidebar() {
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const dispatch = useDispatch();
     const { setSelectedUserId, activeUserId, setActiveUserId } = useOutletContext();
-    const { allUsers, loading } = useSelector(state => state.privateChat);
-
+    const { allUsers, chatUsers, loading } = useSelector(state => state.privateChat);
+    
     useEffect(() => {
         dispatch(fetchAllUser());
     }, [dispatch]);
@@ -42,9 +41,18 @@ function PrivateChatSidebar() {
         setActiveUserId(userId);
         setSelectedUserId(userId);
 
-        if (userId) {
-            socket.emit('privateChat:join', { partnerUserId: userId });
-        }
+        if (!userId) return;
+
+        // Emit to socket to join
+        socket.emit('privateChat:join', { partnerUserId: userId });
+
+        // Checking if this user already has a conversation in chatUsers
+        const userConversation = chatUsers.find(u => u.partnerId === userId);
+
+        if (userConversation?.conversationId) {
+            // If conversation exists, fetch previous messages
+            dispatch(fetchConversationMessages(userConversation.conversationId));
+        };
     };
 
     return (
@@ -178,7 +186,7 @@ function PrivateChatSidebar() {
                                             }}
                                         >
                                             {user?.lastMessage
-                                                ? textFormater(user?.lastMessage?.text)
+                                                ? user.lastMessage?.content?.split(' ').slice(0, 5).join(' ')+'...' 
                                                 : 'No chat message yet'}
                                         </Typography>
                                     </Stack>
