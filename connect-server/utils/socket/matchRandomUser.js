@@ -47,11 +47,6 @@ async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io,
             return;
         }
 
-        if (blockUsers) {
-            waitingQueue.push(socket);
-            return;
-        }
-
         // Save match info in activeMatches
         activeMatches.set(socket.id, partnerSocket.id);
         activeMatches.set(partnerSocket.id, socket.id);
