@@ -48,7 +48,6 @@ function setupSocket(server) {
 
     // === Main connection listener ===
     io.on('connection', (socket) => {
-        console.log('User connected:', socket.id);
 
         // Register random chat events
         randomChatHandler(io, socket);

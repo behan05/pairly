@@ -1,7 +1,7 @@
 const Routers = require('express').Router();
 const {
     listPrivateChatUsersController,
-    getPrivateChatMessagesControllerById,
+    getConversationMessagesController,
     sendPrivateChatMessageControllerById,
     deletePrivateChatWithUserControllerById
 } = require('../../controllers/privateChatControllers/privateChatController')
@@ -9,9 +9,8 @@ const {
 // middleware to identify user
 const authMiddleware = require('../../middlewares/authMiddleware');
 
-
-Routers.get('/list-all-users', authMiddleware, listPrivateChatUsersController);
-Routers.get('/message/:userId', authMiddleware, getPrivateChatMessagesControllerById);
+Routers.get('/users', authMiddleware, listPrivateChatUsersController);
+Routers.get('/user/:conversationId', authMiddleware, getConversationMessagesController);
 Routers.post('/message/:userId', authMiddleware, sendPrivateChatMessageControllerById);
 Routers.delete('/message/:userId', authMiddleware, deletePrivateChatWithUserControllerById);
 
