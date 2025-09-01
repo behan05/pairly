@@ -47,7 +47,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
   const open = Boolean(anchorEl);
 
   // get all users from redux
-  const users = useSelector(state => state.privateChat.users);
+  const users = useSelector(state => state.privateChat.allUsers);
 
   // fallback if not found
   const partnerProfile = useMemo(() => {
@@ -66,7 +66,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
    * Common menu item styling
    */
   const menuItemStyle = {
-    borderRadius: 1,
+    borderRadius: 0.5,
     transition: 'all 0.2s',
     '&:hover': {
       transform: `translateY(-5px)`

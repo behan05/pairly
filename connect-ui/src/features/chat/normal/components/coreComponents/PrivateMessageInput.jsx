@@ -33,12 +33,12 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // Redux and Socket
 import { useDispatch, useSelector } from 'react-redux';
-import { addMessage } from '@/redux/slices/randomChat/randomChatSlice';
+import { addMessage } from '@/redux/slices/privateChat/privateChatSlice';
 import { socket } from '@/services/socket';
 
 /**
  * PrivateMessageInput component
- * - Handles text and media input for random chat
+ * - Handles text and media input for private chat
  * - Supports emoji picker, file/media preview, and optimistic UI updates
  * - Uploads media to server and emits messages via socket
  * @returns {JSX.Element} The rendered component.
@@ -56,8 +56,8 @@ function PrivateMessageInput() {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   // Redux state for user and partner IDs
-  const userId = useSelector((state) => state.profile.profileData?._id);
-  const partnerId = useSelector((state) => state.randomChat?.partnerId);
+  const currentUserId = useSelector((state) => state.profile.profileData?._id);
+  const partnerId = useSelector((state) => state.privayeChat?.chatUsers?.userId);
   const open = Boolean(anchorEl);
 
   // Reference to hidden file input
@@ -76,7 +76,8 @@ function PrivateMessageInput() {
   // Handle typing status with socket events
   let typingTimeout;
   const handleInputChange = (e) => {
-
+    const { value } = e.target;
+    setMessage(value);
   };
 
   // Handle file selection and preview
@@ -94,8 +95,37 @@ function PrivateMessageInput() {
 
   };
 
+  // handle submit
+  // handle submit
   const handleSend = async () => {
+    const hasText = message.trim() !== '';
 
+    if (hasText) {
+      // Emit to socket
+      socket.emit('privateChat:message', {
+        message,
+        senderId: currentUserId,
+        receiverId: partnerId,
+        type: 'text'
+      });
+
+      // Optimistic UI update
+      dispatch(
+        addMessage({
+          message,
+          senderId: currentUserId,
+          receiverId: partnerId,
+          type: 'text',
+          timestamp: new Date().toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit'
+          })
+        })
+      );
+
+      // Clear input
+      setMessage('');
+    }
   };
 
   // Handle emoji selection
@@ -120,10 +150,10 @@ function PrivateMessageInput() {
         sx={{
           display: 'flex',
           alignItems: 'center',
-          p: 1.5,
-          mx: 2,
+          p: 1.2,
+          mx: 1,
           mb: 1,
-          borderRadius: 4,
+          borderRadius: 0.5,
           backgroundColor: theme.palette.background.paper
         }}
       >
@@ -341,11 +371,17 @@ function PrivateMessageInput() {
         <InputBase
           fullWidth
           multiline
-          maxRows={4}
+          maxRows={2}
           placeholder="Type a message..."
-          // value={message}
+          value={message}
           onChange={handleInputChange}
           sx={{ mx: 2 }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              handleSend();
+            }
+          }}
         />
 
         {/* Emoji Button */}

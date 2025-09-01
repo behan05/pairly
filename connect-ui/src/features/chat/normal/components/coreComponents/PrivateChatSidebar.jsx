@@ -8,7 +8,6 @@ import {
     CircularProgress,
     Tooltip,
     TextField,
-    Divider,
 } from '@/MUI/MuiComponents';
 import {
     SearchIcon,
@@ -20,17 +19,20 @@ import ChatSidebarHeader from '@/features/chat/common/ChatSidebarHeader';
 import textFormater from '@/utils/textFormatting';
 import SettingsAction from '@/components/private/SettingsAction';
 
-// redux
+// redux and Socket
 import { fetchAllUser } from '@/redux/slices/privateChat/privateChatAction';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
+
+import { addMessage } from '@/redux/slices/privateChat/privateChatSlice';
+import { socket } from '@/services/socket';
 
 function PrivateChatSidebar() {
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const dispatch = useDispatch();
     const { setSelectedUserId, activeUserId, setActiveUserId } = useOutletContext();
-    const { users, loading } = useSelector(state => state.privateChat);
+    const { allUsers, loading } = useSelector(state => state.privateChat);
 
     useEffect(() => {
         dispatch(fetchAllUser());
@@ -39,6 +41,10 @@ function PrivateChatSidebar() {
     const handleUserClick = (userId) => {
         setActiveUserId(userId);
         setSelectedUserId(userId);
+
+        if (userId) {
+            socket.emit('privateChat:join', { partnerUserId: userId });
+        }
     };
 
     return (
@@ -61,7 +67,7 @@ function PrivateChatSidebar() {
                     <TextField
                         size="small"
                         fullWidth
-                        placeholder="Search settings..."
+                        placeholder="Search user..."
                         // value={searchValue}
                         onChange={(e) => setSearchValue(e.target.value)}
                         InputProps={{
@@ -81,7 +87,7 @@ function PrivateChatSidebar() {
                 </Stack>
             )}
 
-            {users.length === 0 ?
+            {allUsers.length === 0 ?
                 <Typography
                     variant="body1"
                     color="text.secondary"
@@ -94,7 +100,7 @@ function PrivateChatSidebar() {
                         cursor: 'pointer'
                     }
                 }}>
-                    {users.map((user, index) => {
+                    {allUsers.map((user, index) => {
                         const isActive = activeUserId === user.userId;
                         return (
                             <Stack
@@ -103,11 +109,10 @@ function PrivateChatSidebar() {
                                     flexDirection: 'row',
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
-                                    border: `1px solid ${theme.palette.divider}`,
-                                    boxShadow: `inset 0 0 0.2rem ${theme.palette.divider}`,
-                                    borderRadius: 0.5,
+                                    border: `0.1px solid ${theme.palette.divider}`,
+                                    borderRadius: 0.4,
                                     p: 1,
-                                    mt: 1,
+                                    mt: 0.5,
                                     bgcolor: isActive ? theme.palette.action.selected : 'transparent', // highlight
                                     transition: 'background-color 0.3s ease',
                                     ':hover': {
@@ -178,7 +183,6 @@ function PrivateChatSidebar() {
                                         </Typography>
                                     </Stack>
                                 </Stack>
-                                <Divider />
                             </Stack>
                         );
                     })}

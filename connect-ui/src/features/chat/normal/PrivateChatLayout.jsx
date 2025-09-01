@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Stack, useTheme, useMediaQuery } from '@/MUI/MuiComponents';
+import { Box, Stack, useTheme, useMediaQuery, Typography } from '@/MUI/MuiComponents';
 import { Outlet } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import NormalChatController from './NormalChatController'
@@ -81,8 +81,21 @@ function NormalChatLayout() {
                 alignItems="center"
                 height="100%"
                 color="text.secondary"
+                sx={{
+                  userSelect: 'none',
+                }}
               >
-                Select a user to start chatting
+                <Typography
+                  variant={'subtitle2'}
+                  color={'text.primary'}
+                  sx={{
+                    background: theme.palette.background.paper,
+                    py: 1,
+                    px: 2,
+                    borderRadius: 2
+                  }}>
+                  Select a chat to start messaging
+                </Typography>
               </Box>
             )}
           </Stack>

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {
-    setUsers,
+    setAllUsers,
     setActiveChat,
     addMessage,
     setLoading,
@@ -25,7 +25,7 @@ export function fetchAllUser() {
             const response = await axios.get(`${PRIVATE_CHAT_API}/users`, { headers });
 
             if (response.data.success) {
-                dispatch(setUsers(response.data.users));
+                dispatch(setAllUsers(response.data.users));
             } else {
                 dispatch(setError(response.data.error || 'Failed to fetch users'));
             }
