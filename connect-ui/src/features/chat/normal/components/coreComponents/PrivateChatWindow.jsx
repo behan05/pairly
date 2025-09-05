@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import {
   Box,
   Stack,
@@ -6,12 +6,14 @@ import {
   useTheme,
   useMediaQuery,
   IconButton
-} from '../../../../../MUI/MuiComponents';
-import { DownloadIcon } from '../../../../../MUI/MuiIcons';
+} from '@/MUI/MuiComponents';
+import { DownloadIcon, DoneIcon, DoneAllIcon } from '@/MUI/MuiIcons';
 import PrivateChatHeader from './PrivateChatHeader';
 import PrivateMessageInput from './PrivateMessageInput';
+import formatMessageTime from '@/utils/formatMessageTime';
 import { useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
+import { socket } from '@/services/socket';
 
 // Styled audio element
 const StyledAudio = styled('audio')(({ theme }) => ({
@@ -39,19 +41,27 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
   const user = chatUsers.find(u => u.partnerId === selectedUserId);
   const conversationId = user?.conversationId;
 
-  // Map content/messageType to text/type for rendering
+  // Use messages directly from redux, keep `seen`
   const messages = conversationId && conversations[conversationId]?.messages
-    ? conversations[conversationId].messages.map(msg => ({
-        ...msg,
-        text: msg.content,
-        type: msg.messageType
-      }))
+    ? conversations[conversationId].messages
     : [];
 
   // Scroll to bottom when messages update
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Emit read event when opening chat
+  useEffect(() => {
+    const handleFocus = () => {
+      if (conversationId && socket) {
+        socket.emit('privateChat:readMessage', { conversationId });
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [conversationId, socket]);
 
   // Download handler
   const handleDownload = (url, fileName = 'file') => {
@@ -128,74 +138,94 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                 }}
               >
                 {/* Text message */}
-                {msg.type === 'text' && (
+                {msg.messageType === 'text' && (
                   <>
-                    {isValidURL(msg.text) ? (
+                    {isValidURL(msg.content) ? (
                       <Typography
                         variant="body1"
                         component="a"
-                        href={msg.text}
+                        href={msg.content}
                         target="_blank"
                         rel="noopener noreferrer"
                         sx={{ color: 'success.main', wordBreak: 'break-word', textDecoration: 'underline' }}
                       >
-                        {msg.text}
+                        {msg.content}
                       </Typography>
                     ) : (
-                      <Typography variant="body1">{msg.text}</Typography>
+                      <Typography variant="body1">{msg.content}</Typography>
                     )}
-                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', textAlign: 'right', mt: 0.5 }}>
-                      {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 0.5, mt: 0.5 }}
+                    >
+                      {formatMessageTime(msg.createdAt)}
+                      {isOwnMessage && (msg.seen ? <DoneAllIcon sx={{ fontSize: 16, color: "success.main" }} /> : <DoneIcon sx={{ fontSize: 16, color: "grey" }} />)}
                     </Typography>
                   </>
                 )}
 
                 {/* Image */}
-                {msg.type === 'image' && (
+                {msg.messageType === 'image' && (
                   <Box sx={{ position: 'relative' }}>
                     <Box
                       component="img"
-                      src={msg.text}
+                      src={msg.content}
                       alt="sent"
                       sx={{ maxWidth: isSm ? 280 : 480, maxHeight: 320, borderRadius: 1, objectFit: 'cover', width: '100%', height: 'auto' }}
                     />
-                    <IconButton onClick={() => handleDownload(msg.text, msg.fileName || 'image')} sx={{ position: 'absolute', top: 4, right: 2 }}>
+                    <IconButton onClick={() => handleDownload(msg.content, msg.fileName || 'image')} sx={{ position: 'absolute', top: 4, right: 2 }}>
                       <DownloadIcon />
                     </IconButton>
-                    <Typography variant="caption" color="text.secondary" sx={{ position: 'absolute', bottom: 4, right: 8 }}>
-                      {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ position: 'absolute', bottom: 4, right: 8, display: 'flex', alignItems: 'center', gap: 0.5 }}
+                    >
+                      {formatMessageTime(msg.createdAt)}
+                      {isOwnMessage && (msg.seen ? <DoneAllIcon sx={{ fontSize: 16, color: "success.main" }} /> : <DoneIcon sx={{ fontSize: 16, color: "grey" }} />)}
                     </Typography>
                   </Box>
                 )}
 
                 {/* Video */}
-                {msg.type === 'video' && (
+                {msg.messageType === 'video' && (
                   <Box sx={{ position: 'relative' }}>
-                    <Box component="video" src={msg.text} controls sx={{ maxWidth: 320, maxHeight: 240, borderRadius: 1 }} />
-                    <IconButton onClick={() => handleDownload(msg.text, msg.fileName || 'video.mp4')} sx={{ position: 'absolute', top: 4, right: 2 }}>
+                    <Box component="video" src={msg.content} controls sx={{ maxWidth: 320, maxHeight: 240, borderRadius: 1 }} />
+                    <IconButton onClick={() => handleDownload(msg.content, msg.fileName || 'video.mp4')} sx={{ position: 'absolute', top: 4, right: 2 }}>
                       <DownloadIcon />
                     </IconButton>
-                    <Typography variant="caption" color="text.secondary" sx={{ position: 'absolute', bottom: 8, right: 8 }}>
-                      {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ position: 'absolute', bottom: 8, right: 8, display: 'flex', alignItems: 'center', gap: 0.5 }}
+                    >
+                      {formatMessageTime(msg.createdAt)}
+                      {isOwnMessage && (msg.seen ? <DoneAllIcon sx={{ fontSize: 16, color: "success.main" }} /> : <DoneIcon sx={{ fontSize: 16, color: "grey" }} />)}
                     </Typography>
                   </Box>
                 )}
 
                 {/* Audio */}
-                {msg.type === 'audio' && (
+                {msg.messageType === 'audio' && (
                   <Stack sx={{ position: 'relative' }}>
-                    <StyledAudio src={msg.text} controls />
-                    <Typography variant="caption" color="text.secondary" sx={{ mt: 1, alignSelf: 'flex-end' }}>
-                      {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    <StyledAudio src={msg.content} controls />
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ mt: 1, alignSelf: 'flex-end', display: 'flex', alignItems: 'center', gap: 0.5 }}
+                    >
+                      {formatMessageTime(msg.createdAt)}
+                      {isOwnMessage && (msg.seen ? <DoneAllIcon sx={{ fontSize: 16, color: "success.main" }} /> : <DoneIcon sx={{ fontSize: 16, color: "grey" }} />)}
                     </Typography>
                   </Stack>
                 )}
 
                 {/* File */}
-                {msg.type === 'file' && (
+                {msg.messageType === 'file' && (
                   <Stack flexDirection="row" alignItems="center" gap={0.5}>
                     <Typography variant="body2">{msg.fileName || 'file'}</Typography>
-                    <IconButton onClick={() => handleDownload(msg.text, msg.fileName || 'file')}>
+                    <IconButton onClick={() => handleDownload(msg.content, msg.fileName || 'file')}>
                       <DownloadIcon />
                     </IconButton>
                   </Stack>

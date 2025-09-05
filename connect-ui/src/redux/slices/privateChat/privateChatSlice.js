@@ -6,7 +6,7 @@ const initialState = {
     conversations: {},     // { conversationId: [messages...] }
     activeChat: null,      // conversationId
     loading: false,
-    error: null
+    error: null,
 };
 
 const privateChatSlice = createSlice({
@@ -28,11 +28,14 @@ const privateChatSlice = createSlice({
         },
         setActiveChat: (state, action) => {
             state.activeChat = action.payload;
+            const user = state.chatUsers.find(u => u.conversationId === action.payload);
+            if (user) {
+                user.unreadCount = 0;
+            }
         },
         setLoading: (state, action) => {
             state.loading = action.payload;
         },
-
         addMessage: (state, action) => {
             const { conversationId, message } = action.payload;
             if (!message || !conversationId) return;
@@ -44,7 +47,25 @@ const privateChatSlice = createSlice({
             state.conversations[conversationId].messages.push(message);
 
             const user = state.chatUsers.find(u => u.conversationId === conversationId);
-            if (user) user.message = message;
+            if (user) {
+                user.message = message;
+                if (state.activeChat !== conversationId) {
+                    user.unreadCount = (user.unreadCount || 0) + 1;
+                }
+            }
+        },
+        updateMessagesAsRead: (state, action) => {
+            const { conversationId, messageIds } = action.payload;
+            if (!state.conversations[conversationId]) return;
+
+            state.conversations[conversationId].messages = state.conversations[conversationId].messages.map(msg =>
+                messageIds.includes(msg._id) ? { ...msg, seen: true } : msg
+            );
+
+            const user = state.chatUsers.find(u => u.conversationId === conversationId);
+            if (user) {
+                user.unreadCount = 0;
+            }
         },
         setError: (state, action) => { state.error = action.payload; },
         reset: (state) => {
@@ -66,7 +87,8 @@ export const {
     setError,
     reset,
     setLoading,
-    setConversationMessages
+    setConversationMessages,
+    updateMessagesAsRead
 } = privateChatSlice.actions;
 
 export default privateChatSlice.reducer;

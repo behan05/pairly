@@ -8,6 +8,7 @@ import {
     CircularProgress,
     Tooltip,
     TextField,
+    Badge
 } from '@/MUI/MuiComponents';
 import {
     SearchIcon,
@@ -17,13 +18,13 @@ import {
 // Components
 import ChatSidebarHeader from '@/features/chat/common/ChatSidebarHeader';
 import textFormater from '@/utils/textFormatting';
+import formatMessageTime from '@/utils/formatMessageTime';
 import SettingsAction from '@/components/private/SettingsAction';
 
 // redux and Socket
 import { fetchAllUser, fetchConversationMessages } from '@/redux/slices/privateChat/privateChatAction';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
-
 import { socket } from '@/services/socket';
 
 function PrivateChatSidebar() {
@@ -32,7 +33,7 @@ function PrivateChatSidebar() {
     const dispatch = useDispatch();
     const { setSelectedUserId, activeUserId, setActiveUserId } = useOutletContext();
     const { allUsers, chatUsers, loading } = useSelector(state => state.privateChat);
-    
+
     useEffect(() => {
         dispatch(fetchAllUser());
     }, [dispatch]);
@@ -50,7 +51,6 @@ function PrivateChatSidebar() {
         const userConversation = chatUsers.find(u => u.partnerId === userId);
 
         if (userConversation?.conversationId) {
-            // If conversation exists, fetch previous messages
             dispatch(fetchConversationMessages(userConversation.conversationId));
         };
     };
@@ -110,6 +110,7 @@ function PrivateChatSidebar() {
                 }}>
                     {allUsers.map((user, index) => {
                         const isActive = activeUserId === user.userId;
+                        const unseenCount = 1;
                         return (
                             <Stack
                                 key={index}
@@ -121,7 +122,7 @@ function PrivateChatSidebar() {
                                     borderRadius: 0.4,
                                     p: 1,
                                     mt: 0.5,
-                                    bgcolor: isActive ? theme.palette.action.selected : 'transparent', // highlight
+                                    bgcolor: isActive ? theme.palette.action.selected : 'transparent',
                                     transition: 'background-color 0.3s ease',
                                     ':hover': {
                                         backgroundColor: theme.palette.action.hover
@@ -148,7 +149,6 @@ function PrivateChatSidebar() {
                                             }}
                                         />
                                     </Tooltip>
-
                                     <Stack flex={1}>
                                         <Stack
                                             sx={{
@@ -172,23 +172,46 @@ function PrivateChatSidebar() {
                                                 color="text.disabled"
                                                 sx={{ fontSize: '12px' }}
                                             >
-                                                {user?.lastMessage?.createdAt
-                                                    ? new Date(user.lastMessage.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                                                    : ' '}
+                                                {formatMessageTime(user?.lastMessageTime)}
                                             </Typography>
                                         </Stack>
 
-                                        <Typography
-                                            variant='body2'
-                                            color={'text.secondary'}
-                                            sx={{
-                                                fontSize: isSm ? '14px' : 'initial'
-                                            }}
+                                        {/* Text area with Badge count */}
+                                        <Stack
+                                            direction="row"
+                                            alignItems="center"
+                                            justifyContent="space-between"
+                                            sx={{ width: '100%' }}
                                         >
-                                            {user?.lastMessage
-                                                ? user.lastMessage?.content?.split(' ').slice(0, 5).join(' ')+'...' 
-                                                : 'No chat message yet'}
-                                        </Typography>
+                                            <Typography
+                                                variant="body2"
+                                                color="text.secondary"
+                                                sx={{ fontSize: isSm ? '14px' : 'initial' }}
+                                            >
+                                                {user?.lastMessage
+                                                    ? user.lastMessage.content?.split(' ').slice(0, 4).join(' ') + '...'
+                                                    : 'No chat message yet'}
+                                            </Typography>
+
+                                            {/* {unseenCount > 0 && (
+                                                <Badge
+                                                    badgeContent={unseenCount}
+                                                    color={'success'}
+                                                    sx={{
+                                                        '& .MuiBadge-badge': {
+                                                            right: 10,
+                                                            top: 0,
+                                                            fontSize: '0.7rem',
+                                                            minWidth: 20,
+                                                            height: 20,
+                                                            borderRadius: 50,
+                                                            color: 'text.primary'
+                                                        }
+                                                    }}
+                                                />
+                                            )} */}
+                                        </Stack>
+
                                     </Stack>
                                 </Stack>
                             </Stack>

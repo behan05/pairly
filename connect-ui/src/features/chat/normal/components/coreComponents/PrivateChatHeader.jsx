@@ -155,9 +155,9 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
               <Typography variant="body2" fontWeight={600}>
                 {textFormater(partnerProfile?.fullName) ?? 'Stranger'}
               </Typography>
-              <Typography variant="caption" fontWeight={600}>
+              {/* <Typography variant="caption" fontWeight={600}>
                 online
-              </Typography>
+              </Typography> */}
             </Tooltip>
 
             <Typography

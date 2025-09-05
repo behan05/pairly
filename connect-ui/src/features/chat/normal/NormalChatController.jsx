@@ -5,27 +5,20 @@ import {
     addChatUser,
     setActiveChat,
     addMessage,
-    setLoading,
     setError,
-    reset
+    updateMessagesAsRead
 } from '@/redux/slices/privateChat/privateChatSlice';
-import {fetchConversationMessages} from '@/redux/slices/privateChat/privateChatAction'
 
 function NormalChatController() {
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (!socket.connected) socket.connect();
-
-        // Partner joined: server now sends conversationId and partner profile minimal
-
-        socket.on('privateChat:partner-joined', ({ partnerId, conversationId, profile }) => {
+        
+        socket.on('privateChat:partner-joined', ({ partnerId, conversationId }) => {
             dispatch(addChatUser({
                 partnerId,
                 conversationId,
-                name: profile?.name,
-                avatar: profile?.avatar,
-                isOnline: true
             }));
             dispatch(setActiveChat(conversationId));
         });
@@ -49,20 +42,27 @@ function NormalChatController() {
                     timestamp: formatted
                 }
             }));
-
-            // Fetch previous messages if conversationId exists
-            if (conversationId) {
-                dispatch(fetchConversationMessages(conversationId));
-            }
         });
 
-        // typing / stops / disconnected / read / presence - keep stubs
+        socket.on('privateChat:readMessage', ({ conversationId, messageIds }) => {
+            dispatch(updateMessagesAsRead({
+                conversationId,
+                messageIds
+            }));
+        });
+
+        socket.on('privateChat:userOnline', ({ userId }) => {
+            dispatch(addChatUser({ partnerId: userId, isOnline: true }));
+        });
+
+        socket.on('privateChat:userOffline', ({ userId }) => {
+            dispatch(addChatUser({ partnerId: userId, isOnline: false }));
+        });
+
+        // typing / stops / disconnected / presence - keep stubs
         socket.on('privateChat:partner-typing', () => { });
         socket.on('privateChat:partner-stopTyping', () => { });
         socket.on('privateChat:partner-disconnected', () => { });
-        socket.on('privateChat:readMessage', () => { });
-        socket.on('privateChat:userOnline', () => { });
-        socket.on('privateChat:userOffline', () => { });
 
         return () => {
             socket.off('privateChat:partner-joined');
