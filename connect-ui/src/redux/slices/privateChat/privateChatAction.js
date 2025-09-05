@@ -4,7 +4,6 @@ import {
     setConversationMessages,
     setLoading,
     setError,
-    reset
 } from './privateChatSlice';
 import { getAuthHeaders } from '@/utils/authHeaders';
 import { PRIVATE_CHAT_API } from '@/api/config';
@@ -52,3 +51,4 @@ export const fetchConversationMessages = (conversationId) => async (dispatch) =>
         dispatch(setLoading(false));
     }
 };
+

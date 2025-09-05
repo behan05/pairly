@@ -40,6 +40,7 @@ const ChatSidebarHeader = ({ children }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { profileData } = useSelector((state) => state.profile);
+
   const pendingCount = useSelector(pendingFriendRequestCount);
   const theme = useTheme();
 
@@ -59,7 +60,9 @@ const ChatSidebarHeader = ({ children }) => {
     },
     {
       path: '/connect/chat',
-      icon: <ChatIcon sx={{ color: theme.palette.text.primary }} />,
+      icon: (
+        <ChatIcon sx={{ color: theme.palette.text.primary }} />
+      ),
       label: 'Private Chat'
     },
     {

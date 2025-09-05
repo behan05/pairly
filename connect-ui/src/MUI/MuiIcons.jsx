@@ -134,6 +134,8 @@ import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 import Diversity3OutlinedIcon from '@mui/icons-material/Diversity3Outlined';
 import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined';
 import HandshakeIcon from '@mui/icons-material/Handshake';
+import DoneIcon from "@mui/icons-material/Done";
+import DoneAllIcon from "@mui/icons-material/DoneAll";
 
 // // ==================== Private Chat Icons ====================
 import ClearAllIcon from '@mui/icons-material/ClearAll';
@@ -177,6 +179,8 @@ export {
   FavoriteIcon,
   NoteAltIcon,
   LocationOnIcon,
+  DoneAllIcon,
+  DoneIcon,
 
   // Media Controls
   MicIcon,
