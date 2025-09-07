@@ -1,7 +1,7 @@
 {
   "name": "connect",
   "short_name": "connect",
-  "start_url": "https://connect-link-three.vercel.app/connect",
+  "start_url": "/connect",
   "display": "fullscreen",
   "background_color": "#0b0e14ff",
   "theme_color": "#0b0e14ff",
