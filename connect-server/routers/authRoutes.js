@@ -27,6 +27,6 @@ Routers.post('/login', loginController);
  * @desc    Request password reset for user
  * @access  Public
  */
-Routers.post('/forgetPassword', forgetPasswordController);
+Routers.post('/forgot-password', forgetPasswordController);
 
 module.exports = Routers;

@@ -103,7 +103,7 @@ function privateChatHandler(io, socket) {
                 conversationId: conversation._id.toString(),
                 message: {
                     id: newMessage._id.toString(),
-                    text: newMessage.content,
+                    content: newMessage.content,
                     senderId: newMessage.sender,
                     type: newMessage.messageType,
                     timestamp: newMessage.createdAt

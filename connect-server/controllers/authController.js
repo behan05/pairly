@@ -135,28 +135,56 @@ const loginController = async (req, res) => {
 
 const forgetPasswordController = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { fullName, email, password, confirmPassword, authProvider = 'local' } = req.body;
 
-    if (!email) {
+    // Field validations
+    if (!fullName || !email || !password || !confirmPassword) {
       return res.status(400).json({
         success: false,
-        error: 'Email is required!'
+        error: 'All fields are required!',
       });
     }
 
-    // Placeholder: send password reset email/token logic
-    // example generateResetToken(email)
+    // Find user
+    const getUser = await User.findOne({ email, fullName }).lean();
+    if (!getUser) {
+      return res.status(404).json({
+        success: false,
+        error: 'User does not exist',
+      });
+    }
+
+    // Password match check
+    if (authProvider === 'local' && password !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        error: 'Passwords do not match',
+      });
+    }
+
+    // Hash new password
+    const hashedPassword =
+      authProvider === 'local'
+        ? await bcrypt.hash(password, await bcrypt.genSalt(10))
+        : null;
+
+    // Update user
+    await User.findByIdAndUpdate(
+      getUser._id,
+      { password: hashedPassword },
+      { new: true }
+    );
 
     return res.status(200).json({
       success: true,
-      message: 'Password reset instructions sent (if account exists).'
+      message: 'Password reset successfully',
     });
-
   } catch (error) {
+    console.error(error);
     return res.status(500).json({
       success: false,
-      error: 'Error occurred while forget password',
-      detail: error.message
+      error: 'Error occurred while resetting password',
+      detail: error.message,
     });
   }
 };
