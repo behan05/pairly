@@ -38,20 +38,13 @@ const privateChatSlice = createSlice({
         },
         addMessage: (state, action) => {
             const { conversationId, message } = action.payload;
-            if (!message || !conversationId) return;
+            if (!state.conversations[conversationId]) state.conversations[conversationId] = { messages: [] };
 
-            if (!state.conversations[conversationId]) {
-                state.conversations[conversationId] = { messages: [] };
-            }
-
-            state.conversations[conversationId].messages.push(message);
-
-            const user = state.chatUsers.find(u => u.conversationId === conversationId);
-            if (user) {
-                user.message = message;
-                if (state.activeChat !== conversationId) {
-                    user.unreadCount = (user.unreadCount || 0) + 1;
-                }
+            const index = state.conversations[conversationId].messages.findIndex(m => m._id === message._id);
+            if (index >= 0) {
+                state.conversations[conversationId].messages[index] = message;
+            } else {
+                state.conversations[conversationId].messages.push(message);
             }
         },
         updateMessagesAsRead: (state, action) => {

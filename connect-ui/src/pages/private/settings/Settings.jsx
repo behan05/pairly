@@ -30,8 +30,9 @@ import { logout } from '@/redux/slices/auth/authAction';
 import { getProfile } from '@/redux/slices/profile/profileAction';
 import { useDispatch, useSelector } from 'react-redux';
 import { keyframes } from '@emotion/react';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import toCapitalCase from '@/utils/textFormatting';
 
 function Settings() {
   const [searchValue, setSearchValue] = React.useState('');
@@ -99,7 +100,13 @@ function Settings() {
       navigator.share(shareData);
     } else {
       navigator.clipboard.writeText(shareData.url);
-      toast.success('Link copied to clipboard!');
+      toast.success('Link copied to clipboard!', {
+        style: {
+          backdropFilter: 'blur(14px)',
+          background: theme.palette.divider,
+          color: theme.palette.text.primary,
+        }
+      });
     }
   };
 
@@ -108,9 +115,6 @@ function Settings() {
 
   // Get the first 6 words only for settings profile bio
   const shortBioPreview = userBio?.slice(0, 6).join(' ') + '....';
-
-  // split useName.
-  const userFullName = (profileData?.fullName || 'User Name').split(' ');
 
   // glow animation
   const glowDot = keyframes`
@@ -126,7 +130,6 @@ function Settings() {
 `;
   return (
     <Box component={'section'} sx={{ minWidth: '290px' }}>
-      <ToastContainer position="top-center" autoClose={1000} theme="colored" />
 
       {/* Header with arrow back icon */}
       <Stack mb={2}>
@@ -170,7 +173,7 @@ function Settings() {
 
         <Stack justifyContent="center">
           <Typography variant="body1" color={'text.primary'}>
-            {userFullName[0]} {<StyledText text={userFullName?.[1]} />} ({profileData?.age})
+            {toCapitalCase(profileData?.fullName)} ({profileData?.age})
           </Typography>
           <Stack direction="row" alignItems={'center'} gap={1}>
             <Typography variant="body2" letterSpacing={1} color={'success.main'}>

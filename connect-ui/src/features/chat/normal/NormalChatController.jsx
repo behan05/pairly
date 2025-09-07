@@ -14,7 +14,7 @@ function NormalChatController() {
 
     useEffect(() => {
         if (!socket.connected) socket.connect();
-        
+
         socket.on('privateChat:partner-joined', ({ partnerId, conversationId }) => {
             dispatch(addChatUser({
                 partnerId,
@@ -27,19 +27,19 @@ function NormalChatController() {
             dispatch(setError(error || 'Something went wrong in private chat.'));
         });
 
+        // NORMALIZED MESSAGE LISTENER (minimal change - shape normalization)
         socket.on('privateChat:message', ({ conversationId, message, senderId, type, timestamp }) => {
-            const formatted = new Date(timestamp).toLocaleTimeString([], {
-                hour: '2-digit', minute: '2-digit'
-            });
+            const createdAt = timestamp ?? (message?.timestamp ?? new Date().toISOString());
 
             dispatch(addMessage({
                 conversationId,
                 message: {
-                    id: message?.id || `${conversationId}_${Date.now()}`,
-                    text: message?.text ?? message,
-                    senderId,
-                    type,
-                    timestamp: formatted
+                    _id: message?.id,
+                    content: message?.content ?? message?.text ?? '',
+                    sender: senderId ?? message?.senderId ?? message?.sender,
+                    messageType: type ?? message?.type ?? 'text',
+                    createdAt,
+                    seen: false
                 }
             }));
         });

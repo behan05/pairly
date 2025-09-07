@@ -18,7 +18,7 @@ import RandomMessageInput from './RandomMessageInput';
 import NextButton from '../supportComponents/NextButton';
 import DisconnectButton from '../supportComponents/DisconnectButton';
 import CountdownTimer from '../supportComponents/CountdownTimer';
-import StyledText from '@/components/common/StyledText';
+import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 
 // Socket and Redux actions
 import { socket } from '@/services/socket';
@@ -27,6 +27,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 // Styled components
 import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
 
 /**
  * RandomChatWindow component
@@ -178,13 +179,16 @@ function RandomChatWindow({ setShowChatWindow }) {
       {/* === Mobile Only: Floating menu for Next/Disconnect === */}
       {isSm && isConnected && (
         <>
-          <IconButton
-            onClick={handleMenuOpen}
-            sx={{ position: 'absolute', top: 58, right: 0, zIndex: 10 }}
-          >
-            <ArrowDropDownIcon />
-          </IconButton>
-
+          <Tooltip title={'Chat options'}>
+            <ArrowDropDownIcon
+              onClick={handleMenuOpen}
+              sx={{
+                fontSize: '2.5rem',
+                color: 'warning.main',
+                position: 'absolute', top: 55, right: 15, zIndex: 10
+              }}
+            />
+          </Tooltip>
           <Menu
             anchorEl={anchorEl}
             open={open}
@@ -195,7 +199,6 @@ function RandomChatWindow({ setShowChatWindow }) {
               sx: {
                 background: theme.palette.background.paper,
                 boxShadow: theme.shadows[6],
-                border: `1px solid ${theme.palette.success.main}`,
                 borderRadius: 1,
                 minWidth: 180,
                 mb: 1,
@@ -541,18 +544,17 @@ function RandomChatWindow({ setShowChatWindow }) {
                 Click <strong>“Connect”</strong> to meet someone new and start a random chat!
               </Typography>
               {!isConnected && isSm && (
-                <Typography
+                <Button
                   onClick={() => handleDisconnectOnSmallScreen()}
-                  variant={'h5'}
+                  variant={'outlined'}
                   fontWeight={600}
                   p={'1rem 2rem'}
                   color={theme.palette.text.secondary}
                   letterSpacing={1.2}
-                  mt={2}
-                  borderBottom={`1px dotted ${theme.palette.success.main}`}
-                  boxShadow={`inset 0 0 2rem ${theme.palette.divider}`}
+                  startIcon={<NavigateWithArrow />}
                   sx={{
-                    borderRadius: '0 1rem 0 1rem',
+                    mt: 2,
+                    borderRadius: 1,
                     cursor: 'pointer',
                     transition: 'all 0.3s',
                     '&:hover': {
@@ -560,8 +562,8 @@ function RandomChatWindow({ setShowChatWindow }) {
                     }
                   }}
                 >
-                  Back To <StyledText text={'Connect'} />
-                </Typography>
+                  Back To Connect
+                </Button>
               )}
             </>
           )}

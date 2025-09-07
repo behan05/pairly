@@ -27,16 +27,17 @@ import { Link, useNavigate } from 'react-router-dom';
 
 // Redux Action
 import { register } from '@/redux/slices/auth/authAction';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // toast prompt
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function Signup() {
   const theme = useTheme();
   const isLg = useMediaQuery(theme.breakpoints.down('lg'));
   const dispatch = useDispatch();
+  const loading = useSelector((state) => state.auth.loading)
   const [buttonDisabled, setButtonDisabled] = React.useState(false);
   const navigate = useNavigate();
 
@@ -325,7 +326,7 @@ function Signup() {
             variant="outlined"
             endIcon={<SendIcon sx={{ color: 'success.main' }} />}
             size="large"
-            disabled={buttonDisabled}
+            disabled={loading || buttonDisabled}
             sx={{
               alignSelf: 'flex-end',
               px: { xs: 2, sm: 3 },
@@ -341,11 +342,11 @@ function Signup() {
               textDecoration: 'none',
               transition: 'all 0.3s ease',
               '&:hover': {
-                transform: 'translateY(-5px)'
+                transform: loading ? 'none' : 'translateY(-5px)'
               }
             }}
           >
-            {buttonDisabled ? 'Sending...' : 'Create Account'}
+            {loading || buttonDisabled ? 'Creating Account…' : 'Create Account'}
           </Button>
 
           <Divider sx={{ my: 2 }}>

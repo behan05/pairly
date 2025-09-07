@@ -57,7 +57,7 @@ function PrivateMessageInput() {
 
   // Redux state for user and partner IDs
   const currentUserId = useSelector((state) => state.profile.profileData?._id);
-  const partnerId = useSelector((state) => state.privayeChat?.chatUsers?.userId);
+  const conversationId = useSelector((state) => state.privateChat?.conversations);
   const open = Boolean(anchorEl);
 
   // Reference to hidden file input
@@ -96,36 +96,25 @@ function PrivateMessageInput() {
   };
 
   // handle submit
-  // handle submit
   const handleSend = async () => {
     const hasText = message.trim() !== '';
+    if (!hasText) return;
 
-    if (hasText) {
-      // Emit to socket
-      socket.emit('privateChat:message', {
-        message,
-        senderId: currentUserId,
-        receiverId: partnerId,
-        type: 'text'
-      });
+    // Emit to server (keep server payload the same as before)
+    socket.emit('privateChat:message', { message, type:'text'});
 
-      // Optimistic UI update
-      dispatch(
-        addMessage({
-          message,
-          senderId: currentUserId,
-          receiverId: partnerId,
-          type: 'text',
-          timestamp: new Date().toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit'
-          })
-        })
-      );
+    // Optimistic UI Update
+    dispatch(addMessage({
+      conversationId,
+      message: {
+        content: message,
+        sender: currentUserId,
+        messageType: 'text',
+        createdAt: new Date().toISOString(),
+      }
+    }));
 
-      // Clear input
-      setMessage('');
-    }
+    setMessage('');
   };
 
   // Handle emoji selection

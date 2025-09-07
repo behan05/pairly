@@ -136,6 +136,8 @@ import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined';
 import HandshakeIcon from '@mui/icons-material/Handshake';
 import DoneIcon from "@mui/icons-material/Done";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import LinkOffIcon from '@mui/icons-material/LinkOff';
 
 // // ==================== Private Chat Icons ====================
 import ClearAllIcon from '@mui/icons-material/ClearAll';
@@ -181,6 +183,8 @@ export {
   LocationOnIcon,
   DoneAllIcon,
   DoneIcon,
+  SkipNextIcon,
+  LinkOffIcon,
 
   // Media Controls
   MicIcon,
