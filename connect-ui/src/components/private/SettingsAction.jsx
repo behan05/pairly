@@ -23,7 +23,7 @@ function SettingsAction() {
       <Tooltip title="Settings">
         <IconButton
           component={Link}
-          to="/connect/settings"
+          to="/pairly/settings"
           sx={{
             boxShadow: 3,
             '&:hover .rotate-icon': {

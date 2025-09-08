@@ -23,7 +23,7 @@ import axios from 'axios';
 function ReportBug() {
   // Set document title and prefill device info on mount
   React.useEffect(() => {
-    document.title = 'Connect - Report Bug';
+    document.title = 'Pairly - Report Bug';
 
     // Get platform and user agent for device info
     const platform = navigator.platform;
@@ -144,7 +144,7 @@ function ReportBug() {
           </Typography>
 
           <Typography variant="body2" fontWeight={400} gutterBottom mb={4} color="text.secondary">
-            Encountered a bug or issue? Help us improve Connect by reporting it below. The more
+            Encountered a bug or issue? Help us improve Pairly by reporting it below. The more
             details you provide, the faster we can fix it.
           </Typography>
         </Stack>
@@ -236,7 +236,7 @@ function ReportBug() {
           {/* Email input */}
           <TextField
             label="Email"
-            placeholder="connect@support.com"
+            placeholder="Pairly@support.chat"
             name="email"
             value={formData.email}
             onChange={handleChange}

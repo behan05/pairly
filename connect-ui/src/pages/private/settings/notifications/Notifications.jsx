@@ -91,7 +91,7 @@ function Notifications() {
       <ToastContainer position="top-right" autoClose={1000} theme="colored" />
 
       <Stack mb={2}>
-        <NavigateWithArrow redirectTo="/connect/settings" text="Notifications" />
+        <NavigateWithArrow redirectTo="/pairly/settings" text="Notifications" />
       </Stack>
 
       <BlurWrapper>

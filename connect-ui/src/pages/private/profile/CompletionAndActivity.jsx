@@ -15,7 +15,7 @@ function CompletionAndActivity() {
 
       {/* Header with arrow back icon */}
       <Stack mb={2}>
-        <NavigateWithArrow redirectTo={'/connect/profile'} text={'Completion And Activity'} />
+        <NavigateWithArrow redirectTo={'/pairly/profile'} text={'Completion And Activity'} />
       </Stack>
 
       <BlurWrapper>

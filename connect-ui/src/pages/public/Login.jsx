@@ -42,7 +42,7 @@ function Login() {
   const [disabled, setDisabled] = React.useState(false);
 
   React.useEffect(() => {
-    document.title = 'Connect - Login';
+    document.title = 'Pairly - Login';
   }, []);
 
   // Form state to handle user input
@@ -99,7 +99,7 @@ function Login() {
           color: theme.palette.text.primary,
         }
       });
-      setTimeout(() => navigate('/connect'), 1000);
+      setTimeout(() => navigate('/pairly'), 1000);
     } else {
       toast.error(response.message);
       setDisabled(false)
@@ -116,18 +116,15 @@ function Login() {
     switch (platform) {
       case 'google':
         console.log('Redirecting to Google login...');
-        // Implement Google login logic here
         break;
       case 'facebook':
         console.log('Redirecting to Facebook login...');
-        // Implement Facebook login logic here
         break;
-      case 'apple':
-        console.log('Redirecting to Apple login...');
-        // Implement Apple login logic here
+      case 'microsoft':
+        console.log('Redirecting to microsoft login...');
         break;
       default:
-        console.log('Unknown platform');
+        break;
     }
   };
 
@@ -153,11 +150,11 @@ function Login() {
             letterSpacing={1}
             color={theme.palette.text.primary}
           >
-            <StyledText text={'Connect'} />
+            <StyledText text={'Pairly'} />
           </Typography>
 
           <Typography variant="subtitle1" color={theme.palette.text.secondary} mb={3}>
-            Connect is a real-time random chatting webapp, powered by{' '}
+            Pairly is a real-time random chatting webapp, powered by{' '}
             <StyledText text={'interest-based'} /> matching. 100% <StyledText text={'India'} />{' '}
             platform designed for genuine conversations anytime, anywhere.
           </Typography>
@@ -190,7 +187,7 @@ function Login() {
             textAlign={'center'}
             color={theme.palette.text.primary}
           >
-            Hey <StyledText text={'Connects'} />!
+            Hey <StyledText text={'Pairly'} />!
           </Typography>
 
           <Typography
@@ -241,7 +238,7 @@ function Login() {
           {/* Link to signup page */}
           <Stack gap={1}>
             <Typography>
-              New to <StyledText text={'Connect'} /> ?
+              New to <StyledText text={'Pairly'} /> ?
               <MuiLink
                 component={Link}
                 to="/register"
@@ -311,13 +308,38 @@ function Login() {
 
           {/* Social login icons */}
           <Stack direction={'row'} m={'auto'} gap={2}>
-            <IconButton edge="start" onClick={() => handleSocialLogin('google')}>
+            <IconButton
+              edge="start"
+              onClick={() => handleSocialLogin('google')}
+              sx={{ color: 'warning.main' }}
+            >
               <GoogleIcon />
             </IconButton>
-            <IconButton edge="start" onClick={() => handleSocialLogin('apple')}>
-              <AppleIcon />
+
+            <IconButton
+              edge="start"
+              onClick={() => handleSocialLogin('microsoft')}
+              sx={{ color: '#2F2F2F' }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path fill="#F35325" d="M1 1h10v10H1z" />
+                <path fill="#81BC06" d="M13 1h10v10H13z" />
+                <path fill="#05A6F0" d="M1 13h10v10H1z" />
+                <path fill="#FFBA08" d="M13 13h10v10H13z" />
+              </svg>
             </IconButton>
-            <IconButton edge="start" onClick={() => handleSocialLogin('facebook')}>
+
+            <IconButton
+              edge="start"
+              onClick={() => handleSocialLogin('facebook')}
+              sx={{ color: 'info.main' }}
+            >
               <FacebookIcon />
             </IconButton>
           </Stack>

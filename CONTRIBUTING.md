@@ -1,6 +1,6 @@
-# 🛠️ Contributing to Real-Time Chat App
+# 🛠️ Contributing to Pairly (Real time couple friendly chat web application)
 
-Thank you for your interest in contributing to the **Real-Time Chat App**! 🎉  
+Thank you for your interest in contributing to **Pairly**! 🎉  
 We welcome all kinds of contributions — code, design, documentation, bug reports, or suggestions.
 
 ---
@@ -34,13 +34,13 @@ We welcome all kinds of contributions — code, design, documentation, bug repor
 
 ## 🤝 Code of Conduct
 
-We expect everyone to follow our [Code of Conduct](CODE_OF_CONDUCT.md) if available and treat others with respect, kindness, and professionalism.
+Please follow our [Code of Conduct](CODE_OF_CONDUCT.md) and treat others with respect, kindness, and professionalism.
 
 ---
 
 ## 🧰 Getting Started
 
-To get started locally:
+To run Pairly locally:
 
 ```bash
 git clone https://github.com/behan05/real-time-chat-app.git
@@ -53,41 +53,45 @@ npm run dev
 
 ## 🚀 Creating a Pull Request
 
-PRs are welcomed for everything:
+We welcome PRs for:
 
-- bug fixes
-- features
+- Bug fixes
+- Features
 - UI improvements
-- documentation, etc.
+- Documentation
 
-Please follow this process:
+**PR Guidelines:**
 
 - Keep PRs focused and small.
-- Reference related issue numbers in the description.
-- Add screenshots if you made UI changes.
+- Reference related issue numbers.
+- Add screenshots for UI changes.
 - Add test cases if possible.
-- Wait for a maintainer to review and approve.
+- Wait for review and approval.
 
 ---
 
 ## 💬 Commit Guidelines
 
-- feat: add ConnectButton component
+Use clear, conventional commit messages:
+
+- feat: add PairlyButton component
 - fix: resolve chat auto-scroll issue
 - docs: update README instructions
 - refactor: simplify socket connection logic
 
+---
+
 ## 🌿 Branch Naming Convention
 
-Use this format:
-
-- type/short-description
+Format: `type/short-description`
 
 Examples:
 
-- feat/add ConnectButton component
-- fix/resolve chat auto-scroll issue
+- feat/add-pairly-button
+- fix/chat-auto-scroll
 - docs/contributing-update
+
+---
 
 ## 🎨 Code Style Guide
 
@@ -103,32 +107,33 @@ Examples:
 
 ## 🐛 Reporting Bugs & ✨ Requesting Features
 
-Use the [GitHub Issues](../../issues) section to:
+Use [GitHub Issues](../../issues) to:
 
 - Report bugs 🐞
-- Suggest new features 💡
+- Suggest features 💡
 - Ask questions 🙋‍♂️
 
 **Tips for better reports:**
+
 - Clearly describe the issue or idea.
-- Include screenshots or logs when possible.
+- Include screenshots or logs if possible.
 - Mention steps to reproduce (for bugs).
-- Label your issue properly (bug, feature, question, etc.).
+- Label your issue (bug, feature, question, etc.).
 
 ---
 
 ## 🌍 Translation Contributions
 
-We appreciate contributions in different languages!
+We appreciate translations!
 
-- Follow the structure of existing translations
-- Create a PR with the format: `i18n/add-spanish-translation` (or your language)
+- Follow the structure of existing translations.
+- Create a PR with the format: `i18n/add-spanish-translation` (or your language).
 
 ---
 
 ## 🙋 Need Help?
 
-If you're stuck or unsure about anything:
+If you need help:
 
 - Open a [GitHub Discussion](../../discussions)
 - Comment on an open issue

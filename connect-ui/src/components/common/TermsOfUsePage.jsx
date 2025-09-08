@@ -21,7 +21,7 @@ function Section({ title, children }) {
 function TermsOfUsePage() {
   // Set document title on mount
   useEffect(() => {
-    document.title = 'Connect - Terms of Use';
+    document.title = 'Pairly - Terms of Use';
   }, []);
 
   return (
@@ -32,19 +32,19 @@ function TermsOfUsePage() {
           <StyledText text="Terms" /> of Use
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
-          The rules and guidelines for using the Connect platform.
+          The rules and guidelines for using the Pairly platform.
         </Typography>
       </Box>
 
       {/* Intro Paragraph */}
       <Typography paragraph>
-        By accessing or using Connect, you agree to abide by these Terms of Use. If you do not agree
+        By accessing or using Pairly, you agree to abide by these Terms of Use. If you do not agree
         with any part, please do not use our platform.
       </Typography>
 
       {/* Eligibility Section */}
       <Section title="1. Eligibility">
-        You must be at least 18 years old to use Connect. By using the service, you represent that
+        You must be at least 18 years old to use Pairly. By using the service, you represent that
         you meet this requirement.
       </Section>
 
@@ -76,7 +76,7 @@ function TermsOfUsePage() {
 
       {/* Content Ownership Section */}
       <Section title="5. Content Ownership">
-        You retain rights to the content you create. However, by posting on Connect, you grant us a
+        You retain rights to the content you create. However, by posting on Pairly, you grant us a
         limited license to use it for functionality and moderation.
       </Section>
 
@@ -89,7 +89,7 @@ function TermsOfUsePage() {
       {/* Disclaimers Section */}
       <Section title="7. Disclaimers">
         <ul style={{ paddingLeft: '1.2rem' }}>
-          <li>Connect is provided "as is" without warranties of any kind.</li>
+          <li>Pairly is provided "as is" without warranties of any kind.</li>
           <li>We are not responsible for user-generated content or interactions.</li>
         </ul>
       </Section>
@@ -101,7 +101,7 @@ function TermsOfUsePage() {
 
       {/* Contact Us Section */}
       <Section title="9. Contact Us">
-        For questions or disputes, contact us at <StyledText text="legal@connectapp.com" />.
+        For questions or disputes, contact us at <StyledText text="legal@Pairlyapp.com" />.
       </Section>
 
       {/* Divider before footer */}
@@ -109,7 +109,7 @@ function TermsOfUsePage() {
 
       {/* Footer notice */}
       <Typography textAlign="center" variant="body2" color="text.secondary">
-        By continuing to use Connect, you agree to these Terms of Use.
+        By continuing to use Pairly, you agree to these Terms of Use.
       </Typography>
     </Container>
   );

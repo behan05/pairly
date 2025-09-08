@@ -56,7 +56,7 @@ function Profile() {
     <Box component={'section'}>
       {/* Header with arrow back icon */}
       <Stack mb={2}>
-        <NavigateWithArrow redirectTo={'/connect'} text={'Profile'} />
+        <NavigateWithArrow redirectTo={'/pairly'} text={'Profile'} />
       </Stack>
 
       <List sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>

@@ -8,7 +8,7 @@ function Contact() {
   const theme = useTheme();
 
   React.useEffect(() => {
-    document.title = 'Connect - Contact';
+    document.title = 'Pairly - Contact';
   }, []);
 
   const [formData, setFormData] = useState({
@@ -111,7 +111,7 @@ function Contact() {
             label="Email Address"
             variant="outlined"
             name="email"
-            placeholder="connect@connect.com"
+            placeholder="Pairly@gmail.com"
             value={formData.email}
             onChange={handleChange}
             error={!!error.email}

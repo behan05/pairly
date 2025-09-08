@@ -117,7 +117,7 @@ function ChangeCredentials() {
       {/* Navigate Back */}
       <Stack mb={2}>
         <NavigateWithArrow
-          redirectTo={'/connect/settings/account'}
+          redirectTo={'/pairly/settings/account'}
           text={'Change Email / Password'}
         />
       </Stack>

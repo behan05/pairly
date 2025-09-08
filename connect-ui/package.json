@@ -1,5 +1,5 @@
 {
-  "name": "connect-ui",
+  "name": "pairly-ui",
   "private": true,
   "version": "0.1.0-beta",
   "type": "module",
@@ -7,6 +7,7 @@
     "name": "Behan Kumar",
     "email": "behankrbth@outlook.com"
   },
+  "homepage": "https://pairly.chat",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -60,6 +61,7 @@
   },
   "keywords": [
     "connect",
+    "pairly",
     "mern",
     "random-chat",
     "chat-app",
@@ -68,6 +70,8 @@
     "mongodb",
     "authentication",
     "realtime",
-    "behan"
+    "behan",
+    "behan05",
+    "behan kumar"
   ]
 }

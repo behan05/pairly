@@ -19,7 +19,7 @@ function Section({ title, children }) {
 function PrivacyPolicyPage() {
   // Set document title on mount
   useEffect(() => {
-    document.title = 'Connect - Privacy Policy';
+    document.title = 'Pairly - Privacy Policy';
   }, []);
 
   return (
@@ -30,13 +30,13 @@ function PrivacyPolicyPage() {
           <StyledText text="Privacy" /> Policy
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
-          How Connect collects, uses, and protects your information.
+          How Pairly collects, uses, and protects your information.
         </Typography>
       </Box>
 
       {/* Intro Paragraph */}
       <Typography paragraph>
-        This Privacy Policy outlines how Connect handles your data. By using our platform, you agree
+        This Privacy Policy outlines how Pairly handles your data. By using our platform, you agree
         to the practices described below.
       </Typography>
 
@@ -83,7 +83,7 @@ function PrivacyPolicyPage() {
 
       <Section title="6. Policy Updates">
         {/* Policy update notification section */}
-        This policy may change as Connect evolves. Significant changes will be communicated via app
+        This policy may change as Pairly evolves. Significant changes will be communicated via app
         banners or emails.
       </Section>
 
@@ -91,7 +91,7 @@ function PrivacyPolicyPage() {
         {/* Contact information section */}
         If you have any questions or concerns, feel free to contact us at{' '}
         <Box component="span" color="primary.main">
-          support@connect.com
+          support@Pairly.chat
         </Box>
         .
       </Section>
@@ -101,7 +101,7 @@ function PrivacyPolicyPage() {
 
       {/* Footer notice */}
       <Typography textAlign="center" variant="body2" color="text.secondary">
-        By continuing to use Connect, you accept this Privacy Policy.
+        By continuing to use Pairly, you accept this Privacy Policy.
       </Typography>
     </Container>
   );

@@ -2,10 +2,10 @@
 
 ---
 
-# Random Real-Time Chat App
+# Pairly – Real-Time Couple-Friendly Chat App
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
-[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](./contributing)
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](./CONTRIBUTING.md)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-blue.svg)
 ![Status](https://img.shields.io/badge/status-active-success)
 ![Made with React](https://img.shields.io/badge/Made%20with-React-61DAFB?logo=react)
@@ -15,7 +15,7 @@
 ![Stars](https://img.shields.io/github/stars/behan05/real-time-chat-app)
 ![Last Commit](https://img.shields.io/github/last-commit/behan05/real-time-chat-app)
 
-A full-stack random real-time chat application that connects users anonymously for private 1-on-1 messaging. Built with **React**, **Node.js**, **Express**, **Socket.IO**, and **MongoDB**.
+A full-stack real-time chat application that connects users anonymously for private 1-on-1 messaging. Built with **React**, **Node.js**, **Express**, **Socket.IO**, and **MongoDB**.
 
 ---
 
@@ -211,8 +211,8 @@ real-time-chat-app/
 │   ├── socket/
 │   └── server.js
 ├── docs/
-│   ├──screenshot/
-│   └──translations/
+│   ├── screenshot/
+│   └── translations/
 ├── .env
 └── README.md
 ```
@@ -221,7 +221,7 @@ real-time-chat-app/
 
 ## 🚀 Deployment
 
-- **Frontend**: [Vercel](https://connect-link-three.vercel.app/)
+- **Frontend**: [Vercel](https://pairly.chat/)
 - **Backend**: Render
 
 ---

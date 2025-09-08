@@ -51,8 +51,8 @@ function Navbar() {
           <Stack
             component={'img'}
             src={'/logo.png'}
-            alt="connect logo"
-            aria-label="Connect logo"
+            alt="Pairly logo"
+            aria-label="Pairly logo"
             maxWidth={isSm ? 48 : 55}
             boxShadow={3}
           />

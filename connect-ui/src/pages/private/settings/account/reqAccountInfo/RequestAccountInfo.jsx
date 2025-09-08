@@ -53,7 +53,7 @@ function RequestAccountInfo() {
 
       {/* Back Button */}
       <Stack mb={2}>
-        <NavigateWithArrow redirectTo={'/connect/settings/account'} text={'Request account info'} />
+        <NavigateWithArrow redirectTo={'/pairly/settings/account'} text={'Request account info'} />
       </Stack>
 
       {/* Form Box */}

@@ -54,19 +54,19 @@ const ChatSidebarHeader = ({ children }) => {
 
   const navItems = [
     {
-      path: '/connect',
+      path: '/pairly',
       icon: <ShuffleIcon sx={{ color: theme.palette.info.main }} />,
       label: 'Random Chat'
     },
     {
-      path: '/connect/chat',
+      path: '/pairly/chat',
       icon: (
         <ChatIcon sx={{ color: theme.palette.text.primary }} />
       ),
       label: 'Private Chat'
     },
     {
-      path: '/connect/friend-requests',
+      path: '/pairly/friend-requests',
       icon: (
         <Badge badgeContent={pendingCount} color="error" invisible={pendingCount === 0}>
           <PersonAddIcon sx={{ color: theme.palette.success.main }} />
@@ -75,7 +75,7 @@ const ChatSidebarHeader = ({ children }) => {
       label: 'Friend Requests'
     },
     {
-      path: '/connect/blocked-users',
+      path: '/pairly/blocked-users',
       icon: <BlockIcon sx={{ color: theme.palette.error.main }} />,
       label: 'Blocked Users'
     }
@@ -83,13 +83,13 @@ const ChatSidebarHeader = ({ children }) => {
 
   const handleShareClick = () => {
     const shareData = {
-      title: 'Connect App',
-      text: `Join me on Connect! 
+      title: 'Pairly App',
+      text: `Join me on Pairly! 
                    Create your profile 
                    and get matched with real people for 
                    anonymous, safe, and meaningful conversations
                    worldwide.`,
-      url: `${window.location.origin}/connect`
+      url: `${window.location.origin}/pairly`
     };
 
     if (navigator.share) {
@@ -138,7 +138,7 @@ const ChatSidebarHeader = ({ children }) => {
       {/* Header */}
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Typography variant="h6" fontWeight={700}>
-          <StyledText text={'Connect'} />
+          <StyledText text={'Pairly'} />
         </Typography>
 
         {/* Action Icons */}
@@ -201,19 +201,19 @@ const ChatSidebarHeader = ({ children }) => {
         {[
           {
             label: 'Profile',
-            to: '/connect/profile',
+            to: '/pairly/profile',
             icon: <PersonIcon fontSize="small" sx={{ mr: 1, color: theme.palette.info.main }} />
           },
           {
             label: 'Settings',
-            to: '/connect/settings',
+            to: '/pairly/settings',
             icon: (
               <SettingsIcon fontSize="small" sx={{ mr: 1, color: theme.palette.primary.main }} />
             )
           },
           {
             label: 'Help',
-            to: '/connect/settings/help',
+            to: '/pairly/settings/help',
             icon: (
               <HelpOutlineIcon fontSize="small" sx={{ mr: 1, color: theme.palette.warning.main }} />
             )

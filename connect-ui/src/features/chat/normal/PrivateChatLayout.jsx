@@ -21,7 +21,7 @@ function NormalChatLayout() {
   const [activeUserId, setActiveUserId] = useState(null);
 
   React.useEffect(() => {
-    document.title = 'Connect - Private Chat';
+    document.title = 'Pairly - Private Chat';
   }, [dispatch]);
 
   const handleBackToSidebar = () => {

@@ -23,7 +23,7 @@ function WhyChooseUs() {
     {
       icon: <PsychologyIcon sx={{ fontSize: 30, color: theme.palette.warning.main }} />,
       title: 'Smart Matching',
-      content: 'Connect pairs you with like-minded users based on preferences and behavior.'
+      content: 'Pairly pairs you with like-minded users based on preferences and behavior.'
     },
     {
       icon: <FlashOnIcon sx={{ fontSize: 30, color: theme.palette.secondary.main }} />,
@@ -64,7 +64,7 @@ function WhyChooseUs() {
           mx="auto"
         >
           We’re committed to providing a safe, smart, and seamless connection experience. With
-          real-time communication, intelligent matching, and privacy-first design, Connect helps you
+          real-time communication, intelligent matching, and privacy-first design, Pairly helps you
           make meaningful interactions with confidence.
         </Typography>
       </Stack>

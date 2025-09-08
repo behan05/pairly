@@ -38,7 +38,7 @@ setupSocket(server); // Attach WebSocket to raw HTTP server
 
 // Enable CORS for allowed origins
 app.use(cors({
-    origin: ['https://connect-link-three.vercel.app', 'http://localhost:5173'],
+    origin: ['https://connect-link-three.vercel.app', 'https://pairly.chat', 'http://localhost:5173'],
     credentials: true
 }));
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Box,
   Divider,
@@ -42,7 +41,7 @@ function Help() {
     <Box component={'section'}>
       {/* Header with arrow back icon */}
       <Stack mb={2}>
-        <NavigateWithArrow redirectTo={'/connect/settings'} text={'Help'} />
+        <NavigateWithArrow redirectTo={'/pairly/settings'} text={'Help'} />
       </Stack>
 
       <List>

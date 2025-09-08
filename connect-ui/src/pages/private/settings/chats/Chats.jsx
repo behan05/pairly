@@ -8,7 +8,7 @@ import {
   Switch as MuiSwitch,
   Select,
   MenuItem
-} from '../../../../MUI/MuiComponents';
+} from '@/MUI/MuiComponents';
 import {
   EditNoteIcon,
   KeyboardReturnIcon,
@@ -16,7 +16,7 @@ import {
   TextFieldsIcon,
   VisibilityIcon,
   NotificationsActiveIcon
-} from '../../../../MUI/MuiIcons';
+} from '@/MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import BlurWrapper from '@/components/common/BlurWrapper';
 import { getChatSettings, updateChatSettings } from '@/redux/slices/settings/settingsAction';
@@ -139,7 +139,7 @@ function Chats() {
       <ToastContainer position="top-right" autoClose={1000} theme="colored" />
 
       <Stack mb={2}>
-        <NavigateWithArrow redirectTo={'/connect/settings'} text={'Chats'} />
+        <NavigateWithArrow redirectTo={'/pairly/settings'} text={'Chats'} />
       </Stack>
       <BlurWrapper>
         {chatsItem.map((item, i) => (

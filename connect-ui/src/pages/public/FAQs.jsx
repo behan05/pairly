@@ -5,7 +5,7 @@ import FAQ from '@/components/public/FAQ';
 
 function FAQs() {
   React.useEffect(() => {
-    document.title = 'Connect - FAQs ❓';
+    document.title = 'Pairly - FAQs ❓';
   }, []);
 
   return (
@@ -15,7 +15,7 @@ function FAQs() {
       </Typography>
 
       <Typography variant="subtitle1" color="text.secondary" mb={4}>
-        Get quick answers to the most common questions about Connect.
+        Get quick answers to the most common questions about Pairly.
       </Typography>
 
       <FAQ />

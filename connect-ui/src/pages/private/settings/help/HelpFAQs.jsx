@@ -21,7 +21,7 @@ function FAQHelp() {
   };
 
   React.useEffect(() => {
-    document.title = 'Connect - Help with FAQs ❓';
+    document.title = 'Pairly - Help with FAQs ❓';
   }, []);
 
   const faqsHelpData = [
@@ -88,7 +88,7 @@ function FAQHelp() {
     >
       {/* Header with arrow back icon */}
       <Stack mb={2}>
-        <NavigateWithArrow redirectTo={'/connect/settings/help'} text={'FAQs'} />
+        <NavigateWithArrow redirectTo={'/pairly/settings/help'} text={'FAQs'} />
       </Stack>
 
       {/* === FAQs heading === */}
@@ -97,7 +97,7 @@ function FAQHelp() {
       </Typography>
 
       <Typography variant="subtitle1" color="text.secondary" mb={4}>
-        Get quick answers to the most common questions about Connect.
+        Get quick answers to the most common questions about Pairly.
       </Typography>
 
       {/* === FAQs === */}
@@ -110,7 +110,8 @@ function FAQHelp() {
           sx={{
             backdropFilter: `blur(14px)`,
             background: 'transparent',
-            boxShadow: `inset 0 1px 0.1rem ${theme.palette.text.secondary}`
+            boxShadow: `inset 0 1px 0.1rem ${theme.palette.text.secondary}`,
+            borderRadius: 0.5
           }}
         >
           <AccordionSummary

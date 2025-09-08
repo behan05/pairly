@@ -56,7 +56,7 @@ function AccountDelete() {
       <ToastContainer position="top-right" autoClose={2000} theme="colored" />
 
       <Stack mb={2}>
-        <NavigateWithArrow redirectTo={'/connect/settings/account'} text={'Delete Account'} />
+        <NavigateWithArrow redirectTo={'/pairly/settings/account'} text={'Delete Account'} />
       </Stack>
 
       <BlurWrapper>

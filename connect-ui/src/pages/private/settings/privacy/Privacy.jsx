@@ -89,7 +89,7 @@ function Privacy() {
 
       {/* Navigation Back */}
       <Stack mb={2}>
-        <NavigateWithArrow redirectTo="/connect/settings" text="Privacy Settings" />
+        <NavigateWithArrow redirectTo="/pairly/settings" text="Privacy Settings" />
       </Stack>
 
       <BlurWrapper>

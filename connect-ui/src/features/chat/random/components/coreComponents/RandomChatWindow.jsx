@@ -562,7 +562,7 @@ function RandomChatWindow({ setShowChatWindow }) {
                     }
                   }}
                 >
-                  Back To Connect
+                  Back To Pairly
                 </Button>
               )}
             </>

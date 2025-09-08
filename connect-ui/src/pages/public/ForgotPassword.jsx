@@ -47,7 +47,7 @@ function ForgotPassword() {
     const [disabled, setDisabled] = React.useState(false);
 
     React.useEffect(() => {
-        document.title = 'Connect - Forgot Password';
+        document.title = 'Pairly - Forgot Password';
     }, []);
 
     const handleChange = (e) => {
@@ -146,12 +146,12 @@ function ForgotPassword() {
                         letterSpacing={1}
                         color={theme.palette.text.primary}
                     >
-                        <StyledText text={'Connect'} />
+                        <StyledText text={'Pairly'} />
                     </Typography>
 
                     <Typography variant="subtitle1" color={theme.palette.text.secondary} mb={3}>
                         Reset your password and continue enjoying{' '}
-                        <StyledText text={'real-time'} /> chats with <StyledText text={'Connect'} />.
+                        <StyledText text={'real-time'} /> chats with <StyledText text={'Pairly'} />.
                     </Typography>
 
                     {/* Video */}

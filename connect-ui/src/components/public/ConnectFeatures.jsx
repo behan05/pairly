@@ -2,7 +2,7 @@ import { Box, Grid, useTheme } from '@/MUI/MuiComponents';
 import ConnectFeaturesCard from './ConnectFeaturesCard';
 
 // Steps data for How It Works section
-const connectFeatures = [
+const pairlyFeatures = [
   {
     label: '01',
     title: 'Smart ',
@@ -20,9 +20,9 @@ const connectFeatures = [
     highlightText: 'Profiles',
     description:
       'Get to know people before starting a chat. Explore detailed profiles, mutual interests, and compatibility tags.',
-    icon1: 'AccountBox', // Icon for user profile
+    icon1: 'AccountBox',
     title1: 'Explore Profiles',
-    icon2: 'Interests', // Icon for interests (symbolic)
+    icon2: 'Interests',
     title2: 'Discover Mutual Interests'
   },
   {
@@ -85,7 +85,7 @@ function ConnectFeatures() {
         my={2}
         sx={{ borderRadius: 1 }}
       >
-        {connectFeatures.map((card, i) => (
+        {pairlyFeatures.map((card, i) => (
           <Box key={i}>
             <ConnectFeaturesCard
               label={card.label}

@@ -82,13 +82,13 @@ export const routes = createBrowserRouter([
 
   // === Protected routes ===
   {
-    path: '/connect',
+    path: '/pairly',
     element: <PrivateRoute />,
     children: [
       {
         element: <RandomChatLayout />,
         children: [
-          // Default view at /connect
+          // Default view at /pairly
           { index: true, element: <RandomSidebar /> },
           { path: 'blocked-users', element: <BlockedList /> },
           { path: 'friend-requests', element: <FriendRequestList /> },
@@ -165,8 +165,8 @@ export const routes = createBrowserRouter([
         element: <PrivateChatLayout />,
         children: [{ index: true, element: <PrivateChatSidebar /> }]
       },
-      // Fallback for unmatched /connect/* routes
-      { path: '*', element: <PageNotFound redirectTo="/connect" /> }
+      // Fallback for unmatched /pairly/* routes
+      { path: '*', element: <PageNotFound redirectTo="/pairly" /> }
     ]
   }
 ]);

@@ -5,14 +5,14 @@ import PrivacyPolicyPage from '@/components/common/PrivacyPolicyPage';
 
 function HelpPrivacyPolicy() {
   React.useEffect(() => {
-    document.title = 'Connect - Privacy Policies';
+    document.title = 'Pairly - Privacy Policies';
   }, []);
 
   return (
     <Box>
       {/* Header with arrow back icon */}
       <Stack mb={2}>
-        <NavigateWithArrow redirectTo={'/connect/settings/help'} text={'Privacy'} />
+        <NavigateWithArrow redirectTo={'/pairly/settings/help'} text={'Privacy'} />
       </Stack>
 
       <PrivacyPolicyPage />

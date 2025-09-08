@@ -87,13 +87,13 @@ function Settings() {
 
   const handleShareClick = () => {
     const shareData = {
-      title: 'Connect App',
-      text: `Join me on Connect! 
+      title: 'Pairly App',
+      text: `Join me on Pairly! 
                    Create your profile 
                    and get matched with real people for 
                    anonymous, safe, and meaningful conversations
                    worldwide.`,
-      url: `${window.location.origin}/connect`
+      url: `${window.location.origin}/pairly`
     };
 
     if (navigator.share) {
@@ -133,7 +133,7 @@ function Settings() {
 
       {/* Header with arrow back icon */}
       <Stack mb={2}>
-        <NavigateWithArrow redirectTo={'/connect'} text={'Settings'} />
+        <NavigateWithArrow redirectTo={'/pairly'} text={'Settings'} />
       </Stack>
       {/* Search keywords */}
       <Box component={'section'} mt={1}>
@@ -152,7 +152,7 @@ function Settings() {
       {/* Profile avatar */}
       <Stack
         component={Link}
-        to={'/connect/profile/general-info'}
+        to={'/pairly/profile/general-info'}
         my={4}
         flexDirection={'row'}
         gap={2}

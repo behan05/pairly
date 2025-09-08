@@ -30,7 +30,7 @@ function FriendRequestList() {
     const { requests, loading, error } = useSelector(state => state.friendRequest);
 
     useEffect(() => {
-        document.title = 'Connect - Friend Requests';
+        document.title = 'Pairly - Friend Requests';
 
         dispatch(fetchFriendRequests())
     }, [dispatch]);

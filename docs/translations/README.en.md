@@ -7,7 +7,7 @@
 
 ---
 
-# Real-Time Chat App
+# Pairly – Real-Time Couple-Friendly Chat App
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](#contributing)
@@ -42,9 +42,9 @@ A full-stack real-time chat application with user authentication, private messag
 
 ## 🖼️ Preview
 
-| Login Page                                     | Sign Up                                         | App Page                                      |
-| ---------------------------------------------- | ----------------------------------------------- | --------------------------------------------- |
-| ![](./client/public/screenshot/Login-page.png) | ![](./client/public/screenshot/Signup-page.png) | ![](./client/public/screenshot/apps-page.png) |
+| Login Page                          | Sign Up                              | App Page                           |
+| ----------------------------------- | ------------------------------------ | ---------------------------------- |
+| ![](docs/screenshot/Login-page.png) | ![](docs/screenshot/Signup-page.png) | ![](docs/screenshot/apps-page.png) |
 
 ---
 
@@ -80,9 +80,7 @@ Make sure you have the following installed before starting:
 Example connection string:
 
 ```
-
-MONGO\_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/?retryWrites=true\&w=majority
-
+MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/?retryWrites=true&w=majority
 ```
 
 ---
@@ -148,7 +146,7 @@ Connected to MongoDB
 In a new terminal window/tab:
 
 ```bash
-cd .connect-ui
+cd connect-ui
 npm install
 npm run dev
 ```
@@ -192,7 +190,7 @@ Common issues and solutions:
 
 ```
 real-time-chat-app/
-├── client/
+├── connect-ui/
 │   ├── src/
 │   │   ├── components/
 │   │   ├── pages/
@@ -200,12 +198,15 @@ real-time-chat-app/
 │   │   ├── redux/ or context/
 │   │   └── App.jsx
 │   └── package.json
-├── server/
+├── connect-server/
 │   ├── controllers/
 │   ├── models/
 │   ├── routes/
 │   ├── socket/
 │   └── server.js
+├── docs/
+│   ├── screenshot/
+│   └── translations/
 ├── .env
 └── README.md
 ```
@@ -214,7 +215,7 @@ real-time-chat-app/
 
 ## 🚀 Deployment
 
-- **Frontend**: [[Vercel](https://connect-link-three.vercel.app/)](https://connect-link-three.vercel.app)
+- **Frontend**: [Vercel](https://pairly.chat/)
 - **Backend**: Render
 
 ---
@@ -238,7 +239,7 @@ If you're new to open source, here are some good first issues:
 - Improve accessibility
 - Write documentation
 
-### Just
+### Steps to contribute:
 
 - 🌱 Fork this repo
 - 🛠️ Create your feature branch
@@ -266,7 +267,7 @@ This project wouldn't be possible without them!
 ## 📬 Contact
 
 For questions or contributions, feel free to reach out:
-[[behankrbth@outlook.com](mailto:behankrbth@outlook.com)](mailto:behankrbth@outlook.com)
+[behankrbth@outlook.com](mailto:behankrbth@outlook.com)
 
 ---
 
@@ -275,7 +276,3 @@ For questions or contributions, feel free to reach out:
 This project is licensed under the [MIT License](./LICENSE)
 
 ---
-
-```
-
-```

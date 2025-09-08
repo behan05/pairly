@@ -32,7 +32,7 @@ function Account() {
     <Box component={'section'}>
       {/* Header with arrow back icon */}
       <Stack mb={2}>
-        <NavigateWithArrow redirectTo={'/connect/settings'} text={'Account'} />
+        <NavigateWithArrow redirectTo={'/pairly/settings'} text={'Account'} />
       </Stack>
 
       <List sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>

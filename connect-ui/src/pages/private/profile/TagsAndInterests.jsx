@@ -147,7 +147,7 @@ function TagsAndInterests() {
 
       {/* Page Header with back button */}
       <Stack mb={2}>
-        <NavigateWithArrow redirectTo="/connect/profile" text="Tags And Interests" />
+        <NavigateWithArrow redirectTo="/pairly/profile" text="Tags And Interests" />
       </Stack>
 
       {/* Form wrapper with blur styling */}

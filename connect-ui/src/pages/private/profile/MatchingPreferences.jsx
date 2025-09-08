@@ -221,7 +221,7 @@ function MatchingPreferences() {
 
       {/* Header */}
       <Stack mb={2}>
-        <NavigateWithArrow redirectTo={'/connect/profile'} text={'Matching Preferences'} />
+        <NavigateWithArrow redirectTo={'/pairly/profile'} text={'Matching Preferences'} />
       </Stack>
 
       {/* Form Wrapper */}

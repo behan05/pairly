@@ -42,7 +42,7 @@ import ReusableVideo from '@/components/public/ReusableVideo';
 
 function Home() {
   React.useEffect(() => {
-    document.title = 'Connect - The heart of the strangers';
+    document.title = 'Pairly - The heart of the strangers';
   }, []);
 
   const features = [
@@ -131,7 +131,7 @@ function Home() {
       >
         <Stack flex={1} justifyContent="center">
           <Typography variant={isMd ? 'h3' : 'h2'} fontWeight={700} sx={{ color: 'text.primary' }}>
-            {<StyledText text={'Talk Freely.'} />} Connect Instantly.
+            {<StyledText text={'Talk Freely.'} />} Pairly Instantly.
           </Typography>
 
           <Typography
@@ -140,9 +140,9 @@ function Home() {
             color="text.secondary"
             sx={{ mt: 3, maxWidth: 640 }}
           >
-            Connect is a modern chat platform that pairs you with random users across the globe in
+            Pairly is a modern chat platform that pairs you with random users across the globe in
             seconds. Whether you're looking to make new friends, share stories, learn languages, or
-            simply pass time it's your gateway to real-time human connection.
+            simply pass time, it's your gateway to real-time human connection.
           </Typography>
 
           {/* === Calling tagline component === */}
@@ -161,7 +161,7 @@ function Home() {
       {/* ===  How It Works Section === */}
       <HowItWorks />
 
-      {/* ===  Connect-Features Section === */}
+      {/* ===  Pairly Features Section === */}
       <Box mx={'auto'} maxWidth={1200} position="relative">
         {/* Section Heading */}
         <Stack alignItems="center" justifyContent="center" my={6}>
@@ -176,7 +176,7 @@ function Home() {
             flexWrap="wrap"
           >
             <BoltOutlinedIcon fontSize="large" sx={{ color: 'error.main' }} />
-            Connect <StyledText text="Features" />
+            Pairly <StyledText text="Features" />
           </Typography>
 
           <Typography
@@ -303,21 +303,6 @@ function Home() {
       {/* === Why Choose Us? Section === */}
       <WhyChooseUs />
 
-      {/* === Testimonials | What Users Are Saying Section === */}
-      {/* < Box >
-        <Typography
-          variant="h5"
-          fontWeight={600}
-          textTransform={'uppercase'}
-          display="flex"
-          alignItems="center"
-          gap={1}
-        >
-          <ChatBubbleOutlineIcon fontSize='medium' />
-          What Users Are {' '}{<StyledText text={'Saying'} />}
-        </Typography>
-      </Box > */}
-
       {/* === Frequently Asked Questions FAQ Section === */}
       <Box
         mt={6}
@@ -348,7 +333,7 @@ function Home() {
           mb={3}
         >
           Got questions? We've answered the most common things you might wonder about from how
-          Connect works to how we keep your experience safe and smooth.
+          Pairly works to how we keep your experience safe and smooth.
         </Typography>
 
         <FAQ />

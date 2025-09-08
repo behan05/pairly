@@ -42,7 +42,7 @@ function Signup() {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    document.title = 'Connect - Create an Account';
+    document.title = 'Pairly - Create an Account';
   }, []);
 
   const [form, setForm] = React.useState({
@@ -159,11 +159,11 @@ function Signup() {
       case 'facebook':
         console.log('Redirecting to Facebook signup...');
         break;
-      case 'apple':
-        console.log('Redirecting to Apple signup...');
+      case 'microsoft':
+        console.log('Redirecting to microsoft signup...');
         break;
       default:
-        console.log('Unknown platform');
+        break;
     }
   };
 
@@ -188,11 +188,11 @@ function Signup() {
             letterSpacing={1}
             color={theme.palette.text.primary}
           >
-            <StyledText text={'Connect'} />
+            <StyledText text={'Pairly'} />
           </Typography>
 
           <Typography variant="subtitle1" color={theme.palette.text.secondary} mb={3}>
-            Join <StyledText text={'Connect'} /> and experience genuine, interest-based connections.
+            Join <StyledText text={'Pairly'} /> and experience genuine, interest-based connections.
           </Typography>
 
           <ReusableVideo />
@@ -360,15 +360,41 @@ function Signup() {
 
           {/* Social Signup */}
           <Stack direction={'row'} m={'auto'} gap={2}>
-            <IconButton edge="start" onClick={() => handleSocialLogin('google')}>
+            <IconButton
+              edge="start"
+              onClick={() => handleSocialLogin('google')}
+              sx={{ color: 'warning.main' }}
+            >
               <GoogleIcon />
             </IconButton>
-            <IconButton edge="start" onClick={() => handleSocialLogin('apple')}>
-              <AppleIcon />
+
+            <IconButton
+              edge="start"
+              onClick={() => handleSocialLogin('microsoft')}
+              sx={{ color: '#2F2F2F' }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path fill="#F35325" d="M1 1h10v10H1z" />
+                <path fill="#81BC06" d="M13 1h10v10H13z" />
+                <path fill="#05A6F0" d="M1 13h10v10H1z" />
+                <path fill="#FFBA08" d="M13 13h10v10H13z" />
+              </svg>
             </IconButton>
-            <IconButton edge="start" onClick={() => handleSocialLogin('facebook')}>
+
+            <IconButton
+              edge="start"
+              onClick={() => handleSocialLogin('facebook')}
+              sx={{ color: 'info.main' }}
+            >
               <FacebookIcon />
             </IconButton>
+
           </Stack>
         </Box>
       </Box>

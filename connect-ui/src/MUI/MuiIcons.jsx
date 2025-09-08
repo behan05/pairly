@@ -59,7 +59,7 @@ import SecurityOutlinedIcon from '@mui/icons-material/SecurityOutlined';
 import SwipeRightAltOutlinedIcon from '@mui/icons-material/SwipeRightAltOutlined';
 import WorkspacePremiumOutlinedIcon from '@mui/icons-material/WorkspacePremiumOutlined';
 
-// ==================== Connect Features / Why Choose Us ====================
+// ==================== Pairly Features / Why Choose Us ====================
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import BrushIcon from '@mui/icons-material/Brush';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
@@ -232,7 +232,7 @@ export {
   SwipeRightAltOutlinedIcon,
   WorkspacePremiumOutlinedIcon,
 
-  // Connect Features / Why Choose Us
+  // Pairly Features / Why Choose Us
   AccountBoxIcon,
   BrushIcon,
   EmojiPeopleIcon,

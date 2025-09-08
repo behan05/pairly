@@ -20,7 +20,7 @@ function RandomChatLayout() {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    document.title = 'Connect - Start a Random Chat';
+    document.title = 'Pairly - Start a Random Chat';
 
   }, [dispatch]);
 

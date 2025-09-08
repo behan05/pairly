@@ -5,14 +5,14 @@ import ReportBug from '@/components/common/ReportBug';
 
 function HelpReport() {
   React.useEffect(() => {
-    document.title = 'Connect - Report Problem';
+    document.title = 'Pairly - Report Problem';
   }, []);
 
   return (
     <Box>
       {/* Header with arrow back icon */}
       <Stack mb={2}>
-        <NavigateWithArrow redirectTo={'/connect/settings/help'} text={'Report Problem'} />
+        <NavigateWithArrow redirectTo={'/pairly/settings/help'} text={'Report Problem'} />
       </Stack>
 
       {/* === Calling Report Bug Component from commom component === */}

@@ -30,9 +30,9 @@ function Footer() {
           alignItems={{ xs: 'center', md: 'flex-start' }}
           textAlign={{ xs: 'center', md: 'left' }}
         >
-          <Box component="img" src={logo} alt="Connect Logo" sx={{ height: 48 }} />
+          <Box component="img" src={logo} alt="Pairly Logo" sx={{ height: 48 }} />
           <Typography variant="body2" color="text.secondary" maxWidth={320}>
-            {<StyledText text={'Connect'} />} is a real-time random chat platform built for global
+            {<StyledText text={'Pairly'} />} is a real-time random chat platform built for global
             connections, meaningful conversations, and privacy-first experiences.
           </Typography>
         </Stack>
@@ -99,7 +99,7 @@ function Footer() {
         textAlign="center"
       >
         <Typography variant="body2" color="text.secondary">
-          © {new Date().getFullYear()} Connect. All rights reserved.
+          © {new Date().getFullYear()} Pairly. All rights reserved.
         </Typography>
 
         <Typography variant="caption" color="text.secondary">

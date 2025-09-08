@@ -1,5 +1,4 @@
-import React from 'react';
-import { Box } from '../../../../MUI/MuiComponents';
+import { Box } from '@/MUI/MuiComponents';
 import { Outlet } from 'react-router-dom';
 
 function NotificationsLayout() {

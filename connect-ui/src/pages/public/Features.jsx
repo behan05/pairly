@@ -7,7 +7,7 @@ function Features() {
   const theme = useTheme();
 
   React.useEffect(() => {
-    document.title = 'Connect - Features';
+    document.title = 'Pairly - Features';
   }, []);
 
   return (

@@ -35,7 +35,7 @@ function HelpContact() {
   const [error, setError] = React.useState({});
 
   React.useEffect(() => {
-    document.title = 'Connect - Contact Support';
+    document.title = 'Pairly - Contact Support';
   }, []);
 
   const handleChange = React.useCallback((e) => {
@@ -106,7 +106,7 @@ function HelpContact() {
       <ToastContainer position="top-right" autoClose={2000} theme="colored" />
 
       <Stack mb={2}>
-        <NavigateWithArrow redirectTo="/connect/settings/help" text="Contact Support" />
+        <NavigateWithArrow redirectTo="/pairly/settings/help" text="Contact Support" />
       </Stack>
 
       <BlurWrapper component="form" onSubmit={handleSubmit}>

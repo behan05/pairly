@@ -202,7 +202,7 @@ function GeneralInfo() {
       <ToastContainer position="top-right" autoClose={1000} theme="colored" />
 
       <Stack mb={2}>
-        <NavigateWithArrow redirectTo={'/connect/profile'} text={'General Info'} />
+        <NavigateWithArrow redirectTo={'/pairly/profile'} text={'General Info'} />
       </Stack>
 
       <BlurWrapper component="form" onSubmit={handleSubmit}>

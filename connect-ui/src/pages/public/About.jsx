@@ -20,7 +20,7 @@ function About() {
   const theme = useTheme();
 
   React.useEffect(() => {
-    document.title = 'Connect - About';
+    document.title = 'Pairly - About';
   }, []);
 
   // Partner logos with descriptions
@@ -84,11 +84,11 @@ function About() {
           gutterBottom
         >
           <InfoOutlinedIcon size="medium" sx={{ color: theme.palette.success.main }} />
-          WHAT IS <StyledText text="CONNECT" />?
+          WHAT IS <StyledText text="Pairly" />?
         </Typography>
 
         <Typography variant="body2" color="text.secondary" maxWidth={700}>
-          Connect is a modern real-time video and text chat platform designed for meaningful and
+          Pairly is a modern real-time video and text chat platform designed for meaningful and
           instant human interactions. Whether you're looking to meet new people, learn languages, or
           simply enjoy a conversation, we make it simple and secure.
         </Typography>
@@ -155,12 +155,12 @@ function About() {
           </Typography>
 
           <Typography variant="subtitle1" color="text.primary" sx={{ letterSpacing: 0.5 }}>
-            <b>Connect</b> lets you instantly start random video chats with people around the world
+            <b>Pairly</b> lets you instantly start random video chats with people around the world
             — no sign-up, no waiting, just genuine human connection.
           </Typography>
 
           <Typography variant="subtitle2" color="text.secondary" sx={{ letterSpacing: 0.5 }}>
-            <StyledText text="❝" /> With Connect, I made friends globally and had conversations that
+            <StyledText text="❝" /> With Pairly, I made friends globally and had conversations that
             truly mattered. It’s fast, fun, and feels safe. <StyledText text="❝" />
           </Typography>
         </Stack>
@@ -177,12 +177,12 @@ function About() {
           gap={1}
         >
           <InfoOutlinedIcon size="medium" sx={{ color: theme.palette.info.main }} />
-          WHY CHOOSE <StyledText text="CONNECT" />?
+          WHY CHOOSE <StyledText text="Pairly" />?
         </Typography>
 
         <Typography variant="subtitle1" color="text.secondary" maxWidth={700}>
           We’re more than just a chat app. With instant pairing, secure conversations, and a growing
-          global community — Connect is where real conversations begin and boundaries disappear.
+          global community — Pairly is where real conversations begin and boundaries disappear.
         </Typography>
       </Stack>
 

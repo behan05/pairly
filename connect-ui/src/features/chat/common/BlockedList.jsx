@@ -29,7 +29,7 @@ function BlockedList() {
   const { blockedUsers, isBlocking } = useSelector((state) => state.moderation);
 
   useEffect(() => {
-    document.title = 'Connect - Blocked Users';
+    document.title = 'Pairly - Blocked Users';
   }, []);
 
   useEffect(() => {
