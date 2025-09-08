@@ -93,18 +93,30 @@ const ChatSidebarHeader = ({ children }) => {
     };
 
     if (navigator.share) {
-      navigator.share(shareData).catch((error) => {
-        console.error('Share failed:', error);
+      navigator.share(shareData).catch((_) => {
       });
     } else {
       navigator.clipboard.writeText(shareData.url);
-      toast.success('Link copied to clipboard!');
+      toast.success('Link copied to clipboard!', {
+        style: {
+          backdropFilter: 'blur(14px)',
+          background: theme.palette.divider,
+          color: theme.palette.text.primary,
+        }
+      });
     }
   };
+  const firstWord = profileData?.fullName?.split(' ')[0];
 
   const handleLogout = async () => {
     dispatch(logout());
-    toast.success('You have been logged out 😔');
+    toast.success(`We'll miss you ${firstWord} 😔`, {
+      style: {
+        backdropFilter: 'blur(14px)',
+        background: theme.palette.divider,
+        color: theme.palette.text.primary,
+      }
+    });
     setTimeout(() => navigate('/login', { replace: true }), 1000);
   };
 

@@ -14,8 +14,8 @@ const authSlice = createSlice({
   initialState,
 
   reducers: {
-    setLoading: (state) => {
-      state.loading = true;
+    setLoading: (state, action) => {
+      state.loading = action.payload;
       state.error = null;
     },
     setError: (state, action) => {

@@ -5,6 +5,7 @@ import About from '@/pages/public/About';
 import Features from '@/pages/public/Features';
 import Contact from '@/pages/public/Contact';
 import Login from '@/pages/public/Login';
+import ForgotPassword from '@/pages/public/ForgotPassword';
 import Register from '@/pages/public/Signup';
 import FAQs from '@/pages/public/FAQs';
 import { SidebarProvider } from '@/context/SidebarContext';
@@ -69,6 +70,7 @@ export const routes = createBrowserRouter([
       { path: 'features', element: <Features /> },
       { path: 'contact', element: <Contact /> },
       { path: 'login', element: <Login /> },
+      { path: 'forgot-password', element: <ForgotPassword /> },
       { path: 'register', element: <Register /> },
       { path: 'faq', element: <FAQs /> },
       { path: 'report', element: <ReportBug /> },

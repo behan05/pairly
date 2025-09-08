@@ -10,7 +10,6 @@ function ProfileLayout() {
         display: 'flex',
         flexDirection: 'column',
         bgcolor: 'background.paper',
-        borderRight: '1px solid rgba(112, 106, 106, 0.3)',
         minHeight: '100vh',
         maxHeight: '100vh',
         overflowY: 'auto'

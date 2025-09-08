@@ -38,7 +38,7 @@ function RandomChatLayout() {
         flex={1}
         sx={{
           background: theme.palette.background.paper,
-          borderRight: `2px solid ${theme.palette.divider}`,
+          // borderRight: `2px solid ${theme.palette.divider}`,
           display: isMd ? (showChatWindow ? 'none' : 'flex') : 'flex'
         }}
       >

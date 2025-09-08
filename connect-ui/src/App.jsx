@@ -9,7 +9,7 @@ function App() {
   const [initialising, setinitialising] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => setinitialising(false), 2500);
+    setTimeout(() => setinitialising(false), 1000);
   }, []);
 
   return (

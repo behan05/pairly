@@ -27,10 +27,10 @@ import { Link, useNavigate } from 'react-router-dom';
 
 // Redux Action
 import { login } from '@/redux/slices/auth/authAction';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // toast prompt
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function Login() {
@@ -38,10 +38,11 @@ function Login() {
   const isLg = useMediaQuery(theme.breakpoints.down('lg'));
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [isDisabled, setIsDisabled] = React.useState(false);
+  const loading = useSelector((state) => state.auth.loading)
+  const [disabled, setDisabled] = React.useState(false);
 
   React.useEffect(() => {
-    document.title = 'Connect – Login';
+    document.title = 'Connect - Login';
   }, []);
 
   // Form state to handle user input
@@ -86,12 +87,11 @@ function Login() {
 
     setError(newError);
     if (!isValid) return;
-
+    setDisabled(true);
     const response = await dispatch(login(form));
 
     // Toaster notifications
     if (response.success) {
-      setIsDisabled(true);
       toast.success('Login successfully!', {
         style: {
           backdropFilter: 'blur(14px)',
@@ -99,10 +99,10 @@ function Login() {
           color: theme.palette.text.primary,
         }
       });
-      setTimeout(() => navigate('/connect'), 2000);
+      setTimeout(() => navigate('/connect'), 1000);
     } else {
       toast.error(response.message);
-      setIsDisabled(false);
+      setDisabled(false)
     }
   };
 
@@ -274,7 +274,7 @@ function Login() {
             variant="outlined"
             endIcon={<SendIcon sx={{ color: 'success.main' }} />}
             size="large"
-            disabled={isDisabled}
+            disabled={loading || disabled}
             sx={{
               alignSelf: 'flex-end',
               px: { xs: 2, sm: 3 },
@@ -289,12 +289,14 @@ function Login() {
               letterSpacing: 0.2,
               textDecoration: 'none',
               transition: 'all 0.3s ease',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              opacity: loading ? 0.5 : 1,
               '&:hover': {
-                transform: 'translateY(-5px)'
+                transform: loading ? 'none' : 'translateY(-5px)'
               }
             }}
           >
-            {isDisabled ? 'Sending...' : 'Login'}
+            {loading ? 'Logging in...' : 'Login'}
           </Button>
 
           {/* Divider with 'or' text */}
