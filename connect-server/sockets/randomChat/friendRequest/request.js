@@ -25,10 +25,9 @@ async function requestHandler(io, socket, Conversation, PrivateChatRequest, acti
         try {
             const conversation = await Conversation.findOne({
                 participants: { $all: [currentUserId, partnerUserId] },
-                isRandomChat: true,
-                isActive: true,
+                isRandomChat: true
             });
-
+            
             if (!conversation) {
                 socket.emit('random:error', { message: 'No active match found.' });
                 return;
