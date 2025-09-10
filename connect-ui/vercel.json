@@ -1,23 +1,13 @@
 {
-  "builds": [
+  "rewrites": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
   "build": {
     "env": {
       "NPM_CONFIG_LEGACY_PEER_DEPS": "true"
     }
-  },
-  "routes": [
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/((?!assets/|favicon.ico|robots.txt|manifest.json).*)",
-      "dest": "/index.html"
-    }
-  ]
+  }
 }
-

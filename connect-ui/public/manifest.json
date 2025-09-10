@@ -1,7 +1,7 @@
 {
   "name": "pairly",
   "short_name": "pairly",
-  "start_url": "/pairly",
+  "start_url": "/pairly/",
   "display": "fullscreen",
   "background_color": "#0b0e14ff",
   "theme_color": "#0b0e14ff",

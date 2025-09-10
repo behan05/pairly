@@ -42,7 +42,8 @@ app.use(cors({
         'https://connect-link-three.vercel.app', 
         'https://pairly.chat', 
         'https://www.pairly.chat',
-        'http://localhost:5173'
+        'http://localhost:5173',
+        'http://localhost:4173'
     ],
     credentials: true
 }));
