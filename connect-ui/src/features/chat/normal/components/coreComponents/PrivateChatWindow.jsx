@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import {
   Box,
   Stack,
@@ -33,6 +33,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
   const theme = useTheme();
   const isSm = useMediaQuery('(max-width:936px)');
   const messagesEndRef = useRef(null);
+  const [isTyping, setIsTyping] = useState(false);
 
   const currentUserId = useSelector((state) => state.profile.profileData?.user);
   const { chatUsers, conversations } = useSelector((state) => state.privateChat);
@@ -45,11 +46,6 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
   const messages = conversationId && conversations[conversationId]?.messages
     ? conversations[conversationId].messages
     : [];
-
-  // Scroll to bottom when messages update
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
 
   // Emit read event when opening chat
   useEffect(() => {
@@ -107,6 +103,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
   }, []);
 
   useEffect(() => {
+    // Scroll input into view when focused
     const input = document.querySelector("textarea, input");
     if (!input) return;
 
@@ -117,8 +114,16 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
     };
 
     input.addEventListener("focus", handleFocus);
-    return () => input.removeEventListener("focus", handleFocus);
-  }, [messages]);
+
+    // Scroll messages to bottom only if NOT typing
+    if (!isTyping) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+
+    return () => {
+      input.removeEventListener("focus", handleFocus);
+    };
+  }, [messages, isTyping]);
 
 
   return (
@@ -284,7 +289,11 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
           pt: 1,
         }}
       >
-        <PrivateMessageInput conversationId={conversationId} />
+        <PrivateMessageInput
+          conversationId={conversationId}
+          onFocus={() => setIsTyping(true)}
+          onBlur={() => setIsTyping(false)}
+        />
       </Stack>
 
     </Stack>

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import {
   Box,
   IconButton,
@@ -61,6 +61,7 @@ function RandomMessageInput() {
 
   // Reference to hidden file input
   const fileInputRef = useRef(null);
+  const inputContainerRef = useRef(null);
 
   // Handle attach button click (open file menu)
   const handleAttachClick = (event) => {
@@ -245,8 +246,28 @@ function RandomMessageInput() {
     }
   };
 
+  // --- Added effect to keep input above keyboard on mobile ---
+  useEffect(() => {
+    const handleResize = () => {
+      if (inputContainerRef.current && window.visualViewport) {
+        inputContainerRef.current.style.bottom = `${window.visualViewport.offsetTop}px`;
+      }
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleResize);
+      handleResize();
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleResize);
+      }
+    };
+  }, []);
+
   return (
-    <Box position="relative">
+    <Box ref={inputContainerRef} position="sticky" bottom={0} zIndex={10} sx={{ transition: 'bottom 0.25s ease' }}>
 
       {/* Media preview area */}
       <Box

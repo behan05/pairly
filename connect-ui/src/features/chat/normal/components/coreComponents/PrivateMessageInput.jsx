@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import {
   Box,
   IconButton,
@@ -36,74 +36,46 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addMessage } from '@/redux/slices/privateChat/privateChatSlice';
 import { socket } from '@/services/socket';
 
-/**
- * PrivateMessageInput component
- * - Handles text and media input for private chat
- * - Supports emoji picker, file/media preview, and optimistic UI updates
- * - Uploads media to server and emits messages via socket
- * @returns {JSX.Element} The rendered component.
- */
-
 function PrivateMessageInput() {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const dispatch = useDispatch();
 
-  // Local state for message, media previews, emoji picker, and file menu
   const [message, setMessage] = useState('');
   const [previews, setPreviews] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-  // Redux state for user and partner IDs
   const currentUserId = useSelector((state) => state.profile.profileData?._id);
   const conversationId = useSelector((state) => state.privateChat?.conversations);
   const open = Boolean(anchorEl);
 
-  // Reference to hidden file input
   const fileInputRef = useRef(null);
+  const inputContainerRef = useRef(null);
 
-  // Handle attach button click (open file menu)
   const handleAttachClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  // Close file menu
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
 
-  // Handle typing status with socket events
-  let typingTimeout;
   const handleInputChange = (e) => {
     const { value } = e.target;
     setMessage(value);
   };
 
-  // Handle file selection and preview
-  const handleFileClick = (e) => {
+  const handleFileClick = (e) => { };
+  const handleMediaDeleteClick = (indexToDelete) => { };
+  const getContentType = (file) => { };
 
-  };
-
-  // Delete selected media preview
-  const handleMediaDeleteClick = (indexToDelete) => {
-
-  };
-
-  // Determine content type for message/media
-  const getContentType = (file) => {
-
-  };
-
-  // handle submit
   const handleSend = async () => {
     const hasText = message.trim() !== '';
     if (!hasText) return;
 
-    // Emit to server (keep server payload the same as before)
-    socket.emit('privateChat:message', { message, type:'text'});
+    socket.emit('privateChat:message', { message, type: 'text' });
 
-    // Optimistic UI Update
     dispatch(addMessage({
       conversationId,
       message: {
@@ -117,12 +89,8 @@ function PrivateMessageInput() {
     setMessage('');
   };
 
-  // Handle emoji selection
-  const handleEmojiSelect = (emoji) => {
+  const handleEmojiSelect = (emoji) => { };
 
-  };
-
-  // Common style for file menu items
   const menuCommonStyle = {
     borderRadius: 1,
     transition: 'all 0.2s',
@@ -131,8 +99,28 @@ function PrivateMessageInput() {
     }
   };
 
+  // --- Added effect to keep input above keyboard on mobile ---
+  useEffect(() => {
+    const handleResize = () => {
+      if (inputContainerRef.current && window.visualViewport) {
+        inputContainerRef.current.style.bottom = `${window.visualViewport.offsetTop}px`;
+      }
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleResize);
+      handleResize();
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleResize);
+      }
+    };
+  }, []);
+
   return (
-    <Box position="relative">
+    <Box ref={inputContainerRef} position="sticky" bottom={0} zIndex={10} sx={{ transition: 'bottom 0.25s ease' }}>
       {/* Main input area */}
       <Paper
         elevation={3}
@@ -153,7 +141,7 @@ function PrivateMessageInput() {
           </IconButton>
         </Tooltip>
 
-        {/* File Attach Menu for small screen*/}
+        {/* File Menu (small & large screens) */}
         {isSm ? (
           <Menu
             anchorEl={anchorEl}
@@ -182,13 +170,7 @@ function PrivateMessageInput() {
             >
               {/* Photo & Video */}
               <Stack alignItems="center" spacing={1}>
-                <IconButton
-                  sx={{
-                    bgcolor: theme.palette.action.hover,
-                    p: 1.5,
-                    borderRadius: 2
-                  }}
-                >
+                <IconButton sx={{ bgcolor: theme.palette.action.hover, p: 1.5, borderRadius: 2 }}>
                   <PhotoCameraBackIcon sx={{ color: 'primary.main', fontSize: '1.8rem' }} />
                 </IconButton>
                 <Typography variant="caption">Gallery</Typography>
@@ -196,13 +178,7 @@ function PrivateMessageInput() {
 
               {/* Audio */}
               <Stack alignItems="center" spacing={1}>
-                <IconButton
-                  sx={{
-                    bgcolor: theme.palette.action.hover,
-                    p: 1.5,
-                    borderRadius: 2
-                  }}
-                >
+                <IconButton sx={{ bgcolor: theme.palette.action.hover, p: 1.5, borderRadius: 2 }}>
                   <MusicNoteIcon sx={{ color: 'secondary.main', fontSize: '1.8rem' }} />
                 </IconButton>
                 <Typography variant="caption">Audio</Typography>
@@ -210,13 +186,7 @@ function PrivateMessageInput() {
 
               {/* Document */}
               <Stack alignItems="center" spacing={1}>
-                <IconButton
-                  sx={{
-                    bgcolor: theme.palette.action.hover,
-                    p: 1.5,
-                    borderRadius: 2
-                  }}
-                >
+                <IconButton sx={{ bgcolor: theme.palette.action.hover, p: 1.5, borderRadius: 2 }}>
                   <DescriptionIcon sx={{ color: 'success.main', fontSize: '1.8rem' }} />
                 </IconButton>
                 <Typography variant="caption">Document</Typography>
@@ -224,13 +194,7 @@ function PrivateMessageInput() {
 
               {/* Notes */}
               <Stack alignItems="center" spacing={1}>
-                <IconButton
-                  sx={{
-                    bgcolor: theme.palette.action.hover,
-                    p: 1.5,
-                    borderRadius: 2
-                  }}
-                >
+                <IconButton sx={{ bgcolor: theme.palette.action.hover, p: 1.5, borderRadius: 2 }}>
                   <NoteAltIcon sx={{ color: 'info.main', fontSize: '1.8rem' }} />
                 </IconButton>
                 <Typography variant="caption">Notes</Typography>
@@ -238,13 +202,7 @@ function PrivateMessageInput() {
 
               {/* Location */}
               <Stack alignItems="center" spacing={1}>
-                <IconButton
-                  sx={{
-                    bgcolor: theme.palette.action.hover,
-                    p: 1.5,
-                    borderRadius: 2
-                  }}
-                >
+                <IconButton sx={{ bgcolor: theme.palette.action.hover, p: 1.5, borderRadius: 2 }}>
                   <LocationOnIcon sx={{ color: 'error.main', fontSize: '1.8rem' }} />
                 </IconButton>
                 <Typography variant="caption">Location</Typography>
@@ -252,13 +210,7 @@ function PrivateMessageInput() {
 
               {/* Secret */}
               <Stack alignItems="center" spacing={1}>
-                <IconButton
-                  sx={{
-                    bgcolor: theme.palette.action.hover,
-                    p: 1.5,
-                    borderRadius: 2
-                  }}
-                >
+                <IconButton sx={{ bgcolor: theme.palette.action.hover, p: 1.5, borderRadius: 2 }}>
                   <LockIcon sx={{ color: 'warning.main', fontSize: '1.8rem' }} />
                 </IconButton>
                 <Typography variant="caption">Secret</Typography>
@@ -287,7 +239,6 @@ function PrivateMessageInput() {
               }
             }}
           >
-            {/* Document */}
             <MenuItem
               onClick={() => {
                 fileInputRef.current.value = null;
@@ -299,8 +250,6 @@ function PrivateMessageInput() {
               <DescriptionIcon sx={{ mr: 1, color: 'success.main' }} />
               <Typography>Document</Typography>
             </MenuItem>
-
-            {/* Photo & Video */}
             <MenuItem
               onClick={() => {
                 fileInputRef.current.value = null;
@@ -312,8 +261,6 @@ function PrivateMessageInput() {
               <PhotoCameraBackIcon sx={{ mr: 1, color: 'primary.main' }} />
               <Typography>Photo & Video</Typography>
             </MenuItem>
-
-            {/* Audio */}
             <MenuItem
               onClick={() => {
                 fileInputRef.current.value = null;
@@ -325,20 +272,14 @@ function PrivateMessageInput() {
               <MusicNoteIcon sx={{ mr: 1, color: 'secondary.main' }} />
               <Typography>Audio</Typography>
             </MenuItem>
-
-            {/* Private Note */}
             <MenuItem sx={menuCommonStyle}>
               <NoteAltIcon sx={{ mr: 1, color: 'info.main' }} />
               <Typography>Private Notes</Typography>
             </MenuItem>
-
-            {/* Secret Messages */}
             <MenuItem sx={menuCommonStyle}>
               <LockIcon sx={{ mr: 1, color: 'warning.main' }} />
               <Typography>Secret Messages</Typography>
             </MenuItem>
-
-            {/* Send Location */}
             <MenuItem sx={menuCommonStyle}>
               <LocationOnIcon sx={{ mr: 1, color: 'error.main' }} />
               <Typography>Send Location</Typography>
@@ -346,7 +287,6 @@ function PrivateMessageInput() {
           </Menu>
         )}
 
-        {/* Hidden Input for file selection */}
         <input
           type="file"
           accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt,.ppt,.pptx"
@@ -356,7 +296,6 @@ function PrivateMessageInput() {
           onChange={handleFileClick}
         />
 
-        {/* Message Input */}
         <InputBase
           fullWidth
           multiline
@@ -373,14 +312,12 @@ function PrivateMessageInput() {
           }}
         />
 
-        {/* Emoji Button */}
         <Tooltip title="Emoji">
           <IconButton onClick={() => setShowEmojiPicker((prev) => !prev)}>
             <InsertEmoticonIcon />
           </IconButton>
         </Tooltip>
 
-        {/* Send Button */}
         <Tooltip title="Send">
           <IconButton onClick={handleSend}>
             <SendIcon />
@@ -388,7 +325,6 @@ function PrivateMessageInput() {
         </Tooltip>
       </Paper>
 
-      {/* Emoji Picker */}
       {showEmojiPicker && (
         <Box
           sx={{

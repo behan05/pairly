@@ -48,18 +48,12 @@ function RandomChatWindow({ setShowChatWindow }) {
     connected: isConnected,
     waiting: isWaiting
   } = useSelector((state) => state.randomChat);
+  const [isTyping, setIsTyping] = useState(false);
 
   // Local state
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const messagesEndRef = useRef(null);
-
-  // Scroll to bottom when messages change
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages]);
 
   // === Socket Event Handlers ===
   const handleNext = () => {
@@ -187,6 +181,7 @@ function RandomChatWindow({ setShowChatWindow }) {
   }, []);
 
   useEffect(() => {
+    // Scroll input into view when focused
     const input = document.querySelector("textarea, input");
     if (!input) return;
 
@@ -197,8 +192,17 @@ function RandomChatWindow({ setShowChatWindow }) {
     };
 
     input.addEventListener("focus", handleFocus);
-    return () => input.removeEventListener("focus", handleFocus);
-  }, [messages]);
+
+    // Scroll messages to bottom only if NOT typing
+    if (!isTyping) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+
+    return () => {
+      input.removeEventListener("focus", handleFocus);
+    };
+  }, [messages, isTyping]);
+
 
   return (
     <Stack
@@ -547,7 +551,10 @@ function RandomChatWindow({ setShowChatWindow }) {
               pt: 1,
             }}
           >
-            <RandomMessageInput />
+            <RandomMessageInput
+              onFocus={() => setIsTyping(true)}
+              onBlur={() => setIsTyping(false)}
+            />
           </Stack>
 
         </>
