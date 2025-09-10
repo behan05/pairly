@@ -86,15 +86,51 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
     }
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      const chatWindow = document.getElementById("chat-window");
+      if (chatWindow && window.visualViewport) {
+        chatWindow.style.height = `${window.visualViewport.height}px`;
+      }
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", handleResize);
+      handleResize();
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener("resize", handleResize);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const input = document.querySelector("textarea, input");
+    if (!input) return;
+
+    const handleFocus = () => {
+      setTimeout(() => {
+        input.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300);
+    };
+
+    input.addEventListener("focus", handleFocus);
+    return () => input.removeEventListener("focus", handleFocus);
+  }, []);
+
+
   return (
     <Stack
-      height="100vh"
+      height="100dvh"
       width="100%"
       justifyContent="space-between"
       sx={{
         backgroundColor: theme.palette.background.default,
         position: 'relative'
       }}
+      id='chat-window'
     >
       {/* Header */}
       <PrivateChatHeader

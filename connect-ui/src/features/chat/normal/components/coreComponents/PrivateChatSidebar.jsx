@@ -8,7 +8,8 @@ import {
     CircularProgress,
     Tooltip,
     TextField,
-    Badge
+    Avatar,
+    Badge,
 } from '@/MUI/MuiComponents';
 import {
     SearchIcon,
@@ -54,6 +55,7 @@ function PrivateChatSidebar() {
             dispatch(fetchConversationMessages(userConversation.conversationId));
         };
     };
+
 
     return (
         <Box
@@ -133,19 +135,19 @@ function PrivateChatSidebar() {
                                 <Stack
                                     sx={{
                                         flexDirection: 'row',
-                                        gap: 2,
+                                        gap: 1.5,
                                         width: '100%',
+                                        alignItems: 'center'
                                     }}
                                 >
                                     <Tooltip title={user?.profile?.shortBio}>
-                                        <Stack
-                                            component={'img'}
+                                        <Avatar
                                             src={user?.profile?.profileImage || defaultAvatar}
                                             alt={user?.profile?.fullName + 'profile Image'}
                                             maxWidth={35}
                                             sx={{
                                                 objectFit: 'cover',
-                                                borderRadius: 0.5
+                                                borderRadius: '50%'
                                             }}
                                         />
                                     </Tooltip>
@@ -186,10 +188,19 @@ function PrivateChatSidebar() {
                                             <Typography
                                                 variant="body2"
                                                 color="text.secondary"
-                                                sx={{ fontSize: isSm ? '14px' : 'initial' }}
+                                                sx={{
+                                                    maxWidth: '100%',
+                                                    fontSize: isSm ? '14px' : 'initial',
+                                                    whiteSpace: 'nowrap',
+                                                    overflow: 'hidden',
+                                                    textOverflow: 'ellipsis',
+                                                    wordBreak: 'break-all'
+                                                }}
                                             >
                                                 {user?.lastMessage
-                                                    ? user.lastMessage.content?.split(' ').slice(0, 4).join(' ') + '...'
+                                                    ? user.lastMessage.content.length > 36
+                                                        ? user.lastMessage.content.slice(0, 36) + '...'
+                                                        : user.lastMessage.content
                                                     : 'No chat message yet'}
                                             </Typography>
 

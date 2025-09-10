@@ -166,9 +166,43 @@ function RandomChatWindow({ setShowChatWindow }) {
     }
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      const chatWindow = document.getElementById("chat-window");
+      if (chatWindow && window.visualViewport) {
+        chatWindow.style.height = `${window.visualViewport.height}px`;
+      }
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", handleResize);
+      handleResize();
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener("resize", handleResize);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const input = document.querySelector("textarea, input");
+    if (!input) return;
+
+    const handleFocus = () => {
+      setTimeout(() => {
+        input.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300);
+    };
+
+    input.addEventListener("focus", handleFocus);
+    return () => input.removeEventListener("focus", handleFocus);
+  }, []);
+  
   return (
     <Stack
-      height="100%"
+      height="100dvh"
       justifyContent="space-between"
       sx={{
         borderLeft: `2px solid ${theme.palette.divider}`,

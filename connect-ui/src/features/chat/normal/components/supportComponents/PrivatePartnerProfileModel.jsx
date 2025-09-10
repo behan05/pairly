@@ -98,7 +98,7 @@ function PrivatePartnerProfileModel({ userId, open, onClose }) {
           direction="row"
           alignItems="center"
           justifyContent="space-between"
-          sx={{ p: 2, borderBottom: `1px solid ${theme.palette.divider}`}}
+          sx={{ p: 2, borderBottom: `1px solid ${theme.palette.divider}` }}
         >
           <Typography variant="subtitle1" fontWeight={600}>
             User Info
@@ -196,6 +196,10 @@ function PrivatePartnerProfileModel({ userId, open, onClose }) {
               borderRadius: "50%",
               objectFit: "cover",
               mb: 1,
+              transition: 'all 0.3s',
+              ':hover': {
+                transform: 'scale(2.6)',
+              }
             }}
           />
           <Typography variant="h6">{partnerProfile?.fullName || "Stranger"}</Typography>
