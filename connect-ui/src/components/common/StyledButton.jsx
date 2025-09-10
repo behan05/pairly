@@ -15,14 +15,14 @@ function StyledButton({ icon, variant = 'outlined', type, text, redirectUrl, ...
       sx={{
         px: { xs: 2, sm: 3 }, // Responsive horizontal padding
         py: { xs: 1, sm: 1 }, // Responsive vertical padding
-        background: 'transparent', // Transparent background
+        bgcolor: theme.palette.background.paper,
         backdropFilter: 'blur(14px)', // Blur effect
         border: 'none', // Remove border
         borderTopRightRadius: '6px', // Rounded top right corner
         borderBottomRightRadius: '6px', // Rounded bottom right corner
         borderBottom: `1px dotted ${theme.palette.success.main}`, // Dotted bottom border
         textTransform: 'none', // No uppercase transformation
-        color: 'primary.contrastText', // Text color
+        color: 'text.primary',
         letterSpacing: 0.2, // Letter spacing
         textDecoration: 'none', // Remove underline
         transition: 'all 0.3s ease', // Smooth transition

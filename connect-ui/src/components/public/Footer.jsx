@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Typography, Stack, Divider, Link as MuiLink } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import logo from '@/assets/logo/logo.png';
@@ -9,12 +8,11 @@ function Footer() {
     <Box
       component="footer"
       sx={{
-        mt: 8,
+        mt: 4,
         px: { xs: 3, sm: 6, md: 12 },
-        py: 6,
+        py: 4,
         bgcolor: 'transparent',
         backdropFilter: 'blur(6px)',
-        borderTop: '1px solid rgba(255,255,255,0.1)'
       }}
     >
       {/* Top section */}
@@ -30,7 +28,7 @@ function Footer() {
           alignItems={{ xs: 'center', md: 'flex-start' }}
           textAlign={{ xs: 'center', md: 'left' }}
         >
-          <Box component="img" src={logo} alt="Pairly Logo" sx={{ height: 48 }} />
+          <Box component="img" src={logo} alt="Pairly Logo" sx={{ height: 48, userSelect: 'none' }} />
           <Typography variant="body2" color="text.secondary" maxWidth={320}>
             {<StyledText text={'Pairly'} />} is a real-time random chat platform built for global
             connections, meaningful conversations, and privacy-first experiences.
@@ -88,7 +86,7 @@ function Footer() {
       </Stack>
 
       {/* Divider */}
-      <Divider sx={{ my: 4, borderColor: 'rgba(255,255,255,0.1)' }} />
+      <Divider sx={{ my: 4 }} />
 
       {/* Bottom section */}
       <Stack

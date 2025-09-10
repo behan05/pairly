@@ -16,7 +16,7 @@ import BgToggle from './BgToggle';
 
 const navListBtn = [
   { path: '/login', text: 'Login', icon: <LockOpenIcon sx={{ color: 'success.main' }} /> },
-  { path: '/register', text: 'Unlock Access', icon: <LockIcon sx={{ color: 'success.main' }} /> }
+  { path: '/register', text: 'Create Access', icon: <LockIcon sx={{ color: 'success.main' }} /> }
 ];
 
 function Navbar() {
@@ -31,7 +31,8 @@ function Navbar() {
       sx={{
         backgroundColor: 'transparent',
         backdropFilter: 'blur(4px)',
-        WebkitBackdropFilter: 'blur(4px)'
+        WebkitBackdropFilter: 'blur(4px)',
+        userSelect: 'none'
       }}
     >
       <Toolbar
@@ -54,7 +55,9 @@ function Navbar() {
             alt="Pairly logo"
             aria-label="Pairly logo"
             maxWidth={isSm ? 48 : 55}
-            boxShadow={3}
+            sx={{
+              filter: 'brightness(120%) drop-shadow(0 4px 2px',
+            }}
           />
         </Stack>
 

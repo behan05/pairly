@@ -9,7 +9,8 @@ import {
     Button,
     Tooltip,
     IconButton,
-    Divider
+    Divider,
+    Avatar
 } from '@/MUI/MuiComponents';
 import {
     CloseIcon,
@@ -50,17 +51,11 @@ function FriendRequestList() {
     };
 
     return (
-        <Box
-            sx={{
-                px: 2,
-                pb: 2,
-                overflowY: 'auto'
-            }}
-        >
+        <Box sx={{ px: 2, pb: 2, overflowY: 'auto' }}>
             <ChatSidebarHeader />
 
             {loading && (
-                <Stack direction="row" alignItems="center" spacing={1}>
+                <Stack direction="row" alignItems="center" spacing={1} py={2}>
                     <CircularProgress size={18} />
                     <Typography variant="body2" color="text.secondary">
                         Loading friend requests...
@@ -79,102 +74,101 @@ function FriendRequestList() {
             ) : (
                 <Box>
                     {requests.map((request, index) => (
-                        <Stack
-                            key={index}
-                            sx={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                border: `1px solid ${theme.palette.divider}`,
-                                boxShadow: `inset 0 0 0.2rem ${theme.palette.divider}`,
-                                borderRadius: 0.5,
-                                p: 1,
-                                mt: 1
-                            }}
-                        >
-                            <Stack sx={{
-                                flexDirection: 'row',
-                                gap: 2
-                            }}>
-                                <Tooltip title={request?.bio}>
-                                    <Stack
-                                        component={'img'}
+                        <Stack key={index} spacing={1.2} py={1.2}>
+                            <Stack
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="space-between"
+                                sx={{
+                                    p: 1.5,
+                                    borderRadius: 2,
+                                    backgroundColor: theme.palette.background.paper,
+                                    boxShadow: `0 1px 3px ${theme.palette.divider}`,
+                                    transition: 'all 0.2s ease',
+                                    '&:hover': {
+                                        boxShadow: `0 3px 6px ${theme.palette.divider}`,
+                                        transform: 'scale(1.01)',
+                                    },
+                                }}
+                            >
+                                {/* Left: Avatar + Info */}
+                                <Stack direction="row" spacing={1.5} alignItems="center">
+                                    <Avatar
                                         src={request?.profileImage || defaultAvatar}
-                                        alt={request?.fullName + 'profile Image'}
-                                        maxWidth={35}
-                                        sx={{
-                                            objectFit: 'cover',
-                                            borderRadius: 0.5
-                                        }}
+                                        alt={request?.fullName}
+                                        sx={{ width: 44, height: 44 }}
                                     />
-                                </Tooltip>
+                                    <Stack>
+                                        <Typography
+                                            variant={isSm ? 'body2' : 'body1'}
+                                            fontWeight={500}
+                                        >
+                                            {textFormater(request.fullName)}{' '}
+                                            <StyledText text={split(request?.gender ?? ' ')} />
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            color="text.secondary"
+                                            noWrap
+                                            sx={{ maxWidth: 180 }}
+                                        >
+                                            sent you a friend request
+                                        </Typography>
+                                    </Stack>
+                                </Stack>
 
-                                <Stack>
-                                    <Typography
-                                        variant={isSm ? 'body2' : 'body1'}
-                                        sx={{
-                                            fontSize: isSm ? '14px' : 'inital'
-                                        }}
-                                    >
-                                        {textFormater(request.fullName)} {<StyledText text={split(request?.gender ?? ' ')} />}
-                                    </Typography>
-                                    <Typography
-                                        variant='body2'
-                                        color={'text.secondary'}
-                                        sx={{
-                                            fontSize: isSm ? '14px' : 'inital'
-                                        }}
-                                    >
-                                        sent a friend request
-                                    </Typography>
-                                </Stack>
+                                {/* Right: Actions */}
+                                {isSm ? (
+                                    <Stack direction="row" spacing={0.5}>
+                                        <Tooltip title="Accept">
+                                            <IconButton
+                                                onClick={() => handleAcceptRequest(request.sender)}
+                                            >
+                                                <CheckCircleIcon
+                                                    sx={{ color: theme.palette.success.main }}
+                                                />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title="Reject">
+                                            <IconButton
+                                                onClick={() => handleRejectRequest(request.sender)}
+                                            >
+                                                <CloseIcon sx={{ color: theme.palette.error.main }} />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Stack>
+                                ) : (
+                                    <Stack direction="row" spacing={1}>
+                                        <Button
+                                            variant="outlined"
+                                            size="small"
+                                            color="success"
+                                            onClick={() => handleAcceptRequest(request.sender)}
+                                        >
+                                            Accept
+                                        </Button>
+                                        <Button
+                                            variant="outlined"
+                                            size="small"
+                                            color="error"
+                                            onClick={() => handleRejectRequest(request.sender)}
+                                        >
+                                            Ignore
+                                        </Button>
+                                    </Stack>
+                                )}
                             </Stack>
-                            {isSm ? (
-                                <Stack direction="row" sx={{ gap: 1.2, mt: 0.5 }}>
-                                    <Tooltip title="Accept Friend Request">
-                                        <IconButton onClick={() => handleAcceptRequest(request.sender)} >
-                                            <CheckCircleIcon sx={{ color: theme.palette.success.main }} />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title="Reject Friend Request">
-                                        <IconButton onClick={() => handleRejectRequest(request.sender)}>
-                                            <CloseIcon sx={{ color: theme.palette.error.main }} />
-                                        </IconButton>
-                                    </Tooltip>
-                                </Stack>
-                            ) : (
-                                <Stack
-                                    gap={0.5}
-                                    sx={{
-                                        flexDirection: 'row',
-                                    }}>
-                                    <Button
-                                        variant='outlined'
-                                        color='success'
-                                        onClick={() => handleAcceptRequest(request.sender)}
-                                        sx={{
-                                            fontSize: isSm ? '14px' : 'inital',
-                                        }}>
-                                        Accept
-                                    </Button>
-                                    <Button
-                                        variant='outlined'
-                                        color='error'
-                                        onClick={() => handleRejectRequest(request.sender)}
-                                        sx={{
-                                            fontSize: isSm ? '14px' : 'inital'
-                                        }}>
-                                        Ignore
-                                    </Button>
-                                </Stack>
+
+                            {/* Divider between requests */}
+                            {index < requests.length - 1 && (
+                                <Divider sx={{ mt: 1, opacity: 0.6 }} />
                             )}
-                            <Divider />
                         </Stack>
                     ))}
                 </Box>
             )}
         </Box>
-    )
+    );
 }
 
 export default FriendRequestList

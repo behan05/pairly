@@ -62,7 +62,7 @@ function PrivateChatRequestPopupModal() {
         width: 'fit-content',
         alignSelf: 'flex-start',
         transition: 'all 0.3s ease-in-out',
-        color: theme.palette.primary.contrastText,
+        color: theme.palette.text.primary,
         borderColor: theme.palette.divider,
         '&:focus': {
             outline: 'none',
@@ -86,6 +86,7 @@ function PrivateChatRequestPopupModal() {
             <BlurWrapper sx={{
                 maxWidth: isSm ? '90%' : 400,
                 width: '100%',
+                backgroundColor: theme.palette.background.paper
             }}>
                 <Typography variant="body2" textAlign='center' color="textSecondary">
                     {<StyledText text={partnerProfile?.fullName ?? 'unknown'} />}{' '}wants to start a private chat with you.

@@ -194,7 +194,7 @@ function RandomChatHeader() {
           </Tooltip>
           <Box>
             <Tooltip title={<StyledText text={'Partner Profile'} />}>
-              <Typography variant="subtitle1" fontWeight={600}>
+              <Typography variant="subtitle1" fontWeight={600} color="text.primary">
                 {partnerProfile?.fullName ?? 'Stranger'}
               </Typography>
             </Tooltip>

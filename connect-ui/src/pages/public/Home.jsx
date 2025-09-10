@@ -209,7 +209,7 @@ function Home() {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                background: 'transparent',
+                bgcolor: theme.palette.background.paper,
                 backdropFilter: 'blur(6px)',
                 borderRadius: 1,
                 cursor: 'pointer',
@@ -328,7 +328,8 @@ function Home() {
           variant="body2"
           maxWidth="800px"
           color="text.secondary"
-          textAlign="center"
+          mx="auto"
+          textAlign={'center'}
           fontSize={{ xs: 14, md: 16 }}
           mb={3}
         >

@@ -285,7 +285,7 @@ function About() {
               borderRadius={1}
               boxShadow={2}
               sx={{
-                bgcolor: 'inherit',
+                bgcolor: theme.palette.background.paper,
                 backdropFilter: 'blur(14px)',
                 transition: 'all 0.3s ease',
                 borderBottom: `1px dotted ${theme.palette.text.secondary}`,
@@ -293,7 +293,7 @@ function About() {
               }}
             >
               <Box component="img" src={card.brandLogo} alt={card.brandName} width={110} mb={2} />
-              <Typography variant="subtitle1" fontWeight={600}>
+              <Typography variant="subtitle1" fontWeight={600} color='text.primary'>
                 {card.brandName}
               </Typography>
               <Typography variant="body2" color="text.secondary">

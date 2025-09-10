@@ -48,7 +48,7 @@ function HowItWorks() {
 
   const iconsMap = {
     LoginOutlinedIcon: <LoginOutlinedIcon sx={{ color: 'primary.main' }} />,
-    PeopleAltOutlinedIcon: <PeopleAltOutlinedIcon sx={{ color: 'info.contrastText' }} />,
+    PeopleAltOutlinedIcon: <PeopleAltOutlinedIcon sx={{ color: 'info.main' }} />,
     ChatOutlinedIcon: <ChatOutlinedIcon sx={{ color: 'success.main' }} />,
     SwipeRightAltOutlinedIcon: <SwipeRightAltOutlinedIcon sx={{ color: 'warning.main' }} />,
     SecurityOutlinedIcon: <SecurityOutlinedIcon sx={{ color: 'error.main' }} />
@@ -97,7 +97,7 @@ function HowItWorks() {
             flexBasis={350}
             p={3}
             sx={{
-              bgcolor: 'inherit',
+              bgcolor: theme.palette.background.paper,
               backdropFilter: 'blur(14px)',
               borderRadius: theme.spacing(1),
               borderBottom: `1px dotted ${theme.palette.text.secondary}`,

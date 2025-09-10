@@ -68,7 +68,7 @@ const glowBoxSx = (theme) => ({
   flexDirection: 'column',
   gap: 4,
   boxShadow: 'inset 0px 0px 20px rgba(112, 103, 103, 0.2)',
-  transition: 'transform 0.3s ease'
+  transition: 'transform 0.3s ease',
 });
 
 const connectorLineSx = {
@@ -116,8 +116,8 @@ function ConnectFeaturesCard({
       >
         <Stack
           borderRadius={'50%'}
-          width={50}
-          height={50}
+          width={40}
+          height={40}
           justifyContent={'center'}
           alignItems={'center'}
           fontWeight="bold"
@@ -144,7 +144,7 @@ function ConnectFeaturesCard({
           }}
         >
           {iconMap[icon1] || '❔'}
-          <Typography variant="subtitle1" fontWeight="bold">
+          <Typography variant="subtitle1" fontWeight="bold" color={'text.secondary'}>
             {title1}
           </Typography>
         </Box>
@@ -176,7 +176,7 @@ function ConnectFeaturesCard({
           }}
         >
           {iconMap[icon2] || '❔'}
-          <Typography variant="subtitle1" fontWeight="bold">
+          <Typography variant="subtitle1" fontWeight="bold" color={'text.secondary'}>
             {title2}
           </Typography>
         </Box>

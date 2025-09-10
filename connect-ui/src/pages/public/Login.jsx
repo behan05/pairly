@@ -21,7 +21,6 @@ import {
   SendIcon,
   GoogleIcon,
   FacebookIcon,
-  AppleIcon
 } from '@/MUI/MuiIcons';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -282,7 +281,7 @@ function Login() {
               borderBottomRightRadius: '6px',
               border: `1px dotted ${theme.palette.success.main}`,
               textTransform: 'none',
-              color: 'primary.contrastText',
+              color: 'text.primary',
               letterSpacing: 0.2,
               textDecoration: 'none',
               transition: 'all 0.3s ease',

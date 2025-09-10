@@ -146,7 +146,10 @@ function ReportUserModal({ open, onClose, partner, partnerId }) {
       aria-describedby="reason-error"
       sx={{ mt: 10, px: isSm ? 2 : 4 }}
     >
-      <BlurWrapper>
+      <BlurWrapper sx={{
+        width: '100%',
+        backgroundColor: theme.palette.background.paper
+      }}>
         {/* Title */}
         <Typography variant="body1">
           Report <StyledText text={partner?.fullName} />

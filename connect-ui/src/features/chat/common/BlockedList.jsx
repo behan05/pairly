@@ -8,7 +8,8 @@ import {
   IconButton,
   CircularProgress,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
+  Avatar
 } from '@/MUI/MuiComponents';
 import {
   LockOpenIcon,
@@ -68,55 +69,59 @@ function BlockedList() {
           {blockedUsers.map((user, index) => (
             <Stack
               key={index}
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
               sx={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                border: `1px solid ${theme.palette.divider}`,
-                boxShadow: `inset 0 0 0.2rem ${theme.palette.divider}`,
-                borderRadius: 0.5,
-                p: 1,
-                mb: index !== blockedUsers.length - 1 ? 1 : 0
+                p: 1.5,
+                mb: 1.5,
+                borderRadius: 2,
+                backgroundColor: theme.palette.background.paper,
+                border: `1px solid ${theme.palette.warning.light}`,
+                boxShadow: `0 2px 6px ${theme.palette.divider}`,
+                transition: 'all 0.2s ease',
+                '&:hover': {
+                  transform: 'scale(1.01)',
+                  boxShadow: `0 4px 10px ${theme.palette.divider}`,
+                },
               }}
             >
-              <Stack sx={{ flexDirection: 'row', gap: 2 }}>
-                <Tooltip title={user?.fullName}>
-                  <Stack
-                    component={'img'}
-                    src={user?.profileImage || defaultAvatar}
-                    alt={user?.fullName + ' profile image'}
-                    maxWidth={35}
-                    sx={{
-                      objectFit: 'cover',
-                      borderRadius: 0.5
-                    }}
-                  />
-                </Tooltip>
-
+              {/* Avatar + Info */}
+              <Stack direction="row" spacing={2} alignItems="center">
+                <Stack
+                  component="img"
+                  src={user?.profileImage || defaultAvatar}
+                  alt={`${user?.fullName} profile`}
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 1.5,
+                    objectFit: 'cover',
+                  }}
+                />
                 <Stack>
                   <Typography
                     variant={isSm ? 'body2' : 'body1'}
-                    sx={{ fontSize: isSm ? '14px' : 'initial' }}
+                    fontWeight={600}
+                    color="text.primary"
                   >
                     {user?.fullName}
                   </Typography>
                   <Typography
-                    variant='body2'
-                    color={'text.secondary'}
-                    sx={{
-                      fontSize: isSm ? '14px' : 'inital'
-                    }}
+                    variant="body2"
+                    color="text.secondary"
                   >
                     Blocked on{' '}
                     {new Date(user.blockedAt).toLocaleDateString([], {
                       day: '2-digit',
                       month: '2-digit',
-                      year: '2-digit'
+                      year: '2-digit',
                     })}
                   </Typography>
                 </Stack>
               </Stack>
 
+              {/* Actions */}
               {isSm ? (
                 <Tooltip title="Unblock User">
                   <IconButton color="success" onClick={() => handleUnblock(user.blockedUserId)}>
@@ -127,7 +132,6 @@ function BlockedList() {
                 <Button
                   variant="outlined"
                   color="success"
-                  sx={{ fontSize: isSm ? '14px' : 'initial' }}
                   startIcon={<LockOpenIcon />}
                   onClick={() => handleUnblock(user.blockedUserId)}
                 >

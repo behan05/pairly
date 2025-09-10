@@ -73,8 +73,10 @@ import ShieldIcon from '@mui/icons-material/Shield';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 import TuneIcon from '@mui/icons-material/Tune';
 
-// ==================== FAQ ====================
+// ==================== FAQ & Theme Toggle Icons ====================
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 
 // ==================== Social Icons ====================
 import AppleIcon from '@mui/icons-material/Apple';
@@ -248,7 +250,9 @@ export {
 
   // FAQ
   ExpandMoreIcon,
-
+  LightModeIcon, 
+  DarkModeIcon,
+  
   // Social Icons
   AppleIcon,
   FacebookIcon,

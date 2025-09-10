@@ -130,7 +130,7 @@ function FAQHelp() {
               />
             }
           >
-            <Typography variant="subtitle1" letterSpacing={1} fontWeight={600}>
+            <Typography variant="subtitle1" letterSpacing={1} fontWeight={600} color={'text.primary'}>
               {faq.question}
             </Typography>
           </AccordionSummary>

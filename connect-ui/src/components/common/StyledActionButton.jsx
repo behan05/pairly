@@ -26,8 +26,8 @@ const StyledActionButton = ({
         borderBottomRightRadius: '6px', // Rounded bottom right corner
         borderBottom: `1px dotted ${theme.palette.success.main}`, // Dotted bottom border
         backdropFilter: 'blur(14px)', // Blur effect
-        backgroundColor: 'transparent', // Transparent background
-        color: 'primary.contrastText', // Text color
+        bgcolor: theme.palette.background.paper,
+        color: 'text.primary',
         textTransform: 'none', // No uppercase transformation
         letterSpacing: 2, // Letter spacing
         transition: 'all 0.3s ease', // Smooth transition

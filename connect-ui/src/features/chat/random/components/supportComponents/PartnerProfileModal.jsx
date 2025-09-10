@@ -9,7 +9,8 @@ import {
   Tooltip,
   Typography,
   useMediaQuery,
-  useTheme
+  useTheme,
+  Avatar,
 } from '@/MUI/MuiComponents';
 import {
   ArrowBackIcon,
@@ -199,204 +200,153 @@ function PartnerProfileModal({ open, onClose, partner }) {
   }
 
   return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      sx={{ px: isSm ? 2 : 3, mt: 8 }}
-    >
-      {/* Wrapper with blur and scrollable area */}
+    <Modal open={open} onClose={onClose} sx={{ px: isSm ? 1 : 3, mt: 4 }}>
       <BlurWrapper
         sx={{
           overflowY: 'auto',
-          maxHeight: '70vh',
-          width: 'auto'
+          maxHeight: '90vh',
+          width: isSm ? '100%' : 420,
+          mx: 'auto',
+          borderRadius: 1,
+          p: 0,
+          background: theme.palette.background.paper
         }}
       >
-        {/* Top header with back button and name */}
+        {/* Header */}
         <Stack
-          display={'flex'}
-          flexDirection={'row'}
-          alignItems={'center'}
-          justifyContent={'space-between'}
-          maxHeight={'fit-content'}
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          px={2}
+          py={1}
+          borderBottom={`1px solid ${theme.palette.divider}`}
         >
-          <Tooltip title={<StyledText text={`${'Close Profile'}`} />}>
-            <IconButton onClick={handleProfileClose}>
-              <ArrowBackIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-          <Typography variant="h6" color="text.secondary" letterSpacing={0.5} fontWeight={600}>
-            {<StyledText text={splitPartnerFullName[0]} />} {splitPartnerFullName[1]}
+          <IconButton onClick={handleProfileClose}>
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography variant="subtitle1" fontWeight={600} color={'text.primary'}>
+            Profile
+          </Typography>
+          <IconButton onClick={handleProfileClose}>
+            <CloseIcon />
+          </IconButton>
+        </Stack>
+
+        {/* Avatar + Name + Status */}
+        <Stack alignItems="center" spacing={1.2} py={3}>
+          <Avatar
+            src={partner?.profileImage || defaultAvatar}
+            sx={{
+              width: 110,
+              height: 110,
+              border: `3px solid ${theme.palette.primary.main}`
+            }}
+          />
+          <Typography variant="h6" fontWeight={600}>
+            {splitPartnerFullName[0]} {splitPartnerFullName[1] || ''}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {partner?.bio ? partner.bio : 'No bio available'}
           </Typography>
         </Stack>
 
-        <Divider sx={{ color: theme.palette.divider }} />
+        <Divider />
 
-        {/* Profile images side-by-side */}
-        <Stack
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 0.2
-          }}
-        >
-          <Stack
-            component={'img'}
-            src={partner?.profileImage || defaultAvatar}
-            alt="Partner Profile Image"
-            aria-label="Partner Profile Image"
-            sx={profileImageCommonStyle}
-          />
-          <GraphicEqIcon fontSize="large" sx={{ color: 'success.main' }} />
-          <Stack
-            component={'img'}
-            src={profileData?.profileImage || defaultAvatar}
-            alt="Partner Profile Image"
-            aria-label="Partner Profile Image"
-            sx={profileImageCommonStyle}
-          />
-        </Stack>
+        {/* General Info */}
+        {activeSection === 'general' && (
+          <Box px={2} py={2}>
+            <Typography variant="subtitle2" fontWeight={600} gutterBottom color={'text.primary'}>
+              General Info
+            </Typography>
+            <Stack spacing={1}>
+              {generalInfo.map((info, i) => (
+                <Stack key={i} direction="row" alignItems="center" spacing={1.5}>
+                  {info.icon}
+                  <Typography variant="body2" fontWeight={500} color={'text.primary'}>
+                    {info.label}:
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {info.value}
+                  </Typography>
+                </Stack>
+              ))}
+            </Stack>
+          </Box>
+        )}
 
-        {/* Tabs (general, interests, private chat) */}
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1.5, flexWrap: 'wrap' }}>
-          <Tooltip title={<StyledText text={`${'View Info'}`} />}>
+        {/* Interests */}
+        {activeSection === 'interests' && (
+          <Box px={2} py={2}>
+            <Typography variant="subtitle2" fontWeight={600} gutterBottom color={'text.primary'}>
+              Interests
+            </Typography>
+            <Stack spacing={1}>
+              {partnerInterests.map((item, i) => (
+                <Stack key={i} direction="row" alignItems="center" spacing={1.5}>
+                  {item.icon}
+                  <Typography variant="body2" fontWeight={500} color={'text.primary'}>
+                    {item.label}:
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {item.value}
+                  </Typography>
+                </Stack>
+              ))}
+            </Stack>
+          </Box>
+        )}
+
+        {/* Private Chat */}
+        {activeSection === 'privateChat' && (
+          <Box px={2} py={2}>
+            <Typography variant="subtitle2" fontWeight={600} gutterBottom color={'text.primary'}>
+              Private Chat
+            </Typography>
+            <Typography variant="body2" color="text.secondary" mb={2}>
+              {requestingPrivateChat
+                ? 'Requested for a private chat.'
+                : 'Click below to send a request for a private chat with your partner.'}
+            </Typography>
+            <Button
+              variant="contained"
+              fullWidth
+              endIcon={<SendIcon />}
+              onClick={handleFriendRequest}
+              disabled={requestingPrivateChat}
+              sx={{
+                background: theme.palette.primary.main,
+              }}
+            >
+              {requestingPrivateChat ? 'Request Sent' : 'Send Private Chat Request'}
+            </Button>
+          </Box>
+        )}
+
+        <Divider />
+
+        {/* Bottom navigation (like Telegram sections) */}
+        <Stack direction="row" justifyContent="space-around" py={1.5}>
+          <Tooltip title="General Info">
             <IconButton onClick={() => handleClick('general')}>
               <InfoOutlinedIcon
-                fontSize="small"
-                sx={{ color: activeSection === 'general' ? 'success.main' : 'text.secondary' }}
+                sx={{ color: activeSection === 'general' ? 'primary.main' : 'text.secondary' }}
               />
             </IconButton>
           </Tooltip>
-          <Tooltip title={<StyledText text={`${'Interests'}`} />}>
+          <Tooltip title="Interests">
             <IconButton onClick={() => handleClick('interests')}>
               <LocalOfferOutlinedIcon
-                fontSize="small"
-                sx={{ color: activeSection === 'interests' ? 'success.main' : 'text.secondary' }}
+                sx={{ color: activeSection === 'interests' ? 'primary.main' : 'text.secondary' }}
               />
             </IconButton>
           </Tooltip>
-          <Tooltip title={<StyledText text={`${'Request Private Chat'}`} />}>
+          <Tooltip title="Private Chat">
             <IconButton onClick={() => handleClick('privateChat')}>
               <LockPersonOutlinedIcon
-                fontSize="small"
-                sx={{ color: activeSection === 'privateChat' ? 'success.main' : 'text.secondary' }}
+                sx={{ color: activeSection === 'privateChat' ? 'primary.main' : 'text.secondary' }}
               />
             </IconButton>
           </Tooltip>
-        </Box>
-
-        <Divider sx={{ color: theme.palette.divider }} />
-
-        {/* Main content based on tab */}
-        <Stack>
-          {activeSection === 'general' && (
-            <Box flexDirection={'column'}>
-              <Typography letterSpacing={1} fontWeight={600} variant="h6" mb={1}>
-                <StyledText text={'General Info'} />
-              </Typography>
-              {generalInfo.map((info, index) => (
-                <Stack key={index}>
-                  <Stack sx={detailsStyles}>
-                    {info.icon}
-                    <Typography variant="body2" color="text.primary">
-                      {info.label}:
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {info.value}
-                    </Typography>
-                  </Stack>
-                </Stack>
-              ))}
-            </Box>
-          )}
-          {activeSection === 'interests' && (
-            <Box flexDirection={'column'}>
-              <Typography letterSpacing={1} fontWeight={600} variant="h6" mb={1}>
-                <StyledText text={'Interests'} />
-              </Typography>
-              {partnerInterests.map((interests, index) => (
-                <Stack key={index}>
-                  <Stack sx={detailsStyles}>
-                    {interests.icon}
-                    <Typography variant="body2" color="text.primary">
-                      {interests.label}:
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {interests.value}
-                    </Typography>
-                  </Stack>
-                </Stack>
-              ))}
-            </Box>
-          )}
-          {activeSection === 'privateChat' && (
-            <Box flexDirection={'column'}>
-              <Typography letterSpacing={1} fontWeight={600} variant="h6" mb={1}>
-                <StyledText text={'Private Chat'} />
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {requestingPrivateChat
-                  ? 'Requested for a private chat.'
-                  : 'Click the button below to send a request for a private chat with your partner.'}
-              </Typography>
-              <Button
-                variant="outlined"
-                color="primary"
-                endIcon={<SendIcon sx={{ color: 'text.secondary' }} />}
-                aria-label="Send Private Chat Request"
-                onClick={handleFriendRequest}
-                disabled={requestingPrivateChat}
-                sx={{
-                  mt: 2,
-                  width: 'fit-content',
-                  alignSelf: 'flex-start',
-                  transition: 'all 0.3s ease-in-out',
-                  color: theme.palette.primary.contrastText,
-                  borderColor: theme.palette.divider,
-                  '&:focus': {
-                    outline: 'none',
-                    boxShadow: `0 0 0 2px ${theme.palette.primary.main}`
-                  },
-                  '&:hover': {
-                    transform: 'translateY(-5px)',
-                    backgroundColor: theme.palette.action.hover,
-                    color: theme.palette.text.primary
-                  }
-                }}
-              >
-                {requestingPrivateChat ? 'Request Sent' : 'Send Private Chat Request'}
-              </Button>
-            </Box>
-          )}
-        </Stack>
-
-        {/* Close button at the bottom */}
-        <Stack width={'100%'}>
-          <Button
-            onClick={handleProfileClose}
-            variant="outlined"
-            endIcon={<CloseIcon fontSize="small" sx={{ color: theme.palette.secondary.light }} />}
-            aria-label="Close Profile"
-            sx={{
-              maxWidth: 'fit-content',
-              alignSelf: 'flex-end',
-              color: theme.palette.text.secondary,
-              borderColor: theme.palette.divider,
-              transition: 'all 0.3s ease-in-out',
-              '&:focus': {
-                outline: 'none',
-                boxShadow: `0 0 0 2px ${theme.palette.primary.main}`
-              },
-              '&:hover': {
-                backgroundColor: theme.palette.action.hover,
-                color: theme.palette.text.primary
-              }
-            }}
-          >
-            <StyledText text={'Close Profile'} />
-          </Button>
         </Stack>
       </BlurWrapper>
     </Modal>
