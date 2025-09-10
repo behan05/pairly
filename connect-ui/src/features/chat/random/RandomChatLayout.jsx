@@ -27,8 +27,8 @@ function RandomChatLayout() {
   return (
     <Box
       sx={{
-        minHeight: '100vh',
-        maxHeight: '100vh',
+        // minHeight: '100vh',
+        // maxHeight: '100vh',
         display: 'flex',
         flexDirection: 'row'
       }}
@@ -38,7 +38,6 @@ function RandomChatLayout() {
         flex={1}
         sx={{
           background: theme.palette.background.paper,
-          // borderRight: `2px solid ${theme.palette.divider}`,
           display: isMd ? (showChatWindow ? 'none' : 'flex') : 'flex'
         }}
       >

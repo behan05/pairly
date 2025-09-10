@@ -199,7 +199,7 @@ function RandomChatWindow({ setShowChatWindow }) {
     input.addEventListener("focus", handleFocus);
     return () => input.removeEventListener("focus", handleFocus);
   }, []);
-  
+
   return (
     <Stack
       height="100dvh"

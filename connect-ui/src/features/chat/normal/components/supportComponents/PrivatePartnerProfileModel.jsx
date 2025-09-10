@@ -189,7 +189,7 @@ function PrivatePartnerProfileModel({ userId, open, onClose }) {
           <Box
             component="img"
             src={partnerProfile?.profileImage || defaultAvatar}
-            alt="Partner"
+            alt="Partner Image"
             sx={{
               width: isSm ? 90 : 120,
               height: isSm ? 90 : 120,
