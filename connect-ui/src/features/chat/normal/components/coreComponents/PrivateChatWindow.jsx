@@ -118,7 +118,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
 
     input.addEventListener("focus", handleFocus);
     return () => input.removeEventListener("focus", handleFocus);
-  }, []);
+  }, [messages]);
 
 
   return (
@@ -275,7 +275,18 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
       </Box>
 
       {/* Message Input */}
-      <PrivateMessageInput conversationId={conversationId} />
+      <Stack
+        sx={{
+          position: 'sticky',
+          bottom: 0,
+          zIndex: 10,
+          background: theme.palette.background.default,
+          pt: 1,
+        }}
+      >
+        <PrivateMessageInput conversationId={conversationId} />
+      </Stack>
+
     </Stack>
   );
 }

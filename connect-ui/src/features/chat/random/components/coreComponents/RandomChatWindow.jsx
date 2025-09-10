@@ -198,7 +198,7 @@ function RandomChatWindow({ setShowChatWindow }) {
 
     input.addEventListener("focus", handleFocus);
     return () => input.removeEventListener("focus", handleFocus);
-  }, []);
+  }, [messages]);
 
   return (
     <Stack
@@ -209,6 +209,7 @@ function RandomChatWindow({ setShowChatWindow }) {
         backgroundColor: theme.palette.background.default,
         position: 'relative'
       }}
+      id={"chat-window"}
     >
       {/* === Mobile Only: Floating menu for Next/Disconnect === */}
       {isSm && isConnected && (
@@ -537,7 +538,18 @@ function RandomChatWindow({ setShowChatWindow }) {
           </Box>
 
           {/* Input area for sending messages */}
-          <RandomMessageInput />
+          <Stack
+            sx={{
+              position: 'sticky',
+              bottom: 0,
+              zIndex: 10,
+              background: theme.palette.background.default,
+              pt: 1,
+            }}
+          >
+            <RandomMessageInput />
+          </Stack>
+
         </>
       ) : (
         // === Not Connected Placeholder ===
