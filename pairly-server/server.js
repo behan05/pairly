@@ -41,12 +41,12 @@ app.use(cors({
     origin: [
         'https://connect-link-three.vercel.app',
         'http://localhost:5173',
-        'https://connect-link-git-main-behan-kumars-projects.vercel.app',
-        'https://connect-link-qn0hm301c-behan-kumars-projects.vercel.app',
+        'http://localhost:4173',
         'https://pairly.chat',
         'https://www.pairly.chat',
     ],
-    credentials: true
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 }));
 
 // Handle JSON & URL-encoded bodies with large payloads (e.g., media)

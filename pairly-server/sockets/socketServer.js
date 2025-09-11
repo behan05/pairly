@@ -20,9 +20,6 @@ function setupSocket(server) {
     const io = new Server(server, {
         cors: {
             origin: [
-                'http://localhost:5173',
-                'https://connect-link-git-main-behan-kumars-projects.vercel.app',
-                'https://connect-link-qn0hm301c-behan-kumars-projects.vercel.app',
                 'https://connect-link-three.vercel.app',
                 'https://pairly.chat',
                 'https://www.pairly.chat',
