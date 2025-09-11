@@ -1,7 +1,7 @@
 {
-  "name": "connect-server",
+  "name": "pairly-server",
   "version": "0.1.0-beta",
-  "description": "Backend API for Connect - real-time random chat app with authentication and user settings",
+  "description": "Backend API for Pairly - real-time random chat app with authentication and user settings",
   "main": "server.js",
   "type": "commonjs",
   "author": {
@@ -14,7 +14,7 @@
     "dev": "nodemon server.js",
     "start": "node server.js"
   },
-  "homepage": "https://connect-link-three.vercel.app",
+  "homepage": "https://pairly.chat",
   "engines": {
     "node": ">=18.x"
   },
@@ -45,6 +45,7 @@
   },
   "keywords": [
     "connect",
+    "pairly",
     "mern",
     "random-chat",
     "chat-app",
@@ -53,6 +54,8 @@
     "mongodb",
     "authentication",
     "realtime",
-    "behan"
+    "behan",
+    "behan05",
+    "behan kumar"
   ]
 }

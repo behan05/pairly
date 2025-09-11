@@ -89,7 +89,7 @@ const arrowBoxSx = {
   mt: 1
 };
 
-function ConnectFeaturesCard({
+function PairlyFeaturesCard({
   label,
   title,
   highlightText,
@@ -195,4 +195,4 @@ function ConnectFeaturesCard({
   );
 }
 
-export default ConnectFeaturesCard;
+export default PairlyFeaturesCard;

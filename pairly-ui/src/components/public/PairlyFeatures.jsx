@@ -1,5 +1,5 @@
 import { Box, Grid, useTheme } from '@/MUI/MuiComponents';
-import ConnectFeaturesCard from './ConnectFeaturesCard';
+import PairlyFeaturesCard from './PairlyFeaturesCard';
 
 // Steps data for How It Works section
 const pairlyFeatures = [
@@ -71,7 +71,7 @@ const pairlyFeatures = [
   }
 ];
 
-function ConnectFeatures() {
+function PairlyFeatures() {
   const theme = useTheme();
 
   return (
@@ -87,7 +87,7 @@ function ConnectFeatures() {
       >
         {pairlyFeatures.map((card, i) => (
           <Box key={i}>
-            <ConnectFeaturesCard
+            <PairlyFeaturesCard
               label={card.label}
               title={card.title}
               highlightText={card.highlightText}
@@ -103,4 +103,4 @@ function ConnectFeatures() {
     </Grid>
   );
 }
-export default ConnectFeatures;
+export default PairlyFeatures;

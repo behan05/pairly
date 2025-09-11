@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, Stack, useTheme } from '@/MUI/MuiComponents';
-import ConnectFeatures from '@/components/public/ConnectFeatures';
+import PairlyFeatures from '@/components/public/PairlyFeatures';
 import StyledText from '@/components/common/StyledText';
 
 function Features() {
@@ -36,7 +36,7 @@ function Features() {
       </Stack>
 
       {/* Features Grid */}
-      <ConnectFeatures />
+      <PairlyFeatures />
     </Box>
   );
 }
