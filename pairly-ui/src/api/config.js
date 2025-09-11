@@ -2,7 +2,7 @@
 // Uses environment variable for base URL, falls back to production server if not set.
 
 const BASE_ENDPOINT =
-  import.meta.env.VITE_API_URL || 'https://connect-server-rroo.onrender.com/api';
+  import.meta.env.VITE_API_URL || 'https://pairly-server.onrender.com/api';
 
 // Authentication API endpoint
 export const AUTH_API = `${BASE_ENDPOINT}/auth`;
