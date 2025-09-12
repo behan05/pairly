@@ -6,11 +6,11 @@ import {
   IconButton,
   Stack,
   Tooltip,
-  Typography,
   Divider,
   useTheme,
   Avatar,
-  Badge
+  Badge,
+  useMediaQuery
 } from '@/MUI/MuiComponents';
 import {
   PersonAddIcon,
@@ -24,8 +24,7 @@ import {
   ShuffleIcon,
   defaultAvatar
 } from '@/MUI/MuiIcons';
-import { NavLink, useNavigate } from 'react-router-dom';
-import StyledText from '@/components/common/StyledText';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@/redux/slices/auth/authAction';
 import { getProfile } from '@/redux/slices/profile/profileAction';
@@ -43,6 +42,7 @@ const ChatSidebarHeader = ({ children }) => {
 
   const pendingCount = useSelector(pendingFriendRequestCount);
   const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [menuAnchorEl, setMenuAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(menuAnchorEl);
@@ -81,6 +81,8 @@ const ChatSidebarHeader = ({ children }) => {
     }
   ];
 
+  const currentUrlPath = location.pathname;
+
   const handleShareClick = () => {
     const shareData = {
       title: 'Pairly App',
@@ -106,6 +108,7 @@ const ChatSidebarHeader = ({ children }) => {
       });
     }
   };
+
   const firstWord = profileData?.fullName?.split(' ')[0];
 
   const handleLogout = async () => {
@@ -137,19 +140,40 @@ const ChatSidebarHeader = ({ children }) => {
 
       {/* Header */}
       <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Typography variant="h6" fontWeight={700}>
-          <StyledText text={'Pairly'} />
-        </Typography>
+        {/* Logo */}
+        <Link to={'/pairly'}>
+          <Stack
+            component={'img'}
+            src={'/logo.png'}
+            alt="Pairly logo"
+            aria-label="Pairly logo"
+            maxWidth={isSm ? 48 : 55}
+            sx={{
+              filter: 'brightness(120%) drop-shadow(0 4px 2px',
+            }}
+          />
+        </Link>
 
         {/* Action Icons */}
         <Stack direction="row" alignItems="center" gap={2}>
-          {navItems.map(({ path, icon, label }) => (
-            <Tooltip key={label} title={label} arrow>
-              <IconButton component={NavLink} to={path}>
-                {icon}
-              </IconButton>
-            </Tooltip>
-          ))}
+          {navItems.map(({ path, icon, label }) => {
+            if (path === currentUrlPath) return;
+
+            return (
+              <Tooltip key={label} title={label} arrow >
+                <IconButton component={NavLink} to={path}
+                  sx={{
+                    transition: 'all 0.3s linear',
+                    '&:hover': {
+                      transform: 'scale(1.1)'
+                    }
+                  }}>
+                  {icon}
+                </IconButton>
+              </Tooltip>
+            )
+          })}
+
           <Tooltip title="Menu" arrow>
             <Avatar
               src={profileData?.profileImage || defaultAvatar}

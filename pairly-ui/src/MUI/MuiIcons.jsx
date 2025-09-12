@@ -11,6 +11,7 @@ import BuildCircleOutlinedIcon from '@mui/icons-material/BuildCircleOutlined';
 import ContactMailOutlinedIcon from '@mui/icons-material/ContactMailOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 
 // ==================== Authentication ====================
 import LockIcon from '@mui/icons-material/Lock';
@@ -162,6 +163,7 @@ export {
   ContactMailOutlinedIcon,
   HomeOutlinedIcon,
   InfoOutlinedIcon,
+  PersonAddAltOutlinedIcon,
 
   // Authentication
   LockIcon,
@@ -250,9 +252,9 @@ export {
 
   // FAQ
   ExpandMoreIcon,
-  LightModeIcon, 
+  LightModeIcon,
   DarkModeIcon,
-  
+
   // Social Icons
   AppleIcon,
   FacebookIcon,

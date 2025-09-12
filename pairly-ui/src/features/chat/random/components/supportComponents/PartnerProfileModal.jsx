@@ -236,10 +236,19 @@ function PartnerProfileModal({ open, onClose, partner }) {
         <Stack alignItems="center" spacing={1.2} py={3}>
           <Avatar
             src={partner?.profileImage || defaultAvatar}
+
             sx={{
-              width: 110,
-              height: 110,
-              border: `3px solid ${theme.palette.primary.main}`
+              border: `3px solid ${theme.palette.primary.main}`,
+              width: isSm ? 90 : 120,
+              height: isSm ? 90 : 120,
+              borderRadius: "50%",
+              objectFit: "cover",
+              mb: 1,
+              transition: 'all 0.3s',
+              ':hover': {
+                border: `none`,
+                transform: 'scale(2.5)',
+              }
             }}
           />
           <Typography variant="h6" fontWeight={600}>
