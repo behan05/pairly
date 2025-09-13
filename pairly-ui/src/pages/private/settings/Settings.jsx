@@ -114,7 +114,7 @@ function Settings() {
   const userBio = profileData?.shortBio.split(' ');
 
   // Get the first 6 words only for settings profile bio
-  const shortBioPreview = userBio?.slice(0, 6).join(' ') + '....';
+  const shortBioPreview = userBio?.slice(0, 6).join(' ');
 
   // glow animation
   const glowDot = keyframes`

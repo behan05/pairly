@@ -5,6 +5,18 @@ const { createServer } = require('node:http');
 const { setupSocket } = require('./sockets/socketServer');
 require('dotenv').config();
 
+// Social OAuth Provider
+const passport = require('passport');
+require('./config/passport/passportGoogle');
+require('./config/passport/passportGithub');
+const googleRoutes = require('./routers/auth/googleAuth');
+const githubRoutes = require('./routers/auth/githubAuth');
+
+// ==========================
+// Initialized social auth
+// ==========================
+app.use(passport.initialize());
+
 // ==========================
 // Database Connection
 // ==========================
@@ -13,7 +25,7 @@ const connectDB = require('./config/db');
 // ==========================
 // Route Imports
 // ==========================
-const authRoutes = require('./routers/authRoutes');
+const authRoutes = require('./routers/auth/authRoutes');
 const settingsRoutes = require('./routers/settingsRoutes');
 const profileRoutes = require('./routers/profileRoutes');
 const privateChatRoutes = require('./routers/chat/privateChatRoutes');
@@ -59,6 +71,8 @@ require('./cron/deleteRandomExpiredMessages.cron');
 // ==========================
 // Register API Routes
 // ==========================
+app.use('/api/auth', googleRoutes);
+app.use('/api/auth', githubRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/profile', profileRoutes);

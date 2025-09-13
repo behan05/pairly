@@ -98,8 +98,8 @@ Follow these steps to run the app locally:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/behan05/real-time-chat-app.git
-cd real-time-chat-app
+git clone https://github.com/behan05/pairly.git
+cd pairly
 ```
 
 ---
@@ -109,7 +109,7 @@ cd real-time-chat-app
 Navigate into the server directory:
 
 ```bash
-cd connect-server
+cd pairly-server
 ```
 
 Install dependencies:
@@ -152,7 +152,7 @@ Connected to MongoDB
 In a new terminal window/tab:
 
 ```bash
-cd connect-ui
+cd pairly-ui
 npm install
 npm run dev
 ```
@@ -195,8 +195,8 @@ Common issues and solutions:
 ## 📁 Project Structure
 
 ```
-real-time-chat-app/
-├── connect-ui/
+pairly/
+├── pairly-ui/
 │   ├── src/
 │   │   ├── components/
 │   │   ├── pages/
@@ -204,7 +204,7 @@ real-time-chat-app/
 │   │   ├── redux/ or context/
 │   │   └── App.jsx
 │   └── package.json
-├── connect-server/
+├── pairly-server/
 │   ├── controllers/
 │   ├── models/
 │   ├── routes/

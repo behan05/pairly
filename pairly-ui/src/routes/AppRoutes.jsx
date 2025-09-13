@@ -54,6 +54,7 @@ import FriendRequestList from '@/features/chat/random/components/supportComponen
 // Chat History
 import PrivateChatLayout from '@/features/chat/normal/PrivateChatLayout';
 import PrivateChatSidebar from '@/features/chat/normal/components/coreComponents/PrivateChatSidebar';
+import Verify from '../middleware/Verify';
 
 export const routes = createBrowserRouter([
   // === Public routes ===
@@ -70,6 +71,7 @@ export const routes = createBrowserRouter([
       { path: 'features', element: <Features /> },
       { path: 'contact', element: <Contact /> },
       { path: 'login', element: <Login /> },
+      { path: 'verify', element: <Verify /> },
       { path: 'forgot-password', element: <ForgotPassword /> },
       { path: 'register', element: <Register /> },
       { path: 'faq', element: <FAQs /> },

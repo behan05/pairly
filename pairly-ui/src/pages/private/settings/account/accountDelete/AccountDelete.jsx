@@ -22,6 +22,7 @@ import { SETTINGS_API } from '@/api/config';
 import axios from 'axios';
 import { logout } from '@/redux/slices/auth/authAction';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 function AccountDelete() {
   const theme = useTheme();
@@ -29,6 +30,7 @@ function AccountDelete() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const dispatch = useDispatch();
+  const navigator = useNavigate();
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -45,7 +47,8 @@ function AccountDelete() {
         setIsDeleting(false);
         setOpenDialog(false);
         dispatch(logout());
-      }, 1500);
+        navigator('/login', { replace: true });
+      }, 1000);
     } catch (error) {
       toast.error(error.response?.data?.error || 'Something went wrong.');
     }

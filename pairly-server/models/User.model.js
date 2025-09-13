@@ -16,7 +16,7 @@ const usersSchema = new mongoose.Schema({
     },
     authProvider: {
         type: String,
-        enum: ['local', 'google', 'facebook', 'x'],
+        enum: ['local', 'google', 'facebook', 'github'],
         default: 'local',
     },
 }, { timestamps: true });

@@ -12,6 +12,7 @@ import {
   Stack,
   Checkbox,
   FormControlLabel,
+  Tooltip,
   Divider
 } from '@/MUI/MuiComponents';
 import * as React from 'react';
@@ -22,6 +23,7 @@ import {
   GoogleIcon,
   FacebookIcon,
 } from '@/MUI/MuiIcons';
+import GithubIcon from '@mui/icons-material/GitHub';
 import { Link, useNavigate } from 'react-router-dom';
 
 // Redux Action
@@ -31,6 +33,9 @@ import { useDispatch, useSelector } from 'react-redux';
 // toast prompt
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+// Social Auth API
+import { GOOGLE_API, GITHUB_API, FACEBOOK_API } from '@/api/config';
 
 function Login() {
   const theme = useTheme();
@@ -114,13 +119,13 @@ function Login() {
   const handleSocialLogin = (platform) => {
     switch (platform) {
       case 'google':
-        console.log('Redirecting to Google login...');
+        window.location.href = GOOGLE_API;
         break;
       case 'facebook':
-        console.log('Redirecting to Facebook login...');
+        window.location.href = FACEBOOK_API;
         break;
-      case 'microsoft':
-        console.log('Redirecting to microsoft login...');
+      case 'github':
+        window.location.href = GITHUB_API;
         break;
       default:
         break;
@@ -186,7 +191,7 @@ function Login() {
             textAlign={'center'}
             color={theme.palette.text.primary}
           >
-            Hey <StyledText text={'Pairly'} />!
+            Login to <StyledText text={'Pairly'} />!
           </Typography>
 
           <Typography
@@ -306,45 +311,44 @@ function Login() {
           </Divider>
 
           {/* Social login icons */}
-          <Stack direction={'row'} m={'auto'} gap={2}>
-            <IconButton
-              edge="start"
-              onClick={() => handleSocialLogin('google')}
-              sx={{ color: 'warning.main' }}
-            >
-              <GoogleIcon />
-            </IconButton>
+          <Stack direction={'row'} alignItems={'center'} m={'auto'} gap={2}>
 
-            <IconButton
-              edge="start"
-              onClick={() => handleSocialLogin('microsoft')}
-              sx={{ color: '#2F2F2F' }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="currentColor"
+            {/* Login With Google */}
+            <Tooltip title="Login with Google">
+              <IconButton
+                edge="start"
+                onClick={() => handleSocialLogin('google')}
+                sx={{ color: 'warning.main' }}
               >
-                <path fill="#F35325" d="M1 1h10v10H1z" />
-                <path fill="#81BC06" d="M13 1h10v10H13z" />
-                <path fill="#05A6F0" d="M1 13h10v10H1z" />
-                <path fill="#FFBA08" d="M13 13h10v10H13z" />
-              </svg>
-            </IconButton>
+                <GoogleIcon />
+              </IconButton>
+            </Tooltip>
 
-            <IconButton
-              edge="start"
-              onClick={() => handleSocialLogin('facebook')}
-              sx={{ color: 'info.main' }}
-            >
-              <FacebookIcon />
-            </IconButton>
+            {/* Login With GitHub */}
+            <Tooltip title="Login with GitHub">
+              <IconButton
+                edge="start"
+                onClick={() => handleSocialLogin('github')}
+                sx={{ color: '#2F2F2F' }}
+              >
+                <GithubIcon />
+              </IconButton>
+            </Tooltip>
+
+            {/* Login With Facebook */}
+            <Tooltip title="Login with Facebook">
+              <IconButton
+                edge="start"
+                onClick={() => handleSocialLogin('facebook')}
+                sx={{ color: 'info.main' }}
+              >
+                <FacebookIcon  />
+              </IconButton>
+            </Tooltip>
           </Stack>
         </Box>
       </Box>
-    </Box>
+    </Box >
   );
 }
 

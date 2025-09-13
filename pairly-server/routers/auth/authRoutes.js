@@ -6,7 +6,7 @@ const {
     registerController,
     loginController,
     forgetPasswordController
-} = require('../controllers/authController');
+} = require('../../controllers/authController');
 
 /**
  * @route   POST /api/auth/register
