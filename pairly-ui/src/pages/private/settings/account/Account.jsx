@@ -8,8 +8,7 @@ import {
   ListItemText,
   Stack
 } from '@/MUI/MuiComponents';
-
-import { LockResetIcon, InfoIcon, DeleteForeverIcon } from '@/MUI/MuiIcons';
+import { LockResetIcon, InfoIcon, DeleteForeverIcon, InfoOutlinedIcon } from '@/MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 
 import { Link } from 'react-router-dom';
@@ -25,7 +24,12 @@ function Account() {
       icon: <InfoIcon fontSize="medium" sx={{ color: 'info.main' }} />,
       label: 'Request account info',
       path: 'request-info'
-    }
+    },
+    {
+      icon: <InfoOutlinedIcon fontSize="medium" sx={{ color: 'error.main' }} />,
+      label: 'How to delete my data',
+      path: 'data-deletion'
+    },
   ];
 
   return (

@@ -15,7 +15,11 @@ const Layout = () => {
     <Box
       sx={{
         position: 'relative',
-        zIndex: 1
+        zIndex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        minHeight: '100dvh',
       }}
     >
       {/* === Navbar Section === */}
@@ -44,7 +48,6 @@ const Layout = () => {
         </Box>
       </Box>
 
-      <Divider />
       {/* === Footer === */}
       <Footer />
     </Box>

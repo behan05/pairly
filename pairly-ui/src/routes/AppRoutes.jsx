@@ -55,6 +55,7 @@ import FriendRequestList from '@/features/chat/random/components/supportComponen
 import PrivateChatLayout from '@/features/chat/normal/PrivateChatLayout';
 import PrivateChatSidebar from '@/features/chat/normal/components/coreComponents/PrivateChatSidebar';
 import Verify from '../middleware/Verify';
+import DataDeletionPage from '../pages/private/settings/account/HowToDeleteData/DataDeletionPage';
 
 export const routes = createBrowserRouter([
   // === Public routes ===
@@ -110,7 +111,8 @@ export const routes = createBrowserRouter([
                   { index: true, element: <Account /> },
                   { path: 'change-credentials', element: <ChangeCredentials /> },
                   { path: 'request-info', element: <RequestAccountInfo /> },
-                  { path: 'delete-account', element: <AccountDelete /> }
+                  { path: 'delete-account', element: <AccountDelete /> },
+                  { path: 'data-deletion', element: <DataDeletionPage /> }
                 ]
               },
 

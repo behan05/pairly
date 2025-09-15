@@ -21,7 +21,6 @@ import {
   VisibilityOffIcon,
   SendIcon,
   GoogleIcon,
-  FacebookIcon,
 } from '@/MUI/MuiIcons';
 import GithubIcon from '@mui/icons-material/GitHub';
 import { Link, useNavigate } from 'react-router-dom';
@@ -35,7 +34,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Social Auth API
-import { GOOGLE_API, GITHUB_API, FACEBOOK_API } from '@/api/config';
+import { GOOGLE_API, GITHUB_API } from '@/api/config';
 
 function Login() {
   const theme = useTheme();
@@ -121,12 +120,11 @@ function Login() {
       case 'google':
         window.location.href = GOOGLE_API;
         break;
-      case 'facebook':
-        window.location.href = FACEBOOK_API;
-        break;
+
       case 'github':
         window.location.href = GITHUB_API;
         break;
+
       default:
         break;
     }
@@ -332,17 +330,6 @@ function Login() {
                 sx={{ color: '#2F2F2F' }}
               >
                 <GithubIcon />
-              </IconButton>
-            </Tooltip>
-
-            {/* Login With Facebook */}
-            <Tooltip title="Login with Facebook">
-              <IconButton
-                edge="start"
-                onClick={() => handleSocialLogin('facebook')}
-                sx={{ color: 'info.main' }}
-              >
-                <FacebookIcon  />
               </IconButton>
             </Tooltip>
           </Stack>
