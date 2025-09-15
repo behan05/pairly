@@ -19,6 +19,8 @@ import {
   FilterAltIcon,
   TravelExploreIcon
 } from '@/MUI/MuiIcons';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 
 const iconMap = {
   Psychology: <PsychologyIcon sx={{ fontSize: 36, color: 'primary.main' }} />,
@@ -119,43 +121,89 @@ function Home() {
 
   return (
     <React.Fragment>
-      {/* ===  Hero / Slogan Section === */}
+      {/* === Hero / Slogan Section === */}
       <Box
         sx={{
           display: 'flex',
           flexDirection: isLg ? 'column' : 'row',
-          gap: 2,
+          gap: 4,
           flexGrow: 1,
-          py: isMd ? 2 : 15
+          py: isMd ? 4 : 8,
+          alignItems: 'center',
         }}
       >
-        <Stack flex={1} justifyContent="center">
-          <Typography variant={isMd ? 'h3' : 'h2'} fontWeight={700} sx={{ color: 'text.primary' }}>
+        {/* Left Side – Text */}
+        <Stack flex={1} justifyContent="center" spacing={3}>
+          {/* Headline */}
+          <Typography
+            variant={isMd ? 'h3' : 'h2'}
+            fontWeight={700}
+            sx={{ color: 'text.primary', lineHeight: 1.2 }}
+          >
             {<StyledText text={'Talk Freely.'} />} Pairly Instantly.
           </Typography>
 
+          {/* Short Description */}
           <Typography
             variant="h6"
-            gutterBottom
             color="text.secondary"
-            sx={{ mt: 3, maxWidth: 640 }}
+            sx={{ maxWidth: 640, lineHeight: 1.6, mt: 2 }}
           >
-            Pairly is a modern chat platform that pairs you with random users across the globe in
-            seconds. Whether you're looking to make new friends, share stories, learn languages, or
-            simply pass time, it's your gateway to real-time human connection.
+            Pairly pairs you with real users worldwide in seconds, prioritizing matches based on your interests.
+            Even with few users online, you'll always chat with a genuine person—never a bot. Designed to protect
+            human emotions, Pairly helps you connect meaningfully.
           </Typography>
 
-          {/* === Calling tagline component === */}
-          <Tagline />
+          {/* Core Feature Flow */}
+          <Stack spacing={2} sx={{ mt: 3 }}>
+            <Typography variant={isMd ? 'h5' : 'h4'} fontWeight={700} sx={{ color: 'text.primary' }}>
+              Core{' '} <StyledText text='Feature Flow' />
+            </Typography>
 
-          {/* CTA */}
-          <Stack direction={'row'} gap={2} my={2}>
-            <StyledButton text={'Start Connecting'} redirectUrl={'/register'} />
-            <StyledButton text={'Learn More...'} redirectUrl={'/about'} />
+            <Stack component="ul" spacing={1} sx={{ listStyle: 'none', p: 0, m: 0 }}>
+              {['Random Chats', 'Friend Requests', 'Private Chats', 'Propose to partner', 'Couple Features Activated'].map(
+                (step, index) => (
+                  <Stack
+                    key={step}
+                    direction="row"
+                    alignItems="center"
+                    spacing={1}
+                    sx={{ pl: 1 }}
+                  >
+                    {index < 4 && <KeyboardDoubleArrowDownIcon sx={{ color: 'primary.main', fontSize: 28 }} />}
+                    {index === 4 && <VolunteerActivismIcon sx={{ color: 'error.main', fontSize: 28 }} />}
+                    <Typography variant="subtitle1" sx={{ fontWeight: 500, color: 'text.primary' }}>
+                      {step}
+                    </Typography>
+                  </Stack>
+                )
+              )}
+            </Stack>
           </Stack>
+
+          {/* Emotion Protection */}
+          <Typography
+            variant="body1"
+            sx={{ mt: 3, color: 'text.secondary', fontStyle: 'italic', maxWidth: 600 }}
+          >
+            <StyledText text={'“'} />We protect your emotions until couple mode. Pairly helps you know each other clearly before taking the next step.<StyledText text={'”'} />
+          </Typography>
+
+
+          {/* CTA Buttons */}
+          <Stack direction="row" gap={2} sx={{ mt: 3, flexWrap: 'wrap' }}>
+            <StyledButton text={'Connect Instantly'} redirectUrl={'/register'} />
+            <StyledButton text={'How It Works'} redirectUrl={'/about'} />
+          </Stack>
+
+          {/* Tagline / animation below CTA */}
+          <Tagline />
         </Stack>
 
-        <ReusableVideo />
+        {/* Right Side – Video */}
+        <Box flex={1} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <ReusableVideo />
+        </Box>
       </Box>
 
       {/* ===  How It Works Section === */}

@@ -15,6 +15,7 @@ function Footer() {
         backdropFilter: 'blur(6px)',
       }}
     >
+      <Divider sx={{ my: 4 }} />
       {/* Top section */}
       <Stack
         direction={{ xs: 'column', md: 'row' }}

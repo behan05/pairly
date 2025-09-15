@@ -137,11 +137,11 @@ function RandomSidebar() {
           <Typography
             variant="subtitle1"
             fontWeight={500}
-            textAlign="justify"
+            textAlign="start"
             color="text.secondary"
             letterSpacing={0.4}
           >
-            Tap <StyledText text="Connect" /> to jump into a real-time, anonymous chat with someone
+            Tap <strong style={{ fontWeight: 700, color:theme.palette.text.primary }}>Connect</strong> to jump into a real-time, anonymous chat with someone
             across the world. Safe, spontaneous, and surprisingly fun.
           </Typography>
 

@@ -10,7 +10,6 @@ export const AUTH_API = `${BASE_ENDPOINT}/auth`;
 // Social auth APIs
 export const GOOGLE_API = 'https://pairly-server.onrender.com/api/auth/google';
 export const GITHUB_API = 'https://pairly-server.onrender.com/api/auth/github';
-export const FACEBOOK_API = 'http://localhost:8000/api/auth/facebook';
 
 // User settings API endpoint
 export const SETTINGS_API = `${BASE_ENDPOINT}/settings`;
