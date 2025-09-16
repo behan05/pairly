@@ -32,6 +32,7 @@ import WaitingIndicator from '@/components/private/randomChat/WaitingIndicator';
 import StyledText from '@/components/common/StyledText';
 import textFormater from '@/utils/textFormatting';
 import PrivatePartnerProfileModel from '../supportComponents/PrivatePartnerProfileModel';
+import ProposeToPartnerModel from '../supportComponents/ProposeToPartnerModel';
 
 import { useSelector } from "react-redux";
 
@@ -39,6 +40,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const isTabletOrBelow = useMediaQuery('(max-width:775px)');
+  const [proposeModel, setProposeModel] = useState(false);
 
   // local state
   const [anchorEl, setAnchorEl] = useState(null);
@@ -82,7 +84,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
         break;
 
       case 'proposeToPartner':
-        // your logic here
+        setProposeModel((prev) => !prev);
         break;
 
       case 'closeChat':
@@ -268,6 +270,11 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
         partnerProfile={partnerProfile}
         open={openProfileModal}
         onClose={() => setOpenProfileModal(false)}
+      />
+
+      <ProposeToPartnerModel
+        open={proposeModel}
+        onClose={setProposeModel}
       />
     </Box>
   )
