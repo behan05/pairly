@@ -19,6 +19,14 @@ const usersSchema = new mongoose.Schema({
         enum: ['local', 'google', 'facebook', 'github'],
         default: 'local',
     },
+
+    // Email verification fields
+    emailVerified: {
+        type: Boolean,
+        default: false
+    },
+    emailToken: { type: String }
+    
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', usersSchema);

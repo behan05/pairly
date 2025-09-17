@@ -26,8 +26,8 @@ import TypingIndicator from '@/components/private/randomChat/TypingIndicator';
 import WaitingIndicator from '@/components/private/randomChat/WaitingIndicator';
 import PartnerProfileModal from '../../components/supportComponents/PartnerProfileModal';
 import StyledText from '@/components/common/StyledText';
-import BlockUserModal from '../../../common/BlockUserModal';
-import ReportUserModal from '../../../common/ReportUserModal';
+import BlockUserModal from '../supportComponents/BlockUserModal';
+import ReportUserModal from '../supportComponents/ReportUserModal';
 import PrivateChatRequestPopupModal from '../supportComponents/PrivateChatRequestPopupModal';
 
 // Redux

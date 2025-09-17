@@ -5,68 +5,36 @@ const generateToken = require('../utils/generateToken');
 // auth Controllers
 const registerController = async (req, res) => {
   try {
-    const {
-      fullName,
-      email,
-      password,
-      confirmPassword,
-      authProvider = 'local'
-    } = req.body;
+    const { fullName, email, password, confirmPassword, authProvider = 'local' } = req.body;
 
-    // Check user existence
+    // Check if user exists
     const existingUser = await User.findOne({ email });
-
     if (existingUser) {
-      return res.status(409).json({
-        success: false,
-        error: 'User already exists! Please use another email.'
-      });
+      return res.status(409).json({ success: false, error: 'User already exists!' });
     }
 
-    // Local provider validations
+    // Password validation for local
     if (authProvider === 'local') {
-      if (!password || !confirmPassword) {
-        return res.status(400).json({
-          success: false,
-          error: 'Password and confirm password are required for local signup.'
-        });
-      }
-
-      if (password !== confirmPassword) {
-        return res.status(400).json({
-          success: false,
-          error: 'Passwords do not match.'
-        });
-      }
+      if (!password || !confirmPassword) return res.status(400).json({ success: false, error: 'Password required' });
+      if (password !== confirmPassword) return res.status(400).json({ success: false, error: 'Passwords do not match' });
     }
 
-    // Hash password (if local)
+    // Hash password
     const hashedPassword = authProvider === 'local'
       ? await bcrypt.hash(password, await bcrypt.genSalt(10))
       : null;
 
-    // Create new user
-    const newUser = await User.create({
+    // Create user
+    await User.create({
       fullName,
       email,
       password: hashedPassword,
-      authProvider
-    });
-
-    // Save to DB
-    await newUser.save();
-
-    return res.status(201).json({
-      success: true,
-      message: 'New user created!'
+      authProvider,
+      emailVerified: false,
     });
 
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      error: 'Error occurred while creating new account',
-      detail: error.message
-    });
+    res.status(500).json({ success: false, error: 'Failed to create user', detail: error.message });
   }
 };
 
@@ -192,5 +160,5 @@ const forgetPasswordController = async (req, res) => {
 module.exports = {
   registerController,
   loginController,
-  forgetPasswordController
+  forgetPasswordController,
 };

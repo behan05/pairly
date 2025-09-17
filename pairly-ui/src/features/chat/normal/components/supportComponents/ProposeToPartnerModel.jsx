@@ -142,8 +142,8 @@ function ProposeToPartnerModel({ open, onClose }) {
                     <CloseIcon />
                 </IconButton>
 
-                <Typography variant="h4" color='warning.main'>
-                    Create Your Personalized Proposal
+                <Typography variant="h4" color='text.main'>
+                    Create Your Personalized Proposal (under development)
                 </Typography>
 
                 {/* Proposal Type */}

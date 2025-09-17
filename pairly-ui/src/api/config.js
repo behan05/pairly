@@ -18,16 +18,30 @@ export const SETTINGS_API = `${BASE_ENDPOINT}/settings`;
 export const PROFILE_API = `${BASE_ENDPOINT}/profile`;
 
 // Random chat API endpoint
+export const BLOCKED_USERS_API = `${BASE_ENDPOINT}/blocked`;
+
+// ---------------------- RANDOM CHAT API -------------------------
+
+// Random chat API endpoint
 export const RANDOM_API = `${BASE_ENDPOINT}/random-chat`;
-
-// Random chat API endpoint
-export const BLOCK_API = `${BASE_ENDPOINT}/random-block`;
-
-// Random chat API endpoint
-export const REPORT_API = `${BASE_ENDPOINT}/random-report`;
 
 // Friend request API endpoint
 export const FRIEND_REQUEST_API = `${BASE_ENDPOINT}/friend-request`;
 
+// Random chat API endpoint
+export const RANDOM_BLOCK_API = `${BASE_ENDPOINT}/random-block`;
+
+// Random chat API endpoint
+export const RANDOM_REPORT_API = `${BASE_ENDPOINT}/random-report`;
+
+// ---------------------- PRIVATE CHAT API -------------------------
+
 // Friend request API endpoint
 export const PRIVATE_CHAT_API = `${BASE_ENDPOINT}/private-chat`;
+
+// private chat API endpoint
+export const PRIVATE_REPORT_API = `${BASE_ENDPOINT}/private-report`;
+
+// Private chat API endpoint
+export const PRIVATE_BLOCK_API = `${BASE_ENDPOINT}/private-block`;
+

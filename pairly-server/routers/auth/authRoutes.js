@@ -5,7 +5,7 @@ const Routers = express.Router();
 const {
     registerController,
     loginController,
-    forgetPasswordController
+    forgetPasswordController,
 } = require('../../controllers/authController');
 
 /**

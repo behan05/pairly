@@ -41,12 +41,39 @@ exports.listPrivateChatUsersController = async (req, res) => {
             });
         }
 
-        // Extract friend IDs (the "other" user in each request)
-        const allFriendsId = currentUserFriends.map(f =>
+        // Extract friend IDs
+        let allFriendsId = currentUserFriends.map(f =>
             f.from.toString() === currentUserId.toString() ? f.to : f.from
         );
 
-        // Get profiles of those friends
+        // Get blocked users (both directions)
+        const blockedUsers = await Block.find({
+            isRandomChat: false,
+            $or: [
+                { blocker: currentUserId, blocked: { $in: allFriendsId } },
+                { blocked: currentUserId, blocker: { $in: allFriendsId } }
+            ]
+        }).lean();
+
+        // Collect blocked IDs
+        const blockedIds = blockedUsers.map(b =>
+            b.blocker.toString() === currentUserId.toString()
+                ? b.blocked.toString()
+                : b.blocker.toString()
+        );
+
+        // Filter out blocked users
+        allFriendsId = allFriendsId.filter(id => !blockedIds.includes(id.toString()));
+
+        if (!allFriendsId.length) {
+            return res.status(200).json({
+                success: true,
+                message: 'No private chat users available (all blocked)',
+                users: []
+            });
+        }
+
+        // Get profiles of allowed friends
         const profiles = await Profile.find({ user: { $in: allFriendsId } }).lean();
 
         // Get conversations where current user is a participant
@@ -57,7 +84,7 @@ exports.listPrivateChatUsersController = async (req, res) => {
 
         const conversationIds = conversations.map(c => c._id);
 
-        // Get last message for each conversation in one query
+        // Get last message for each conversation
         const lastMessages = await Message.aggregate([
             { $match: { conversation: { $in: conversationIds } } },
             { $sort: { createdAt: -1 } },
@@ -69,7 +96,7 @@ exports.listPrivateChatUsersController = async (req, res) => {
             }
         ]);
 
-        // Build a map of conversationId -> lastMessage
+        // Build map conversationId -> lastMessage
         const lastMessagesMap = {};
         lastMessages.forEach(m => {
             lastMessagesMap[m._id.toString()] = m.lastMessage;
@@ -94,18 +121,11 @@ exports.listPrivateChatUsersController = async (req, res) => {
             };
         });
 
-        // Sorting users by lastMessageTime (most recent first)
+        // Sort by lastMessageTime (latest first)
         userDetails.sort((user1, user2) => {
-            // If both users have no last message → keep order as is
             if (!user1?.lastMessageTime && !user2?.lastMessageTime) return 0;
-
-            // If only user1 has no last message → put user2 first
             if (!user1?.lastMessageTime) return 1;
-
-            // If only user2 has no last message → put user1 first
             if (!user2?.lastMessageTime) return -1;
-
-            // Both users have messages → compare dates
             return new Date(user2.lastMessageTime) - new Date(user1.lastMessageTime);
         });
 
@@ -142,9 +162,7 @@ exports.getConversationMessagesController = async (req, res) => {
     } catch (err) {
         res.status(500).json({ success: false, error: 'Server error' });
     }
-
-
 }
 
-exports.sendPrivateChatMessageControllerById = async (req, res) => { }
+exports.clearPrivateChatMessageControllerById = async (req, res) => { }
 exports.deletePrivateChatWithUserControllerById = async (req, res) => { }

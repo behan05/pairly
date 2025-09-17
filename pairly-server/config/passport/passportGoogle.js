@@ -18,7 +18,8 @@ passport.use(new GoogleStrategy({
                 user = await User.create({
                     fullName: profile.displayName,
                     email: profile.emails[0].value,
-                    authProvider: 'google'
+                    authProvider: 'google',
+                    emailVerified: true
                 });
             }
 
