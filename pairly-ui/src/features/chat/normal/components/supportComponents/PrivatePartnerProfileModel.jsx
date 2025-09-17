@@ -24,7 +24,6 @@ import {
   ClearAllIcon,
   FavoriteIcon,
   CloseIcon,
-  SendIcon,
   MoreVertIcon
 } from "@/MUI/MuiIcons";
 

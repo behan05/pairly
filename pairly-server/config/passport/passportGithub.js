@@ -37,6 +37,7 @@ passport.use(
                         fullName: profile.displayName || profile.username,
                         email,
                         authProvider: 'github',
+                        emailVerified: true
                     });
                 }
 

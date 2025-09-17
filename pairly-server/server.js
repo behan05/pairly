@@ -28,11 +28,16 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routers/auth/authRoutes');
 const settingsRoutes = require('./routers/settingsRoutes');
 const profileRoutes = require('./routers/profileRoutes');
-const privateChatRoutes = require('./routers/chat/privateChatRoutes');
-const randomChatRoutes = require('./routers/chat/randomChatRoutes');
-const blockRoutes = require('./routers/chat/blockRoutes');
-const reportRoutes = require('./routers/chat/reportRoutes');
-const friendRequestRoutes = require('./routers/chat/friendRequestRoutes');
+const blockedUser = require('./routers/chat/common/blockedUserRoutes');
+
+const randomChatRoutes = require('./routers/chat/random/randomChatRoutes');
+const friendRequestRoutes = require('./routers/chat/random/friendRequestRoutes');
+const randomBlockRoutes = require('./routers/chat/random/randomBlockRoutes');
+const randomReportRoutes = require('./routers/chat/random/randomReportRoutes');
+
+const privateChatRoutes = require('./routers/chat/private/privateChatRoutes');
+const privateBlockRoutes = require('./routers/chat/private/privateBlockRoutes')
+const privateReportRoutes = require('./routers/chat/private/privateReportRoutes')
 
 // ==========================
 // App Configuration
@@ -76,11 +81,20 @@ app.use('/api/auth', githubRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/profile', profileRoutes);
-app.use('/api/private-chat', privateChatRoutes);
+
+// ------------ All Blocked Users ---------------------
+app.use('/api/blocked', blockedUser)
+
+// ------------- Random Chat Routes --------------------
 app.use('/api/random-chat', randomChatRoutes);
-app.use('/api/random-block', blockRoutes);
-app.use('/api/random-report', reportRoutes);
+app.use('/api/random-block', randomBlockRoutes);
+app.use('/api/random-report', randomReportRoutes);
 app.use('/api/friend-request', friendRequestRoutes)
+
+// ------------- Private Chat Routes --------------------
+app.use('/api/private-chat', privateChatRoutes);
+app.use('/api/private-block', privateBlockRoutes);
+app.use('/api/private-report', privateReportRoutes);
 
 // ==========================
 // Health Check Route

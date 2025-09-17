@@ -1,7 +1,7 @@
 const Routers = require('express').Router();
-const { uploadRandomChatMediaController } = require('../../controllers//randomChatControllers/randomChatController');
-const authMiddleware = require('../../middlewares/authMiddleware');
-const upload = require('../../middlewares/uploadRandomMedia');
+const { uploadRandomChatMediaController } = require('../../../controllers/randomChatControllers/randomChatController');
+const authMiddleware = require('../../../middlewares/authMiddleware');
+const upload = require('../../../middlewares/uploadRandomMedia');
 
 /**
  * ================================
