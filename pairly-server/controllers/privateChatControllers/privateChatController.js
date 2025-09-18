@@ -164,5 +164,77 @@ exports.getConversationMessagesController = async (req, res) => {
     }
 }
 
-exports.clearPrivateChatMessageControllerById = async (req, res) => { }
-exports.deletePrivateChatWithUserControllerById = async (req, res) => { }
+exports.deletePrivateChatWithUserControllerById = async (req, res) => {
+    const currentUserId = req.user.id;
+    const { conversationId } = req.params;
+
+    if (!currentUserId) {
+        return res.status(401).json({
+            success: false,
+            error: 'Unauthorized: access token is missing'
+        });
+    }
+
+    if (!conversationId) {
+        return res.status(400).json({
+            success: false,
+            error: 'Error: conversationId must be required'
+        });
+    }
+
+    try {
+        // Find the conversation
+        const conversation = await Conversation.findOne({
+            _id: conversationId,
+            isRandomChat: false,
+            participants: currentUserId
+        });
+
+        if (!conversation) {
+            return res.status(404).json({
+                success: false,
+                error: "Conversation not found"
+            });
+        }
+
+        // Delete friend request
+        await PrivateChatRequest.deleteOne({
+            conversation: conversation._id,
+            status: 'accepted'
+        });
+
+        // Delete the conversation (messages will be retained due to TTL)
+        const result = await Conversation.deleteOne({ _id: conversation._id });
+
+        if (result.deletedCount === 0) {
+            return res.status(500).json({
+                success: false,
+                error: "Failed to delete conversation"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Conversation and friend request deleted for both users. Messages are retained (TTL applies)."
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: "Error occurred while deleting conversation model",
+            details: error.message
+        });
+    }
+};
+
+exports.clearPrivateChatMessageControllerById = async (req, res) => {
+    const currentUserId = req.user.id;
+    const { partnerUserId } = req.body;
+
+    if (!currentUserId) {
+        return res.status(401).json({
+            success: false,
+            error: 'Unauthorized: access token is missing'
+        });
+    };
+}
