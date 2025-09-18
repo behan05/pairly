@@ -27,7 +27,7 @@ import {
   MoreVertIcon
 } from "@/MUI/MuiIcons";
 
-import { deleteConversationMessage } from '@/redux/slices/privateChat/privateChatAction';
+import { deleteConversationMessage, clearConversationMessage, fetchAllUser } from '@/redux/slices/privateChat/privateChatAction';
 import { useDispatch, useSelector } from 'react-redux'
 import { Country, State } from "country-state-city";
 import ProposeToPartnerModel from '../supportComponents/ProposeToPartnerModel';
@@ -97,6 +97,17 @@ function PrivatePartnerProfileModel(
       onCloseChatWindow(null);
     }
   };
+  /** Handle Clear Message */
+  const handleClearChatLog = async () => {
+    if (!activeChat) return;
+
+    const res = await dispatch(clearConversationMessage(activeChat));
+    if (res?.success) {
+      clearActiveChat(null);
+      onCloseChatWindow(null);
+      dispatch(fetchAllUser())
+    }
+  };
 
   const handleAction = (action) => {
     switch (action) {
@@ -116,7 +127,7 @@ function PrivatePartnerProfileModel(
         break;
 
       case 'clearChat':
-        // Implement clear chat logic here
+        handleClearChatLog()
         break;
 
       case 'deleteChat':

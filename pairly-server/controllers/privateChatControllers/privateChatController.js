@@ -85,6 +85,18 @@ exports.listPrivateChatUsersController = async (req, res) => {
 
         const conversationIds = conversations.map(c => c._id);
 
+        // get clear logs for this user
+        const clearLogs = await ChatClearLog.find({
+            user: currentUserId,
+            conversation: { $in: conversationIds }
+        }).lean();
+
+        // make a map for fast lookup
+        const clearLogsMap = {};
+        clearLogs.forEach(log => {
+            clearLogsMap[log.conversation.toString()] = log.clearTimestamp;
+        });
+
         // Get last message for each conversation
         const lastMessages = await Message.aggregate([
             { $match: { conversation: { $in: conversationIds } } },
@@ -97,10 +109,17 @@ exports.listPrivateChatUsersController = async (req, res) => {
             }
         ]);
 
-        // Build map conversationId -> lastMessage
+        // filter by clear timestamp
         const lastMessagesMap = {};
         lastMessages.forEach(m => {
-            lastMessagesMap[m._id.toString()] = m.lastMessage;
+            const convId = m._id.toString();
+            const clearTime = clearLogsMap[convId];
+
+            if (clearTime && m.lastMessage.createdAt <= clearTime) {
+                lastMessagesMap[convId] = null;
+            } else {
+                lastMessagesMap[convId] = m.lastMessage;
+            }
         });
 
         // Build user details
@@ -160,7 +179,7 @@ exports.getConversationMessagesController = async (req, res) => {
     try {
         // Get clear timestamp for this user/conversation
         const clearLog = await ChatClearLog.findOne({ user: currentUserId, conversation: conversationId });
-        
+
         let filter = {
             conversation: conversationId
         };

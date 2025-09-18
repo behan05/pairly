@@ -36,7 +36,7 @@ import ProposeToPartnerModel from '../supportComponents/ProposeToPartnerModel';
 import ReportUserModal from '../supportComponents/ReportUserModal';
 import BlockUserModal from '../supportComponents/BlockUsermodal'
 
-import { deleteConversationMessage, clearConversationMessage } from '@/redux/slices/privateChat/privateChatAction';
+import { deleteConversationMessage, clearConversationMessage, fetchAllUser } from '@/redux/slices/privateChat/privateChatAction';
 import { useDispatch, useSelector } from 'react-redux'
 
 function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat }) {
@@ -81,7 +81,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
     setOpenBlockDialog(true);
   };
 
-  /** Handle Report Partner */
+  /** Handle Clear Message */
   const handleClearChatLog = async () => {
     if (!activeChat) return;
 
@@ -89,6 +89,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
     if (res?.success) {
       clearActiveChat(null);
       onCloseChatWindow(null);
+      dispatch(fetchAllUser())
     }
   };
 
