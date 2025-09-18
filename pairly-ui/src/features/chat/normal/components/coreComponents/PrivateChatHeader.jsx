@@ -36,7 +36,7 @@ import ProposeToPartnerModel from '../supportComponents/ProposeToPartnerModel';
 import ReportUserModal from '../supportComponents/ReportUserModal';
 import BlockUserModal from '../supportComponents/BlockUsermodal'
 
-import { deleteConversationMessage } from '@/redux/slices/privateChat/privateChatAction';
+import { deleteConversationMessage, clearConversationMessage } from '@/redux/slices/privateChat/privateChatAction';
 import { useDispatch, useSelector } from 'react-redux'
 
 function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat }) {
@@ -79,6 +79,17 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
   /** Handle Report Partner */
   const handleBlockPartner = () => {
     setOpenBlockDialog(true);
+  };
+
+  /** Handle Report Partner */
+  const handleClearChatLog = async () => {
+    if (!activeChat) return;
+
+    const res = await dispatch(clearConversationMessage(activeChat));
+    if (res?.success) {
+      clearActiveChat(null);
+      onCloseChatWindow(null);
+    }
   };
 
   /** Handle delete Partner */
@@ -136,7 +147,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
         break;
 
       case 'clearChat':
-        // your logic here
+        handleClearChatLog()
         break;
 
       case 'deleteChat':
@@ -301,6 +312,8 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
         partnerProfile={partnerProfile}
         open={openProfileModal}
         onClose={() => setOpenProfileModal(false)}
+        onCloseChatWindow={onCloseChatWindow}
+        clearActiveChat={clearActiveChat}
       />
 
       <ProposeToPartnerModel

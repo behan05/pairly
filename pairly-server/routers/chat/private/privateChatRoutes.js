@@ -12,6 +12,5 @@ const authMiddleware = require('../../../middlewares/authMiddleware');
 Routers.get('/users', authMiddleware, listPrivateChatUsersController);
 Routers.get('/user/:conversationId', authMiddleware, getConversationMessagesController);
 Routers.delete('/conversations/:conversationId', authMiddleware, deletePrivateChatWithUserControllerById);
-Routers.post('/message/:userId', authMiddleware, clearPrivateChatMessageControllerById);
-
+Routers.delete('/conversations/:conversationId/messages', authMiddleware, clearPrivateChatMessageControllerById);
 module.exports = Routers;

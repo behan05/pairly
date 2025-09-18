@@ -5,7 +5,6 @@ import {
     Typography,
     useMediaQuery,
     useTheme,
-    CircularProgress,
     Tooltip,
     TextField,
     Avatar,
@@ -86,16 +85,6 @@ function PrivateChatSidebar() {
                     />
                 </Box>
             </ChatSidebarHeader>
-
-            {/* User List */}
-            {loading && (
-                <Stack direction="row" alignItems="center" spacing={1}>
-                    <CircularProgress size={18} />
-                    <Typography variant="body2" color="text.secondary">
-                        Loading friend list...
-                    </Typography>
-                </Stack>
-            )}
 
             {allUsers.length === 0 ?
                 <Typography

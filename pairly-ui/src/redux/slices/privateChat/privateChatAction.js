@@ -87,3 +87,37 @@ export const deleteConversationMessage = (conversationId) => {
     };
 };
 
+export const clearConversationMessage = (conversationId) => {
+    return async (dispatch) => {
+        dispatch(setLoading(true));
+        const headers = getAuthHeaders();
+
+        try {
+            const res = await axios.delete(
+                `http://localhost:8000/api/private-chat/conversations/${conversationId}/messages`,
+                { headers }
+            );
+
+            if (res.data.success) {
+                dispatch(setLoading(false));
+                return {
+                    success: true
+                };
+            } else {
+                dispatch(setLoading(false));
+                dispatch(setError(res.data.error || 'Failed to clear conversation message'));
+                return {
+                    success: false
+                };
+            };
+        } catch (error) {
+            dispatch(setError(error.response?.data?.error || 'Server error clearing conversation messages'));
+            return {
+                success: false
+            };
+        } finally {
+            dispatch(setLoading(false));
+        }
+    };
+};
+

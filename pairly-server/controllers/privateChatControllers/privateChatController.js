@@ -4,6 +4,7 @@ const Conversation = require('../../models/chat/Conversation.model');
 const Message = require('../../models/chat/Message.model');
 const Block = require('../../models/chat/Block.model');
 const PrivateChatRequest = require('../../models/chat/PrivateChatRequest.model');
+const ChatClearLog = require('../../models/chat/ChatClearLog.model');
 
 exports.listPrivateChatUsersController = async (req, res) => {
     const currentUserId = req.user.id;
@@ -151,16 +152,82 @@ exports.getConversationMessagesController = async (req, res) => {
             success: false,
             error: 'Unauthorized: access token is missing'
         });
-    };
+    }
 
     const { conversationId } = req.params;
     if (!conversationId) return res.status(400).json({ success: false, error: 'conversationId required' });
 
     try {
-        const messages = await Message.find({ conversation: conversationId }).sort({ createdAt: 1 });
+        // Get clear timestamp for this user/conversation
+        const clearLog = await ChatClearLog.findOne({ user: currentUserId, conversation: conversationId });
+        
+        let filter = {
+            conversation: conversationId
+        };
+        if (clearLog && clearLog.clearTimestamp) {
+            filter.createdAt = {
+                $gt: clearLog.clearTimestamp
+            };
+        }
+
+        const messages = await Message.find(filter).sort({ createdAt: 1 });
         res.json({ success: true, messages });
     } catch (err) {
         res.status(500).json({ success: false, error: 'Server error' });
+    }
+}
+
+exports.clearPrivateChatMessageControllerById = async (req, res) => {
+    const currentUserId = req.user.id;
+    const { conversationId } = req.params;
+
+    if (!currentUserId) {
+        return res.status(401).json({
+            success: false,
+            error: 'Unauthorized: access token is missing'
+        });
+    }
+
+    if (!conversationId) {
+        return res.status(400).json({
+            success: false,
+            error: 'Error: conversationId must be required'
+        });
+    }
+
+    try {
+        // Find the conversation
+        const conversation = await Conversation.findOne({
+            _id: conversationId,
+            isRandomChat: false,
+            participants: currentUserId
+        });
+
+        if (!conversation) {
+            return res.status(404).json({
+                success: false,
+                error: "Conversation not found"
+            });
+        }
+
+        // Save or update the clear timestamp for this user/conversation
+        await ChatClearLog.findOneAndUpdate(
+            { user: currentUserId, conversation: conversationId },
+            { clearTimestamp: new Date() },
+            { upsert: true, new: true }
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "Chat cleared from your view. Messages are retained for 90 days as per policy."
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: "Error occurred while marking chat as cleared",
+            details: error.message
+        });
     }
 }
 
@@ -231,14 +298,3 @@ exports.deletePrivateChatWithUserControllerById = async (req, res) => {
     }
 };
 
-exports.clearPrivateChatMessageControllerById = async (req, res) => {
-    const currentUserId = req.user.id;
-    const { partnerUserId } = req.body;
-
-    if (!currentUserId) {
-        return res.status(401).json({
-            success: false,
-            error: 'Unauthorized: access token is missing'
-        });
-    };
-}
