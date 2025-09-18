@@ -81,13 +81,15 @@ function FriendRequestList() {
                                 justifyContent="space-between"
                                 sx={{
                                     p: 1.5,
-                                    borderRadius: 2,
+                                    mb: 1,
+                                    borderRadius: 0.5,
                                     backgroundColor: theme.palette.background.paper,
-                                    boxShadow: `0 1px 3px ${theme.palette.divider}`,
+                                    border: `1px solid ${theme.palette.divider}`,
+                                    boxShadow: `inset 0 2px 6px ${theme.palette.divider}`,
                                     transition: 'all 0.2s ease',
                                     '&:hover': {
-                                        boxShadow: `0 3px 6px ${theme.palette.divider}`,
                                         transform: 'scale(1.01)',
+                                        boxShadow: `0 4px 10px ${theme.palette.divider}`,
                                     },
                                 }}
                             >

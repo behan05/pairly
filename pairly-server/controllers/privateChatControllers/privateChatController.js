@@ -197,9 +197,13 @@ exports.deletePrivateChatWithUserControllerById = async (req, res) => {
             });
         }
 
-        // Delete friend request
-        await PrivateChatRequest.deleteOne({
-            conversation: conversation._id,
+        // Get both participants
+        const participants = conversation.participants.map(id => id.toString());
+
+        // Delete all accepted friend requests between these two users
+        await PrivateChatRequest.deleteMany({
+            from: { $in: participants },
+            to: { $in: participants },
             status: 'accepted'
         });
 

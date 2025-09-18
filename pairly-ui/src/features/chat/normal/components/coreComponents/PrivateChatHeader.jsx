@@ -81,7 +81,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
     setOpenBlockDialog(true);
   };
 
-  /** Handle Report Partner */
+  /** Handle delete Partner */
   const handleDeleteChat = async () => {
     if (!activeChat) return;
 

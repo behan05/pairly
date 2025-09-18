@@ -52,14 +52,14 @@ export const fetchConversationMessages = (conversationId) => async (dispatch) =>
     }
 };
 
-export const deleteConversationMessage = (conversationsId) => {
+export const deleteConversationMessage = (conversationId) => {
     return async (dispatch) => {
         dispatch(setLoading(true));
         const headers = getAuthHeaders();
 
         try {
             const res = await axios.delete(
-                `${PRIVATE_CHAT_API}/conversations/${conversationsId}`,
+                `${PRIVATE_CHAT_API}/conversations/${conversationId}`,
                 { headers }
             );
 
