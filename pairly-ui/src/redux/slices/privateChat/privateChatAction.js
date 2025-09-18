@@ -52,3 +52,38 @@ export const fetchConversationMessages = (conversationId) => async (dispatch) =>
     }
 };
 
+export const deleteConversationMessage = (conversationsId) => {
+    return async (dispatch) => {
+        dispatch(setLoading(true));
+        const headers = getAuthHeaders();
+
+        try {
+            const res = await axios.delete(
+                `${PRIVATE_CHAT_API}/conversations/${conversationsId}`,
+                { headers }
+            );
+
+            if (res.data.success) {
+                dispatch(setLoading(false));
+                dispatch(setConversationMessages({ conversationId: null, messages: [] }));
+                return {
+                    success: true
+                };
+            } else {
+                dispatch(setLoading(false));
+                dispatch(setError(res.data.error || 'Failed to delete conversation'));
+                return {
+                    success: false
+                };
+            };
+        } catch (error) {
+            dispatch(setError(error.response?.data?.error || 'Server error deleting conversation'));
+            return {
+                success: false
+            };
+        } finally {
+            dispatch(setLoading(false));
+        }
+    };
+};
+

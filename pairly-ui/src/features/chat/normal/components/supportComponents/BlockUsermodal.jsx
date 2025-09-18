@@ -49,12 +49,13 @@ import StyledText from '@/components/common/StyledText';
 
 // redux
 import { privateBlockUser } from '@/redux/slices/moderation/blockUserAction';
+import { fetchAllUser } from '@/redux/slices/privateChat/privateChatAction';
 import { useDispatch, useSelector } from 'react-redux';
 
 // Toast notifications
 import { toast } from 'react-toastify';
 
-function BlockUserModal({ open, onClose, partner, partnerId }) {
+function BlockUserModal({ open, onClose, partner, partnerId, clearActiveChat, onCloseChatWindow }) {
     const dispatch = useDispatch();
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.down('xs'));
@@ -101,8 +102,8 @@ function BlockUserModal({ open, onClose, partner, partnerId }) {
      * Handle block confirmation and trigger API call
      */
     const handleBlockConfirm = async () => {
-        // If reason is 'other', ensure customReason has at least 10 chars
-        if (formData.reason === 'other' && formData.customReason.trim().length < 10) {
+        // If reason is 'other', ensure customReason has at least 5 chars
+        if (formData.reason === 'other' && formData.customReason.trim().length < 5) {
             setError((prev) => ({
                 ...prev,
                 customReason:
@@ -128,6 +129,11 @@ function BlockUserModal({ open, onClose, partner, partnerId }) {
 
             if (response?.success) {
                 toast.success(response.message || 'User blocked successfully');
+                // Close chat window and clear active chat
+                if (typeof clearActiveChat === 'function') clearActiveChat(null);
+                if (typeof onCloseChatWindow === 'function') onCloseChatWindow(null);
+                // Refetch friend list to remove blocked user
+                dispatch(fetchAllUser());
                 onClose();
             } else {
                 toast.error(response?.error || 'Something went wrong');

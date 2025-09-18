@@ -36,7 +36,8 @@ import ProposeToPartnerModel from '../supportComponents/ProposeToPartnerModel';
 import ReportUserModal from '../supportComponents/ReportUserModal';
 import BlockUserModal from '../supportComponents/BlockUsermodal'
 
-import { useSelector } from "react-redux";
+import { deleteConversationMessage } from '@/redux/slices/privateChat/privateChatAction';
+import { useDispatch, useSelector } from 'react-redux'
 
 function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat }) {
   const theme = useTheme();
@@ -46,6 +47,8 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
   const [openBlockDialog, setOpenBlockDialog] = useState(false);
   const [openReportDialog, setOpenReportDialog] = useState(false);
 
+  const dispatch = useDispatch();
+
   // local state
   const [anchorEl, setAnchorEl] = useState(null);
   const [openProfileModal, setOpenProfileModal] = useState(false);
@@ -53,7 +56,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
   const open = Boolean(anchorEl);
 
   // get all users from redux
-  const users = useSelector(state => state.privateChat.allUsers);
+  const { allUsers: users, activeChat } = useSelector(state => state.privateChat);
 
   // fallback if not found
   const partnerProfile = useMemo(() => {
@@ -76,6 +79,20 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
   /** Handle Report Partner */
   const handleBlockPartner = () => {
     setOpenBlockDialog(true);
+  };
+
+  /** Handle Report Partner */
+  const handleDeleteChat = async () => {
+    if (!activeChat) return;
+
+    const confirmed = window.confirm('Are you sure you want to delete this chat? This action cannot be undone.');
+    if (!confirmed) return;
+
+    const res = await dispatch(deleteConversationMessage(activeChat));
+    if (res?.success) {
+      clearActiveChat(null);
+      onCloseChatWindow(null);
+    }
   };
 
   /**
@@ -123,7 +140,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
         break;
 
       case 'deleteChat':
-        // your logic here
+        handleDeleteChat();
         break;
 
       default:
@@ -296,6 +313,8 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
         onClose={() => setOpenBlockDialog(false)}
         partner={partnerProfile}
         partnerId={userId}
+        onCloseChatWindow={onCloseChatWindow}
+        clearActiveChat={clearActiveChat}
       />
 
       <ReportUserModal
