@@ -94,7 +94,7 @@ export const clearConversationMessage = (conversationId) => {
 
         try {
             const res = await axios.delete(
-                `http://localhost:8000/api/private-chat/conversations/${conversationId}/messages`,
+                `${PRIVATE_CHAT_API}/conversations/${conversationId}/messages`,
                 { headers }
             );
 
