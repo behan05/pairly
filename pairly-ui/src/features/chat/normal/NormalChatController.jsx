@@ -28,18 +28,19 @@ function NormalChatController() {
         });
 
         // NORMALIZED MESSAGE LISTENER (minimal change - shape normalization)
-        socket.on('privateChat:message', ({ conversationId, message, senderId, type, timestamp }) => {
-            const createdAt = timestamp ?? (message?.timestamp ?? new Date().toISOString());
+        socket.on('privateChat:message', ({ conversationId, message }) => {
+            // normalize timestamp safely (avoid undefined `timestamp`)
+            const createdAt = message?.timestamp ?? message?.createdAt ?? new Date().toISOString();
 
             dispatch(addMessage({
                 conversationId,
                 message: {
-                    _id: message?.id,
+                    _id: message?._id ?? message?.clientMessageId,
                     content: message?.content ?? message?.text ?? '',
-                    sender: senderId ?? message?.senderId ?? message?.sender,
-                    messageType: type ?? message?.type ?? 'text',
+                    sender: message?.sender ?? message?.senderId,
+                    messageType: message?.messageType ?? message?.type ?? 'text',
                     createdAt,
-                    seen: false
+                    seen: message?.seen ?? false
                 }
             }));
         });

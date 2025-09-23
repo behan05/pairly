@@ -37,10 +37,8 @@ const allowedMimeTypes = [
 const storage = new CloudinaryStorage({
     cloudinary,
     params: async (req, file) => {
-        // Default to auto for mixed content
         let resourceType = 'auto';
 
-        // Handle unsupported document types by setting resource_type: 'raw'
         if (
             file.mimetype === 'application/msword' ||
             file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
@@ -54,13 +52,13 @@ const storage = new CloudinaryStorage({
         }
 
         return {
-            folder: 'pairly/random-chats',
+            folder: 'pairly/private-chats',
             allowed_formats: allowedFormats,
             public_id: `user_${req.user?.id || 'guest'}_${Date.now()}`,
             resource_type: resourceType,
         };
-    },
-});
+    }
+})
 
 // Multer Upload Middleware
 const upload = multer({

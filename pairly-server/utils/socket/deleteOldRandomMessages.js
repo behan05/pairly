@@ -19,7 +19,7 @@ async function deleteExpiredRandomMessages() {
 
     // Filtering only those where the related conversation is a random chat
     const randomExpiredMessages = expiredMessages.filter(
-        msg => msg.conversation?.isRandom === true
+        msg => msg.conversation?.isRandomChat === true
     );
 
     // Delete media (if any)

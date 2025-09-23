@@ -8,8 +8,10 @@ const BASE_ENDPOINT =
 export const AUTH_API = `${BASE_ENDPOINT}/auth`;
 
 // Social auth APIs
-export const GOOGLE_API = 'https://pairly-server.onrender.com/api/auth/google';
-export const GITHUB_API = 'https://pairly-server.onrender.com/api/auth/github';
+// export const GOOGLE_API = 'https://pairly-server.onrender.com/api/auth/google';
+// export const GITHUB_API = 'https://pairly-server.onrender.com/api/auth/github';
+export const GOOGLE_API = `${BASE_ENDPOINT}/auth/google`;
+export const GITHUB_API = `${BASE_ENDPOINT}/auth/github`;
 
 // User settings API endpoint
 export const SETTINGS_API = `${BASE_ENDPOINT}/settings`;

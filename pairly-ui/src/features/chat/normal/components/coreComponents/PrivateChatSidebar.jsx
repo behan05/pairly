@@ -14,6 +14,10 @@ import {
     SearchIcon,
     defaultAvatar,
 } from '@/MUI/MuiIcons';
+import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
+import ImageIcon from '@mui/icons-material/Image';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import AudiotrackIcon from '@mui/icons-material/Audiotrack';
 
 // Components
 import ChatSidebarHeader from '@/features/chat/common/ChatSidebarHeader';
@@ -51,10 +55,17 @@ function PrivateChatSidebar() {
         const userConversation = chatUsers.find(u => u.partnerId === userId);
 
         if (userConversation?.conversationId) {
+            // Dispatch immediately if conversationId is already available
             dispatch(fetchConversationMessages(userConversation.conversationId));
-        };
+        } else {
+            // Wait for the socket event to provide the conversationId
+            socket.on('privateChat:partner-joined', ({ partnerId, conversationId }) => {
+                if (partnerId === userId) {
+                    dispatch(fetchConversationMessages(conversationId));
+                }
+            });
+        }
     };
-
 
     return (
         <Box
@@ -179,18 +190,42 @@ function PrivateChatSidebar() {
                                                 color="text.secondary"
                                                 sx={{
                                                     maxWidth: '100%',
-                                                    fontSize: isSm ? '14px' : 'initial',
+                                                    fontSize: isSm ? '12px' : '14',
                                                     whiteSpace: 'nowrap',
                                                     overflow: 'hidden',
                                                     textOverflow: 'ellipsis',
                                                     wordBreak: 'break-all'
                                                 }}
                                             >
-                                                {user?.lastMessage
-                                                    ? user.lastMessage.content.length > 36
-                                                        ? user.lastMessage.content.slice(0, 36) + '...'
-                                                        : user.lastMessage.content
-                                                    : 'No chat message yet'}
+                                                {
+                                                    user?.lastMessage?.messageType === 'image' ?
+                                                        <Stack flexDirection='row' alignItems='center' gap={0.5}>
+                                                            <ImageIcon fontSize='small' sx={{ color: 'success.main' }} />
+                                                            <Typography variant={'body2'}>image</Typography>
+                                                        </Stack>
+                                                        : user?.lastMessage?.messageType === 'video' ?
+                                                            <Stack flexDirection='row' alignItems='center' gap={0.5}>
+                                                                <VideoLibraryIcon fontSize='small' sx={{ color: 'primary.main' }} />
+                                                                <Typography variant={'body2'}>video</Typography>
+                                                            </Stack>
+                                                            : user?.lastMessage?.messageType === 'file' ?
+                                                                <Stack flexDirection='row' alignItems='center' gap={0.5}>
+                                                                    <InsertDriveFileIcon fontSize='small' sx={{ color: 'secondary.main' }} />
+                                                                    <Typography variant={'body2'}>file</Typography>
+                                                                </Stack>
+                                                                :
+                                                                user?.lastMessage?.messageType === 'audio' ?
+                                                                    <Stack flexDirection='row' alignItems='center' gap={0.5}>
+                                                                        <AudiotrackIcon fontSize="small" sx={{ color: 'warning.main' }} />
+                                                                        <Typography variant={'body2'}>audio</Typography>
+                                                                    </Stack>
+                                                                    :
+                                                                    user?.lastMessage?.messageType === 'text'
+                                                                        ? user.lastMessage.content.length > 36
+                                                                            ? user.lastMessage.content.slice(0, 36) + '...'
+                                                                            : user.lastMessage.content
+                                                                        : 'No chat message yet'
+                                                }
                                             </Typography>
 
                                             {/* {unseenCount > 0 && (

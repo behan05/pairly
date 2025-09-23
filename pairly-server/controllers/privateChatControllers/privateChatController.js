@@ -5,6 +5,7 @@ const Message = require('../../models/chat/Message.model');
 const Block = require('../../models/chat/Block.model');
 const PrivateChatRequest = require('../../models/chat/PrivateChatRequest.model');
 const ChatClearLog = require('../../models/chat/ChatClearLog.model');
+const { getIO } = require('../../sockets/socketServer');
 
 exports.listPrivateChatUsersController = async (req, res) => {
     const currentUserId = req.user.id;
@@ -316,4 +317,120 @@ exports.deletePrivateChatWithUserControllerById = async (req, res) => {
         });
     }
 };
+
+exports.uploadPrivateChatMediaController = async (req, res) => {
+    const currentUserId = req.user.id;
+    let { conversationId } = req.body;
+
+    if (!currentUserId) {
+        return res.status(401).json({
+            success: false,
+            error: 'Unauthorized: access token is missing'
+        });
+    }
+
+    // Accept conversationId as object or string
+    if (typeof conversationId === 'object' && conversationId !== null) {
+        conversationId = conversationId._id || conversationId.id || conversationId.toString();
+    }
+
+    if (!conversationId || typeof conversationId !== 'string') {
+        return res.status(400).json({
+            success: false,
+            error: 'conversationId is required and must be a string'
+        });
+    }
+
+    const media = req.file;
+    if (!media) {
+        return res.status(400).json({
+            success: false,
+            error: 'No media file uploaded'
+        });
+    }
+
+    try {
+        // Verify conversation and membership
+        const conversation = await Conversation.findOne({
+            _id: conversationId,
+            isRandomChat: false,
+            participants: currentUserId
+        });
+
+        if (!conversation) {
+            return res.status(404).json({
+                success: false,
+                error: 'Conversation not found'
+            });
+        }
+
+        // Determine message type
+        const getType = (mimetype) => {
+            if (!mimetype) return 'file';
+            if (mimetype.startsWith('image/')) return 'image';
+            if (mimetype.startsWith('video/')) return 'video';
+            if (mimetype.startsWith('audio/')) return 'audio';
+            return 'file';
+        };
+
+        const messageType = getType(media.mimetype);
+
+        // Cloud URL (multer/cloud adapter should set url or path)
+        const cloudinaryUrl = media.url || media.path || null;
+        if (!cloudinaryUrl) {
+            return res.status(500).json({ success: false, error: 'Media upload failed, no URL returned' });
+        }
+
+        // Create message record
+        const newMessage = await Message.create({
+            conversation: conversationId,
+            sender: currentUserId,
+            content: cloudinaryUrl,
+            messageType,
+            publicMediaId: req.file.filename
+        });
+
+        // Emit socket event to the conversation room so clients reconcile optimistic messages
+        try {
+            const io = getIO();
+            // compute roomId consistent with socket join logic: sorted participant ids joined by '-'
+            const participantIds = (conversation.participants || []).map(p => p.toString());
+            const roomId = participantIds.sort().join('-');
+
+            const emittedMessage = {
+                _id: newMessage._id.toString(),
+                content: newMessage.content,
+                sender: newMessage.sender.toString ? newMessage.sender.toString() : String(newMessage.sender),
+                messageType: newMessage.messageType || messageType,
+                publicMediaId: newMessage.publicMediaId || null,
+                createdAt: newMessage.createdAt ? newMessage.createdAt.toISOString() : new Date().toISOString(),
+                timestamp: newMessage.createdAt ? newMessage.createdAt.toISOString() : new Date().toISOString(),
+            };
+
+            // Emit to room so both participants receive the message
+            io.to(roomId).emit('privateChat:message', {
+                conversationId: String(conversationId),
+                message: emittedMessage
+            });
+        } catch (emitErr) {
+            console.error('Socket emit error (media):', emitErr);
+        }
+
+        return res.status(201).json({
+            success: true,
+            message: 'Media uploaded successfully',
+            data: newMessage
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            error: 'Error while uploading media',
+            details: error.message
+        });
+    }
+};
+
+
 

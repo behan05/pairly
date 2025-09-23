@@ -6,7 +6,6 @@ import {
   Typography,
   Tooltip,
   IconButton,
-  CircularProgress,
   useTheme,
   useMediaQuery,
   Avatar,
@@ -62,15 +61,6 @@ function BlockedList() {
   return (
     <Box sx={{ px: 2, pb: 2, overflowY: 'auto' }}>
       <ChatSidebarHeader />
-
-      {isBlocking && (
-        <Stack direction="row" alignItems="center" spacing={1}>
-          <CircularProgress size={18} />
-          <Typography variant="body2" color="text.secondary">
-            Loading blocked users...
-          </Typography>
-        </Stack>
-      )}
 
       {blockedUsers.length === 0 ? (
         <Typography variant="body1" color="text.secondary" sx={{ mt: 3, textAlign: 'center' }}>

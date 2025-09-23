@@ -50,9 +50,8 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
   // Emit read event when opening chat
   useEffect(() => {
     const handleFocus = () => {
-      if (conversationId && socket) {
-        socket.emit('privateChat:readMessage', { conversationId });
-      }
+      if (!conversationId) return;
+      socket.emit('privateChat:readMessage', { conversationId });
     };
 
     window.addEventListener('focus', handleFocus);
@@ -61,70 +60,23 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
 
   // Download handler
   const handleDownload = (url, fileName = 'file') => {
-    try {
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    } catch (error) {
-      console.error('Download failed', error);
-    }
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
   };
 
   const isValidURL = (text) => {
-    try {
-      const url = new URL(text);
-      return url.protocol === 'http:' || url.protocol === 'https:';
-    } catch (_) {
-      return false;
-    }
+    try { new URL(text); return true; } catch { return false; }
   };
 
   useEffect(() => {
-    const handleResize = () => {
-      const chatWindow = document.getElementById("chat-window");
-      if (chatWindow && window.visualViewport) {
-        chatWindow.style.height = `${window.visualViewport.height}px`;
-      }
-    };
-
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", handleResize);
-      handleResize();
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-
-    return () => {
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener("resize", handleResize);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    // Scroll input into view when focused
-    const input = document.querySelector("textarea, input");
-    if (!input) return;
-
-    const handleFocus = () => {
-      setTimeout(() => {
-        input.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 300);
-    };
-
-    input.addEventListener("focus", handleFocus);
-
-    // Scroll messages to bottom only if NOT typing
-    if (!isTyping) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
-
-    return () => {
-      input.removeEventListener("focus", handleFocus);
-    };
   }, [messages, isTyping]);
-
 
   return (
     <Stack
@@ -229,11 +181,31 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                   </Box>
                 )}
 
-                {/* Video */}
+                {/* Video Message */}
                 {msg.messageType === 'video' && (
-                  <Box sx={{ position: 'relative' }}>
-                    <Box component="video" src={msg.content} controls sx={{ maxWidth: 320, maxHeight: 240, borderRadius: 1 }} />
-                    <IconButton onClick={() => handleDownload(msg.content, msg.fileName || 'video.mp4')} sx={{ position: 'absolute', top: 4, right: 2 }}>
+                  <Stack sx={{ position: 'relative' }}>
+                    <Stack>
+                      <Box
+                        component="video"
+                        src={msg.content}
+                        controls
+                        sx={{
+                          maxWidth: 320,
+                          maxHeight: 240,
+                          borderRadius: 1
+                        }}
+                      />
+                    </Stack>
+
+                    <IconButton
+                      onClick={() => handleDownload(msg.message, msg.fileName || 'video.mp4')}
+                      aria-label={`Download ${msg.fileName || 'video'}`}
+                      sx={{
+                        position: 'absolute',
+                        top: 4,
+                        right: 2
+                      }}
+                    >
                       <DownloadIcon />
                     </IconButton>
                     <Typography
@@ -244,7 +216,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                       {formatMessageTime(msg.createdAt)}
                       {isOwnMessage && (msg.seen ? <DoneAllIcon sx={{ fontSize: 16, color: "success.main" }} /> : <DoneIcon sx={{ fontSize: 16, color: "grey" }} />)}
                     </Typography>
-                  </Box>
+                  </Stack>
                 )}
 
                 {/* Audio */}

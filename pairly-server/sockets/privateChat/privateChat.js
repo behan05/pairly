@@ -1,7 +1,7 @@
 const Conversation = require('../../models/chat/Conversation.model');
 const Message = require('../../models/chat/Message.model');
 
-const privateChatSessions = new Map(); 
+const privateChatSessions = new Map();
 const onlineUsers = new Map();
 
 function privateChatHandler(io, socket) {
@@ -10,58 +10,63 @@ function privateChatHandler(io, socket) {
     // --- JOIN CHAT SESSION ---
     socket.on('privateChat:join', async ({ partnerUserId }) => {
         if (!partnerUserId) {
-            socket.emit('privateChat:error', { error: 'missing partner Id' });
+            socket.emit('privateChat:error', { error: 'partnerUserId is required.' });
             return;
         }
 
         const roomId = [currentUserId, partnerUserId].sort().join('-');
         socket.join(roomId);
 
-        let conversation = await Conversation.findOne({
-            participants: { $size: 2, $all: [partnerUserId, currentUserId] },
-            isRandomChat: false
-        });
-
-        if (!conversation) {
-            conversation = new Conversation({
-                participants: [partnerUserId, currentUserId],
-                isRandomChat: false,
-                isActive: true,
-                matchedAt: new Date()
+        try {
+            let conversation = await Conversation.findOne({
+                participants: { $size: 2, $all: [partnerUserId, currentUserId] },
+                isRandomChat: false
             });
-            await conversation.save();
+
+            if (!conversation) {
+                conversation = new Conversation({
+                    participants: [partnerUserId, currentUserId],
+                    isRandomChat: false,
+                    isActive: true,
+                    matchedAt: new Date()
+                });
+                await conversation.save();
+            }
+
+            privateChatSessions.set(currentUserId, {
+                partnerId: partnerUserId,
+                roomId,
+                conversationId: conversation._id.toString()
+            });
+
+            // Mark user online
+            onlineUsers.set(currentUserId, socket.id);
+
+            // Notify current user about partner's presence
+            if (onlineUsers.has(partnerUserId)) {
+                socket.emit('privateChat:userOnline', { userId: partnerUserId });
+            } else {
+                socket.emit('privateChat:userOffline', { userId: partnerUserId });
+            }
+
+            // Notify partner that current user is online
+            if (onlineUsers.has(partnerUserId)) {
+                io.to(onlineUsers.get(partnerUserId)).emit('privateChat:userOnline', { userId: currentUserId });
+            }
+
+            socket.emit('privateChat:partner-joined', {
+                partnerId: partnerUserId,
+                conversationId: conversation._id.toString(),
+                profile: null
+            });
+        } catch (err) {
+            console.error('privateChat:join error', err);
+            socket.emit('privateChat:error', { error: 'Failed to join private chat.' });
         }
-
-        privateChatSessions.set(currentUserId, {
-            partnerId: partnerUserId,
-            roomId,
-            conversationId: conversation._id.toString()
-        });
-
-        // Mark user online
-        onlineUsers.set(currentUserId, socket.id);
-
-        // Notify current user about partner's presence
-        if (onlineUsers.has(partnerUserId)) {
-            socket.emit('privateChat:userOnline', { userId: partnerUserId });
-        } else {
-            socket.emit('privateChat:userOffline', { userId: partnerUserId });
-        }
-
-        // Notify partner that current user is online
-        if (onlineUsers.has(partnerUserId)) {
-            io.to(onlineUsers.get(partnerUserId)).emit('privateChat:userOnline', { userId: currentUserId });
-        }
-
-        socket.emit('privateChat:partner-joined', {
-            partnerId: partnerUserId,
-            conversationId: conversation._id.toString(),
-            profile: null
-        });
     });
 
     // --- SEND MESSAGE ---
-    socket.on('privateChat:message', async ({ message, type }) => {
+    socket.on('privateChat:message', async ({ message, messageType }) => {
         const session = privateChatSessions.get(currentUserId);
         if (!session || !session.partnerId) {
             socket.emit('privateChat:error', { error: 'You are not connected to anyone yet.' });
@@ -87,11 +92,13 @@ function privateChatHandler(io, socket) {
             }
 
             const NINETY_DAYS = 1000 * 60 * 60 * 24 * 90;
+            const content = (typeof message === 'object') ? (message.text ?? message) : message;
+
             const newMessage = new Message({
                 conversation: conversation._id,
                 sender: currentUserId,
-                content: typeof message === 'object' ? message.text ?? message : message,
-                messageType: type,
+                content,
+                messageType: messageType ?? 'text',
                 delivered: true,
                 seen: false,
                 deleteAt: new Date(Date.now() + NINETY_DAYS)
@@ -102,18 +109,16 @@ function privateChatHandler(io, socket) {
             io.to(roomId).emit('privateChat:message', {
                 conversationId: conversation._id.toString(),
                 message: {
-                    id: newMessage._id.toString(),
+                    _id: newMessage._id.toString(),
                     content: newMessage.content,
-                    senderId: newMessage.sender,
-                    type: newMessage.messageType,
-                    timestamp: newMessage.createdAt
+                    sender: typeof newMessage.sender === 'object' && newMessage.sender.toString ? newMessage.sender.toString() : String(newMessage.sender),
+                    messageType: newMessage.messageType || 'text',
+                    timestamp: newMessage.createdAt ? newMessage.createdAt.toISOString() : new Date().toISOString()
                 },
-                senderId: newMessage.sender,
-                type: newMessage.messageType,
-                timestamp: newMessage.createdAt
             });
         } catch (err) {
-            socket.emit('privateChat:error', { message: 'Failed to send message.' });
+            console.error('privateChat:message error', err);
+            socket.emit('privateChat:error', { error: 'Failed to send message.' });
         }
     });
 

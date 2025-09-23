@@ -3,7 +3,6 @@ import {
     Box,
     Stack,
     Typography,
-    CircularProgress,
     useTheme,
     useMediaQuery,
     Button,
@@ -53,15 +52,6 @@ function FriendRequestList() {
     return (
         <Box sx={{ px: 2, pb: 2, overflowY: 'auto' }}>
             <ChatSidebarHeader />
-
-            {loading && (
-                <Stack direction="row" alignItems="center" spacing={1} py={2}>
-                    <CircularProgress size={18} />
-                    <Typography variant="body2" color="text.secondary">
-                        Loading friend requests...
-                    </Typography>
-                </Stack>
-            )}
 
             {requests.length === 0 ? (
                 <Typography

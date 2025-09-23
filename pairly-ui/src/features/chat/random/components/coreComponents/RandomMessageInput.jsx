@@ -24,8 +24,9 @@ import {
 // Emoji Picker and Toast Notifications
 import Picker from '@emoji-mart/react';
 import data from '@emoji-mart/data';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 
 // Redux and Socket
 import { useDispatch, useSelector } from 'react-redux';
@@ -574,16 +575,28 @@ function RandomMessageInput() {
 
       {/* Emoji Picker */}
       {showEmojiPicker && (
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: '72px',
-            right: 24,
-            zIndex: 1000
-          }}
-        >
-          <Picker data={data} onEmojiSelect={handleEmojiSelect} theme={theme.palette.mode} />
-        </Box>
+        <ClickAwayListener onClickAway={() => setShowEmojiPicker(false)}>
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: '72px',
+              right: 24,
+              zIndex: 1000
+            }}
+          >
+            <Picker
+              data={data}
+              onEmojiSelect={handleEmojiSelect}
+              theme={theme.palette.mode}
+              style={{
+                background: theme.palette.background.paper,
+                borderRadius: 8,
+                boxShadow: theme.shadows[6],
+                color: theme.palette.text.primary
+              }}
+            />
+          </Box>
+        </ClickAwayListener>
       )}
     </Box>
   );

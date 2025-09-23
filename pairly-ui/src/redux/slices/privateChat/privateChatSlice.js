@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     allUsers: [],          // full users fetched from API to show in sidebar list
     chatUsers: [],         // users you have active chats with
-    conversations: {},     // { conversationId: [messages...] }
+    conversations: {},     // { conversationId: { messages: [...] } }
     activeChat: null,      // conversationId
     loading: false,
     error: null,
@@ -16,51 +16,84 @@ const privateChatSlice = createSlice({
         setAllUsers: (state, action) => {
             state.allUsers = Array.isArray(action.payload) ? action.payload : [];
         },
+
         addChatUser: (state, action) => {
             const newUser = action.payload;
-            const exists = state.chatUsers.find(u => u.partnerId === newUser.partnerId);
-            if (!exists) state.chatUsers.push(newUser);
-            else Object.assign(exists, newUser);
-        },
-        setConversationMessages: (state, action) => {
-            const { conversationId, messages } = action.payload;
-            state.conversations[conversationId] = { messages };
-        },
-        setActiveChat: (state, action) => {
-            state.activeChat = action.payload;
-            const user = state.chatUsers.find(u => u.conversationId === action.payload);
-            if (user) {
-                user.unreadCount = 0;
+            if (!newUser || !newUser.partnerId) return;
+
+            const idx = state.chatUsers.findIndex(u => u.partnerId === newUser.partnerId);
+            if (idx === -1) {
+                state.chatUsers.push({
+                    partnerId: newUser.partnerId,
+                    conversationId: newUser.conversationId ?? null,
+                    isOnline: newUser.isOnline ?? false,
+                    profile: newUser.profile ?? null
+                });
+            } else {
+                // merge updates
+                state.chatUsers[idx] = {
+                    ...state.chatUsers[idx],
+                    ...newUser
+                };
             }
         },
+
+        setConversationMessages: (state, action) => {
+            const { conversationId, messages } = action.payload;
+            if (!conversationId) return;
+            state.conversations[String(conversationId)] = { messages: Array.isArray(messages) ? messages : [] };
+        },
+
+        setActiveChat: (state, action) => {
+            state.activeChat = action.payload;
+        },
+
         setLoading: (state, action) => {
             state.loading = action.payload;
         },
+
         addMessage: (state, action) => {
             const { conversationId, message } = action.payload;
-            if (!state.conversations[conversationId]) state.conversations[conversationId] = { messages: [] };
+            if (!conversationId || !message) return;
 
-            const index = state.conversations[conversationId].messages.findIndex(m => m._id === message._id);
-            if (index >= 0) {
-                state.conversations[conversationId].messages[index] = message;
-            } else {
-                state.conversations[conversationId].messages.push(message);
+            const cid = String(conversationId);
+
+            // ensure conversation object exists with messages array
+            if (!state.conversations[cid]) {
+                state.conversations[cid] = { messages: [] };
             }
+
+            const msgs = state.conversations[cid].messages;
+            if (!Array.isArray(msgs)) {
+                state.conversations[cid].messages = [];
+            }
+
+            // Prevent duplicate messages by _id
+            if (message._id) {
+                const exists = state.conversations[cid].messages.some(m => m._id === message._id);
+                if (exists) return;
+            }
+
+            // Push new message
+            state.conversations[cid].messages.push(message);
         },
+
         updateMessagesAsRead: (state, action) => {
             const { conversationId, messageIds } = action.payload;
-            if (!state.conversations[conversationId]) return;
+            if (!conversationId || !Array.isArray(messageIds)) return;
+            const cid = String(conversationId);
+            if (!state.conversations[cid]) return;
 
-            state.conversations[conversationId].messages = state.conversations[conversationId].messages.map(msg =>
+            state.conversations[cid].messages = state.conversations[cid].messages.map(msg =>
                 messageIds.includes(msg._id) ? { ...msg, seen: true } : msg
             );
-
-            const user = state.chatUsers.find(u => u.conversationId === conversationId);
-            if (user) {
-                user.unreadCount = 0;
-            }
         },
-        setError: (state, action) => { state.error = action.payload; },
+
+        setError: (state, action) => {
+            state.error = action.payload ?? null;
+            state.loading = false;
+        },
+
         reset: (state) => {
             state.allUsers = [];
             state.chatUsers = [];

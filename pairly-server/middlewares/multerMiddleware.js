@@ -6,7 +6,7 @@ const cloudinary = require('../utils/cloudinary/cloudinary');
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-        folder: 'connect/profileImage',
+        folder: 'pairly/profileImage',
         allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
         public_id: (req, file) => {
             return `user_${req.user.id}_${Date.now()}`;
