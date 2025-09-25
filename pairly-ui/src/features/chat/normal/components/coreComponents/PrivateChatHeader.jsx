@@ -161,7 +161,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
   };
 
   return (
-    <Box position={'relative'}>
+    <Box position="sticky" top={0} zIndex={20}>
       <Stack
         direction="row"
         alignItems="center"
@@ -171,7 +171,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
         py={1}
         sx={{
           borderBottom: `1px solid ${theme.palette.divider}`,
-          backgroundColor: theme.palette.background.paper
+          backgroundColor: theme.palette.background.paper,
         }}
       >
         {/* Back Button only for small screens */}

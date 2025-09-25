@@ -164,18 +164,17 @@ function RandomChatHeader() {
   }, [partnerProfile]);
 
   return (
-    <Box position={'relative'}>
-      {/* Header wrapper */}
+    <Box position="sticky" top={0} zIndex={20}>
       <Stack
         direction="row"
         alignItems="center"
         justifyContent="space-between"
         spacing={2}
-        px={2}
-        py={0}
+        px={isSm ? 0.5 : 2}
+        py={1}
         sx={{
           borderBottom: `1px solid ${theme.palette.divider}`,
-          backgroundColor: theme.palette.background.paper
+          backgroundColor: theme.palette.background.paper,
         }}
       >
         {/* Left Section: Avatar + Name + Location */}
