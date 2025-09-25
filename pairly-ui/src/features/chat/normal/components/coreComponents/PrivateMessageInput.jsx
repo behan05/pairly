@@ -196,10 +196,10 @@ function PrivateMessageInput() {
     setAnchorEl(null);
   };
 
+  // Adding this useEffect to handle mobile keyboard resizing
   useEffect(() => {
     const handleViewportChange = () => {
       if (!inputContainerRef.current || !window.visualViewport) return;
-
       const vhOffset = window.visualViewport.height - window.innerHeight;
       inputContainerRef.current.style.bottom = `${vhOffset > 0 ? vhOffset + 8 : 0}px`;
     };
@@ -649,7 +649,7 @@ function PrivateMessageInput() {
           <Box
             sx={{
               position: 'absolute',
-              bottom: `calc(${inputContainerRef.current?.style.bottom || 0}px + 72px)`,
+              bottom: 72,
               right: 24,
               zIndex: 1000
             }}
