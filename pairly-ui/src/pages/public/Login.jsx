@@ -98,13 +98,19 @@ function Login() {
       toast.success('Login successfully!', {
         style: {
           backdropFilter: 'blur(14px)',
-          background: theme.palette.divider,
+          background: theme.palette.background.paper,
           color: theme.palette.text.primary,
         }
       });
       setTimeout(() => navigate('/pairly'), 1000);
     } else {
-      toast.error(response.message);
+      toast.error(response.message, {
+        style: {
+          backdropFilter: 'blur(14px)',
+          background: theme.palette.warning.main,
+          color: theme.palette.text.primary,
+        }
+      });
       setDisabled(false)
     }
   };

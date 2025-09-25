@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {
   Box,
   Stack,
@@ -23,10 +23,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import {
-  getSettingsNotification,
-  updateSettingsNotification
-} from '@/redux/slices/settings/settingsAction';
+import { updateSettingsNotification } from '@/redux/slices/settings/settingsAction';
 
 function Notifications() {
   const theme = useTheme();
@@ -42,19 +39,14 @@ function Notifications() {
     blockNotification: false
   });
 
-  // 1. Fetch settings from backend on mount
-  useEffect(() => {
-    dispatch(getSettingsNotification());
-  }, [dispatch]);
-
-  // 2. When Redux store updates, sync to local state
+  // When Redux store updates, sync to local state
   useEffect(() => {
     if (notificationSettings) {
       setNotifSettings(notificationSettings);
     }
   }, [notificationSettings]);
 
-  // 3. Toggle handler
+  // Toggle handler
   const handleToggle = useCallback(
     async (key) => {
       const updated = { ...notifSettings, [key]: !notifSettings[key] };
@@ -63,9 +55,21 @@ function Notifications() {
       const response = await dispatch(updateSettingsNotification(updated));
 
       if (response?.success) {
-        toast.success(response.message || 'Notification settings updated');
+        toast.success(response.message || 'Notification settings updated', {
+          style: {
+            backdropFilter: 'blur(14px)',
+            background: theme.palette.background.paper,
+            color: theme.palette.text.primary,
+          }
+        });
       } else {
-        toast.error(response.error || 'Failed to update settings');
+        toast.error(response.error || 'Failed to update settings', {
+          style: {
+            backdropFilter: 'blur(14px)',
+            background: theme.palette.warning.main,
+            color: theme.palette.text.primary,
+          }
+        });
       }
     },
     [notifSettings, dispatch]

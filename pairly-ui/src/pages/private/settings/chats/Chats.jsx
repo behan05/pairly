@@ -7,7 +7,8 @@ import {
   Typography,
   Switch as MuiSwitch,
   Select,
-  MenuItem
+  MenuItem,
+  useTheme
 } from '@/MUI/MuiComponents';
 import {
   EditNoteIcon,
@@ -19,13 +20,15 @@ import {
 } from '@/MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import BlurWrapper from '@/components/common/BlurWrapper';
-import { getChatSettings, updateChatSettings } from '@/redux/slices/settings/settingsAction';
+import { updateChatSettings } from '@/redux/slices/settings/settingsAction';
+import { toggleTheme } from '@/redux/slices/theme/themeSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function Chats() {
   const dispatch = useDispatch();
+  const theme = useTheme();
   const { settingsData } = useSelector((state) => state.settings);
   const chatSettings = settingsData?.chatSettings;
 
@@ -34,13 +37,9 @@ function Chats() {
     showTypingStatus: true,
     showOnlineStatus: true,
     enterToSend: true,
-    chatTheme: 'dark',
+    chatTheme: localStorage.getItem('theme') ?? 'dark',
     chatFontSize: 'medium'
   });
-
-  useEffect(() => {
-    dispatch(getChatSettings());
-  }, [dispatch]);
 
   useEffect(() => {
     if (chatSettings) {
@@ -49,15 +48,33 @@ function Chats() {
   }, [chatSettings]);
 
   const handleChange = async (key, value) => {
+
+    if (key === 'chatTheme') {
+      localStorage.setItem('theme', value);
+      dispatch(toggleTheme())
+    };
+
     const updated = { ...formData, [key]: value };
     setFormData(updated);
 
     // Dispatch update action
     const response = await dispatch(updateChatSettings(updated));
     if (response?.success) {
-      toast.success(response.message || 'Chat settings updated');
+      toast.success(response.message || 'Chat settings updated', {
+        style: {
+          backdropFilter: 'blur(14px)',
+          background: theme.palette.background.paper,
+          color: theme.palette.text.primary,
+        }
+      });
     } else {
-      toast.error(response.error || 'Failed to update settings');
+      toast.error(response.error || 'Failed to update settings', {
+        style: {
+          backdropFilter: 'blur(14px)',
+          background: theme.palette.warning.main,
+          color: theme.palette.text.primary,
+        }
+      });
     }
   };
 

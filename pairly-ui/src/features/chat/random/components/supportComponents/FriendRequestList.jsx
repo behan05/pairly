@@ -20,7 +20,7 @@ import {
 import ChatSidebarHeader from '../../../common/ChatSidebarHeader';
 import StyledText from '@/components/common/StyledText';
 import textFormater from '@/utils/textFormatting';
-import { fetchFriendRequests, acceptFriendRequest, declineFriendRequest } from '@/redux/slices/randomChat/friendRequestAction'
+import { acceptFriendRequest, declineFriendRequest } from '@/redux/slices/randomChat/friendRequestAction'
 import { useSelector, useDispatch } from 'react-redux';
 
 function FriendRequestList() {
@@ -31,8 +31,6 @@ function FriendRequestList() {
 
     useEffect(() => {
         document.title = 'Pairly - Friend Requests';
-
-        dispatch(fetchFriendRequests())
     }, [dispatch]);
 
     const split = (gender) => gender?.[0]?.toUpperCase() ?? '';

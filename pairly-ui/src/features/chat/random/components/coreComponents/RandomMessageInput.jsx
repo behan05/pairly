@@ -9,7 +9,8 @@ import {
   Tooltip,
   Typography,
   useTheme,
-  Stack
+  Stack,
+  useMediaQuery
 } from '@/MUI/MuiComponents';
 import {
   CloseIcon,
@@ -48,6 +49,7 @@ import { RANDOM_API } from '@/api/config';
 function RandomMessageInput() {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
   // Local state for message, media previews, emoji picker, and file menu
   const [message, setMessage] = useState('');
@@ -247,28 +249,41 @@ function RandomMessageInput() {
     }
   };
 
-  // --- Added effect to keep input above keyboard on mobile ---
   useEffect(() => {
-    const handleResize = () => {
-      if (inputContainerRef.current && window.visualViewport) {
-        inputContainerRef.current.style.bottom = `${window.visualViewport.offsetTop}px`;
-      }
+    const handleViewportChange = () => {
+      if (!inputContainerRef.current || !window.visualViewport) return;
+
+      const vhOffset = window.visualViewport.height - window.innerHeight;
+      inputContainerRef.current.style.bottom = `${vhOffset > 0 ? vhOffset + 8 : 0}px`;
     };
 
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', handleResize);
-      handleResize();
+      window.visualViewport.addEventListener('resize', handleViewportChange);
+      window.visualViewport.addEventListener('scroll', handleViewportChange);
+      handleViewportChange();
     }
 
     return () => {
       if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', handleResize);
+        window.visualViewport.removeEventListener('resize', handleViewportChange);
+        window.visualViewport.removeEventListener('scroll', handleViewportChange);
       }
     };
   }, []);
 
   return (
-    <Box ref={inputContainerRef} position="sticky" bottom={0} zIndex={10} sx={{ transition: 'bottom 0.25s ease' }}>
+    <Box
+      ref={inputContainerRef}
+      position={isSm ? 'fixed' : 'sticky'}
+      bottom={0}
+      left={0}
+      width="100%"
+      zIndex={10}
+      sx={{
+        transition: 'bottom 0.25s ease',
+        pb: isSm ? 'env(safe-area-inset-bottom)' : 0
+      }}
+    >
 
       {/* Media preview area */}
       <Box
@@ -579,7 +594,7 @@ function RandomMessageInput() {
           <Box
             sx={{
               position: 'absolute',
-              bottom: '72px',
+              bottom: `calc(${inputContainerRef.current?.style.bottom || 0}px + 72px)`,
               right: 24,
               zIndex: 1000
             }}

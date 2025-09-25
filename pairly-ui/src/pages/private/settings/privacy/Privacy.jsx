@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Stack, Switch, Typography, Divider, FormControlLabel } from '@/MUI/MuiComponents';
+import { Box, Stack, useTheme, Switch, Typography, Divider, FormControlLabel } from '@/MUI/MuiComponents';
 import {
   VisibilityIcon,
   TuneIcon,
@@ -12,13 +12,15 @@ import BlurWrapper from '@/components/common/BlurWrapper';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { updateSettingsPrivacy, getSettingsPrivacy } from '@/redux/slices/settings/settingsAction';
+import { updateSettingsPrivacy } from '@/redux/slices/settings/settingsAction';
 import { useSelector, useDispatch } from 'react-redux';
 
 function Privacy() {
   const dispatch = useDispatch();
+  const theme = useTheme();
   const { settingsData } = useSelector((state) => state.settings);
-
+  const privacySettings = settingsData?.privacySettings;
+  
   const defaultSettings = {
     showProfilePic: true,
     showLocation: true,
@@ -31,14 +33,9 @@ function Privacy() {
 
   const [formData, setFormData] = useState(defaultSettings);
 
-  // Fetch initial settings data
-  useEffect(() => {
-    dispatch(getSettingsPrivacy());
-  }, []);
-
   // Sync Redux state -> Local form state
   useEffect(() => {
-    if (settingsData?.privacySettings) {
+    if (privacySettings) {
       setFormData((prev) => ({
         ...prev,
         ...settingsData.privacySettings
@@ -59,12 +56,30 @@ function Privacy() {
       const response = await dispatch(updateSettingsPrivacy(updatedFormData));
 
       if (response?.success) {
-        toast.success(response.message || 'Privacy settings updated');
+        toast.success(response.message || 'Privacy settings updated', {
+          style: {
+            backdropFilter: 'blur(14px)',
+            background: theme.palette.background.paper,
+            color: theme.palette.text.primary,
+          }
+        });
       } else {
-        toast.error(response?.error || response?.message || 'Failed to update settings');
+        toast.error(response?.error || response?.message || 'Failed to update settings', {
+          style: {
+            backdropFilter: 'blur(14px)',
+            background: theme.palette.warning.main,
+            color: theme.palette.text.primary,
+          }
+        });
       }
     } catch (error) {
-      toast.error(error?.message || 'Something went wrong');
+      toast.error(error?.message || 'Something went wrong', {
+        style: {
+          backdropFilter: 'blur(14px)',
+          background: theme.palette.warning.main,
+          color: theme.palette.text.primary,
+        }
+      });
     }
   };
 

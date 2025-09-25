@@ -27,13 +27,16 @@ import {
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@/redux/slices/auth/authAction';
-import { getProfile } from '@/redux/slices/profile/profileAction';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // friend request selector
 import { fetchFriendRequests } from '@/redux/slices/randomChat/friendRequestAction';
+import { getProfile } from '@/redux/slices/profile/profileAction';
 import { pendingFriendRequestCount } from '@/redux/slices/randomChat/friendRequestSlice'
+import { getChatSettings } from '@/redux/slices/settings/settingsAction';
+import { getSettingsNotification } from '@/redux/slices/settings/settingsAction';
+import { getSettingsPrivacy } from '@/redux/slices/settings/settingsAction';
 
 const ChatSidebarHeader = ({ children }) => {
   const navigate = useNavigate();
@@ -47,9 +50,13 @@ const ChatSidebarHeader = ({ children }) => {
   const [menuAnchorEl, setMenuAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(menuAnchorEl);
 
+  // Fetch initial settings | Preferences data
   useEffect(() => {
     dispatch(getProfile());
     dispatch(fetchFriendRequests());
+    dispatch(getChatSettings());
+    dispatch(getSettingsNotification());
+    dispatch(getSettingsPrivacy());
   }, [dispatch]);
 
   const navItems = [
@@ -102,7 +109,7 @@ const ChatSidebarHeader = ({ children }) => {
       toast.success('Link copied to clipboard!', {
         style: {
           backdropFilter: 'blur(14px)',
-          background: theme.palette.divider,
+          background: theme.palette.background.paper,
           color: theme.palette.text.primary,
         }
       });
@@ -116,7 +123,7 @@ const ChatSidebarHeader = ({ children }) => {
     toast.success(`We'll miss you ${firstWord} 😔`, {
       style: {
         backdropFilter: 'blur(14px)',
-        background: theme.palette.divider,
+        background: theme.palette.background.paper,
         color: theme.palette.text.primary,
       }
     });

@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Box,
   Divider,
@@ -73,7 +72,7 @@ function Account() {
           }}
         >
           <ListItemIcon>{<DeleteForeverIcon sx={{ mr: 1.1, color: 'error.main' }} />}</ListItemIcon>
-          <ListItemText primary="Deactivate my account" sx={{ color: 'error.main' }} />
+          <ListItemText primary="Delete my account" sx={{ color: 'error.main' }} />
         </ListItemButton>
       </List>
 

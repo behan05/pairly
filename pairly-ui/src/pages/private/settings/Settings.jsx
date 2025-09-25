@@ -25,7 +25,6 @@ import {
 } from '@/MUI/MuiIcons';
 import { Link, useNavigate } from 'react-router-dom';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
-import StyledText from '@/components/common/StyledText';
 import { logout } from '@/redux/slices/auth/authAction';
 import { getProfile } from '@/redux/slices/profile/profileAction';
 import { useDispatch, useSelector } from 'react-redux';
@@ -103,7 +102,7 @@ function Settings() {
       toast.success('Link copied to clipboard!', {
         style: {
           backdropFilter: 'blur(14px)',
-          background: theme.palette.divider,
+          background: theme.palette.background.paper,
           color: theme.palette.text.primary,
         }
       });

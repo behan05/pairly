@@ -135,13 +135,19 @@ function Signup() {
       toast.success('Account created successfully!', {
         style: {
           backdropFilter: 'blur(14px)',
-          background: theme.palette.divider,
+          background: theme.palette.background.paper,
           color: theme.palette.text.primary,
         }
       });
       setTimeout(() => navigate('/login'), 1000);
     } else {
-      toast.error(response.message || 'Signup failed!');
+      toast.error(response.message || 'Signup failed!', {
+        style: {
+          backdropFilter: 'blur(14px)',
+          background: theme.palette.warning.main,
+          color: theme.palette.text.primary,
+        }
+      });
       setButtonDisabled(false);
     }
   };
