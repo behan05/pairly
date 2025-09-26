@@ -295,7 +295,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
               },
               {
                 icon: <DeleteIcon fontSize="small" sx={{ mr: 1, color: 'error.main' }} />,
-                label: 'Delete Chat',
+                label: 'Delete User',
                 onClick: () => handleAction('deleteChat'),
               },
             ].map((item, index) => (

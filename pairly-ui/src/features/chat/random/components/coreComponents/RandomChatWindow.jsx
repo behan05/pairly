@@ -615,7 +615,8 @@ function RandomChatWindow({ setShowChatWindow }) {
                   background: theme.palette.background.paper,
                   py: 1,
                   px: 2,
-                  borderRadius: 2
+                  borderRadius: 2,
+                  userSelect: 'none'
                 }}>
                   <Typography
                     variant="h5"

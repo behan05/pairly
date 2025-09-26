@@ -179,10 +179,15 @@ function PrivatePartnerProfileModel(
             sx={{ p: 2, borderBottom: `1px solid ${theme.palette.divider}` }}
           >
             <Typography variant="subtitle1" fontWeight={600}>
-              User Info
+              {partnerProfile.fullName.split(' ')[0]} Info
             </Typography>
 
-            <Stack direction="row" alignItems="center">
+            <Stack
+              direction="row"
+              alignItems="center"
+              boxShadow={`inset 0 0 1rem ${theme.palette.divider}`}
+              borderRadius={1}
+            >
               <IconButton onClick={handleMenuOpen} sx={{ color: "white" }}>
                 <MoreVertIcon />
               </IconButton>
@@ -249,11 +254,6 @@ function PrivatePartnerProfileModel(
                 icon: <ClearAllIcon fontSize="small" sx={{ mr: 1, color: 'info.main' }} />,
                 label: 'Clear Chat',
                 onClick: () => handleAction('clearChat'),
-              },
-              {
-                icon: <DeleteIcon fontSize="small" sx={{ mr: 1, color: 'error.main' }} />,
-                label: 'Delete Chat',
-                onClick: () => handleAction('deleteChat'),
               },
             ].map((item, index) => (
               <MenuItem key={index} onClick={item.onClick} sx={menuItemStyle}>

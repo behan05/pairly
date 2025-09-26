@@ -3,6 +3,9 @@ const privateChatHandler = require('./privateChat/privateChat');
 const verifyToken = require('../utils/socket/verifyToken');
 const { randomChatHandler } = require('./randomChat/randomChat')
 
+// count total online user
+let onlineUsers = new Set();
+
 /**
  * Initializes and configures the Socket.IO server.
 *
@@ -53,6 +56,10 @@ function setupSocket(server) {
     // === Main connection listener ===
     io.on('connection', (socket) => {
 
+        // count number of active users and broadcast to all clients
+        onlineUsers.add(socket.id);
+        io.emit('onlineCount', onlineUsers.size);
+
         // Register random chat events
         randomChatHandler(io, socket);
 
@@ -61,7 +68,8 @@ function setupSocket(server) {
 
         // Handle disconnection
         socket.on('disconnect', async () => {
-            console.log('User disconnected:', socket.id);
+            onlineUsers.delete(socket.id);
+            io.emit('onlineCount', onlineUsers.size);
         });
     });
 }

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   Stack,
@@ -34,6 +34,7 @@ function RandomSidebar() {
     (state) => state.randomChat
   );
   const { setShowChatWindow, showChatWindow } = useOutletContext();
+  const [numberOfActiveUsers, setNumberOfActiveUsers] = useState(0);
 
   useEffect(() => {
     if (!isConnected && isSm) {
@@ -58,6 +59,16 @@ function RandomSidebar() {
     socket.emit('random:disconnect');
     dispatch(resetRandomChat());
   };
+
+  useEffect(() => {
+    socket.on('onlineCount', (count) => {
+      setNumberOfActiveUsers(count);
+    });
+
+    return () => {
+      socket.off('onlineCount');
+    };
+  }, []);
 
   return (
     <Box
@@ -175,7 +186,10 @@ function RandomSidebar() {
             sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1 }}
           >
             <GroupIcon sx={{ fontSize: 'medium', color: 'info.main' }} />
-            1,203 people are online right now!
+            {numberOfActiveUsers === 1
+              ? `${numberOfActiveUsers} person is online right now!`
+              : `${numberOfActiveUsers} people are online right now!`
+            }
           </Typography>
         </Stack>
       </Stack>
