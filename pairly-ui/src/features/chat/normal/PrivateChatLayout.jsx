@@ -1,20 +1,25 @@
 import React, { useState } from 'react';
-import { Box, Stack, useTheme, useMediaQuery, Typography } from '@/MUI/MuiComponents';
+import { Box, Stack, useTheme, useMediaQuery, Typography, Tooltip } from '@/MUI/MuiComponents';
+import { ForumRoundedIcon } from '@/MUI/MuiIcons';
 import { Outlet } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import NormalChatController from './NormalChatController'
 import PrivateChatWindow from './components/coreComponents/PrivateChatWindow';
+import privateChatWindowImage from '@/assets/images/chatWindowImage1.png'
+import privateChatWindowImage2 from '@/assets/images/chatWindowImage.png'
+
 /**
  * NormalChatLayout component
  * - Main layout for normal chat page
  * - Handles responsive sidebar and chat window display
  * - Passes state to child components via Outlet context
- * - Includes RandomController for socket/event logic
+ * - Includes PRivateController for socket/event logic
  */
 
 function NormalChatLayout() {
   const theme = useTheme();
   const isTabletOrBelow = useMediaQuery('(max-width:775px)');
+  const isLg = useMediaQuery(theme.breakpoints.down('lg'));
   const dispatch = useDispatch();
 
   const [selectedUserId, setSelectedUserId] = useState(null);
@@ -83,19 +88,45 @@ function NormalChatLayout() {
                 color="text.secondary"
                 sx={{
                   userSelect: 'none',
+                  backgroundImage: isLg ? `url(${privateChatWindowImage2})` : `url(${privateChatWindowImage})`,
+                  backgroundSize: "cover",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center",
+                  minHeight: "100dvh",
+                  width: "100%",
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center'
                 }}
               >
-                <Typography
-                  variant={'subtitle2'}
-                  color={'text.primary'}
-                  sx={{
-                    background: theme.palette.background.paper,
-                    py: 1,
-                    px: 2,
-                    borderRadius: 2
-                  }}>
-                  Select a chat to start messaging
-                </Typography>
+                <Box sx={{
+                  mb: 20,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                  <Tooltip
+                    title="Your chat will appear here once you're clicked on user">
+                    <ForumRoundedIcon
+                      sx={{
+                        fontSize: 80,
+                        color: 'info.main',
+                      }}
+                    />
+                  </Tooltip>
+                  <Typography
+                    variant={'subtitle2'}
+                    color={'text.primary'}
+                    sx={{
+                      background: theme.palette.background.paper,
+                      py: 1,
+                      px: 2,
+                      borderRadius: 2
+                    }}>
+                    Select a chat to start messaging
+                  </Typography>
+                </Box>
               </Box>
             )}
           </Stack>

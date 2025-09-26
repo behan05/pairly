@@ -1,43 +1,46 @@
-import { Player } from '@lottiefiles/react-lottie-player'; // Lottie animation player
-import landingLottieJson from '@/assets/lottie/randomChatWelcome'; // Animation JSON file
-import { useMediaQuery, useTheme, Box } from '@/MUI/MuiComponents'; // MUI hooks and Box
+import { useMediaQuery, useTheme, Box } from '@/MUI/MuiComponents';
+import video from '@/assets/videos/landingPageSidebarVideo.mp4';
 
-// RandomLandingLottie component displays a responsive Lottie animation on the landing page
-const RandomLandingLottie = () => {
-  const theme = useTheme(); // Get theme for breakpoints
-  const isXs = useMediaQuery(theme.breakpoints.down('sm')); // Check if screen is extra small
-  const isMd = useMediaQuery(theme.breakpoints.between('sm', 'md')); // Check if screen is medium
+const RandomLandingVideo = () => {
+  const theme = useTheme();
+  const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMd = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
-  // Set animation size based on screen size
-  const size = isXs ? 300 : isMd ? 350 : 400;
+  // Set max size relative to viewport to prevent scrollbar
+  const maxSize = isXs ? '80vw' : isMd ? '60vw' : '50vw';
+  const maxHeight = isXs ? '50vh' : isMd ? '55vh' : '60vh';
 
   return (
     <Box
       sx={{
-        width: `${size}px`, // Responsive width
-        height: `${size}px`, // Responsive height
-        display: 'flex', // Flexbox for centering
-        alignItems: 'center', // Center vertically
-        justifyContent: 'center', // Center horizontally
-        mx: 'auto', // Center in parent horizontally
-        overflow: 'hidden' // Hide overflow
+        maxWidth: maxSize,
+        height: 'auto',
+        maxHeight: maxHeight,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        mx: 'auto',
+        overflow: 'hidden',
+        filter: `drop-shadow(20px 10px 6px ${theme.palette.divider})`,
+        borderRadius: 1.5,
       }}
     >
-      {/* Lottie Player for animation */}
-      <Player
-        autoplay // Play animation automatically
-        loop // Loop animation
-        src={landingLottieJson} // Animation source
+      <video
+        src={video}
+        autoPlay
+        loop
+        muted
+        playsInline
         style={{
-          width: '100%', // Fill container width
-          height: '100%', // Fill container height
-          objectFit: 'contain', // Contain animation in box
-          display: 'block' // Block display
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          display: 'block',
+
         }}
-        renderer="svg" // Use SVG renderer for crisp animation
       />
     </Box>
   );
 };
 
-export default RandomLandingLottie;
+export default RandomLandingVideo;

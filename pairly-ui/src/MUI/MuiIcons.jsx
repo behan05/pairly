@@ -28,6 +28,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 import SmsIcon from '@mui/icons-material/Sms';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import GroupIcon from '@mui/icons-material/Group';
 
 // ==================== Media Controls ====================
 import MicIcon from '@mui/icons-material/Mic';
@@ -189,6 +190,7 @@ export {
   DoneIcon,
   SkipNextIcon,
   LinkOffIcon,
+  GroupIcon,
 
   // Media Controls
   MicIcon,

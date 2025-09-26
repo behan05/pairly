@@ -171,7 +171,6 @@ function RandomChatHeader() {
         justifyContent="space-between"
         spacing={2}
         px={isSm ? 0.5 : 2}
-        py={1}
         sx={{
           borderBottom: `1px solid ${theme.palette.divider}`,
           backgroundColor: theme.palette.background.paper,

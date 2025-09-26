@@ -1,6 +1,6 @@
 import { Button } from '@/MUI/MuiComponents';
 import BoltIcon from '@mui/icons-material/Bolt';
-
+import StyledText from '@/components/common/StyledText';
 /**
  * ConnectButton component renders a button to initiate a connection.
  * @param {Function} onClick - Function to execute when the button is clicked.
@@ -13,12 +13,12 @@ function ConnectButton({ onClick, disabled = false }) {
     <Button
       variant="outlined"
       fullWidth
-      startIcon={<BoltIcon sx={{ color: 'success.main' }} />}
+      startIcon={<BoltIcon sx={{ color: 'success.main' }} fontSize={'medium'} />}
       onClick={onClick}
       disabled={disabled}
-      sx={{ width: 'fit-content', color: 'text.primary' }}
+      sx={{ width: 'fit-content', color: 'text.primary', fontSize: '1.2rem' }}
     >
-      Connect
+      {<StyledText text={'Start Random Chat'} />}{' '}
     </Button>
   );
 }

@@ -28,6 +28,8 @@ import { useDispatch, useSelector } from 'react-redux';
 // Styled components
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+import randomChatWindowImage from '@/assets/images/chatWindowImage1.png'
+import randomChatWindowImage2 from '@/assets/images/chatWindowImage.png'
 
 /**
  * RandomChatWindow component
@@ -38,6 +40,7 @@ import Button from '@mui/material/Button';
 function RandomChatWindow({ setShowChatWindow }) {
   const theme = useTheme();
   const isSm = useMediaQuery('(max-width:936px)');
+  const isLg = useMediaQuery(theme.breakpoints.down('lg'));
   const dispatch = useDispatch();
 
   // Redux state
@@ -567,7 +570,6 @@ function RandomChatWindow({ setShowChatWindow }) {
             justifyContent: 'center',
             alignItems: 'center',
             minHeight: '100%',
-            px: 2,
             textAlign: 'center'
           }}
         >
@@ -586,16 +588,52 @@ function RandomChatWindow({ setShowChatWindow }) {
               </Stack>
             </Stack>
           ) : (
-            <>
-              <Tooltip title="Your chat will appear here once you're matched">
-                <ForumRoundedIcon sx={{ fontSize: 80, color: 'text.secondary', mb: 2 }} />
-              </Tooltip>
-              <Typography variant="h5" color="text.secondary" gutterBottom>
-                You're not connected yet
-              </Typography>
-              <Typography variant="body1" gutterBottom color="text.secondary">
-                Click <strong>“Connect”</strong> to meet someone new and start a random chat!
-              </Typography>
+            <Stack
+              sx={{
+                backgroundImage: isLg ? `url(${randomChatWindowImage2})` : `url(${randomChatWindowImage})`,
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                minHeight: "100dvh",
+                width: "100%",
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <Box sx={{ mb: 20 }}>
+                <Tooltip
+                  title="Your chat will appear here once you're matched">
+                  <ForumRoundedIcon
+                    sx={{
+                      fontSize: 80,
+                      color: 'info.main',
+                    }}
+                  />
+                </Tooltip>
+                <Stack sx={{
+                  background: theme.palette.background.paper,
+                  py: 1,
+                  px: 2,
+                  borderRadius: 2
+                }}>
+                  <Typography
+                    variant="h5"
+                    color="text.primary"
+                    gutterBottom
+                  >
+                    You're not connected yet
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    color="text.primary"
+                  >
+                    Click <strong>“Start random Chat”</strong> to meet someone new and start a random chat!
+                  </Typography>
+                </Stack>
+
+              </Box>
+
               {!isConnected && isSm && (
                 <Button
                   onClick={() => handleDisconnectOnSmallScreen()}
@@ -618,7 +656,7 @@ function RandomChatWindow({ setShowChatWindow }) {
                   Back To Pairly
                 </Button>
               )}
-            </>
+            </Stack>
           )}
         </Box>
       )}

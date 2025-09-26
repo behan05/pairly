@@ -134,7 +134,6 @@ const ChatSidebarHeader = ({ children }) => {
     <Box
       py={1}
       px={1}
-      bgcolor="background.papar"
       sx={{
         position: 'sticky',
         top: 0,
@@ -162,7 +161,13 @@ const ChatSidebarHeader = ({ children }) => {
         </Link>
 
         {/* Action Icons */}
-        <Stack direction="row" alignItems="center" gap={2}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          gap={2}
+          boxShadow={`inset 0 0 1rem ${theme.palette.divider}`}
+          borderRadius={1}
+        >
           {navItems.map(({ path, icon, label }) => {
             if (path === currentUrlPath) return;
 

@@ -8,17 +8,17 @@ import {
   IconButton,
   Tooltip
 } from '@/MUI/MuiComponents';
-import { ArrowBackIcon } from '@/MUI/MuiIcons';
+import { ArrowBackIcon, GroupIcon } from '@/MUI/MuiIcons';
 
 // Components
 import ChatSidebarHeader from '../../../common/ChatSidebarHeader';
 import ConnectButton from '../supportComponents/ConnectButton';
 import DisconnectButton from '../supportComponents/DisconnectButton';
 import NextButton from '../supportComponents/NextButton';
-import StyledText from '@/components/common/StyledText';
 import SettingsAction from '@/components/private/SettingsAction';
 import CountdownTimer from '../supportComponents/CountdownTimer';
 import RandomLandingLottie from '../supportComponents/RandomLandingPageLottie';
+import StyledText from '@/components/common/StyledText';
 
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,43 +26,34 @@ import { socket } from '@/services/socket';
 import { resetRandomChat, setWaiting } from '@/redux/slices/randomChat/randomChatSlice';
 import { useOutletContext } from 'react-router-dom';
 
-/**
- * RandomSidebar component
- * - Displays sidebar for random chat feature
- * - Handles connect, next, and disconnect actions
- * - Shows landing animation, instructions, and action buttons
- * - Responsive for mobile and desktop
- */
 function RandomSidebar() {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const dispatch = useDispatch();
-  const { waiting: isWaiting, connected: isConnected } = useSelector((state) => state.randomChat);
+  const { waiting: isWaiting, connected: isConnected } = useSelector(
+    (state) => state.randomChat
+  );
   const { setShowChatWindow, showChatWindow } = useOutletContext();
 
-  // Auto return to sidebar when disconnected (on small screen only)
   useEffect(() => {
     if (!isConnected && isSm) {
       setShowChatWindow(false);
     }
   }, [isConnected, isSm, setShowChatWindow]);
 
-  // Handler: Connect to random chat
   const handleConnect = () => {
     if (!socket.connected) socket.connect();
     if (isConnected) return;
 
     dispatch(setWaiting(true));
     socket.emit('join-random');
-    setShowChatWindow(true); // Open chat window on connect
+    setShowChatWindow(true);
   };
 
-  // Handler: Go to next random user
   const handleNext = () => {
     socket.emit('random:next');
   };
 
-  // Handler: Disconnect from chat
   const handleDisconnect = () => {
     socket.emit('random:disconnect');
     dispatch(resetRandomChat());
@@ -74,7 +65,7 @@ function RandomSidebar() {
       display="flex"
       flexDirection="column"
       bgcolor="background.paper"
-      minWidth={300}
+      minWidth={isSm ? '100%' : 380}
       px={2}
       sx={{
         minHeight: '100vh',
@@ -85,7 +76,7 @@ function RandomSidebar() {
       {/* Sidebar header */}
       <ChatSidebarHeader />
 
-      {/* Back Button: only on small screen + chat window is open */}
+      {/* Back button for mobile */}
       {isSm && showChatWindow && (
         <IconButton
           onClick={() => setShowChatWindow(false)}
@@ -102,99 +93,95 @@ function RandomSidebar() {
         </IconButton>
       )}
 
+      {/* Main Hero Section */}
       <Stack
-        px={2}
-        pt={isSm ? 3 : 6}
-        sx={{
-          maxWidth: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          height: '100%'
-        }}
+        flex={1}
+        alignItems="center"
+        justifyContent="center"
+        spacing={isSm ? 4 : 6}
+        textAlign="center"
+        pt={2}
       >
-        {/* Waiting animation or landing animation */}
+        {/* Heading ABOVE the image */}
+        <Typography
+          variant={isSm ? 'h4' : 'h3'}
+          fontWeight={700}
+          letterSpacing={1}
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', flexWrap: 'wrap', gap: 1 }}
+        >
+          Ready To Meet
+          <Typography
+            variant={'subtitle1'}
+            sx={{ fontStyle: 'italic', textShadow: `0 0 1rem ${theme.palette.success.main}` }}
+          >
+            ❝<StyledText text={'someone new?'} />❞
+          </Typography>
+        </Typography>
+
+        {/* Animation or countdown */}
         {isWaiting ? (
-          <Stack sx={{ minWidth: '100%', maxHeight: '100%', width: '100%' }}>
-            <CountdownTimer startFrom={10} autoRestart={true} />
-          </Stack>
+          <CountdownTimer startFrom={10} autoRestart />
         ) : (
           <RandomLandingLottie />
         )}
 
-        {/* Tag Lines and instructions */}
-        <Stack spacing={2.5}>
-          <Typography
-            variant={isSm ? 'h3' : 'h4'}
-            fontWeight={700}
-            letterSpacing={0.8}
-            gutterBottom
-          >
-            <StyledText text="Meet Someone" /> New Instantly.
-          </Typography>
+        {/* Action Buttons */}
+        <Stack
+          spacing={isSm ? 2 : 3}
+          direction={isSm ? 'column' : 'row'}
+          justifyContent="center"
+          alignItems="center"
+          mt={2}
+          width="100%"
+        >
+          {isWaiting || isConnected ? (
+            <>
+              {isConnected && (
+                <Tooltip title="Skip to the next user">
+                  <NextButton onClick={handleNext} />
+                </Tooltip>
+              )}
+              <Tooltip title="Say goodbye to your chat buddy 😢">
+                <DisconnectButton onClick={handleDisconnect} />
+              </Tooltip>
+            </>
+          ) : (
+            <Tooltip title="Start a new chat with someone">
+              <Box width={isSm ? '100%' : 'auto'}>
+                <ConnectButton
+                  onClick={handleConnect}
+                  fullWidth={isSm}
+                />
+              </Box>
+            </Tooltip>
+          )}
+        </Stack>
 
+        {/* Subtext + users online */}
+        <Stack spacing={2} px={isSm ? 1 : 2}>
           <Typography
             variant="subtitle1"
             fontWeight={500}
-            textAlign="start"
             color="text.secondary"
-            letterSpacing={0.4}
           >
-            Tap <strong style={{ fontWeight: 700, color:theme.palette.text.primary }}>Connect</strong> to jump into a real-time, anonymous chat with someone
-            across the world. Safe, spontaneous, and surprisingly fun.
+            Jump into real-time chats with people worldwide.
           </Typography>
 
+          {/* Static users online (replace with real logic later) */}
           <Typography
-            variant="body2"
-            fontWeight={400}
-            textAlign="justify"
+            variant="subtitle2"
+            fontWeight={600}
             color="text.secondary"
-            letterSpacing={0.3}
+            sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1 }}
           >
-            Just a simple profile. Better matches, better chats.
+            <GroupIcon sx={{ fontSize: 'medium', color: 'info.main' }} />
+            1,203 people are online right now!
           </Typography>
-        </Stack>
-
-        {/* Action Buttons: Connect, Next, Disconnect */}
-        <Stack
-          gap={2}
-          direction="row"
-          flexWrap="wrap"
-          justifyContent="center"
-          alignSelf="center"
-          mt={2}
-        >
-          <Tooltip
-            title={isConnected ? 'You’re already connected' : 'Start a new chat with someone'}
-          >
-            <Typography variant={'label1'}>
-              <ConnectButton onClick={handleConnect} disabled={isConnected} />
-            </Typography>
-          </Tooltip>
-
-          <Tooltip
-            title={isConnected ? 'Skip to the next user' : 'You must be connected to use Next 😔'}
-          >
-            <Typography variant={'label1'}>
-              <NextButton onClick={handleNext} disabled={!isConnected} />
-            </Typography>
-          </Tooltip>
-
-          <Tooltip
-            title={
-              isConnected ? 'Say goodbye to your chat buddy 😢' : 'You’re not connected yet 😔'
-            }
-          >
-            <Typography variant={'label1'}>
-              <DisconnectButton onClick={handleDisconnect} />
-            </Typography>
-          </Tooltip>
         </Stack>
       </Stack>
 
-      {/* Settings action button */}
-      <Stack sx={{ position: 'relative' }}>
+      {/* Settings action */}
+      <Stack sx={{ position: 'relative', mt: isSm ? 0 : 4 }} alignItems="center">
         <SettingsAction />
       </Stack>
     </Box>
