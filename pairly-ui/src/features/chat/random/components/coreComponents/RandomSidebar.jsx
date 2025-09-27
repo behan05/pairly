@@ -61,6 +61,8 @@ function RandomSidebar() {
   };
 
   useEffect(() => {
+    socket.emit('getOnlineCount');
+
     socket.on('onlineCount', (count) => {
       setNumberOfActiveUsers(count);
     });

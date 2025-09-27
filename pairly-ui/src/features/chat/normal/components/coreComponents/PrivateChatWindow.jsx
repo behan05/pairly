@@ -160,61 +160,88 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
 
                 {/* Image */}
                 {msg.messageType === 'image' && (
-                  <Box sx={{ position: 'relative' }}>
+                  <Box sx={{ position: 'relative', maxWidth: '100%' }}>
                     <Box
                       component="img"
                       src={msg.content}
                       alt="sent"
-                      sx={{ maxWidth: isSm ? 280 : 480, maxHeight: 320, borderRadius: 1, objectFit: 'cover', width: '100%', height: 'auto' }}
+                      sx={{
+                        width: '100%',
+                        maxWidth: isSm ? '80vw' : '480px', // responsive max width
+                        maxHeight: isSm ? '40vh' : '60vh', // responsive max height
+                        borderRadius: 1,
+                        objectFit: 'cover'
+                      }}
                     />
-                    <IconButton onClick={() => handleDownload(msg.content, msg.fileName || 'image')} sx={{ position: 'absolute', top: 4, right: 2 }}>
+                    <IconButton
+                      onClick={() => handleDownload(msg.content, msg.fileName || 'image')}
+                      sx={{ position: 'absolute', top: 4, right: 2 }}
+                    >
                       <DownloadIcon />
                     </IconButton>
                     <Typography
                       variant="caption"
                       color="text.secondary"
-                      sx={{ position: 'absolute', bottom: 4, right: 8, display: 'flex', alignItems: 'center', gap: 0.5 }}
+                      sx={{
+                        position: 'absolute',
+                        bottom: 4,
+                        right: 8,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 0.5
+                      }}
                     >
                       {formatMessageTime(msg.createdAt)}
-                      {isOwnMessage && (msg.seen ? <DoneAllIcon sx={{ fontSize: 16, color: "success.main" }} /> : <DoneIcon sx={{ fontSize: 16, color: "grey" }} />)}
+                      {isOwnMessage &&
+                        (msg.seen ? (
+                          <DoneAllIcon sx={{ fontSize: 16, color: 'success.main' }} />
+                        ) : (
+                          <DoneIcon sx={{ fontSize: 16, color: 'grey' }} />
+                        ))}
                     </Typography>
                   </Box>
                 )}
 
-                {/* Video Message */}
+                {/* Video */}
                 {msg.messageType === 'video' && (
-                  <Stack sx={{ position: 'relative' }}>
-                    <Stack>
-                      <Box
-                        component="video"
-                        src={msg.content}
-                        controls
-                        sx={{
-                          maxWidth: 320,
-                          maxHeight: 240,
-                          borderRadius: 1
-                        }}
-                      />
-                    </Stack>
-
-                    <IconButton
-                      onClick={() => handleDownload(msg.message, msg.fileName || 'video.mp4')}
-                      aria-label={`Download ${msg.fileName || 'video'}`}
+                  <Stack sx={{ position: 'relative', maxWidth: '100%' }}>
+                    <Box
+                      component="video"
+                      src={msg.content}
+                      controls
                       sx={{
-                        position: 'absolute',
-                        top: 4,
-                        right: 2
+                        width: '100%',
+                        maxWidth: isSm ? '80vw' : '480px',
+                        maxHeight: isSm ? '40vh' : '60vh',
+                        borderRadius: 1
                       }}
+                    />
+                    <IconButton
+                      onClick={() => handleDownload(msg.content, msg.fileName || 'video.mp4')}
+                      aria-label={`Download ${msg.fileName || 'video'}`}
+                      sx={{ position: 'absolute', top: 4, right: 2 }}
                     >
                       <DownloadIcon />
                     </IconButton>
                     <Typography
                       variant="caption"
                       color="text.secondary"
-                      sx={{ position: 'absolute', bottom: 8, right: 8, display: 'flex', alignItems: 'center', gap: 0.5 }}
+                      sx={{
+                        position: 'absolute',
+                        bottom: 8,
+                        right: 8,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 0.5
+                      }}
                     >
                       {formatMessageTime(msg.createdAt)}
-                      {isOwnMessage && (msg.seen ? <DoneAllIcon sx={{ fontSize: 16, color: "success.main" }} /> : <DoneIcon sx={{ fontSize: 16, color: "grey" }} />)}
+                      {isOwnMessage &&
+                        (msg.seen ? (
+                          <DoneAllIcon sx={{ fontSize: 16, color: 'success.main' }} />
+                        ) : (
+                          <DoneIcon sx={{ fontSize: 16, color: 'grey' }} />
+                        ))}
                     </Typography>
                   </Stack>
                 )}
@@ -222,23 +249,39 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                 {/* Audio */}
                 {msg.messageType === 'audio' && (
                   <Stack sx={{ position: 'relative' }}>
-                    <StyledAudio src={msg.content} controls />
+                    <StyledAudio
+                      src={msg.content}
+                      controls />
                     <Typography
                       variant="caption"
                       color="text.secondary"
-                      sx={{ mt: 1, alignSelf: 'flex-end', display: 'flex', alignItems: 'center', gap: 0.5 }}
+                      sx={{
+                        mt: 1,
+                        alignSelf: 'flex-end',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 0.5
+                      }}
                     >
                       {formatMessageTime(msg.createdAt)}
-                      {isOwnMessage && (msg.seen ? <DoneAllIcon sx={{ fontSize: 16, color: "success.main" }} /> : <DoneIcon sx={{ fontSize: 16, color: "grey" }} />)}
-                    </Typography>
-                  </Stack>
-                )}
+                      {isOwnMessage &&
+                        (msg.seen ? <DoneAllIcon
+                          sx={{ fontSize: 16, color: "success.main" }} />
+                          : <DoneIcon sx={{ fontSize: 16, color: "grey" }} />)}
+                    </Typography> </Stack>)}
 
                 {/* File */}
                 {msg.messageType === 'file' && (
-                  <Stack flexDirection="row" alignItems="center" gap={0.5}>
+                  <Stack
+                    flexDirection="row"
+                    alignItems="center"
+                    gap={0.5}
+                    sx={{ maxWidth: isSm ? '90vw' : '480px', flexWrap: 'wrap' }}
+                  >
                     <Typography variant="body2">{msg.fileName || 'file'}</Typography>
-                    <IconButton onClick={() => handleDownload(msg.content, msg.fileName || 'file')}>
+                    <IconButton
+                      onClick={() => handleDownload(msg.content, msg.fileName || 'file')}
+                    >
                       <DownloadIcon />
                     </IconButton>
                   </Stack>

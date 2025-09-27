@@ -360,25 +360,19 @@ function RandomChatWindow({ setShowChatWindow }) {
 
                     {/* Image Message */}
                     {msg.type === 'image' && (
-                      <Stack
-                        sx={{
-                          position: 'relative'
-                        }}
-                      >
+                      <Stack sx={{ position: 'relative', maxWidth: '100%' }}>
                         <Box
                           component="img"
                           src={msg.message}
                           alt="sent"
                           sx={{
-                            maxWidth: isSm ? 280 : 480,
-                            maxHeight: 320,
                             width: '100%',
-                            height: 'auto',
+                            maxWidth: isSm ? '80vw' : '480px',
+                            maxHeight: isSm ? '40vh' : '60vh',
                             borderRadius: 1,
                             objectFit: 'cover'
                           }}
                         />
-
                         <Typography
                           variant="caption"
                           color="text.secondary"
@@ -398,15 +392,10 @@ function RandomChatWindow({ setShowChatWindow }) {
                         >
                           {msg.timestamp}
                         </Typography>
-
                         <IconButton
                           onClick={() => handleDownload(msg.message, msg.fileName || 'image')}
                           aria-label={`Download ${msg.fileName || 'image'}`}
-                          sx={{
-                            position: 'absolute',
-                            top: 4,
-                            right: 2
-                          }}
+                          sx={{ position: 'absolute', top: 4, right: 2 }}
                         >
                           <DownloadIcon />
                         </IconButton>
@@ -415,48 +404,42 @@ function RandomChatWindow({ setShowChatWindow }) {
 
                     {/* Video Message */}
                     {msg.type === 'video' && (
-                      <Stack sx={{ position: 'relative' }}>
-                        <Stack>
-                          <Box
-                            component="video"
-                            src={msg.message}
-                            controls
-                            sx={{
-                              maxWidth: 320,
-                              maxHeight: 240,
-                              borderRadius: 1
-                            }}
-                          />
-                        </Stack>
-
+                      <Stack sx={{ position: 'relative', maxWidth: '100%' }}>
+                        <Box
+                          component="video"
+                          src={msg.message}
+                          controls
+                          sx={{
+                            width: '100%',
+                            maxWidth: isSm ? '80vw' : '480px',
+                            maxHeight: isSm ? '40vh' : '60vh',
+                            borderRadius: 1
+                          }}
+                        />
                         <Typography
                           variant="caption"
                           color="text.secondary"
                           sx={{
-                            display: 'block',
-                            alignSelf: 'flex-end',
+                            position: 'absolute',
+                            bottom: 8,
+                            right: 8,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 0.5,
                             backgroundColor: 'transparent',
                             backdropFilter: 'blur(4px)',
                             WebkitBackdropFilter: 'blur(4px)',
                             borderRadius: 0.5,
-                            position: 'absolute',
-                            bottom: 8,
-                            right: 8,
                             px: 1,
                             py: 0.25
                           }}
                         >
                           {msg.timestamp}
                         </Typography>
-
                         <IconButton
                           onClick={() => handleDownload(msg.message, msg.fileName || 'video.mp4')}
                           aria-label={`Download ${msg.fileName || 'video'}`}
-                          sx={{
-                            position: 'absolute',
-                            top: 4,
-                            right: 2
-                          }}
+                          sx={{ position: 'absolute', top: 4, right: 2 }}
                         >
                           <DownloadIcon />
                         </IconButton>
@@ -498,17 +481,11 @@ function RandomChatWindow({ setShowChatWindow }) {
 
                     {/* File Message */}
                     {msg.type === 'file' && (
-                      <>
-                        <Stack
-                          flexDirection={'row'}
-                          justifyContent={'center'}
-                          alignItems={'center'}
-                          gap={0.3}
-                        >
+                      <Stack sx={{ maxWidth: isSm ? '90vw' : '480px', flexWrap: 'wrap', gap: 0.5 }}>
+                        <Stack flexDirection="row" alignItems="center" gap={0.3}>
                           <Typography variant="body2" sx={{ wordBreak: 'break-word' }}>
-                            {`${msg.fileName || 'file'}`}
+                            {msg.fileName || 'file'}
                           </Typography>
-
                           <IconButton
                             onClick={() => handleDownload(msg.message, msg.fileName || 'file')}
                             aria-label={`Download ${msg.fileName || 'file'}`}
@@ -516,7 +493,6 @@ function RandomChatWindow({ setShowChatWindow }) {
                             <DownloadIcon />
                           </IconButton>
                         </Stack>
-
                         <Typography
                           variant="caption"
                           color="text.secondary"
@@ -533,8 +509,9 @@ function RandomChatWindow({ setShowChatWindow }) {
                         >
                           {msg.timestamp}
                         </Typography>
-                      </>
+                      </Stack>
                     )}
+
                   </Box>
                 );
               })}

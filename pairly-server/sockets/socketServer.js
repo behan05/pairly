@@ -59,6 +59,10 @@ function setupSocket(server) {
         // count number of active users and broadcast to all clients
         onlineUsers.add(socket.id);
         io.emit('onlineCount', onlineUsers.size);
+        
+        socket.on('getOnlineCount', () => {
+            socket.emit('onlineCount', onlineUsers.size);
+        });
 
         // Register random chat events
         randomChatHandler(io, socket);

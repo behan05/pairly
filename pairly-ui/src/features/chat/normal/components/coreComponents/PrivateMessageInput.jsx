@@ -239,7 +239,8 @@ function PrivateMessageInput() {
           gap: 2,
           flexWrap: 'wrap',
           px: 3,
-          py: 1
+          py: 1,
+          background: theme.palette.background.paper
         }}
       >
         {previews.map((file, index) => {
