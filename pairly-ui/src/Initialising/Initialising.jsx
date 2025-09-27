@@ -1,15 +1,9 @@
-import { Box, useMediaQuery, useTheme, Stack } from '@/MUI/MuiComponents';
+import { Box, Stack } from '@/MUI/MuiComponents';
 import intro from '../assets/intro/intro.mp4';
-import vertical_intro from '../assets/intro/vertical-intro.mp4';
 
 function Initialising() {
-  const theme = useTheme();
-  const isSm = useMediaQuery(theme.breakpoints.down('sm'));
-
-  const currentVideo = isSm ? vertical_intro : intro;
 
   return (
-
     <Box
       sx={{
         position: 'relative',
@@ -18,7 +12,7 @@ function Initialising() {
       {/* === Background Video === */}
       <Stack
         component={'video'}
-        src={currentVideo}
+        src={intro}
         loading="lazy"
         aria-label="background video"
         autoPlay

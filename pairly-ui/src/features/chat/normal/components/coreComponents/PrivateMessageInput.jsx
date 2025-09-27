@@ -236,11 +236,17 @@ function PrivateMessageInput() {
       <Box
         sx={{
           display: 'flex',
-          gap: 2,
-          flexWrap: 'wrap',
-          px: 3,
+          gap: 1,
+          flexWrap: isSm ? 'no-wrap' : 'wrap',
+          justifyContent: isSm ? "nowrap" : 'center',
+          px: 1,
           py: 1,
-          background: theme.palette.background.paper
+          overflowX: 'auto',
+          maxHeight: '35vh',
+          zIndex: 999,
+          "::-webkit-scrollbar": {
+            display: isSm ? 'none' : 'block'
+          },
         }}
       >
         {previews.map((file, index) => {

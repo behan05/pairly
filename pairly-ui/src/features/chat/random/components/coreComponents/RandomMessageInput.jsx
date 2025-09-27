@@ -289,10 +289,17 @@ function RandomMessageInput() {
       <Box
         sx={{
           display: 'flex',
-          gap: 2,
-          flexWrap: 'wrap',
-          px: 3,
-          py: 1
+          gap: 1,
+          flexWrap: isSm ? 'nowrap' : 'wrap',
+          justifyContent: isSm ? "flex-start" : 'center',
+          px: 1,
+          py: 1,
+          overflowX: 'auto',
+          maxHeight: '35vh',
+          zIndex: 999,
+          "::-webkit-scrollbar": {
+            display: isSm ? 'none' : 'block'
+          },
         }}
       >
         {previews.map((file, index) => {
