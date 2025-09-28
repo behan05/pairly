@@ -221,11 +221,7 @@ function PrivateMessageInput() {
   return (
     <Box
       ref={inputContainerRef}
-      position={isSm ? 'fixed' : 'sticky'}
-      bottom={0}
-      left={0}
       width="100%"
-      zIndex={10}
       sx={{
         transition: 'bottom 0.25s ease',
         pb: isSm ? 'env(safe-area-inset-bottom)' : 0
@@ -237,14 +233,14 @@ function PrivateMessageInput() {
         sx={{
           display: 'flex',
           gap: 1,
-          flexWrap: isSm ? 'no-wrap' : 'wrap',
-          justifyContent: isSm ? "nowrap" : 'center',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
           px: 1,
-          py: 1,
+          py: 0.5,
           overflowX: 'auto',
           maxHeight: '35vh',
           zIndex: 999,
-          "::-webkit-scrollbar": {
+          "&::-webkit-scrollbar": {
             display: isSm ? 'none' : 'block'
           },
         }}
@@ -428,8 +424,7 @@ function PrivateMessageInput() {
           p: 1.2,
           mx: 1,
           mb: 1,
-          borderRadius: 0.5,
-          backgroundColor: theme.palette.background.paper
+          borderRadius: 2,
         }}
       >
         {/* Attach Button */}

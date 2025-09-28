@@ -84,8 +84,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
       width="100%"
       justifyContent="space-between"
       sx={{
-        backgroundColor: theme.palette.background.default,
-        position: 'relative'
+        position: 'relative',
       }}
       id='chat-window'
     >
@@ -300,8 +299,6 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
           position: 'sticky',
           bottom: 0,
           zIndex: 10,
-          background: theme.palette.background.default,
-          pt: 1,
         }}
       >
         <PrivateMessageInput

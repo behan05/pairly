@@ -274,9 +274,6 @@ function RandomMessageInput() {
   return (
     <Box
       ref={inputContainerRef}
-      position={isSm ? 'fixed' : 'sticky'}
-      bottom={0}
-      left={0}
       width="100%"
       zIndex={10}
       sx={{
@@ -290,14 +287,14 @@ function RandomMessageInput() {
         sx={{
           display: 'flex',
           gap: 1,
-          flexWrap: isSm ? 'nowrap' : 'wrap',
-          justifyContent: isSm ? "flex-start" : 'center',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
           px: 1,
           py: 1,
           overflowX: 'auto',
           maxHeight: '35vh',
           zIndex: 999,
-          "::-webkit-scrollbar": {
+          "&::-webkit-scrollbar": {
             display: isSm ? 'none' : 'block'
           },
         }}
@@ -481,7 +478,7 @@ function RandomMessageInput() {
           p: 1.2,
           mx: 1,
           mb: 1,
-          borderRadius: 0.5,
+          borderRadius: 2,
           backgroundColor: theme.palette.background.paper
         }}
       >

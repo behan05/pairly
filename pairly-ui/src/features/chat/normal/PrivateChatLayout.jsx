@@ -7,6 +7,8 @@ import NormalChatController from './NormalChatController'
 import PrivateChatWindow from './components/coreComponents/PrivateChatWindow';
 import privateChatWindowImage from '@/assets/images/chatWindowImage1.png'
 import privateChatWindowImage2 from '@/assets/images/chatWindowImage.png'
+import chatWindowBackgroundDarkImage from '@/assets/images/chatWindowBackgroundDarkImage.png';
+import chatWindowBackgroundLightImage from '@/assets/images/chatWindowBackgroundLightImage.png';
 
 /**
  * NormalChatLayout component
@@ -33,6 +35,11 @@ function NormalChatLayout() {
     setSelectedUserId(null);
   };
 
+  let bgChatImg =
+    localStorage.getItem('theme') === 'dark'
+      ? chatWindowBackgroundDarkImage
+      : chatWindowBackgroundLightImage;
+
   return (
     <Box
       sx={{
@@ -44,12 +51,20 @@ function NormalChatLayout() {
     >
       {isTabletOrBelow ? (
         selectedUserId ? (
-          <PrivateChatWindow
-            selectedUserId={selectedUserId}
-            onBack={handleBackToSidebar}
-            onCloseChatWindow={setSelectedUserId}
-            clearActiveChat={setActiveUserId}
-          />
+          <Stack sx={{
+            backgroundImage: `url(${bgChatImg})`,
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            width: '100%',
+          }}>
+            <PrivateChatWindow
+              selectedUserId={selectedUserId}
+              onBack={handleBackToSidebar}
+              onCloseChatWindow={setSelectedUserId}
+              clearActiveChat={setActiveUserId}
+            />
+          </Stack>
         ) :
           <Stack
             flex={1}
@@ -74,11 +89,19 @@ function NormalChatLayout() {
 
           <Stack flex={2.5}>
             {selectedUserId ? (
-              <PrivateChatWindow
-                selectedUserId={selectedUserId}
-                onCloseChatWindow={setSelectedUserId}
-                clearActiveChat={setActiveUserId}
-              />
+              <Stack sx={{
+                backgroundImage: `url(${bgChatImg})`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
+                width: '100%',
+              }}>
+                <PrivateChatWindow
+                  selectedUserId={selectedUserId}
+                  onCloseChatWindow={setSelectedUserId}
+                  clearActiveChat={setActiveUserId}
+                />
+              </Stack>
             ) : (
               <Box
                 display="flex"

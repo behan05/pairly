@@ -19,6 +19,8 @@ import NextButton from '../supportComponents/NextButton';
 import DisconnectButton from '../supportComponents/DisconnectButton';
 import CountdownTimer from '../supportComponents/CountdownTimer';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
+import chatWindowBackgroundDarkImage from '@/assets/images/chatWindowBackgroundDarkImage.png';
+import chatWindowBackgroundLightImage from '@/assets/images/chatWindowBackgroundLightImage.png';
 
 // Socket and Redux actions
 import { socket } from '@/services/socket';
@@ -42,6 +44,11 @@ function RandomChatWindow({ setShowChatWindow }) {
   const isSm = useMediaQuery('(max-width:936px)');
   const isLg = useMediaQuery(theme.breakpoints.down('lg'));
   const dispatch = useDispatch();
+
+  let bgChatImg =
+    localStorage.getItem('theme') === 'dark'
+      ? chatWindowBackgroundDarkImage
+      : chatWindowBackgroundLightImage;
 
   // Redux state
   const userId = useSelector((state) => state.profile.profileData?._id);
@@ -206,15 +213,17 @@ function RandomChatWindow({ setShowChatWindow }) {
     };
   }, [messages, isTyping]);
 
-
   return (
     <Stack
       height="100dvh"
       justifyContent="space-between"
       sx={{
         borderLeft: `2px solid ${theme.palette.divider}`,
-        backgroundColor: theme.palette.background.default,
-        position: 'relative'
+        position: 'relative',
+        backgroundImage: isConnected && `url(${bgChatImg})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
       }}
       id={"chat-window"}
     >
@@ -245,26 +254,29 @@ function RandomChatWindow({ setShowChatWindow }) {
                 minWidth: 180,
                 mb: 1,
                 px: 1,
-                py: 0.75
+                py: 0.75,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
               }
             }}
           >
-            <MenuItem>
+            <Stack mb={1}>
               <NextButton
                 onClick={() => {
                   handleMenuClose();
                   handleNext();
                 }}
               />
-            </MenuItem>
-            <MenuItem>
+            </Stack>
+            <Stack>
               <DisconnectButton
                 onClick={() => {
                   handleMenuClose();
                   handleDisconnect();
                 }}
               />
-            </MenuItem>
+            </Stack>
           </Menu>
         </>
       )}
@@ -527,8 +539,6 @@ function RandomChatWindow({ setShowChatWindow }) {
               position: 'sticky',
               bottom: 0,
               zIndex: 10,
-              background: theme.palette.background.default,
-              pt: 1,
             }}
           >
             <RandomMessageInput
@@ -631,7 +641,7 @@ function RandomChatWindow({ setShowChatWindow }) {
                     }
                   }}
                 >
-                  Back To Pairly
+                  Back To Home
                 </Button>
               )}
             </Stack>
