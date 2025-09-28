@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -35,9 +35,11 @@ import PrivatePartnerProfileModel from '../supportComponents/PrivatePartnerProfi
 import ProposeToPartnerModel from '../supportComponents/ProposeToPartnerModel';
 import ReportUserModal from '../supportComponents/ReportUserModal';
 import BlockUserModal from '../supportComponents/BlockUsermodal'
+import formatMessageTime from '@/utils/formatMessageTime';
 
 import { deleteConversationMessage, clearConversationMessage, fetchAllUser } from '@/redux/slices/privateChat/privateChatAction';
 import { useDispatch, useSelector } from 'react-redux'
+import { socket } from '@/services/socket';
 
 function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat }) {
   const theme = useTheme();
@@ -56,12 +58,30 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
   const open = Boolean(anchorEl);
 
   // get all users from redux
-  const { allUsers: users, activeChat } = useSelector(state => state.privateChat);
+  const { allUsers: users, chatUsers, activeChat } = useSelector(state => state.privateChat);
 
   // fallback if not found
   const partnerProfile = useMemo(() => {
     return users.find((u) => u.userId === userId)?.profile || {};
   }, [users, userId]);
+
+  const isPartnerOnline = useMemo(() => {
+    return chatUsers.find((u) => u.partnerId === userId) || {};
+  }, [userId, chatUsers]);
+
+  useEffect(() => {
+    socket.emit('getOnlineUser');
+
+    socket.on('onlineUserList', (onlineIds) => {
+      onlineIds.forEach(id => {
+        dispatch(addChatUser({ partnerId: id, isOnline: true }));
+      });
+    });
+
+    return () => {
+      socket.off('onlineUserList');
+    };
+  }, []);
 
   const handleMenuOpen = (e) => {
     setAnchorEl(e.currentTarget);
@@ -189,20 +209,17 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
           sx={{ cursor: 'pointer', flexGrow: 1 }}
           onClick={() => setOpenProfileModal(true)}
         >
-          <Tooltip title={<StyledText text={'Partner Profile'} />}>
+          <Tooltip title={<StyledText text={`User Info`} />}>
             <Avatar
               alt={partnerProfile?.fullName ?? 'Stranger'}
               src={partnerProfile?.profileImage || defaultAvatar}
             />
           </Tooltip>
           <Box>
-            <Tooltip title={<StyledText text={'Partner Profile'} />}>
+            <Tooltip title={<StyledText text={'User Info'} />}>
               <Typography variant="body2" fontWeight={600}>
                 {textFormater(partnerProfile?.fullName) ?? 'Stranger'}
               </Typography>
-              {/* <Typography variant="caption" fontWeight={600}>
-                online
-              </Typography> */}
             </Tooltip>
 
             <Typography
@@ -212,7 +229,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
                 fontSize: isSm ? '0.8rem' : '0.9rem'
               }}
             >
-              {/* {fullStateName} {fullCountryName} */}
+              {`${isPartnerOnline.isOnline ? 'Online' : 'Offline'}`}
             </Typography>
           </Box>
         </Stack>
@@ -222,9 +239,11 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
           {/* {partnerTyping ? <TypingIndicator /> : <WaitingIndicator />} */}
 
           {/* Action Menu Icon */}
-          <IconButton onClick={handleMenuOpen} size="small">
-            <MoreVertIcon />
-          </IconButton>
+          <Tooltip title='Menu'>
+            <IconButton onClick={handleMenuOpen} size="small">
+              <MoreVertIcon />
+            </IconButton>
+          </Tooltip>
 
           {/* Dropdown Menu */}
           <Menu

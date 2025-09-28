@@ -4,7 +4,8 @@ const verifyToken = require('../utils/socket/verifyToken');
 const { randomChatHandler } = require('./randomChat/randomChat')
 
 // count total online user
-let onlineUsers = new Set();
+let onlineUsersCount = new Set();
+let onlineUsers = new Map();
 
 /**
  * Initializes and configures the Socket.IO server.
@@ -57,11 +58,20 @@ function setupSocket(server) {
     io.on('connection', (socket) => {
 
         // count number of active users and broadcast to all clients
-        onlineUsers.add(socket.id);
-        io.emit('onlineCount', onlineUsers.size);
-        
+        onlineUsersCount.add(socket.id);
+        io.emit('onlineCount', onlineUsersCount.size);
+
         socket.on('getOnlineCount', () => {
-            socket.emit('onlineCount', onlineUsers.size);
+            socket.emit('onlineCount', onlineUsersCount.size);
+        });
+
+        // flag user online
+        onlineUsers.set(socket.userId.toString(), socket.id);
+
+        // Notify to all user
+        socket.broadcast.emit('privateChat:userOnline', { userId: socket.userId.toString() });
+        socket.on('getOnlineUser', () => {
+            socket.emit('privateChat:userOnline', { userId: socket.userId.toString() });
         });
 
         // Register random chat events
@@ -72,8 +82,14 @@ function setupSocket(server) {
 
         // Handle disconnection
         socket.on('disconnect', async () => {
-            onlineUsers.delete(socket.id);
-            io.emit('onlineCount', onlineUsers.size);
+            onlineUsersCount.delete(socket.id);
+            io.emit('onlineCount', onlineUsersCount.size);
+
+            // Flag user offline
+            onlineUsers.delete(socket.userId.toString());
+
+            // Notify to all user
+            io.emit('privateChat:userOffline', { userId: socket.userId.toString() });
         });
     });
 }

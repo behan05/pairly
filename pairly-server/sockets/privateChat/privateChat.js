@@ -2,7 +2,6 @@ const Conversation = require('../../models/chat/Conversation.model');
 const Message = require('../../models/chat/Message.model');
 
 const privateChatSessions = new Map();
-const onlineUsers = new Map();
 
 function privateChatHandler(io, socket) {
     const currentUserId = socket.userId;
@@ -38,21 +37,6 @@ function privateChatHandler(io, socket) {
                 roomId,
                 conversationId: conversation._id.toString()
             });
-
-            // Mark user online
-            onlineUsers.set(currentUserId, socket.id);
-
-            // Notify current user about partner's presence
-            if (onlineUsers.has(partnerUserId)) {
-                socket.emit('privateChat:userOnline', { userId: partnerUserId });
-            } else {
-                socket.emit('privateChat:userOffline', { userId: partnerUserId });
-            }
-
-            // Notify partner that current user is online
-            if (onlineUsers.has(partnerUserId)) {
-                io.to(onlineUsers.get(partnerUserId)).emit('privateChat:userOnline', { userId: currentUserId });
-            }
 
             socket.emit('privateChat:partner-joined', {
                 partnerId: partnerUserId,
@@ -159,12 +143,7 @@ function privateChatHandler(io, socket) {
 
     // --- DISCONNECT / OFFLINE ---
     socket.on('disconnect', () => {
-        onlineUsers.delete(currentUserId);
-
-        const session = privateChatSessions.get(currentUserId);
-        if (session?.partnerId && onlineUsers.has(session.partnerId)) {
-            io.to(onlineUsers.get(session.partnerId)).emit('privateChat:userOffline', { userId: currentUserId });
-        }
+        
     });
 
     // --- OPTIONAL STUBS (typing, etc.) ---
