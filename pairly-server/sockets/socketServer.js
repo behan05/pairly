@@ -1,7 +1,8 @@
 const { Server } = require('socket.io');
 const privateChatHandler = require('./privateChat/privateChat');
 const verifyToken = require('../utils/socket/verifyToken');
-const { randomChatHandler } = require('./randomChat/randomChat')
+const { randomChatHandler } = require('./randomChat/randomChat');
+const User = require('../models/User.model');
 
 // count total online user
 let onlineUsersCount = new Set();
@@ -57,7 +58,7 @@ function setupSocket(server) {
     // === Main connection listener ===
     io.on('connection', (socket) => {
 
-        // count number of active users and broadcast to all clients
+        // count active
         onlineUsersCount.add(socket.id);
         io.emit('onlineCount', onlineUsersCount.size);
 
@@ -65,14 +66,16 @@ function setupSocket(server) {
             socket.emit('onlineCount', onlineUsersCount.size);
         });
 
-        // flag user online
-        onlineUsers.set(socket.userId.toString(), socket.id);
+        // mark user online
+        onlineUsers.set(socket.userId, socket.id);
 
-        // Notify to all user
-        socket.broadcast.emit('privateChat:userOnline', { userId: socket.userId.toString() });
-        socket.on('getOnlineUser', () => {
-            socket.emit('privateChat:userOnline', { userId: socket.userId.toString() });
-        });
+        // send all online users one by one to the new client
+        for (const userId of onlineUsers.keys()) {
+            socket.emit('privateChat:userOnline', { userId });
+        };
+
+        // notify others about this user
+        socket.broadcast.emit('privateChat:userOnline', { userId: socket.userId });
 
         // Register random chat events
         randomChatHandler(io, socket);
@@ -85,11 +88,16 @@ function setupSocket(server) {
             onlineUsersCount.delete(socket.id);
             io.emit('onlineCount', onlineUsersCount.size);
 
-            // Flag user offline
-            onlineUsers.delete(socket.userId.toString());
+            // Update DB
+            const updateLastActivity = await User.findByIdAndUpdate(
+                { _id: socket.userId },
+                { lastSeen: new Date() },
+                { new: true }
+            );
+            onlineUsers.delete(socket.userId);
 
-            // Notify to all user
-            io.emit('privateChat:userOffline', { userId: socket.userId.toString() });
+
+            io.emit('privateChat:userOffline', { userId: socket.userId, lastSeen: updateLastActivity?.lastSeen });
         });
     });
 }

@@ -70,20 +70,6 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
     return chatUsers.find((u) => u.partnerId === userId) || {};
   }, [userId, chatUsers]);
 
-  useEffect(() => {
-    socket.emit('getOnlineUser');
-
-    socket.on('onlineUserList', (onlineIds) => {
-      onlineIds.forEach(id => {
-        dispatch(addChatUser({ partnerId: id, isOnline: true }));
-      });
-    });
-
-    return () => {
-      socket.off('onlineUserList');
-    };
-  }, []);
-
   const handleMenuOpen = (e) => {
     setAnchorEl(e.currentTarget);
   };
@@ -230,7 +216,10 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
                 fontSize: isSm ? '0.8rem' : '0.9rem'
               }}
             >
-              {`${isPartnerOnline.isOnline ? 'Online' : 'Offline'}`}
+              {isPartnerOnline?.isOnline || !isPartnerOnline?.lastSeen
+                ? "Online"
+                : `Last active ${formatMessageTime(isPartnerOnline.lastSeen)}`
+              }
             </Typography>
           </Box>
         </Stack>

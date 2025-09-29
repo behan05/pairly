@@ -20,13 +20,19 @@ const usersSchema = new mongoose.Schema({
         default: 'local',
     },
 
+    lastSeen: {
+        type: Date,
+        default: null,
+    },
+
     // Email verification fields
     emailVerified: {
         type: Boolean,
         default: false
     },
     emailToken: { type: String }
-    
+
+
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', usersSchema);

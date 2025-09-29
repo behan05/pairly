@@ -27,7 +27,7 @@ const privateChatSlice = createSlice({
                     partnerId: newUser.partnerId,
                     conversationId: newUser.conversationId ?? null,
                     isOnline: newUser.isOnline ?? false,
-                    profile: newUser.profile ?? null
+                    lastSeen: newUser.lastSeen ?? null
                 });
             } else {
                 // merge updates

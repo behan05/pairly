@@ -152,8 +152,11 @@ function PrivateChatSidebar() {
                                             variant="dot"
                                             sx={{
                                                 '& .MuiBadge-dot': {
-                                                    backgroundColor: onlineUserIds.includes(user.userId) ? 'green' : 'gray',
-                                                    animation: onlineUserIds.includes(user.userId) ? 'blink 1.5s infinite' : 'none',
+                                                    backgroundColor: onlineUserIds.includes(user.userId) || !user.lastSeen ? 'green' : 'gray',
+                                                    animation: onlineUserIds.includes(user.userId) || !user.lastSeen ? 'blink 2s infinite' : 'none',
+                                                    width: 10,
+                                                    height: 10,
+                                                    borderRadius: '50%'
                                                 },
                                                 '@keyframes blink': {
                                                     '0%, 50%, 100%': { opacity: 1 },

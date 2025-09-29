@@ -27,9 +27,7 @@ function NormalChatController() {
             dispatch(setError(error || 'Something went wrong in private chat.'));
         });
 
-        // NORMALIZED MESSAGE LISTENER (minimal change - shape normalization)
         socket.on('privateChat:message', ({ conversationId, message }) => {
-            // normalize timestamp safely (avoid undefined `timestamp`)
             const createdAt = message?.timestamp ?? message?.createdAt ?? new Date().toISOString();
 
             dispatch(addMessage({
@@ -56,8 +54,8 @@ function NormalChatController() {
             dispatch(addChatUser({ partnerId: userId, isOnline: true }));
         });
 
-        socket.on('privateChat:userOffline', ({ userId }) => {
-            dispatch(addChatUser({ partnerId: userId, isOnline: false }));
+        socket.on('privateChat:userOffline', ({ userId, lastSeen }) => {
+            dispatch(addChatUser({ partnerId: userId, isOnline: false, lastSeen }));
         });
 
         // typing / stops / disconnected / presence - keep stubs
