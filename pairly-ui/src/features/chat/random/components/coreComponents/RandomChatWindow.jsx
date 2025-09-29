@@ -305,34 +305,32 @@ function RandomChatWindow({ setShowChatWindow }) {
                     key={index}
                     alignSelf={isOwnMessage ? 'flex-end' : 'flex-start'}
                     sx={{
-                      backgroundColor: isOwnMessage
-                        ? theme.palette.background.paper
-                        : theme.palette.background.paper,
-                      color: isOwnMessage ? 'text.primary' : 'text.secondary',
-                      px: 2,
+                      background: isOwnMessage
+                        ? `linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.primary.main} 100%)`
+                        : `linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.action.hover} 100%)`,
+                      color: isOwnMessage
+                        ? theme.palette.text.primary
+                        : theme.palette.text.primary,
+                      px: 1.5,
                       py: 1,
                       maxWidth: '70%',
                       borderRadius: isOwnMessage
                         ? '1.2rem 0 1.2rem 1.2rem'
                         : '0 1.2rem 1.2rem 1.2rem',
                       position: 'relative',
-                      borderColor: isOwnMessage
-                        ? theme.palette.success.main
-                        : theme.palette.primary.main,
-                      borderWidth: 0,
-                      borderStyle: 'solid',
                       wordBreak: 'break-word',
                       overflowWrap: 'break-word',
-
+                      boxShadow: `0 2px 6px ${theme.palette.action.disabledBackground}`,
+                      transition: 'background 0.3s ease, transform 0.2s ease',
                       '&:hover': {
-                        backgroundColor: isOwnMessage
-                          ? theme.palette.primary.paper
-                          : theme.palette.background.paper,
-                        color: theme.palette.text.primary,
-                        boxShadow: isOwnMessage ? `0 2px 8px ${theme.palette.action.hover}` : `0 2px 8px ${theme.palette.divider}`,
+                        transform: 'scale(1.01)',
+                        background: isOwnMessage
+                          ? `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 100%)`
+                          : `linear-gradient(135deg, ${theme.palette.action.hover} 0%, ${theme.palette.background.default} 100%)`,
                       },
                     }}
                   >
+
                     {/* Text Message */}
                     {msg.type === 'text' && (
                       <>

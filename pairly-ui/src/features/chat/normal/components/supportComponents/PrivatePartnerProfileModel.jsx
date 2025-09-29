@@ -178,7 +178,13 @@ function PrivatePartnerProfileModel(
             justifyContent="space-between"
             sx={{ p: 2, borderBottom: `1px solid ${theme.palette.divider}` }}
           >
-            <Typography variant="subtitle1" fontWeight={600}>
+            <Typography
+              variant="subtitle1"
+              fontWeight={600}
+              sx={{
+                color: theme.palette.text.primary
+              }}
+            >
               {partnerProfile.fullName.split(' ')[0]} Info
             </Typography>
 
@@ -188,10 +194,10 @@ function PrivatePartnerProfileModel(
               boxShadow={`inset 0 0 1rem ${theme.palette.divider}`}
               borderRadius={1}
             >
-              <IconButton onClick={handleMenuOpen} sx={{ color: "white" }}>
+              <IconButton onClick={handleMenuOpen} sx={{ color: theme.palette.text.primary }}>
                 <MoreVertIcon />
               </IconButton>
-              <IconButton onClick={onClose} sx={{ color: "white" }}>
+              <IconButton onClick={onClose} sx={{ color: theme.palette.text.primary }}>
                 <CloseIcon />
               </IconButton>
             </Stack>

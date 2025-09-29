@@ -38,6 +38,7 @@ import BlockUserModal from '../supportComponents/BlockUsermodal'
 import formatMessageTime from '@/utils/formatMessageTime';
 
 import { deleteConversationMessage, clearConversationMessage, fetchAllUser } from '@/redux/slices/privateChat/privateChatAction';
+import { addChatUser } from '@/redux/slices/privateChat/privateChatSlice';
 import { useDispatch, useSelector } from 'react-redux'
 import { socket } from '@/services/socket';
 

@@ -42,8 +42,11 @@ function ConnectButton({ onClick, disabled = false }) {
       startIcon={<BoltIcon sx={{ color: 'success.main' }} fontSize="medium" />}
       onClick={onClick}
       disabled={disabled}
+      sx={{
+        fontSize: '1rem'
+      }}
     >
-      <StyledText text="Start Random Chat" />
+      Start Random Chat
     </CustomButton>
   );
 }

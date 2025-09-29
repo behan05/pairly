@@ -10,7 +10,7 @@ import {
 import { DownloadIcon, DoneIcon, DoneAllIcon } from '@/MUI/MuiIcons';
 import PrivateChatHeader from './PrivateChatHeader';
 import PrivateMessageInput from './PrivateMessageInput';
-import formatMessageTime from '@/utils/formatMessageTime';
+import formatBubbleTime from '@/utils/formatBubbleTime';
 import { useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import { socket } from '@/services/socket';
@@ -113,9 +113,13 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                 key={index}
                 alignSelf={isOwnMessage ? 'flex-end' : 'flex-start'}
                 sx={{
-                  backgroundColor: theme.palette.background.paper,
-                  color: isOwnMessage ? 'text.primary' : 'text.secondary',
-                  px: 2,
+                  background: isOwnMessage
+                    ? `linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.primary.main} 100%)`
+                    : `linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.action.hover} 100%)`,
+                  color: isOwnMessage
+                    ? theme.palette.text.primary
+                    : theme.palette.text.primary,
+                  px: 1.5,
                   py: 1,
                   maxWidth: '70%',
                   borderRadius: isOwnMessage
@@ -124,11 +128,17 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                   position: 'relative',
                   wordBreak: 'break-word',
                   overflowWrap: 'break-word',
+                  boxShadow: `0 2px 6px ${theme.palette.action.disabledBackground}`,
+                  transition: 'background 0.3s ease, transform 0.2s ease',
                   '&:hover': {
-                    backgroundColor: theme.palette.action.hover
+                    transform: 'scale(1.01)',
+                    background: isOwnMessage
+                      ? `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 100%)`
+                      : `linear-gradient(135deg, ${theme.palette.action.hover} 0%, ${theme.palette.background.default} 100%)`,
                   },
                 }}
               >
+
                 {/* Text message */}
                 {msg.messageType === 'text' && (
                   <>
@@ -139,19 +149,39 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                         href={msg.content}
                         target="_blank"
                         rel="noopener noreferrer"
-                        sx={{ color: 'success.main', wordBreak: 'break-word', textDecoration: 'underline' }}
+                        sx={{
+                          wordBreak: 'break-word',
+                          fontWeight: 500,
+                          color: isOwnMessage
+                            ? theme.palette.primary.contrastText
+                            : theme.palette.success.main,
+                          textDecoration: 'underline',
+                          textUnderlineOffset: 2,
+                          '&:hover': {
+                            color: isOwnMessage
+                              ? theme.palette.info.light
+                              : theme.palette.success.dark,
+                          },
+                        }}
                       >
                         {msg.content}
                       </Typography>
+
                     ) : (
                       <Typography variant="body1">{msg.content}</Typography>
                     )}
                     <Typography
                       variant="caption"
                       color="text.secondary"
-                      sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 0.5, mt: 0.5 }}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        alignItems: 'center',
+                        gap: 0.5,
+                        mt: 0.5,
+                      }}
                     >
-                      {formatMessageTime(msg.createdAt)}
+                      {formatBubbleTime(msg.createdAt)}
                       {isOwnMessage && (msg.seen ? <DoneAllIcon sx={{ fontSize: 16, color: "success.main" }} /> : <DoneIcon sx={{ fontSize: 16, color: "grey" }} />)}
                     </Typography>
                   </>
@@ -166,8 +196,8 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                       alt="sent"
                       sx={{
                         width: '100%',
-                        maxWidth: isSm ? '80vw' : '480px', // responsive max width
-                        maxHeight: isSm ? '40vh' : '60vh', // responsive max height
+                        maxWidth: isSm ? '80vw' : '480px',
+                        maxHeight: isSm ? '40vh' : '60vh',
                         borderRadius: 1,
                         objectFit: 'cover'
                       }}
@@ -180,17 +210,17 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                     </IconButton>
                     <Typography
                       variant="caption"
-                      color="text.secondary"
+                      color="#ddd"
                       sx={{
                         position: 'absolute',
-                        bottom: 4,
+                        bottom: 5,
                         right: 8,
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 0.5
+                        gap: 0.5,
                       }}
                     >
-                      {formatMessageTime(msg.createdAt)}
+                      {formatBubbleTime(msg.createdAt)}
                       {isOwnMessage &&
                         (msg.seen ? (
                           <DoneAllIcon sx={{ fontSize: 16, color: 'success.main' }} />
@@ -224,17 +254,17 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                     </IconButton>
                     <Typography
                       variant="caption"
-                      color="text.secondary"
+                      color="#ddd"
                       sx={{
                         position: 'absolute',
-                        bottom: 8,
+                        bottom: 4,
                         right: 8,
                         display: 'flex',
                         alignItems: 'center',
                         gap: 0.5
                       }}
                     >
-                      {formatMessageTime(msg.createdAt)}
+                      {formatBubbleTime(msg.createdAt)}
                       {isOwnMessage &&
                         (msg.seen ? (
                           <DoneAllIcon sx={{ fontSize: 16, color: 'success.main' }} />
@@ -262,7 +292,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                         gap: 0.5
                       }}
                     >
-                      {formatMessageTime(msg.createdAt)}
+                      {formatBubbleTime(msg.createdAt)}
                       {isOwnMessage &&
                         (msg.seen ? <DoneAllIcon
                           sx={{ fontSize: 16, color: "success.main" }} />
@@ -271,18 +301,38 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
 
                 {/* File */}
                 {msg.messageType === 'file' && (
-                  <Stack
-                    flexDirection="row"
-                    alignItems="center"
-                    gap={0.5}
-                    sx={{ maxWidth: isSm ? '90vw' : '480px', flexWrap: 'wrap' }}
-                  >
-                    <Typography variant="body2">{msg.fileName || 'file'}</Typography>
-                    <IconButton
-                      onClick={() => handleDownload(msg.content, msg.fileName || 'file')}
+                  <Stack sx={{ maxWidth: isSm ? '90vw' : '480px', flexWrap: 'wrap', gap: 0.5 }}>
+                    <Stack flexDirection="row" alignItems="center" gap={0.3}>
+                      <Typography variant="body2" sx={{ wordBreak: 'break-word' }}>
+                        {msg.fileName || 'file'}
+                      </Typography>
+                      <IconButton
+                        onClick={() => handleDownload(msg.content, msg.fileName || 'file')}
+                        aria-label={`Download ${msg.fileName || 'file'}`}
+                      >
+                        <DownloadIcon />
+                      </IconButton>
+                    </Stack>
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{
+                        position: 'absolute',
+                        bottom: 1,
+                        right: 8,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 0.5
+                      }}
                     >
-                      <DownloadIcon />
-                    </IconButton>
+                      {formatBubbleTime(msg.createdAt)}
+                      {isOwnMessage &&
+                        (msg.seen ? (
+                          <DoneAllIcon sx={{ fontSize: 16, color: 'success.main' }} />
+                        ) : (
+                          <DoneIcon sx={{ fontSize: 16, color: 'grey' }} />
+                        ))}
+                    </Typography>
                   </Stack>
                 )}
               </Box>

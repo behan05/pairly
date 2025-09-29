@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import {
     Box,
     Stack,
@@ -36,7 +36,11 @@ function PrivateChatSidebar() {
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const dispatch = useDispatch();
     const { setSelectedUserId, activeUserId, setActiveUserId } = useOutletContext();
-    const { allUsers, chatUsers, loading } = useSelector(state => state.privateChat);
+    const { allUsers, chatUsers } = useSelector(state => state.privateChat);
+
+    const onlineUserIds = useMemo(() => {
+        return chatUsers.filter(u => u.isOnline).map(u => u.partnerId);
+    }, [chatUsers]);
 
     useEffect(() => {
         dispatch(fetchAllUser());
@@ -112,6 +116,7 @@ function PrivateChatSidebar() {
                 }}>
                     {allUsers.map((user, index) => {
                         const isActive = activeUserId === user.userId;
+
                         const unseenCount = 1;
                         return (
                             <Stack
@@ -123,7 +128,7 @@ function PrivateChatSidebar() {
                                     border: `0.1px solid ${theme.palette.divider}`,
                                     borderRadius: 0.4,
                                     p: 1,
-                                    mt: 0.5,
+                                    my: 0.5,
                                     bgcolor: isActive ? theme.palette.action.selected : 'transparent',
                                     transition: 'background-color 0.3s ease',
                                     ':hover': {
@@ -141,15 +146,28 @@ function PrivateChatSidebar() {
                                     }}
                                 >
                                     <Tooltip title={user?.profile?.shortBio}>
-                                        <Avatar
-                                            src={user?.profile?.profileImage || defaultAvatar}
-                                            alt={user?.profile?.fullName + 'profile Image'}
-                                            maxWidth={35}
+                                        <Badge
+                                            overlap="circular"
+                                            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                                            variant="dot"
                                             sx={{
-                                                objectFit: 'cover',
-                                                borderRadius: '50%'
+                                                '& .MuiBadge-dot': {
+                                                    backgroundColor: onlineUserIds.includes(user.userId) ? 'green' : 'gray',
+                                                    animation: onlineUserIds.includes(user.userId) ? 'blink 1.5s infinite' : 'none',
+                                                },
+                                                '@keyframes blink': {
+                                                    '0%, 50%, 100%': { opacity: 1 },
+                                                    '25%, 75%': { opacity: 0 },
+                                                },
                                             }}
-                                        />
+                                        >
+                                            <Avatar
+                                                src={user?.profile?.profileImage || defaultAvatar}
+                                                alt={user?.profile?.fullName + ' profile Image'}
+                                                sx={{ width: 35, height: 35, objectFit: 'cover' }}
+                                            />
+                                        </Badge>
+
                                     </Tooltip>
                                     <Stack flex={1}>
                                         <Stack
