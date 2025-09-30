@@ -60,8 +60,6 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
   // get all users from redux
   const { allUsers: users, chatUsers, activeChat, partnerTyping } = useSelector(state => state.privateChat);
 
-  console.log(partnerTyping);
-
   // fallback if not found
   const partnerProfile = useMemo(() => {
     return users.find((u) => u.userId === userId)?.profile || {};

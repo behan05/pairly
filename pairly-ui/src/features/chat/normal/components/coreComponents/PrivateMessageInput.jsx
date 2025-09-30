@@ -28,12 +28,12 @@ function PrivateMessageInput() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-  const currentUserId = useSelector((state) => state.profile.profileData?._id ?? state.profile.profileData?.user);
+  const currentUserId = useSelector((state) => state.profile.profileData?.userId ?? state.profile.profileData?.user);
   const { conversationId, activePartnerId } = useSelector((state) => state.privateChat);
   const open = Boolean(anchorEl);
   const fileInputRef = useRef(null);
   const inputContainerRef = useRef(null);
-
+  
   // Typing indicator logic
   const typingTimeout = useRef(null);
   const lastTypingTime = useRef(0);

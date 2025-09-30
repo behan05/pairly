@@ -76,19 +76,25 @@ function RandomMessageInput() {
     setAnchorEl(null);
   };
 
-  // Handle typing status with socket events
-  let typingTimeout;
+  // Typing indicator logic
+  const typingTimeout = useRef(null);
+  const lastTypingTime = useRef(0);
+  const TYPING_DELAY = 1000;
+
   const handleInputChange = (e) => {
     const { value } = e.target;
     setMessage(value);
 
-    socket.emit('random:typing');
+    const now = Date.now();
+    if (now - lastTypingTime.current > TYPING_DELAY) {
+      socket.emit('random:typing');
+      lastTypingTime.current = now;
+    }
 
-    if (typingTimeout) clearTimeout(typingTimeout);
-
-    typingTimeout = setTimeout(() => {
+    if (typingTimeout.current) clearTimeout(typingTimeout.current);
+    typingTimeout.current = setTimeout(() => {
       socket.emit('random:stop-typing');
-    }, 1000);
+    }, TYPING_DELAY + 500);
   };
 
   // Handle file selection and preview

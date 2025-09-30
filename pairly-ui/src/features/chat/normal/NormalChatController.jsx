@@ -14,7 +14,7 @@ function NormalChatController() {
     const dispatch = useDispatch();
 
     const { activePartnerId } = useSelector(state => state.privateChat);
-    const currentUserId = useSelector((state) => state.profile.profileData?._id ?? state.profile.profileData?.user);
+    const currentUserId = useSelector((state) => state.profile.profileData?.userId ?? state.profile.profileData?.user);
 
     useEffect(() => {
         if (!socket.connected) socket.connect();
@@ -62,14 +62,21 @@ function NormalChatController() {
             dispatch(addChatUser({ partnerId: userId, isOnline: false, lastSeen }));
         });
 
-        socket.on('privateChat:typing', ({ from, to }) => {
-            if (to === currentUserId && from === activePartnerId) {
+        socket.on('privateChat:partner-typing', ({ from, to }) => {
+            if (
+                String(to) === String(currentUserId) &&
+                String(from) !== String(currentUserId) &&
+                String(from) === String(activePartnerId)
+            ) {
                 dispatch(setPartnerTyping(true));
             }
         });
 
-        socket.on('privateChat:stop-typing', ({ from, to }) => {
-            if (to === currentUserId && from === activePartnerId) {
+        socket.on('privateChat:partner-stopTyping', ({ from, to }) => {
+            if (
+                String(to) === String(currentUserId) &&
+                String(from) === String(activePartnerId)
+            ) {
                 dispatch(setPartnerTyping(false));
             }
         });
@@ -88,7 +95,7 @@ function NormalChatController() {
             socket.off('privateChat:userOffline');
             socket.off('privateChat:partner-disconnected');
         };
-    }, [dispatch]);
+    }, [dispatch, currentUserId, activePartnerId]);
 
     return null;
 }

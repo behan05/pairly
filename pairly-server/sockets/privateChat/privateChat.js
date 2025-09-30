@@ -1,6 +1,5 @@
 const Conversation = require('../../models/chat/Conversation.model');
 const Message = require('../../models/chat/Message.model');
-const typingHandler = require('./typing/typingStatus');
 
 const privateChatSessions = new Map();
 
@@ -143,7 +142,33 @@ function privateChatHandler(io, socket) {
     });
 
     // === Typing indicator: started ===
-    typingHandler(socket, io);
+    socket.on('privateChat:typing', ({ from, to }) => {
+        const session = privateChatSessions.get(currentUserId);
+        if (!session || session.partnerId !== to) return;
+
+        // find partner's socket
+        const partnerSocket = [...io.sockets.sockets.values()]
+            .find(s => String(s.userId) === String(to));
+
+        if (partnerSocket) {
+            io.to(partnerSocket.id).emit('privateChat:partner-typing', { from, to });
+        }
+    });
+
+    // === Typing indicator: stopped ===
+    socket.on('privateChat:stop-typing', ({ from, to }) => {
+        const session = privateChatSessions.get(currentUserId);
+        if (!session || session.partnerId !== to) return;
+
+        // find partner's socket
+        const partnerSocket = [...io.sockets.sockets.values()]
+            .find(s => String(s.userId) === String(to));
+
+        if (partnerSocket) {
+            io.to(partnerSocket.id).emit('privateChat:partner-stopTyping', { from, to });
+        }
+    });
+
 }
 
 module.exports = privateChatHandler;
