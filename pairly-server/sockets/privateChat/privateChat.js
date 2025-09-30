@@ -1,5 +1,6 @@
 const Conversation = require('../../models/chat/Conversation.model');
 const Message = require('../../models/chat/Message.model');
+const typingHandler = require('./typing/typingStatus');
 
 const privateChatSessions = new Map();
 
@@ -141,15 +142,8 @@ function privateChatHandler(io, socket) {
         }
     });
 
-    // --- DISCONNECT / OFFLINE ---
-    socket.on('disconnect', () => {
-        
-    });
-
-    // --- OPTIONAL STUBS (typing, etc.) ---
-    socket.on('privateChat:partner-typing', () => { });
-    socket.on('privateChat:partner-stopTyping', () => { });
-    socket.on('privateChat:partner-disconnected', () => { });
+    // === Typing indicator: started ===
+    typingHandler(socket, io);
 }
 
 module.exports = privateChatHandler;

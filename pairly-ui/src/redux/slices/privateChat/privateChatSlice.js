@@ -5,6 +5,8 @@ const initialState = {
     chatUsers: [],         // users you have active chats with
     conversations: {},     // { conversationId: { messages: [...] } }
     activeChat: null,      // conversationId
+    activePartnerId: null,  // active partner id
+    partnerTyping: false,
     loading: false,
     error: null,
 };
@@ -15,6 +17,10 @@ const privateChatSlice = createSlice({
     reducers: {
         setAllUsers: (state, action) => {
             state.allUsers = Array.isArray(action.payload) ? action.payload : [];
+        },
+
+        setActivePartnerId: (state, action) => {
+            state.activePartnerId = action.payload;
         },
 
         addChatUser: (state, action) => {
@@ -50,6 +56,10 @@ const privateChatSlice = createSlice({
 
         setLoading: (state, action) => {
             state.loading = action.payload;
+        },
+
+        setPartnerTyping: (state, action) => {
+            state.partnerTyping = action.payload;
         },
 
         addMessage: (state, action) => {
@@ -110,11 +120,13 @@ export const {
     addChatUser,
     setActiveChat,
     addMessage,
+    setPartnerTyping,
     setError,
     reset,
     setLoading,
     setConversationMessages,
-    updateMessagesAsRead
+    updateMessagesAsRead,
+    setActivePartnerId
 } = privateChatSlice.actions;
 
 export default privateChatSlice.reducer;

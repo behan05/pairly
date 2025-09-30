@@ -1,16 +1,20 @@
 import { useEffect } from 'react';
 import { socket } from '@/services/socket';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     addChatUser,
     setActiveChat,
     addMessage,
     setError,
-    updateMessagesAsRead
+    updateMessagesAsRead,
+    setPartnerTyping
 } from '@/redux/slices/privateChat/privateChatSlice';
 
 function NormalChatController() {
     const dispatch = useDispatch();
+
+    const { activePartnerId } = useSelector(state => state.privateChat);
+    const currentUserId = useSelector((state) => state.profile.profileData?._id ?? state.profile.profileData?.user);
 
     useEffect(() => {
         if (!socket.connected) socket.connect();
@@ -58,9 +62,19 @@ function NormalChatController() {
             dispatch(addChatUser({ partnerId: userId, isOnline: false, lastSeen }));
         });
 
-        // typing / stops / disconnected / presence - keep stubs
-        socket.on('privateChat:partner-typing', () => { });
-        socket.on('privateChat:partner-stopTyping', () => { });
+        socket.on('privateChat:typing', ({ from, to }) => {
+            if (to === currentUserId && from === activePartnerId) {
+                dispatch(setPartnerTyping(true));
+            }
+        });
+
+        socket.on('privateChat:stop-typing', ({ from, to }) => {
+            if (to === currentUserId && from === activePartnerId) {
+                dispatch(setPartnerTyping(false));
+            }
+        });
+
+        //  disconnected / presence - keep stubs
         socket.on('privateChat:partner-disconnected', () => { });
 
         return () => {
@@ -69,10 +83,10 @@ function NormalChatController() {
             socket.off('privateChat:message');
             socket.off('privateChat:partner-typing');
             socket.off('privateChat:partner-stopTyping');
-            socket.off('privateChat:partner-disconnected');
             socket.off('privateChat:readMessage');
             socket.off('privateChat:userOnline');
             socket.off('privateChat:userOffline');
+            socket.off('privateChat:partner-disconnected');
         };
     }, [dispatch]);
 

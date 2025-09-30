@@ -3,13 +3,13 @@ import typingAnimation from '@/assets/lottie/typing.json';
 import { Box } from '@/MUI/MuiComponents';
 
 const TypingAnimation = () => {
-  const size = 70;
+  const size = 60;
 
   return (
     <Box
       sx={{
         width: `${size}px`,
-        height: `${size}px`,
+        height: `${40}px`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

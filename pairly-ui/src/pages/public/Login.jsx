@@ -102,7 +102,7 @@ function Login() {
           color: theme.palette.text.primary,
         }
       });
-      setTimeout(() => navigate('/pairly'), 1000);
+      setTimeout(() => navigate('/pairly/chat'), 500);
     } else {
       toast.error(response.message, {
         style: {

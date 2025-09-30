@@ -132,13 +132,12 @@ const ChatSidebarHeader = ({ children }) => {
 
   return (
     <Box
-      py={1}
-      px={1}
+      pt={1}
       sx={{
         position: 'sticky',
         top: 0,
         zIndex: 999,
-        backgroundColor: 'transparent',
+        backgroundColor: 'background.paper',
         backdropFilter: 'blur(4px)',
         WebkitBackdropFilter: 'blur(4px)'
       }}
@@ -164,9 +163,7 @@ const ChatSidebarHeader = ({ children }) => {
         <Stack
           direction="row"
           alignItems="center"
-          gap={2}
-          boxShadow={`inset 0 0 1rem ${theme.palette.divider}`}
-          borderRadius={1}
+          gap={3.5}
         >
           {navItems.map(({ path, icon, label }) => {
             if (path === currentUrlPath) return;

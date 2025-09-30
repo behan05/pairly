@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -10,7 +10,8 @@ import {
   useTheme,
   Tooltip,
   Divider,
-  useMediaQuery
+  useMediaQuery,
+  Badge
 } from '@/MUI/MuiComponents';
 import {
   MoreVertIcon,
@@ -38,9 +39,7 @@ import BlockUserModal from '../supportComponents/BlockUsermodal'
 import formatMessageTime from '@/utils/formatMessageTime';
 
 import { deleteConversationMessage, clearConversationMessage, fetchAllUser } from '@/redux/slices/privateChat/privateChatAction';
-import { addChatUser } from '@/redux/slices/privateChat/privateChatSlice';
 import { useDispatch, useSelector } from 'react-redux'
-import { socket } from '@/services/socket';
 
 function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat }) {
   const theme = useTheme();
@@ -59,7 +58,9 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
   const open = Boolean(anchorEl);
 
   // get all users from redux
-  const { allUsers: users, chatUsers, activeChat } = useSelector(state => state.privateChat);
+  const { allUsers: users, chatUsers, activeChat, partnerTyping } = useSelector(state => state.privateChat);
+
+  console.log(partnerTyping);
 
   // fallback if not found
   const partnerProfile = useMemo(() => {
@@ -209,25 +210,43 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
               </Typography>
             </Tooltip>
 
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{
-                fontSize: isSm ? '0.8rem' : '0.9rem'
-              }}
-            >
-              {isPartnerOnline?.isOnline || !isPartnerOnline?.lastSeen
-                ? "Online"
-                : `Last active ${formatMessageTime(isPartnerOnline.lastSeen)}`
-              }
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              {isPartnerOnline?.isOnline ? (
+                <Stack justifyContent={'center'} direction={'row'} alignItems={'center'}>
+                  <Box
+                    sx={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: '50%',
+                      backgroundColor: theme.palette.success.main,
+                      marginRight: 0.5,
+                      mt: '2px',
+                    }}
+                  />
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ fontSize: isSm ? '0.8rem' : '0.9rem' }}
+                  >
+                    Online
+                  </Typography>
+                </Stack>
+              ) : (
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ fontSize: isSm ? '0.8rem' : '0.9rem' }}
+                >
+                  Last active {formatMessageTime(isPartnerOnline.lastSeen)}
+                </Typography>
+              )}
+            </Box>
           </Box>
         </Stack>
 
         {/* Right Section: Typing Indicator + Menu */}
         <Stack direction="row" alignItems="center" justifyContent="center">
-          {/* {partnerTyping ? <TypingIndicator /> : <WaitingIndicator />} */}
-
+          {partnerTyping ? <TypingIndicator /> : <WaitingIndicator />}
           {/* Action Menu Icon */}
           <Tooltip title='Menu'>
             <IconButton onClick={handleMenuOpen} size="small">

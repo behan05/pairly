@@ -48,7 +48,7 @@ function FriendRequestList() {
     };
 
     return (
-        <Box sx={{ px: 2, pb: 2, overflowY: 'auto' }}>
+        <Box sx={{ px: 1.5, pb: 2, overflowY: 'auto' }}>
             <ChatSidebarHeader />
 
             {requests.length === 0 ? (

@@ -1,6 +1,5 @@
 import { Button } from '@/MUI/MuiComponents';
 import BoltIcon from '@mui/icons-material/Bolt';
-import StyledText from '@/components/common/StyledText';
 import { styled } from '@mui/system';
 
 // Styled button with zanina-yassine CSS

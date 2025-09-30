@@ -230,13 +230,15 @@ function RandomChatWindow({ setShowChatWindow }) {
       {/* === Mobile Only: Floating menu for Next/Disconnect === */}
       {isSm && isConnected && (
         <>
-          <Tooltip title={'Chat options'}>
+          <Tooltip title={'Chat actions'}>
             <ArrowDropDownIcon
               onClick={handleMenuOpen}
               sx={{
-                fontSize: '2.5rem',
-                color: 'warning.main',
-                position: 'absolute', top: 55, right: 15, zIndex: 10
+                fontSize: '2.8rem',
+                color: 'success.main',
+                boxShadow: `inset 0 0 1rem ${theme.palette.info.dark}`,
+                borderRadius: 2,
+                position: 'absolute', top: 45, right: 15, zIndex: 10
               }}
             />
           </Tooltip>

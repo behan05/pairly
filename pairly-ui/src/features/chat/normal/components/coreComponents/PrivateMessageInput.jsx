@@ -29,23 +29,30 @@ function PrivateMessageInput() {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const currentUserId = useSelector((state) => state.profile.profileData?._id ?? state.profile.profileData?.user);
-  const conversationId = useSelector((state) => state.privateChat.activeChat);
+  const { conversationId, activePartnerId } = useSelector((state) => state.privateChat);
   const open = Boolean(anchorEl);
   const fileInputRef = useRef(null);
   const inputContainerRef = useRef(null);
 
   // Typing indicator logic
-  const typingTimeoutRef = useRef(null);
+  const typingTimeout = useRef(null);
+  const lastTypingTime = useRef(0);
+  const TYPING_DELAY = 1000;
+
   const handleInputChange = (e) => {
     const { value } = e.target;
     setMessage(value);
 
-    socket.emit('privateChat:typing');
-    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+    const now = Date.now();
+    if (now - lastTypingTime.current > TYPING_DELAY) {
+      socket.emit('privateChat:typing', { from: currentUserId, to: activePartnerId });
+      lastTypingTime.current = now;
+    }
 
-    typingTimeoutRef.current = setTimeout(() => {
-      socket.emit('privateChat:stop-typing');
-    }, 1000);
+    if (typingTimeout.current) clearTimeout(typingTimeout.current);
+    typingTimeout.current = setTimeout(() => {
+      socket.emit('privateChat:stop-typing', { from: currentUserId, to: activePartnerId });
+    }, TYPING_DELAY + 500);
   };
 
   // Handle file selection and preview

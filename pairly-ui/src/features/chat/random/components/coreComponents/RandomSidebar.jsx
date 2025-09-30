@@ -79,7 +79,7 @@ function RandomSidebar() {
       flexDirection="column"
       bgcolor="background.paper"
       minWidth={isSm ? '100%' : 380}
-      px={2}
+      px={1.5}
       sx={{
         minHeight: '100vh',
         maxHeight: '100vh',
