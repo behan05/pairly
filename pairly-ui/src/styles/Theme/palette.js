@@ -42,68 +42,68 @@ export const lightPalette = {
   text: {
     primary: "#1E1E2F",
     secondary: "#4B4B60",
-    disabled: "#9CA3AF",
+    disabled: "#8A8A8A",
   },
 
   background: {
-    default: "#f7f7f7ff",
+    default: "#F2F2F5",
     paper: "#FFFFFF",
   },
 
-  divider: "rgba(0, 0, 0, 0.08)",
+  divider: "rgba(0, 0, 0, 0.12)",
 };
 
 export const darkPalette = {
-  mode: 'dark',
+  mode: "dark",
 
   primary: {
-    main: '#5A67D8',
-    light: '#7F9CF5',
-    dark: '#434190',
-    contrastText: '#F5F5F5'
+    main: "#5A67D8",
+    light: "#7F9CF5",
+    dark: "#434190",
+    contrastText: "#FFFFFF",
   },
 
   secondary: {
-    main: '#D16BA5',
-    light: '#F3A1C8',
-    dark: '#9D4480',
-    contrastText: '#F5F5F5'
+    main: "#C67197",
+    light: "#E29CC7",
+    dark: "#9D4480",
+    contrastText: "#FFFFFF",
   },
 
   info: {
-    main: '#3ABFF8',
-    dark: '#0284C7',
-    contrastText: '#F5F5F5'
+    main: "#3ABFF8",
+    dark: "#0284C7",
+    contrastText: "#FFFFFF",
   },
 
   warning: {
-    main: '#FFC107',
-    dark: '#C29E00',
-    contrastText: '#1A1A1A'
+    main: "#FFC107",
+    dark: "#C29E00",
+    contrastText: "#1A1A1A",
   },
 
   error: {
-    main: '#F43F5E',
-    dark: '#B91C1C',
-    contrastText: '#F5F5F5'
+    main: "#F43F5E",
+    dark: "#B91C1C",
+    contrastText: "#FFFFFF",
   },
 
   success: {
-    main: '#38B2AC',
-    dark: '#2C7A7B',
-    contrastText: '#F5F5F5'
+    main: "#38B2AC",
+    dark: "#2C7A7B",
+    contrastText: "#FFFFFF",
   },
 
   text: {
-    primary: '#ECEFF1',
-    secondary: '#B0BEC5',
-    disabled: '#78909C'
+    primary: "#E0F2F1",
+    secondary: "#B8D8D3",
+    disabled: "#90A4AE",
   },
 
   background: {
-    default: '#090a11ff',
-    paper: '#0b0e14ff'
+    default: "#001218",
+    paper: "#001217",
   },
 
-  divider: 'rgba(255, 255, 255, 0.08)'
-}
+  divider: "rgba(224, 242, 241, 0.14)",
+};

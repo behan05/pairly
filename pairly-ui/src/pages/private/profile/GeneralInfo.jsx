@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Avatar, Box, Stack, TextField, Tooltip, Typography, useTheme } from '@/MUI/MuiComponents';
-
-import { SendIcon, EditIcon } from '@/MUI/MuiIcons';
+import { Avatar, Box, Stack, TextField, Tooltip, Typography, useTheme, IconButton } from '@/MUI/MuiComponents';
+import { SendIcon, EditIcon, RefreshIcon } from '@/MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import BlurWrapper from '@/components/common/BlurWrapper';
 import StyledText from '@/components/common/StyledText';
@@ -53,6 +52,37 @@ function GeneralInfo() {
     }
   }, [profileData]);
 
+  const diverseBios = [
+    `${formData.fullName || '__'}, ${formData.age || '__'} ${formData.gender || '__'} who values real talk 🌿 Curious about ideas and people who challenge me to grow.`,
+    `Passionate about music, travel, and meaningful moments 🎶 I'm ${formData.fullName || '__'}, a ${formData.age || '__'}-year-old ${formData.gender || '__'} who loves connection.`,
+    `Adventure seeker with a thoughtful soul 🌟 I'm ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'}, always chasing joy in the little things.`,
+    `Mindful dreamer 🎨 ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} who values honesty, creativity, and spontaneous fun.`,
+    `Book lover and coffee enthusiast ☕ I'm ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} always chasing growth and good stories.`,
+    `Empathy-driven and curious 🔥 ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} who believes in meaningful connections over small talk.`,
+    `Cheerful and adventurous ✨ I'm ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} here for deep chats and shared experiences.`,
+    `Creative thinker and eternal learner 🎭 ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} who loves music, art, and real conversations.`,
+    `Optimist who values emotional honesty 💡 I'm ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'}, let’s connect beyond the surface.`,
+    `Seeking calm in the chaos 🌙 ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} who’s open to meaningful talks and new perspectives.`,
+    `Curious mind with a playful heart 🎈 ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} who enjoys spontaneous fun and thoughtful chats.`,
+    `Driven by creativity and connection 🎧 I'm ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} always chasing good energy.`,
+    `Introvert with a loud imagination 🧠 ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} who loves deep thoughts and quiet moments.`,
+    `Explorer of ideas and emotions 🧭 ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} here to learn, laugh, and grow.`,
+    `Kind soul with a curious spark 🔍 I'm ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} let’s talk about life, dreams, and everything in between.`,
+    `Open-hearted and open-minded 💬 ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} who values honesty and shared experiences.`,
+    `Lover of stories, silence, and soulful music 🎵 ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} here for real connection.`,
+    `Thoughtful and spontaneous 🌈 ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} who enjoys meaningful moments and playful energy.`,
+    `Empathetic listener and joyful explorer 🚲 I'm ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} let’s share something real.`,
+    `Big heart, curious mind 🪐 ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} always learning and looking for connection.`,
+    `Gentle soul with bold ideas 🖌️ ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} passionate about creativity and kindness.`,
+    `Here for honest chats and shared laughter 😂 ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} who values depth and joy.`,
+    `Quiet thinker, loud dreamer 🌌 ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} let’s connect beyond the surface.`,
+    `Life enthusiast with a love for connection 🫶 ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} here to vibe and grow.`,
+    `Soulful, curious, and always evolving 🪴 ${formData.fullName || '__'}, ${formData.age || '__'}, ${formData.gender || '__'} let’s build something meaningful.`
+  ];
+
+  // Pick a random bio
+  const randomBio = diverseBios[Math.floor(Math.random() * diverseBios.length)];
+
   const inputField = [
     {
       label: 'Your Full Name',
@@ -94,12 +124,45 @@ function GeneralInfo() {
       label: 'Short Bio',
       placeholder: 'Write a short introduction...',
       name: 'shortBio',
-      value: formData.shortBio,
+      value: formData.shortBio || randomBio,
       multiline: true,
       rows: 3,
       fullWidth: true,
       error: Boolean(error.shortBio),
-      helperText: error.shortBio || 'Maximum 200 characters. This will be shown on your profile.'
+      helperText: error.shortBio || 'Maximum 200 characters. This will be shown on your profile.',
+      InputProps: {
+        endAdornment: (
+          <Tooltip title="Change Bio" arrow>
+            <IconButton
+              size="small"
+              onClick={() => {
+                const newBio = diverseBios[Math.floor(Math.random() * diverseBios.length)];
+                setFormData((prev) => ({ ...prev, shortBio: newBio }));
+              }}
+              sx={{
+                p: 0.5,
+                color: 'primary.main',
+                backgroundColor: 'action.hover',
+                '&:hover': {
+                  color: 'primary.dark',
+                }
+              }}
+            >
+              <RefreshIcon
+                fontSize="medium"
+                sx={{
+                  transition: 'transform 0.6s ease-in-out',
+                  color: 'info.main',
+                  '&:hover': {
+                    color: 'warning.main',
+                    transform: 'rotate(360deg)',
+                  }
+                }}
+              />
+            </IconButton>
+          </Tooltip>
+        )
+      }
     }
   ];
 
@@ -126,7 +189,7 @@ function GeneralInfo() {
     setError((prev) => ({ ...prev, profileImage: '' }));
     setFormData((prev) => ({ ...prev, profileImage: file }));
 
-    const preview = URL.createObjectURL(file); // ✅
+    const preview = URL.createObjectURL(file);
     setPreviewUrl(preview);
   };
 
@@ -182,7 +245,7 @@ function GeneralInfo() {
     payload.append('shortBio', formData.shortBio);
 
     if (formData.profileImage instanceof File) {
-      payload.append('profileImage', formData.profileImage); // not base64
+      payload.append('profileImage', formData.profileImage);
     }
 
     setIsDisabled(true);

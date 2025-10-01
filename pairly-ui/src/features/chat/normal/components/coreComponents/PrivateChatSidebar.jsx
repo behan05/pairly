@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
     Box,
     Stack,
@@ -45,35 +45,47 @@ function PrivateChatSidebar() {
         return chatUsers.filter(u => u.isOnline).map(u => u.partnerId);
     }, [chatUsers]);
 
+    const [searchValue, setSearchValue] = useState('');
+
     useEffect(() => {
         dispatch(fetchAllUser());
     }, [dispatch]);
+
+    useEffect(() => {
+        const handlePartnerJoined = ({ partnerId, conversationId }) => {
+            if (partnerId === activeUserId) {
+                dispatch(fetchConversationMessages(conversationId));
+            }
+        };
+
+        socket.on('privateChat:partner-joined', handlePartnerJoined);
+
+        return () => {
+            socket.off('privateChat:partner-joined', handlePartnerJoined);
+        };
+    }, [dispatch, activeUserId]);
 
     const handleUserClick = (userId) => {
         setActiveUserId(userId);
         setSelectedUserId(userId);
         dispatch(setActivePartnerId(userId));
-        
+
         if (!userId) return;
 
         // Emit to socket to join
         socket.emit('privateChat:join', { partnerUserId: userId });
 
-        // Checking if this user already has a conversation in chatUsers
+        // If conversation already exists, load immediately
         const userConversation = chatUsers.find(u => u.partnerId === userId);
-
         if (userConversation?.conversationId) {
-            // Dispatch immediately if conversationId is already available
             dispatch(fetchConversationMessages(userConversation.conversationId));
-        } else {
-            // Wait for the socket event to provide the conversationId
-            socket.on('privateChat:partner-joined', ({ partnerId, conversationId }) => {
-                if (partnerId === userId) {
-                    dispatch(fetchConversationMessages(conversationId));
-                }
-            });
-        }
+        };
     };
+
+    // filter users by search
+    const filteredUsers = allUsers.filter(user =>
+        user?.profile?.fullName?.toLowerCase().includes(searchValue.toLowerCase())
+    );
 
     return (
         <Box
@@ -81,7 +93,7 @@ function PrivateChatSidebar() {
             display="flex"
             flexDirection="column"
             bgcolor="background.paper"
-            minWidth={300}
+            minWidth={isSm ? '100%' : 300}
             px={1.5}
             sx={{
                 minHeight: '100vh',
@@ -99,6 +111,7 @@ function PrivateChatSidebar() {
                         size="small"
                         fullWidth
                         placeholder="Search user..."
+                        value={searchValue}
                         onChange={(e) => setSearchValue(e.target.value)}
                         InputProps={{
                             startAdornment: <SearchIcon fontSize="small" sx={{ mr: 1 }} />,
@@ -323,20 +336,20 @@ function PrivateChatSidebar() {
                 </Box>
             </ChatSidebarHeader>
 
-            {allUsers.length === 0 ?
+            {filteredUsers.length === 0 ?
                 <Typography
                     variant="body1"
                     color="text.secondary"
                     sx={{ mt: 3, textAlign: 'center' }}
                 >
-                    No friends yet — start connecting!
+                    No friends yet — start random chat!
                 </Typography> :
                 <Box sx={{
                     ':hover': {
                         cursor: 'pointer'
                     }
                 }}>
-                    {allUsers.map((user, index) => {
+                    {filteredUsers.map((user, index) => {
                         const isActive = activeUserId === user.userId;
 
                         const unseenCount = 1;
@@ -389,7 +402,7 @@ function PrivateChatSidebar() {
                                             <Avatar
                                                 src={user?.profile?.profileImage || defaultAvatar}
                                                 alt={user?.profile?.fullName + ' profile Image'}
-                                                sx={{ width: 35, height: 35, objectFit: 'cover' }}
+                                                sx={{ width: 40, height: 40, objectFit: 'cover' }}
                                             />
                                         </Badge>
 
@@ -507,6 +520,6 @@ function PrivateChatSidebar() {
             </Box>
         </Box>
     )
-}
+};
 
 export default PrivateChatSidebar;

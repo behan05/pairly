@@ -19,6 +19,9 @@ function NormalChatController() {
     useEffect(() => {
         if (!socket.connected) socket.connect();
 
+        // request current online/offline users
+        socket.emit('privateChat:getOnlineUsers');
+
         socket.on('privateChat:partner-joined', ({ partnerId, conversationId }) => {
             dispatch(addChatUser({
                 partnerId,
@@ -81,7 +84,17 @@ function NormalChatController() {
             }
         });
 
-        //  disconnected / presence - keep stubs
+        socket.on('privateChat:allUsers', (users) => {
+            users.forEach(user => {
+                dispatch(addChatUser({
+                    partnerId: user.userId,
+                    isOnline: user.isOnline,
+                    lastSeen: user.lastSeen
+                }));
+            });
+        });
+
+        //  disconnected keep stubs
         socket.on('privateChat:partner-disconnected', () => { });
 
         return () => {

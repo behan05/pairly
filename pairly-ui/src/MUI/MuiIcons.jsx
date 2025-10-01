@@ -49,6 +49,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonIcon from '@mui/icons-material/Person';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 // ==================== How It Works ====================
 import BoltOutlinedIcon from '@mui/icons-material/BoltOutlined';
@@ -226,6 +227,7 @@ export {
   PersonAddIcon,
   PersonIcon,
   PersonOutlineIcon,
+  RefreshIcon,
 
   // How It Works
   BoltOutlinedIcon,
