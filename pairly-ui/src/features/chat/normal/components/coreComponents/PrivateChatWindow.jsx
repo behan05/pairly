@@ -97,7 +97,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
       />
 
       {/* Messages */}
-      <Box flex={1} p={2} sx={{ overflowY: 'auto', maxHeight: `calc(100vh - 160px)` }}>
+      <Box flex={1} px={isSm? 1.5 : 2} sx={{ overflowY: 'auto' }}>
         <Stack spacing={1.5}>
           {messages.length === 0 && (
             <Box sx={{ textAlign: 'center', color: theme.palette.text.secondary }}>
