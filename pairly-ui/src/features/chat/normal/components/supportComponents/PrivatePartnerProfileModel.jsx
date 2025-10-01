@@ -176,7 +176,7 @@ function PrivatePartnerProfileModel(
             direction="row"
             alignItems="center"
             justifyContent="space-between"
-            sx={{ p: 2, borderBottom: `1px solid ${theme.palette.divider}` }}
+            sx={{ p: 2, mx: 1, borderBottom: `1px solid ${theme.palette.divider}` }}
           >
             <Typography
               variant="subtitle1"
@@ -191,7 +191,6 @@ function PrivatePartnerProfileModel(
             <Stack
               direction="row"
               alignItems="center"
-              boxShadow={`inset 0 0 1rem ${theme.palette.divider}`}
               borderRadius={1}
             >
               <IconButton onClick={handleMenuOpen} sx={{ color: theme.palette.text.primary }}>
@@ -287,10 +286,30 @@ function PrivatePartnerProfileModel(
                 }
               }}
             />
-            <Typography variant="h6">{partnerProfile?.fullName || "Stranger"}</Typography>
-            <Typography variant="body2" color="gray">
-              {location || "Unknown Location"}
-            </Typography>
+            <Stack textAlign="center">
+              <Typography variant="h6">
+                {partnerProfile?.fullName || "Stranger"}
+              </Typography>
+              <Typography variant="body2" color="gray" guttorButtom>
+                {location || "Unknown Location"}
+              </Typography>
+            </Stack>
+
+            {/* Short Bio */}
+            {partnerProfile?.shortBio && (
+              <Typography
+                variant="body2"
+                sx={{
+                  mt: 1,
+                  px: 3,
+                  textAlign: "center",
+                  color: "text.secondary",
+                  fontStyle: "italic",
+                }}
+              >
+                {partnerProfile.shortBio}
+              </Typography>
+            )}
           </Stack>
 
           <Divider sx={{ bgcolor: theme.palette.divider, height: '4px' }} />
@@ -300,7 +319,7 @@ function PrivatePartnerProfileModel(
             direction="row"
             alignItems="center"
             justifyContent="space-between"
-            sx={{ px: 2, py: 1 }}
+            sx={{ px: 2, py: 1, mx: 1 }}
             onChange={() => handleAction('muteNotification')}
           >
             <Typography variant="body2">Notifications</Typography>
@@ -311,21 +330,27 @@ function PrivatePartnerProfileModel(
 
           {/* Action List */}
           <List>
-            <ListItemButton onClick={() => handleAction('proposeToPartner')}>
+            <ListItemButton
+              sx={{ mx: 1, borderRadius: 1 }}
+              onClick={() => handleAction('proposeToPartner')}>
               <ListItemIcon>
                 <FavoriteIcon sx={{ color: theme.palette.secondary.main }} />
               </ListItemIcon>
               <ListItemText primary="Propose for Relationship" />
             </ListItemButton>
 
-            <ListItemButton onClick={() => handleAction('block')}>
+            <ListItemButton
+              sx={{ mx: 1, borderRadius: 1 }}
+              onClick={() => handleAction('block')}>
               <ListItemIcon>
                 <BlockIcon sx={{ color: "orange" }} />
               </ListItemIcon>
               <ListItemText primary="Block User" />
             </ListItemButton>
 
-            <ListItemButton onClick={() => handleAction('deleteChat')}>
+            <ListItemButton
+              sx={{ mx: 1, borderRadius: 1 }}
+              onClick={() => handleAction('deleteChat')}>
               <ListItemIcon>
                 <DeleteIcon sx={{ color: "red" }} />
               </ListItemIcon>

@@ -79,6 +79,8 @@ function Settings() {
     }
   ];
 
+  let filterSettings = settingItems.filter((setting) => setting.path.includes(searchValue));
+
   const handleLogout = async () => {
     await dispatch(logout());
     navigate('/login');
@@ -195,68 +197,89 @@ function Settings() {
           </Typography>
         </Stack>
       </Stack>
-      <Divider />
+      <Divider sx={{ bgcolor: theme.palette.divider }} />
 
       {/* Setting items */}
 
-      <List>
-        {settingItems.map((item, i) => (
+      {filterSettings.length === 0 ? (
+        <Typography
+          variant="body2"
+          sx={{
+            width: '100%',
+            fontWeight: 600,
+            letterSpacing: 0.5,
+            mt: 8,
+            textAlign: 'center',
+            color: 'text.secondary',
+            fontSize: '1rem',
+            lineHeight: 1.6,
+          }}
+        >
+          Hmm… nothing here. Try searching differently.
+        </Typography>
+
+      ) : (
+        <List>
+          {filterSettings.map((item, i) => (
+            <ListItemButton
+              key={i}
+              aria-level={item.title}
+              component={Link}
+              to={item.path}
+              sx={{
+                borderRadius: 1,
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-5px)'
+                }
+              }}
+            >
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <Stack>
+                <ListItemText primary={item.title} sx={{ m: 0 }} />
+                <ListItemText secondary={item.subTitle} sx={{ m: 0 }} />
+              </Stack>
+            </ListItemButton>
+          ))}
+
+          <Divider sx={{ bgcolor: theme.palette.divider, mt: 2 }} />
           <ListItemButton
-            key={i}
-            aria-level={item.title}
-            component={Link}
-            to={item.path}
+            onClick={handleShareClick}
             sx={{
               borderRadius: 1,
+              px: 2,
+              mt: 2,
               transition: 'all 0.3s ease',
               '&:hover': {
                 transform: 'translateY(-5px)'
               }
             }}
           >
-            <ListItemIcon>{item.icon}</ListItemIcon>
-            <Stack>
-              <ListItemText primary={item.title} sx={{ m: 0 }} />
-              <ListItemText secondary={item.subTitle} sx={{ m: 0 }} />
-            </Stack>
+            <ListItemIcon>
+              <ShareIcon sx={{ mr: 1.1, color: 'success.main' }} />
+            </ListItemIcon>
+            <ListItemText primary="Invite a Friend" />
           </ListItemButton>
-        ))}
-        <ListItemButton
-          onClick={handleShareClick}
-          sx={{
-            borderRadius: 1,
-            p: 2,
-            transition: 'all 0.3s ease',
-            '&:hover': {
-              transform: 'translateY(-5px)'
-            }
-          }}
-        >
-          <ListItemIcon>
-            <ShareIcon sx={{ mr: 1.1, color: 'success.main' }} />
-          </ListItemIcon>
-          <ListItemText primary="Invite a Friend" />
-        </ListItemButton>
 
-        <ListItemButton
-          onClick={handleLogout}
-          sx={{
-            borderRadius: 1,
-            p: 2,
-            transition: 'all 0.3s ease',
-            '&:hover': {
-              transform: 'translateY(-5px)'
-            }
-          }}
-        >
-          <ListItemIcon>
-            <LogoutIcon sx={{ mr: 1.1, color: 'error.main' }} />
-          </ListItemIcon>
-          <ListItemText primary="Logout" sx={{ color: 'error.main' }} />
-        </ListItemButton>
-      </List>
+          <ListItemButton
+            onClick={handleLogout}
+            sx={{
+              borderRadius: 1,
+              px: 2,
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                transform: 'translateY(-5px)'
+              }
+            }}
+          >
+            <ListItemIcon>
+              <LogoutIcon sx={{ mr: 1.1, color: 'error.main' }} />
+            </ListItemIcon>
+            <ListItemText primary="Logout" sx={{ color: 'error.main' }} />
+          </ListItemButton>
+        </List>
+      )}
 
-      <Divider sx={{ mt: 4 }} />
     </Box>
   );
 }
