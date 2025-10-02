@@ -244,17 +244,23 @@ function PartnerProfileModal({ open, onClose, partner }) {
               borderRadius: "50%",
               objectFit: "cover",
               mb: 1,
-              transition: 'all 0.3s',
+              transition: 'all 0.3s ease-in-out',
               ':hover': {
                 border: `none`,
-                transform: 'scale(2.5)',
+                transform: 'scale(2.8)',
+                borderRadius: 1,
               }
             }}
           />
           <Typography variant="h6" fontWeight={600}>
             {splitPartnerFullName[0]} {splitPartnerFullName[1] || ''}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography
+            variant="body2"
+            textAlign='center'
+            color="text.secondary"
+            sx={{ fontStyle: 'italic', fontWeight: 600 }}
+          >
             {partner?.bio ? partner.bio : 'No bio available'}
           </Typography>
         </Stack>

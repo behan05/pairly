@@ -12,29 +12,31 @@ import chatWindowBackgroundLightImage from '@/assets/images/chatWindowBackground
 
 /**
  * NormalChatLayout component
- * - Main layout for normal chat page
- * - Handles responsive sidebar and chat window display
- * - Passes state to child components via Outlet context
- * - Includes PRivateController for socket/event logic
+ * Main layout for the chat page
+ * - Handles responsive layout for sidebar & chat window
+ * - Displays chat background images
+ * - Integrates PrivateChatWindow & socket/controller logic
  */
 
 function NormalChatLayout() {
   const theme = useTheme();
-  const isTabletOrBelow = useMediaQuery('(max-width:775px)');
-  const isLg = useMediaQuery(theme.breakpoints.down('lg'));
+  const isTabletOrBelow = useMediaQuery('(max-width:775px)'); // small screen check
+  const isLg = useMediaQuery(theme.breakpoints.down('lg')); // medium screen check
   const dispatch = useDispatch();
 
-  const [selectedUserId, setSelectedUserId] = useState(null);
-  const [activeUserId, setActiveUserId] = useState(null);
+  const [selectedUserId, setSelectedUserId] = useState(null); // currently open chat user
+  const [activeUserId, setActiveUserId] = useState(null); // tracks active chat
 
+  // Set page title when component mounts
   React.useEffect(() => {
     document.title = 'Pairly - Private Chat';
   }, [dispatch]);
 
   const handleBackToSidebar = () => {
-    setSelectedUserId(null);
+    setSelectedUserId(null); // go back to sidebar on small screen
   };
 
+  // Select background image based on theme
   let bgChatImg =
     localStorage.getItem('theme') === 'dark'
       ? chatWindowBackgroundDarkImage
@@ -49,8 +51,10 @@ function NormalChatLayout() {
         flexDirection: 'row'
       }}
     >
+      {/* Mobile / tablet view */}
       {isTabletOrBelow ? (
         selectedUserId ? (
+          // Show chat window if a user is selected
           <Stack sx={{
             backgroundImage: `url(${bgChatImg})`,
             backgroundRepeat: 'no-repeat',
@@ -60,12 +64,13 @@ function NormalChatLayout() {
           }}>
             <PrivateChatWindow
               selectedUserId={selectedUserId}
-              onBack={handleBackToSidebar}
+              onBack={handleBackToSidebar} // back button on mobile
               onCloseChatWindow={setSelectedUserId}
               clearActiveChat={setActiveUserId}
             />
           </Stack>
         ) :
+          // Show user list (Outlet) if no chat selected
           <Stack
             flex={1}
             sx={{
@@ -76,7 +81,9 @@ function NormalChatLayout() {
             <Outlet context={{ setSelectedUserId, activeUserId, setActiveUserId }} />
           </Stack>
       ) : (
+        // Desktop / large screen view
         <>
+          {/* Sidebar for user list */}
           <Stack
             flex={1}
             sx={{
@@ -87,8 +94,10 @@ function NormalChatLayout() {
             <Outlet context={{ setSelectedUserId, activeUserId, setActiveUserId }} />
           </Stack>
 
+          {/* Chat window */}
           <Stack flex={2.5}>
             {selectedUserId ? (
+              // Show chat if a user is selected
               <Stack sx={{
                 backgroundImage: `url(${bgChatImg})`,
                 backgroundRepeat: 'no-repeat',
@@ -103,6 +112,7 @@ function NormalChatLayout() {
                 />
               </Stack>
             ) : (
+              // Default empty chat window placeholder
               <Box
                 display="flex"
                 justifyContent="center"
@@ -156,11 +166,10 @@ function NormalChatLayout() {
         </>
       )}
 
-      {/* RandomController: handles socket events and chat logic in background */}
+      {/* Controller handles background chat/socket logic */}
       <NormalChatController />
     </Box>
   )
 }
 
 export default NormalChatLayout;
-

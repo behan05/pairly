@@ -33,7 +33,7 @@ function PrivateMessageInput() {
   const open = Boolean(anchorEl);
   const fileInputRef = useRef(null);
   const inputContainerRef = useRef(null);
-  
+
   // Typing indicator logic
   const typingTimeout = useRef(null);
   const lastTypingTime = useRef(0);
@@ -188,11 +188,15 @@ function PrivateMessageInput() {
   };
 
   const menuCommonStyle = {
-    borderRadius: 1,
-    transition: 'all 0.2s',
+    borderRadius: 0.5,
+    p: '8px 10px',
+    transition: 'all 0.3s ease-out',
+    color: 'text.secondary',
     '&:hover': {
-      transform: `translateY(-5px)`
-    }
+      transform: `scale(0.99)`,
+      transform: `translate(1px, -1px)`,
+      filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
+    },
   };
 
   const handleAttachClick = (event) => {
@@ -451,12 +455,16 @@ function PrivateMessageInput() {
             transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             PaperProps={{
               sx: {
-                background: theme.palette.background.paper,
+                background: `linear-gradient(130deg,
+             ${theme.palette.primary.dark} 0%, 
+            ${theme.palette.background.paper} 30%,
+             ${theme.palette.background.paper} 100%)`,
                 boxShadow: theme.shadows[6],
-                border: `1px solid ${theme.palette.divider}`,
-                borderRadius: 2,
-                minWidth: 250,
-                p: 2,
+                borderRadius: 1,
+                minWidth: 200,
+                p: '0px 10px',
+                py: 0.75,
+                overflow: 'hidden'
               }
             }}
           >
@@ -469,9 +477,24 @@ function PrivateMessageInput() {
               }}
             >
               {/* Photo & Video */}
-              <Stack alignItems="center" spacing={1}>
+              <Stack
+                alignItems="center"
+                spacing={1}
+                sx={{
+                  transition: 'all 0.3s ease-in-out',
+                  '&:hover': {
+                    transform: `scale(0.99)`,
+                    transform: `translate(1px, -2px)`,
+                    filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
+                  }
+                }}
+              >
                 <IconButton
-                  sx={{ bgcolor: theme.palette.action.hover, p: 1.5, borderRadius: 2 }}
+                  sx={{
+                    bgcolor: theme.palette.action.hover,
+                    p: 1.5,
+                    borderRadius: 2,
+                  }}
                   onClick={() => {
                     fileInputRef.current.value = null;
                     fileInputRef.current.click();
@@ -484,7 +507,14 @@ function PrivateMessageInput() {
               </Stack>
 
               {/* Audio */}
-              <Stack alignItems="center" spacing={1}>
+              <Stack alignItems="center" spacing={1} sx={{
+                transition: 'all 0.3s ease-in-out',
+                '&:hover': {
+                  transform: `scale(0.99)`,
+                  transform: `translate(1px, -2px)`,
+                  filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
+                }
+              }}>
                 <IconButton
                   sx={{ bgcolor: theme.palette.action.hover, p: 1.5, borderRadius: 2 }}
                   onClick={() => {
@@ -499,7 +529,14 @@ function PrivateMessageInput() {
               </Stack>
 
               {/* Document */}
-              <Stack alignItems="center" spacing={1}>
+              <Stack alignItems="center" spacing={1} sx={{
+                transition: 'all 0.3s ease-in-out',
+                '&:hover': {
+                  transform: `scale(0.99)`,
+                  transform: `translate(1px, -2px)`,
+                  filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
+                }
+              }}>
                 <IconButton
                   sx={{ bgcolor: theme.palette.action.hover, p: 1.5, borderRadius: 2 }}
                   onClick={() => {
@@ -514,7 +551,14 @@ function PrivateMessageInput() {
               </Stack>
 
               {/* Notes */}
-              <Stack alignItems="center" spacing={1}>
+              <Stack alignItems="center" spacing={1} sx={{
+                transition: 'all 0.3s ease-in-out',
+                '&:hover': {
+                  transform: `scale(0.99)`,
+                  transform: `translate(1px, -2px)`,
+                  filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
+                }
+              }}>
                 <IconButton
                   sx={{ bgcolor: theme.palette.action.hover, p: 1.5, borderRadius: 2 }}
                   onClick={() => {
@@ -529,7 +573,14 @@ function PrivateMessageInput() {
               </Stack>
 
               {/* Location */}
-              <Stack alignItems="center" spacing={1}>
+              <Stack alignItems="center" spacing={1} sx={{
+                transition: 'all 0.3s ease-in-out',
+                '&:hover': {
+                  transform: `scale(0.99)`,
+                  transform: `translate(1px, -2px)`,
+                  filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
+                }
+              }}>
                 <IconButton sx={{ bgcolor: theme.palette.action.hover, p: 1.5, borderRadius: 2 }}>
                   <LocationOnIcon sx={{ color: 'error.main', fontSize: '1.8rem' }} />
                 </IconButton>
@@ -537,7 +588,14 @@ function PrivateMessageInput() {
               </Stack>
 
               {/* Secret */}
-              <Stack alignItems="center" spacing={1}>
+              <Stack alignItems="center" spacing={1} sx={{
+                transition: 'all 0.3s ease-in-out',
+                '&:hover': {
+                  transform: `scale(0.99)`,
+                  transform: `translate(1px, -2px)`,
+                  filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
+                }
+              }}>
                 <IconButton sx={{ bgcolor: theme.palette.action.hover, p: 1.5, borderRadius: 2 }}>
                   <LockIcon sx={{ color: 'warning.main', fontSize: '1.8rem' }} />
                 </IconButton>
@@ -555,13 +613,14 @@ function PrivateMessageInput() {
             transformOrigin={{ vertical: 'bottom', horizontal: 'bottom' }}
             PaperProps={{
               sx: {
-                background: `${theme.palette.background.paper}`,
+                background: `linear-gradient(130deg,
+             ${theme.palette.primary.dark} 0%, 
+            ${theme.palette.background.paper} 30%,
+             ${theme.palette.background.paper} 100%)`,
                 boxShadow: theme.shadows[6],
-                border: `1px solid ${theme.palette.success.main}`,
                 borderRadius: 1,
                 minWidth: 200,
-                mb: 1,
-                px: 1,
+                p: '0px 10px',
                 py: 0.75,
                 overflow: 'hidden'
               }

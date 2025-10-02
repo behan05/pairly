@@ -139,11 +139,15 @@ function RandomChatHeader() {
    * Common menu item styling
    */
   const menuItemStyle = {
-    borderRadius: 1,
-    transition: 'all 0.2s',
+    borderRadius: 0.5,
+    p: '8px 10px',
+    transition: 'all 0.3s ease-out',
+    color: 'text.secondary',
     '&:hover': {
-      transform: `translateY(-5px)`
-    }
+      transform: `scale(0.99)`,
+      transform: `translate(1px, -1px)`,
+      filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
+    },
   };
 
   /** Full readable state name */
@@ -228,13 +232,15 @@ function RandomChatHeader() {
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             PaperProps={{
               sx: {
-                background: `${theme.palette.background.paper}`,
+                background: `linear-gradient(130deg,
+             ${theme.palette.primary.dark} 0%, 
+            ${theme.palette.background.paper} 30%,
+             ${theme.palette.background.paper} 100%)`,
                 boxShadow: theme.shadows[6],
-                border: `1px solid ${theme.palette.success.main}`,
                 borderRadius: 1,
                 minWidth: 200,
-                mb: 1,
-                px: 1,
+                mt: 1,
+                p: '0px 10px',
                 py: 0.75,
                 overflow: 'hidden'
               }

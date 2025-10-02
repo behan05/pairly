@@ -148,11 +148,15 @@ function PrivatePartnerProfileModel(
  */
   const menuItemStyle = {
     borderRadius: 0.5,
-    transition: 'all 0.2s',
+    p: '8px 10px',
+    transition: 'all 0.3s ease-out',
+    color: 'text.secondary',
     '&:hover': {
-      transform: `translateY(-5px)`
-    }
-  }
+      transform: `scale(0.99)`,
+      transform: `translate(1px, -1px)`,
+      filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
+    },
+  };
 
   return (
     <Box>
@@ -211,16 +215,18 @@ function PrivatePartnerProfileModel(
             transformOrigin={{ vertical: 'top', horizontal: 'center' }}
             PaperProps={{
               sx: {
-                background: theme.palette.background.paper,
+                background: `linear-gradient(130deg,
+             ${theme.palette.primary.dark} 0%, 
+            ${theme.palette.background.paper} 30%,
+             ${theme.palette.background.paper} 100%)`,
                 boxShadow: theme.shadows[6],
-                border: `1px solid ${theme.palette.divider}`,
                 borderRadius: 1,
                 minWidth: 200,
-                mb: 1,
-                px: 1,
+                mt: 1,
+                p: '0px 10px',
                 py: 0.75,
-                overflow: 'hidden',
-              },
+                overflow: 'hidden'
+              }
             }}
           >
             {[

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Stack, useTheme, Switch, Typography, Divider, FormControlLabel } from '@/MUI/MuiComponents';
+import { Box, Stack, useTheme, Typography, Divider, FormControlLabel } from '@/MUI/MuiComponents';
 import {
   VisibilityIcon,
   TuneIcon,
@@ -9,6 +9,7 @@ import {
 } from '@/MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import BlurWrapper from '@/components/common/BlurWrapper';
+import CyberSwitch from '@/components/private/CyberSwitch';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -20,7 +21,7 @@ function Privacy() {
   const theme = useTheme();
   const { settingsData } = useSelector((state) => state.settings);
   const privacySettings = settingsData?.privacySettings;
-  
+
   const defaultSettings = {
     showProfilePic: true,
     showLocation: true,
@@ -115,21 +116,23 @@ function Privacy() {
           description="Control whether your profile picture or location is visible during a chat."
         >
           <FormControlLabel
+            sx={{ display: 'flex', gap: 1, justifyContent: 'flex-start', alignItems: 'center' }}
             control={
-              <Switch
+              <CyberSwitch
+                id="showProfilePic"
                 checked={formData.showProfilePic}
                 onChange={handleToggle('showProfilePic')}
-                color="primary"
               />
             }
             label="Show my profile picture"
           />
           <FormControlLabel
+            sx={{ display: 'flex', gap: 1, justifyContent: 'flex-start', alignItems: 'center' }}
             control={
-              <Switch
+              <CyberSwitch
+                id="showLocation"
                 checked={formData.showLocation}
                 onChange={handleToggle('showLocation')}
-                color="primary"
               />
             }
             label="Show my location to others"
@@ -144,11 +147,12 @@ function Privacy() {
           description="Choose who you're matched with during random chats."
         >
           <FormControlLabel
+            sx={{ display: 'flex', gap: 1, justifyContent: 'flex-start', alignItems: 'center' }}
             control={
-              <Switch
+              <CyberSwitch
+                id="matchVerifiedOnly"
                 checked={formData.matchVerifiedOnly}
                 onChange={handleToggle('matchVerifiedOnly')}
-                color="primary"
               />
             }
             label="Match with verified users only"
@@ -163,21 +167,23 @@ function Privacy() {
           description="Decide how chats behave like rechat and auto-deletion."
         >
           <FormControlLabel
+            sx={{ display: 'flex', gap: 1, justifyContent: 'flex-start', alignItems: 'center' }}
             control={
-              <Switch
+              <CyberSwitch
+                id="allowRechat"
                 checked={formData.allowRechat}
                 onChange={handleToggle('allowRechat')}
-                color="primary"
               />
             }
             label="Allow user to reconnect after chat"
           />
           <FormControlLabel
+            sx={{ display: 'flex', gap: 1, justifyContent: 'flex-start', alignItems: 'center' }}
             control={
-              <Switch
+              <CyberSwitch
                 checked={formData.autoDeleteChats}
                 onChange={handleToggle('autoDeleteChats')}
-                color="primary"
+                id="autoDeleteChats"
               />
             }
             label="Auto delete chats after session"
@@ -192,11 +198,12 @@ function Privacy() {
           description="Improve your safety by blocking inappropriate matches."
         >
           <FormControlLabel
+            sx={{ display: 'flex', gap: 1, justifyContent: 'flex-start', alignItems: 'center' }}
             control={
-              <Switch
+              <CyberSwitch
                 checked={formData.blockNSFW}
                 onChange={handleToggle('blockNSFW')}
-                color="primary"
+                id="blockNSFW"
               />
             }
             label="Block NSFW matches"
@@ -211,11 +218,12 @@ function Privacy() {
           description="Choose if your chat data can be exported or saved."
         >
           <FormControlLabel
+            sx={{ display: 'flex', gap: 1, justifyContent: 'flex-start', alignItems: 'center' }}
             control={
-              <Switch
+              <CyberSwitch
                 checked={formData.allowExportData}
                 onChange={handleToggle('allowExportData')}
-                color="primary"
+                id="allowExportData"
               />
             }
             label="Allow export of my data"

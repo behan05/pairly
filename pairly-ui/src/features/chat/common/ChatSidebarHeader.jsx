@@ -218,13 +218,15 @@ const ChatSidebarHeader = ({ children }) => {
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         PaperProps={{
           sx: {
-            background: `${theme.palette.background.paper}`,
+            background: `linear-gradient(130deg,
+             ${theme.palette.primary.dark} 0%, 
+            ${theme.palette.background.paper} 30%,
+             ${theme.palette.background.paper} 100%)`,
             boxShadow: theme.shadows[6],
-            border: `1px solid ${theme.palette.success.main}`,
             borderRadius: 1,
             minWidth: 200,
             mt: 1,
-            px: 1,
+            p: '0px 10px',
             py: 0.75,
             overflow: 'hidden'
           }
@@ -266,14 +268,15 @@ const ChatSidebarHeader = ({ children }) => {
               setMenuAnchorEl(null);
             }}
             sx={{
-              borderRadius: 1,
-              px: 1.5,
-              py: 1,
-              mb: 0.5,
-              transition: 'all 0.2s',
+              borderRadius: 0.5,
+              p: '8px 10px',
+              transition: 'all 0.3s ease-out',
+              color: 'text.secondary',
               '&:hover': {
-                transform: `translateY(-5px)`
-              }
+                transform: `scale(0.99)`,
+                transform: `translate(1px, -1px)`,
+                filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
+              },
             }}
           >
             {icon}
@@ -287,13 +290,14 @@ const ChatSidebarHeader = ({ children }) => {
         <MenuItem
           onClick={handleLogout}
           sx={{
-            borderRadius: 1,
-            px: 1.5,
-            py: 1,
-            transition: 'all 0.2s',
-            color: theme.palette.error.main,
+            borderRadius: 0.5,
+            p: '8px 10px',
+            color: 'error.main',
+            transition: 'all 0.3s ease-out',
             '&:hover': {
-              transform: `translateY(-5px)`
+              transform: `scale(0.99)`,
+              transform: `translate(1px, -1px)`,
+              filter: `drop-shadow(0 20px 1rem ${theme.palette.error.main})`
             }
           }}
         >

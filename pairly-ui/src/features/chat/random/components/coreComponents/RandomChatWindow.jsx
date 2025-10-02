@@ -250,16 +250,15 @@ function RandomChatWindow({ setShowChatWindow }) {
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             PaperProps={{
               sx: {
-                background: theme.palette.background.paper,
+                background: `linear-gradient(130deg,
+             ${theme.palette.primary.dark} 0%, 
+            ${theme.palette.background.paper} 30%,
+             ${theme.palette.background.paper} 100%)`,
                 boxShadow: theme.shadows[6],
                 borderRadius: 1,
-                minWidth: 180,
-                mb: 1,
-                px: 1,
+                p: '0px 15px',
                 py: 0.75,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
+                overflow: 'hidden'
               }
             }}
           >

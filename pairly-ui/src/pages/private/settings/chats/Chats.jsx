@@ -5,7 +5,6 @@ import {
   FormControlLabel,
   Stack,
   Typography,
-  Switch as MuiSwitch,
   Select,
   MenuItem,
   useTheme
@@ -20,6 +19,7 @@ import {
 } from '@/MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import BlurWrapper from '@/components/common/BlurWrapper';
+import CyberSwitch from '@/components/private/CyberSwitch';
 import { updateChatSettings } from '@/redux/slices/settings/settingsAction';
 import { toggleTheme } from '@/redux/slices/theme/themeSlice';
 import { useSelector, useDispatch } from 'react-redux';
@@ -81,10 +81,12 @@ function Chats() {
   // Helper functions to generate UI components
   const getSwitch = (label, switchLabelText) => (
     <FormControlLabel
+      sx={{ display: 'flex', ml: 0.2, gap: 1, justifyContent: 'flex-start', alignItems: 'center' }}
       control={
-        <MuiSwitch
+        <CyberSwitch
           checked={formData[label]}
           onChange={(e) => handleChange(label, e.target.checked)}
+          id={label}
         />
       }
       label={switchLabelText}

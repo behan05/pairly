@@ -5,7 +5,6 @@ import {
   Typography,
   Divider,
   FormControlLabel,
-  Switch,
   useTheme
 } from '@/MUI/MuiComponents';
 
@@ -18,6 +17,7 @@ import {
 } from '@/MUI/MuiIcons';
 
 import BlurWrapper from '@/components/common/BlurWrapper';
+import CyberSwitch from '@/components/private/CyberSwitch';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
@@ -105,8 +105,13 @@ function Notifications() {
           description="Get notified when you get a new random match."
         >
           <FormControlLabel
+            sx={{ display: 'flex', ml: 0.2, gap: 1, justifyContent: 'flex-start', alignItems: 'center' }}
             control={
-              <Switch checked={notifSettings.newMatch} onChange={() => handleToggle('newMatch')} />
+              <CyberSwitch
+                checked={notifSettings.newMatch}
+                onChange={() => handleToggle('newMatch')}
+                id={'newMatch'}
+              />
             }
             label="Enable match notifications"
           />
@@ -120,10 +125,12 @@ function Notifications() {
           description="Receive alerts when someone sends you a message."
         >
           <FormControlLabel
+            sx={{ display: 'flex', ml: 0.2, gap: 1, justifyContent: 'flex-start', alignItems: 'center' }}
             control={
-              <Switch
+              <CyberSwitch
                 checked={notifSettings.newMessage}
                 onChange={() => handleToggle('newMessage')}
+                id={'newMessage'}
               />
             }
             label="Enable message notifications"
@@ -138,10 +145,12 @@ function Notifications() {
           description="Get notified of suspicious activity or policy warnings."
         >
           <FormControlLabel
+            sx={{ display: 'flex', ml: 0.2, gap: 1, justifyContent: 'flex-start', alignItems: 'center' }}
             control={
-              <Switch
+              <CyberSwitch
                 checked={notifSettings.warningAlerts}
                 onChange={() => handleToggle('warningAlerts')}
+                id={'warningAlerts'}
               />
             }
             label="Enable safety alerts"
@@ -156,10 +165,12 @@ function Notifications() {
           description="Receive notifications when someone sends you a friend request."
         >
           <FormControlLabel
+            sx={{ display: 'flex', ml: 0.2, gap: 1, justifyContent: 'flex-start', alignItems: 'center' }}
             control={
-              <Switch
+              <CyberSwitch
                 checked={notifSettings.friendRequest}
                 onChange={() => handleToggle('friendRequest')}
+                id={'friendRequest'}
               />
             }
             label="Enable friend request notifications"
@@ -174,10 +185,12 @@ function Notifications() {
           description="Receive alerts when a blocked user interacts or appears again."
         >
           <FormControlLabel
+            sx={{ display: 'flex', ml: 0.2, gap: 1, justifyContent: 'flex-start', alignItems: 'center' }}
             control={
-              <Switch
+              <CyberSwitch
                 checked={notifSettings.blockNotification}
                 onChange={() => handleToggle('blockNotification')}
+                id={'blockNotification'}
               />
             }
             label="Enable block notifications"
