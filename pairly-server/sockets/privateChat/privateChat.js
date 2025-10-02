@@ -1,9 +1,11 @@
 const Conversation = require('../../models/chat/Conversation.model');
 const Message = require('../../models/chat/Message.model');
+const User = require('../../models/User.model');
+const PrivateChatRequest = require('../../models/chat/PrivateChatRequest.model');
 
 const privateChatSessions = new Map();
 
-function privateChatHandler(io, socket) {
+function privateChatHandler(io, socket, onlineUsers) {
     const currentUserId = socket.userId;
 
     // --- JOIN CHAT SESSION ---
@@ -166,6 +168,46 @@ function privateChatHandler(io, socket) {
 
         if (partnerSocket) {
             io.to(partnerSocket.id).emit('privateChat:partner-stopTyping', { from, to });
+        }
+    });
+
+    // when server receives 'privateChat:getOnlineUsers'
+    socket.on('privateChat:getOnlineUsers', async () => {
+        try {
+            // Find all accepted chat requests where user is involved
+            const currentUserFriends = await PrivateChatRequest.find({
+                $or: [
+                    { to: currentUserId },
+                    { from: currentUserId }
+                ],
+                status: 'accepted'
+            }).lean();
+
+            if (!currentUserFriends.length) {
+                socket.emit('privateChat:allUsers', []);
+                return;
+            }
+
+            // Extract friend IDs
+            const allFriendsId = currentUserFriends.map(f =>
+                f.from.toString() === currentUserId.toString() ? f.to : f.from
+            );
+
+            // Fetch all friend user objects at once
+            const users = await User.find({ _id: { $in: allFriendsId } }).lean();
+
+            const partnersWithStatus = users.map(u => ({
+                userId: u._id.toString(),
+                isOnline: onlineUsers.has(String(u._id)),
+                lastSeen: u.lastSeen
+            }));
+
+            // Emit once with the full array
+            socket.emit('privateChat:allUsers', partnersWithStatus);
+
+        } catch (err) {
+            console.error('privateChat:getOnlineUsers error', err);
+            socket.emit('privateChat:error', { error: 'Failed to fetch online partners.' });
         }
     });
 

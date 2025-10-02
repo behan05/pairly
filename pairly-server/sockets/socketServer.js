@@ -67,7 +67,7 @@ function setupSocket(server) {
         });
 
         // mark user online
-        onlineUsers.set(socket.userId, socket.id);
+        onlineUsers.set(String(socket.userId), socket.id);
 
         // send all online users one by one to the new client
         for (const userId of onlineUsers.keys()) {
@@ -81,7 +81,7 @@ function setupSocket(server) {
         randomChatHandler(io, socket);
 
         // Register private chat events
-        privateChatHandler(io, socket);
+        privateChatHandler(io, socket, onlineUsers);
 
         // Handle disconnection
         socket.on('disconnect', async () => {
@@ -94,8 +94,7 @@ function setupSocket(server) {
                 { lastSeen: new Date() },
                 { new: true }
             );
-            onlineUsers.delete(socket.userId);
-
+            onlineUsers.delete(String(socket.userId));
 
             io.emit('privateChat:userOffline', { userId: socket.userId, lastSeen: updateLastActivity?.lastSeen });
         });
