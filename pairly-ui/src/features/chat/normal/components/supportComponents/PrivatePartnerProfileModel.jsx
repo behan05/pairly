@@ -152,8 +152,7 @@ function PrivatePartnerProfileModel(
     transition: 'all 0.3s ease-out',
     color: 'text.secondary',
     '&:hover': {
-      transform: `scale(0.99)`,
-      transform: `translate(1px, -1px)`,
+      transform: `translate(1px, -1px) scale(0.99)`,
       filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
     },
   };
@@ -289,6 +288,7 @@ function PrivatePartnerProfileModel(
                 transition: 'all 0.3s',
                 ':hover': {
                   transform: 'scale(2.6)',
+                  borderRadius: 1,
                 }
               }}
             />

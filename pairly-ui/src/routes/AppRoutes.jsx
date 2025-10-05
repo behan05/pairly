@@ -93,7 +93,6 @@ export const routes = createBrowserRouter([
         children: [
           // Default view at /pairly
           { index: true, element: <RandomSidebar /> },
-          { path: 'blocked-users', element: <BlockedList /> },
           { path: 'friend-requests', element: <FriendRequestList /> },
 
           // Settings
@@ -132,6 +131,10 @@ export const routes = createBrowserRouter([
                 path: 'notifications',
                 element: <NotificationsLayout />,
                 children: [{ index: true, element: <Notifications /> }]
+              },
+              {
+                path: 'blocked-users',
+                element: <BlockedList />,
               },
 
               {

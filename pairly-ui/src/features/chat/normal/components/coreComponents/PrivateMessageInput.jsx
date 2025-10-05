@@ -16,7 +16,6 @@ import { addMessage } from '@/redux/slices/privateChat/privateChatSlice';
 import { PRIVATE_CHAT_API } from '@/api/config'
 import { socket } from '@/services/socket';
 import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';
 
 function PrivateMessageInput() {
   const theme = useTheme();
@@ -34,7 +33,6 @@ function PrivateMessageInput() {
   const fileInputRef = useRef(null);
   const inputContainerRef = useRef(null);
 
-  // Typing indicator logic
   const typingTimeout = useRef(null);
   const lastTypingTime = useRef(0);
   const TYPING_DELAY = 1000;
@@ -55,7 +53,6 @@ function PrivateMessageInput() {
     }, TYPING_DELAY + 500);
   };
 
-  // Handle file selection and preview
   const handleFileClick = (e) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
@@ -69,92 +66,49 @@ function PrivateMessageInput() {
           .replace(/\(\d+\)(?=\.[^/.]+$)/, '')
           .replace(/[^a-zA-Z0-9_.-]/g, '_')
           .replace(/_+(?=\.[^.]+$)/, '');
+        const sanitizedFile = new File([file], sanitizedName, { type: file.type, lastModified: file.lastModified });
 
-        const sanitizedFile = new File([file], sanitizedName, {
-          type: file.type,
-          lastModified: file.lastModified
-        });
-
-        const filePreview = {
-          file: sanitizedFile,
-          name: sanitizedName,
-          type: file.type,
-          data: reader.result
-        };
-
+        const filePreview = { file: sanitizedFile, name: sanitizedName, type: file.type, data: reader.result };
         setPreviews((prev) => [...prev, filePreview]);
       };
       reader.readAsDataURL(file);
     });
   };
 
-  // Delete selected media preview
-  const handleMediaDeleteClick = (indexToDelete) => {
-    setPreviews((prev) => prev.filter((_, i) => i !== indexToDelete));
-  };
+  const handleMediaDeleteClick = (indexToDelete) => setPreviews((prev) => prev.filter((_, i) => i !== indexToDelete));
 
-  // Determine content type for message/media
   const getContentType = (file) => {
     if (!file) return 'text';
-    if (typeof file === 'object' && file.type) {
-      if (file.type.startsWith('image/')) return 'image';
-      if (file.type.startsWith('video/')) return 'video';
-      if (file.type.startsWith('audio/')) return 'audio';
-      if (
-        file.type === 'application/pdf' ||
-        file.type === 'application/msword' ||
-        file.type.includes('officedocument') ||
-        file.type === 'text/plain'
-      ) {
-        return 'file';
-      }
-    }
+    if (file.type.startsWith('image/')) return 'image';
+    if (file.type.startsWith('video/')) return 'video';
+    if (file.type.startsWith('audio/')) return 'audio';
+    if (['application/pdf', 'application/msword', 'text/plain'].includes(file.type) || file.type.includes('officedocument')) return 'file';
     return 'text';
   };
 
-  /**
- * Handles sending text and media messages.
- * - Optimistically updates UI for text/media
- * - Uploads media to server
- * - Emits socket events for text
- */
   const handleSend = async () => {
     const hasText = message.trim() !== '';
     const hasMedia = previews.length > 0;
     if (!hasText && !hasMedia) return;
-
     const createdAtIso = new Date().toISOString();
 
-    // ---- Handle Text ----
     if (hasText) {
-
-      // emit to server
-      socket.emit('privateChat:message', {
-        message,
-        messageType: 'text',
-      });
-
+      socket.emit('privateChat:message', { message, messageType: 'text' });
       setMessage('');
     }
 
     if (hasMedia) {
-      previews.forEach((file) => {
-        dispatch(
-          addMessage({
-            sender: String(currentUserId ?? ''),
-            message: file.data,
-            fileName: file.name,
-            messageType: getContentType(file),
-            createdAt: createdAtIso,
-            seen: false
-          })
-        );
-      });
-
+      previews.forEach((file) => dispatch(addMessage({
+        sender: String(currentUserId ?? ''),
+        message: file.data,
+        fileName: file.name,
+        messageType: getContentType(file),
+        createdAt: createdAtIso,
+        seen: false
+      })));
       setPreviews([]);
     }
 
-    // Upload actual media to server
     try {
       if (hasMedia) {
         for (let file of previews) {
@@ -164,63 +118,39 @@ function PrivateMessageInput() {
           formData.append('messageType', getContentType(file));
 
           const token = localStorage.getItem('token');
-          if (!token) {
-            toast.error('You must be logged in to send media.');
-            return;
-          }
+          if (!token) return toast.error('You must be logged in to send media.');
 
           await axios.post(`${PRIVATE_CHAT_API}/media`, formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${token}`
-            }
+            headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` }
           });
         }
       }
     } catch (err) {
       toast.error('Upload failed. Try again.', err?.message);
     }
-
   };
 
-  const handleEmojiSelect = (emoji) => {
-    setMessage((prev) => prev + emoji.native);
-  };
+  const handleEmojiSelect = (emoji) => setMessage((prev) => prev + emoji.native);
 
   const menuCommonStyle = {
-    borderRadius: 0.5,
-    p: '8px 10px',
-    transition: 'all 0.3s ease-out',
-    color: 'text.secondary',
-    '&:hover': {
-      transform: `scale(0.99)`,
-      transform: `translate(1px, -1px)`,
-      filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
-    },
+    borderRadius: 0.5, p: '8px 10px', transition: 'all 0.3s ease-out', color: 'text.secondary',
+    '&:hover': { transform: 'scale(0.99) translate(1px, -1px)', filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})` }
   };
 
-  const handleAttachClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const handleAttachClick = (event) => setAnchorEl(event.currentTarget);
+  const handleCloseMenu = () => setAnchorEl(null);
 
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
-
-  // Adding this useEffect to handle mobile keyboard resizing
   useEffect(() => {
     const handleViewportChange = () => {
       if (!inputContainerRef.current || !window.visualViewport) return;
       const vhOffset = window.visualViewport.height - window.innerHeight;
-      inputContainerRef.current.style.bottom = `${vhOffset > 0 ? vhOffset + 8 : 0}px`;
+      inputContainerRef.current.style.marginBottom = `${vhOffset > 0 ? vhOffset + 8 : 0}px`;
     };
-
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', handleViewportChange);
       window.visualViewport.addEventListener('scroll', handleViewportChange);
       handleViewportChange();
     }
-
     return () => {
       if (window.visualViewport) {
         window.visualViewport.removeEventListener('resize', handleViewportChange);
@@ -230,14 +160,7 @@ function PrivateMessageInput() {
   }, []);
 
   return (
-    <Box
-      ref={inputContainerRef}
-      width="100%"
-      sx={{
-        transition: 'bottom 0.25s ease',
-        pb: isSm ? 'env(safe-area-inset-bottom)' : 0
-      }}
-    >
+    <Box ref={inputContainerRef} width="100%" sx={{ transition: 'margin-bottom 0.25s ease', pb: isSm ? 'env(safe-area-inset-bottom)' : 0 }}>
 
       {/* Media preview area */}
       <Box
@@ -483,8 +406,7 @@ function PrivateMessageInput() {
                 sx={{
                   transition: 'all 0.3s ease-in-out',
                   '&:hover': {
-                    transform: `scale(0.99)`,
-                    transform: `translate(1px, -2px)`,
+                    transform: `translate(1px, -2px) scale(0.99)`,
                     filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
                   }
                 }}
@@ -510,8 +432,7 @@ function PrivateMessageInput() {
               <Stack alignItems="center" spacing={1} sx={{
                 transition: 'all 0.3s ease-in-out',
                 '&:hover': {
-                  transform: `scale(0.99)`,
-                  transform: `translate(1px, -2px)`,
+                  transform: `translate(1px, -2px) scale(0.99)`,
                   filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
                 }
               }}>
@@ -532,8 +453,7 @@ function PrivateMessageInput() {
               <Stack alignItems="center" spacing={1} sx={{
                 transition: 'all 0.3s ease-in-out',
                 '&:hover': {
-                  transform: `scale(0.99)`,
-                  transform: `translate(1px, -2px)`,
+                  transform: `translate(1px, -2px) scale(0.99)`,
                   filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
                 }
               }}>
@@ -554,8 +474,7 @@ function PrivateMessageInput() {
               <Stack alignItems="center" spacing={1} sx={{
                 transition: 'all 0.3s ease-in-out',
                 '&:hover': {
-                  transform: `scale(0.99)`,
-                  transform: `translate(1px, -2px)`,
+                  transform: `translate(1px, -2px) scale(0.99)`,
                   filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
                 }
               }}>
@@ -576,8 +495,7 @@ function PrivateMessageInput() {
               <Stack alignItems="center" spacing={1} sx={{
                 transition: 'all 0.3s ease-in-out',
                 '&:hover': {
-                  transform: `scale(0.99)`,
-                  transform: `translate(1px, -2px)`,
+                  transform: `translate(1px, -2px) scale(0.99)`,
                   filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
                 }
               }}>
@@ -591,8 +509,7 @@ function PrivateMessageInput() {
               <Stack alignItems="center" spacing={1} sx={{
                 transition: 'all 0.3s ease-in-out',
                 '&:hover': {
-                  transform: `scale(0.99)`,
-                  transform: `translate(1px, -2px)`,
+                  transform: `translate(1px, -2px) scale(0.99)`,
                   filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
                 }
               }}>

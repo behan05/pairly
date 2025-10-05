@@ -26,6 +26,7 @@ import ChatSidebarHeader from '@/features/chat/common/ChatSidebarHeader';
 import textFormater from '@/utils/textFormatting';
 import formatMessageTime from '@/utils/formatMessageTime';
 import SettingsAction from '@/components/private/SettingsAction';
+import Loading from '@/components/common/Loading';
 
 // redux and Socket
 import { fetchAllUser, fetchConversationMessages } from '@/redux/slices/privateChat/privateChatAction';
@@ -39,7 +40,7 @@ function PrivateChatSidebar() {
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const dispatch = useDispatch();
     const { setSelectedUserId, activeUserId, setActiveUserId } = useOutletContext();
-    const { allUsers, chatUsers } = useSelector(state => state.privateChat);
+    const { allUsers, chatUsers, loading } = useSelector(state => state.privateChat);
 
     const onlineUserIds = useMemo(() => {
         return chatUsers.filter(u => u.isOnline).map(u => u.partnerId);
@@ -336,155 +337,162 @@ function PrivateChatSidebar() {
                 </Box>
             </ChatSidebarHeader>
 
-            {filteredUsers.length === 0 ?
-                <Typography
-                    variant="body1"
-                    color="text.secondary"
-                    sx={{ mt: 3, textAlign: 'center' }}
-                >
-                    No friends yet — start random chat!
-                </Typography> :
-                <Box sx={{
-                    ':hover': {
-                        cursor: 'pointer'
-                    }
-                }}>
-                    {filteredUsers.map((user, index) => {
-                        const isActive = activeUserId === user.userId;
+            {loading ? (
+                <Loading sx={{
+                    background: theme.palette.background.paper,
+                    maxHeight: 300
+                }} />
+            ) : (
+                <>
+                    {filteredUsers.length === 0 ?
+                        <Typography
+                            variant="body1"
+                            color="text.secondary"
+                            sx={{ mt: 3, textAlign: 'center' }}
+                        >
+                            No friends yet — start random chat!
+                        </Typography> :
+                        <Box sx={{
+                            ':hover': {
+                                cursor: 'pointer'
+                            }
+                        }}>
+                            {filteredUsers.map((user, index) => {
+                                const isActive = activeUserId === user.userId;
 
-                        const unseenCount = 1;
-                        return (
-                            <Stack
-                                key={index}
-                                sx={{
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    border: `0.1px solid ${theme.palette.divider}`,
-                                    borderRadius: 0.4,
-                                    p: 1,
-                                    my: 0.5,
-                                    bgcolor: isActive ? theme.palette.action.selected : 'transparent',
-                                    transition: 'background-color 0.3s ease',
-                                    ':hover': {
-                                        backgroundColor: theme.palette.action.hover
-                                    }
-                                }}
-                                onClick={() => handleUserClick(user.userId)}
-                            >
-                                <Stack
-                                    sx={{
-                                        flexDirection: 'row',
-                                        gap: 1.5,
-                                        width: '100%',
-                                        alignItems: 'center'
-                                    }}
-                                >
-                                    <Tooltip title={user?.profile?.shortBio}>
-                                        <Badge
-                                            overlap="circular"
-                                            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                                            variant="dot"
-                                            sx={{
-                                                '& .MuiBadge-dot': {
-                                                    backgroundColor: onlineUserIds.includes(user.userId) ? 'green' : 'gray',
-                                                    animation: onlineUserIds.includes(user.userId) ? 'blink 2s infinite' : 'none',
-                                                    width: 10,
-                                                    height: 10,
-                                                    borderRadius: '50%'
-                                                },
-                                                '@keyframes blink': {
-                                                    '0%, 50%, 100%': { opacity: 1 },
-                                                    '25%, 75%': { opacity: 0 },
-                                                },
-                                            }}
-                                        >
-                                            <Avatar
-                                                src={user?.profile?.profileImage || defaultAvatar}
-                                                alt={user?.profile?.fullName + ' profile Image'}
-                                                sx={{ width: 40, height: 40, objectFit: 'cover' }}
-                                            />
-                                        </Badge>
-
-                                    </Tooltip>
-                                    <Stack flex={1}>
+                                const unseenCount = 1;
+                                return (
+                                    <Stack
+                                        key={index}
+                                        sx={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            border: `0.1px solid ${theme.palette.divider}`,
+                                            borderRadius: 0.4,
+                                            p: 1,
+                                            my: 0.5,
+                                            bgcolor: isActive ? theme.palette.action.selected : 'transparent',
+                                            transition: 'background-color 0.3s ease',
+                                            ':hover': {
+                                                backgroundColor: theme.palette.action.hover
+                                            }
+                                        }}
+                                        onClick={() => handleUserClick(user.userId)}
+                                    >
                                         <Stack
                                             sx={{
-                                                display: 'flex',
                                                 flexDirection: 'row',
-                                                alignItems: 'center',
-                                                justifyContent: 'space-between',
+                                                gap: 1.5,
+                                                width: '100%',
+                                                alignItems: 'center'
                                             }}
                                         >
-                                            <Typography
-                                                variant={isSm ? 'body2' : 'body1'}
-                                                sx={{
-                                                    fontSize: isSm ? '14px' : 'initial'
-                                                }}
-                                            >
-                                                {textFormater(user.profile?.fullName)}
-                                            </Typography>
+                                            <Tooltip title={user?.profile?.shortBio}>
+                                                <Badge
+                                                    overlap="circular"
+                                                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                                                    variant="dot"
+                                                    sx={{
+                                                        '& .MuiBadge-dot': {
+                                                            backgroundColor: onlineUserIds.includes(user.userId) ? 'green' : 'gray',
+                                                            animation: onlineUserIds.includes(user.userId) ? 'blink 2s infinite' : 'none',
+                                                            width: 10,
+                                                            height: 10,
+                                                            borderRadius: '50%'
+                                                        },
+                                                        '@keyframes blink': {
+                                                            '0%, 50%, 100%': { opacity: 1 },
+                                                            '25%, 75%': { opacity: 0 },
+                                                        },
+                                                    }}
+                                                >
+                                                    <Avatar
+                                                        src={user?.profile?.profileImage || defaultAvatar}
+                                                        alt={user?.profile?.fullName + ' profile Image'}
+                                                        sx={{ width: 40, height: 40, objectFit: 'cover' }}
+                                                    />
+                                                </Badge>
 
-                                            <Typography
-                                                variant="caption"
-                                                color="text.disabled"
-                                                sx={{ fontSize: '12px' }}
-                                            >
-                                                {formatMessageTime(user?.lastMessageTime)}
-                                            </Typography>
-                                        </Stack>
+                                            </Tooltip>
+                                            <Stack flex={1}>
+                                                <Stack
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'space-between',
+                                                    }}
+                                                >
+                                                    <Typography
+                                                        variant={isSm ? 'body2' : 'body1'}
+                                                        sx={{
+                                                            fontSize: isSm ? '14px' : 'initial'
+                                                        }}
+                                                    >
+                                                        {textFormater(user.profile?.fullName)}
+                                                    </Typography>
 
-                                        {/* Text area with Badge count */}
-                                        <Stack
-                                            direction="row"
-                                            alignItems="center"
-                                            justifyContent="space-between"
-                                            sx={{ width: '100%' }}
-                                        >
-                                            <Typography
-                                                variant="body2"
-                                                color="text.secondary"
-                                                sx={{
-                                                    maxWidth: '100%',
-                                                    fontSize: isSm ? '12px' : '14',
-                                                    whiteSpace: 'nowrap',
-                                                    overflow: 'hidden',
-                                                    textOverflow: 'ellipsis',
-                                                    wordBreak: 'break-all'
-                                                }}
-                                            >
-                                                {
-                                                    user?.lastMessage?.messageType === 'image' ?
-                                                        <Stack flexDirection='row' alignItems='center' gap={0.5}>
-                                                            <ImageIcon fontSize='small' sx={{ color: 'success.main' }} />
-                                                            <Typography variant={'body2'}>image</Typography>
-                                                        </Stack>
-                                                        : user?.lastMessage?.messageType === 'video' ?
-                                                            <Stack flexDirection='row' alignItems='center' gap={0.5}>
-                                                                <VideoLibraryIcon fontSize='small' sx={{ color: 'primary.main' }} />
-                                                                <Typography variant={'body2'}>video</Typography>
-                                                            </Stack>
-                                                            : user?.lastMessage?.messageType === 'file' ?
+                                                    <Typography
+                                                        variant="caption"
+                                                        color="text.disabled"
+                                                        sx={{ fontSize: '12px' }}
+                                                    >
+                                                        {formatMessageTime(user?.lastMessageTime)}
+                                                    </Typography>
+                                                </Stack>
+
+                                                {/* Text area with Badge count */}
+                                                <Stack
+                                                    direction="row"
+                                                    alignItems="center"
+                                                    justifyContent="space-between"
+                                                    sx={{ width: '100%' }}
+                                                >
+                                                    <Typography
+                                                        variant="body2"
+                                                        color="text.secondary"
+                                                        sx={{
+                                                            maxWidth: '100%',
+                                                            fontSize: isSm ? '12px' : '14',
+                                                            whiteSpace: 'nowrap',
+                                                            overflow: 'hidden',
+                                                            textOverflow: 'ellipsis',
+                                                            wordBreak: 'break-all'
+                                                        }}
+                                                    >
+                                                        {
+                                                            user?.lastMessage?.messageType === 'image' ?
                                                                 <Stack flexDirection='row' alignItems='center' gap={0.5}>
-                                                                    <InsertDriveFileIcon fontSize='small' sx={{ color: 'secondary.main' }} />
-                                                                    <Typography variant={'body2'}>file</Typography>
+                                                                    <ImageIcon fontSize='small' sx={{ color: 'success.main' }} />
+                                                                    <Typography variant={'body2'}>image</Typography>
                                                                 </Stack>
-                                                                :
-                                                                user?.lastMessage?.messageType === 'audio' ?
+                                                                : user?.lastMessage?.messageType === 'video' ?
                                                                     <Stack flexDirection='row' alignItems='center' gap={0.5}>
-                                                                        <AudiotrackIcon fontSize="small" sx={{ color: 'warning.main' }} />
-                                                                        <Typography variant={'body2'}>audio</Typography>
+                                                                        <VideoLibraryIcon fontSize='small' sx={{ color: 'primary.main' }} />
+                                                                        <Typography variant={'body2'}>video</Typography>
                                                                     </Stack>
-                                                                    :
-                                                                    user?.lastMessage?.messageType === 'text'
-                                                                        ? user.lastMessage.content.length > 36
-                                                                            ? user.lastMessage.content.slice(0, 36) + '...'
-                                                                            : user.lastMessage.content
-                                                                        : 'No chat message yet'
-                                                }
-                                            </Typography>
+                                                                    : user?.lastMessage?.messageType === 'file' ?
+                                                                        <Stack flexDirection='row' alignItems='center' gap={0.5}>
+                                                                            <InsertDriveFileIcon fontSize='small' sx={{ color: 'secondary.main' }} />
+                                                                            <Typography variant={'body2'}>file</Typography>
+                                                                        </Stack>
+                                                                        :
+                                                                        user?.lastMessage?.messageType === 'audio' ?
+                                                                            <Stack flexDirection='row' alignItems='center' gap={0.5}>
+                                                                                <AudiotrackIcon fontSize="small" sx={{ color: 'warning.main' }} />
+                                                                                <Typography variant={'body2'}>audio</Typography>
+                                                                            </Stack>
+                                                                            :
+                                                                            user?.lastMessage?.messageType === 'text'
+                                                                                ? user.lastMessage.content.length > 36
+                                                                                    ? user.lastMessage.content.slice(0, 36) + '...'
+                                                                                    : user.lastMessage.content
+                                                                                : 'No chat message yet'
+                                                        }
+                                                    </Typography>
 
-                                            {/* {unseenCount > 0 && (
+                                                    {/* {unseenCount > 0 && (
                                                 <Badge
                                                     badgeContent={unseenCount}
                                                     color={'success'}
@@ -501,15 +509,18 @@ function PrivateChatSidebar() {
                                                     }}
                                                 />
                                             )} */}
-                                        </Stack>
+                                                </Stack>
 
+                                            </Stack>
+                                        </Stack>
                                     </Stack>
-                                </Stack>
-                            </Stack>
-                        );
-                    })}
-                </Box>
-            }
+                                );
+                            })}
+                        </Box>
+                    }
+                </>
+            )}
+
             {/* Floating Settings icon at bottom of sidebar */}
             <Box sx={{
                 position: 'absolute',

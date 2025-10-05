@@ -1,16 +1,19 @@
-import { Box } from '@/MUI/MuiComponents';
+import { Box, useTheme } from '@/MUI/MuiComponents';
 
-function Loading() {
+function Loading({ sx = {} }) {
+    const theme = useTheme();
+
     return (
         <Box
             sx={{
-                minHeight: '100vh',
+                height: '100dvh',
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
                 flexDirection: 'column',
                 backgroundColor: '#000',
+                ...sx
             }}
         >
             {/* Loader bar */}
@@ -20,7 +23,11 @@ function Loading() {
                     height: 3,
                     borderRadius: '20px',
                     overflow: 'hidden',
-                    backgroundColor: 'rgb(15, 15, 15)',
+                    background: `linear-gradient(90deg,
+                     ${theme.palette.primary.dark} 20%,
+                      ${theme.palette.success.light},
+                      ${theme.palette.secondary.dark}) 100%`
+                    ,
                     position: 'relative',
                 }}
             >

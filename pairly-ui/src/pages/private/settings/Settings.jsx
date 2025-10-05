@@ -21,7 +21,8 @@ import {
   SosIcon,
   ChatIcon,
   LogoutIcon,
-  ShareIcon
+  ShareIcon,
+  BlockIcon
 } from '@/MUI/MuiIcons';
 import { Link, useNavigate } from 'react-router-dom';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
@@ -51,31 +52,37 @@ function Settings() {
       path: 'account',
       icon: <KeyIcon sx={{ mr: 1.1, color: 'warning.main' }} />,
       title: 'Account',
-      subTitle: 'Security notification, account info'
+      subTitle: 'Login, security alerts, account details'
     },
     {
       path: 'privacy',
       icon: <LockIcon sx={{ mr: 1.1, color: 'info.main' }} />,
       title: 'Privacy',
-      subTitle: 'Blocked contacts, controls'
+      subTitle: 'Blocked users, visibility, data controls'
     },
     {
       path: 'chats',
       icon: <ChatIcon sx={{ mr: 1.1, color: 'success.main' }} />,
       title: 'Chats',
-      subTitle: 'Theme, wallpaper, chat settings'
+      subTitle: 'Themes, wallpapers, chat preferences'
     },
     {
       path: 'notifications',
       icon: <NotificationsIcon sx={{ mr: 1.1, color: 'primary.main' }} />,
       title: 'Notifications',
-      subTitle: 'Message notifications'
+      subTitle: 'Message alerts, sound, vibration'
+    },
+    {
+      path: 'blocked-users',
+      icon: <BlockIcon sx={{ color: theme.palette.error.main }} />,
+      title: 'Blocked',
+      subTitle: 'Manage blocked users'
     },
     {
       path: 'help',
       icon: <SosIcon sx={{ mr: 1.1, color: 'error.main' }} />,
       title: 'Help',
-      subTitle: 'Help center, contact us, privacy policy'
+      subTitle: 'FAQs, contact support, policies'
     }
   ];
 

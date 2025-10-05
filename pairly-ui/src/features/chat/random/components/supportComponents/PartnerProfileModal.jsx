@@ -135,11 +135,6 @@ function PartnerProfileModal({ open, onClose, partner }) {
       label: 'Pronouns',
       value: toCapitalCase(partner?.pronouns) || 'Unknown',
       icon: <RecordVoiceOverOutlinedIcon fontSize="small" color="warning" />
-    },
-    {
-      label: 'Bio',
-      value: partner?.bio || 'No bio available',
-      icon: <SubjectOutlinedIcon fontSize="small" color="action" />
     }
   ];
 
@@ -176,22 +171,6 @@ function PartnerProfileModal({ open, onClose, partner }) {
     }
   ];
 
-  // Styles shared between both user and partner profile image
-  const profileImageCommonStyle = {
-    maxWidth: isSm ? 100 : 160,
-    maxHeight: isSm ? 100 : 160,
-    width: '100%',
-    height: 'auto',
-    mb: 2,
-    objectFit: 'cover',
-    borderRadius: '30%',
-    mx: 'auto',
-    transition: 'transform 0.3s ease-in-out',
-    '&:hover': {
-      transform: 'scale(1.02)'
-    }
-  };
-
   // handle friend request
   const handleFriendRequest = () => {
     setRequestingPrivateChat(true)
@@ -218,7 +197,7 @@ function PartnerProfileModal({ open, onClose, partner }) {
           alignItems="center"
           justifyContent="space-between"
           px={2}
-          py={1}
+          py={0.5}
           borderBottom={`1px solid ${theme.palette.divider}`}
         >
           <IconButton onClick={handleProfileClose}>
@@ -233,10 +212,9 @@ function PartnerProfileModal({ open, onClose, partner }) {
         </Stack>
 
         {/* Avatar + Name + Status */}
-        <Stack alignItems="center" spacing={1.2} py={3}>
+        <Stack alignItems="center" spacing={1.2} >
           <Avatar
             src={partner?.profileImage || defaultAvatar}
-
             sx={{
               border: `3px solid ${theme.palette.primary.main}`,
               width: isSm ? 90 : 120,
@@ -247,7 +225,7 @@ function PartnerProfileModal({ open, onClose, partner }) {
               transition: 'all 0.3s ease-in-out',
               ':hover': {
                 border: `none`,
-                transform: 'scale(2.8)',
+                transform: isSm ? 'scale(2.6)' : 'scale(2.3)',
                 borderRadius: 1,
               }
             }}
@@ -265,22 +243,111 @@ function PartnerProfileModal({ open, onClose, partner }) {
           </Typography>
         </Stack>
 
-        <Divider />
+        <Divider sx={{ height: 4, background: theme.palette.divider }} />
+
+        {/* navigation */}
+        <Stack
+          direction="row"
+          justifyContent="space-around"
+          py={1.5}
+          sx={{
+            background: `linear-gradient(130deg,
+             ${theme.palette.primary.dark} 0%, 
+            ${theme.palette.background.paper} 30%,
+             ${theme.palette.background.paper} 80%)`,
+            borderRadius: 1,
+            mx: 2,
+            px: 1,
+          }}
+        >
+          <Tooltip title="General Info">
+            <IconButton
+              onClick={() => handleClick('general')}
+              sx={{
+                background: activeSection === 'general' ? theme.palette.primary.main : 'transparent',
+                color: activeSection === 'general' ? '#fff' : theme.palette.text.secondary,
+                '&:hover': {
+                  background: activeSection === 'general' ? theme.palette.primary.dark : theme.palette.action.hover,
+                },
+                borderRadius: 2,
+                p: 1.5,
+                transition: 'all 0.3s ease',
+              }}
+            >
+              <InfoOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Interests">
+            <IconButton
+              onClick={() => handleClick('interests')}
+              sx={{
+                background: activeSection === 'interests' ? theme.palette.primary.main : 'transparent',
+                color: activeSection === 'interests' ? '#fff' : theme.palette.text.secondary,
+                '&:hover': {
+                  background: activeSection === 'interests' ? theme.palette.primary.dark : theme.palette.action.hover,
+                },
+                borderRadius: 2,
+                p: 1.5,
+                transition: 'all 0.3s ease',
+              }}
+            >
+              <LocalOfferOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Private Chat">
+            <IconButton
+              onClick={() => handleClick('privateChat')}
+              sx={{
+                background: activeSection === 'privateChat' ? theme.palette.primary.main : 'transparent',
+                color: activeSection === 'privateChat' ? '#fff' : theme.palette.text.secondary,
+                '&:hover': {
+                  background: activeSection === 'privateChat' ? theme.palette.primary.dark : theme.palette.action.hover,
+                },
+                borderRadius: 2,
+                p: 1.5,
+                transition: 'all 0.3s ease',
+              }}
+            >
+              <LockPersonOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        </Stack>
 
         {/* General Info */}
         {activeSection === 'general' && (
-          <Box px={2} py={2}>
+          <Box px={2} pb={2} display="flex" flexDirection="column" gap={1}>
             <Typography variant="subtitle2" fontWeight={600} gutterBottom color={'text.primary'}>
               General Info
             </Typography>
             <Stack spacing={1}>
               {generalInfo.map((info, i) => (
-                <Stack key={i} direction="row" alignItems="center" spacing={1.5}>
-                  {info.icon}
-                  <Typography variant="body2" fontWeight={500} color={'text.primary'}>
-                    {info.label}:
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                <Stack
+                  key={i}
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  sx={{
+                    p: 1.5,
+                    borderRadius: 1,
+                    background: theme.palette.background.default,
+                    boxShadow: 'inset 0 0 0.2rem',
+                    transition: 'all 0.3s ease-out',
+
+                    '&:hover': {
+                      transform: `scale(0.99)`,
+                      transform: `translate(1px, -2px)`,
+                    },
+                  }}
+                >
+                  <Stack direction="row" alignItems="center" spacing={1.5}>
+                    {info.icon}
+                    <Typography variant="body2" fontWeight={600}>
+                      {info.label}:
+                    </Typography>
+                  </Stack>
+                  <Typography variant="body2" color="text.secondary" textAlign="right">
                     {info.value}
                   </Typography>
                 </Stack>
@@ -291,18 +358,37 @@ function PartnerProfileModal({ open, onClose, partner }) {
 
         {/* Interests */}
         {activeSection === 'interests' && (
-          <Box px={2} py={2}>
+          <Box px={2} pb={2} display="flex" flexDirection="column" gap={1}>
             <Typography variant="subtitle2" fontWeight={600} gutterBottom color={'text.primary'}>
               Interests
             </Typography>
             <Stack spacing={1}>
               {partnerInterests.map((item, i) => (
-                <Stack key={i} direction="row" alignItems="center" spacing={1.5}>
-                  {item.icon}
-                  <Typography variant="body2" fontWeight={500} color={'text.primary'}>
-                    {item.label}:
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                <Stack
+                  key={i}
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  sx={{
+                    p: 1.5,
+                    borderRadius: 1,
+                    background: theme.palette.background.default,
+                    boxShadow: 'inset 0 0 0.2rem',
+                    transition: 'all 0.3s ease-out',
+
+                    '&:hover': {
+                      transform: `scale(0.99)`,
+                      transform: `translate(1px, -2px)`,
+                    },
+                  }}
+                >
+                  <Stack direction="row" alignItems="center" spacing={1.5}>
+                    {item.icon}
+                    <Typography variant="body2" fontWeight={600}>
+                      {item.label}:
+                    </Typography>
+                  </Stack>
+                  <Typography variant="body2" color="text.secondary" textAlign="right">
                     {item.value}
                   </Typography>
                 </Stack>
@@ -313,11 +399,11 @@ function PartnerProfileModal({ open, onClose, partner }) {
 
         {/* Private Chat */}
         {activeSection === 'privateChat' && (
-          <Box px={2} py={2}>
+          <Box px={2} pb={2} display="flex" flexDirection="column" gap={1}>
             <Typography variant="subtitle2" fontWeight={600} gutterBottom color={'text.primary'}>
               Private Chat
             </Typography>
-            <Typography variant="body2" color="text.secondary" mb={2}>
+            <Typography variant="body2" color="text.secondary">
               {requestingPrivateChat
                 ? 'Requested for a private chat.'
                 : 'Click below to send a request for a private chat with your partner.'}
@@ -329,40 +415,29 @@ function PartnerProfileModal({ open, onClose, partner }) {
               onClick={handleFriendRequest}
               disabled={requestingPrivateChat}
               sx={{
-                background: theme.palette.primary.main,
+                p: 1.5,
+                borderRadius: 1,
+                background: `linear-gradient(130deg,
+                ${theme.palette.background.paper} 30%,
+                ${theme.palette.background.default} 0%,
+                ${theme.palette.primary.dark} 80%)`,
+                boxShadow: 'inset 0 0 0.2rem',
+                color: 'text.primary',
+                transition: 'all 0.3s ease-out',
+                '&:hover': {
+                  transform: `translate(1px, -2px) scale(0.99)`,
+                  background: `linear-gradient(130deg,
+             ${theme.palette.primary.dark} 0%, 
+            ${theme.palette.background.paper} 30%,
+             ${theme.palette.background.paper} 80%)`,
+                },
               }}
             >
-              {requestingPrivateChat ? 'Request Sent' : 'Send Private Chat Request'}
+              {requestingPrivateChat ? 'You’ve Already Requested' : 'Send Private Chat Request'}
             </Button>
           </Box>
         )}
 
-        <Divider />
-
-        {/* Bottom navigation (like Telegram sections) */}
-        <Stack direction="row" justifyContent="space-around" py={1.5}>
-          <Tooltip title="General Info">
-            <IconButton onClick={() => handleClick('general')}>
-              <InfoOutlinedIcon
-                sx={{ color: activeSection === 'general' ? 'primary.main' : 'text.secondary' }}
-              />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Interests">
-            <IconButton onClick={() => handleClick('interests')}>
-              <LocalOfferOutlinedIcon
-                sx={{ color: activeSection === 'interests' ? 'primary.main' : 'text.secondary' }}
-              />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Private Chat">
-            <IconButton onClick={() => handleClick('privateChat')}>
-              <LockPersonOutlinedIcon
-                sx={{ color: activeSection === 'privateChat' ? 'primary.main' : 'text.secondary' }}
-              />
-            </IconButton>
-          </Tooltip>
-        </Stack>
       </BlurWrapper>
     </Modal>
   );

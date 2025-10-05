@@ -624,19 +624,25 @@ function RandomChatWindow({ setShowChatWindow }) {
               {!isConnected && isSm && (
                 <Button
                   onClick={() => handleDisconnectOnSmallScreen()}
-                  variant={'outlined'}
-                  fontWeight={600}
+                  variant={'contained'}
+                  fontWeight={900}
                   p={'1rem 2rem'}
                   color={theme.palette.text.secondary}
-                  letterSpacing={1.2}
+                  letterSpacing={1.4}
                   startIcon={<NavigateWithArrow />}
                   sx={{
                     mt: 2,
                     borderRadius: 1,
                     cursor: 'pointer',
                     transition: 'all 0.3s',
+                    background: theme.palette.primary.main,
+                    boxShadow: '0 8px 1rem',
+                    fontStyle: 'oblique',
+                    fontSize: '1.2rem',
+                    transition: 'all 0.3s ease-in-out',
                     '&:hover': {
-                      transform: 'translateY(-5px)'
+                      transform: 'translateY(-5px) scale(1.1)',
+                      boxShadow: 'inset 0 8px 1rem',
                     }
                   }}
                 >

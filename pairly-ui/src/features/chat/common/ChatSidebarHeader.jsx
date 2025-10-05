@@ -18,7 +18,6 @@ import {
   LogoutIcon,
   HelpOutlineIcon,
   SettingsIcon,
-  BlockIcon,
   ChatIcon,
   ShareIcon,
   ShuffleIcon,
@@ -81,11 +80,6 @@ const ChatSidebarHeader = ({ children }) => {
       ),
       label: 'Friend Requests'
     },
-    {
-      path: '/pairly/blocked-users',
-      icon: <BlockIcon sx={{ color: theme.palette.error.main }} />,
-      label: 'Blocked Users'
-    }
   ];
 
   const currentUrlPath = location.pathname;
