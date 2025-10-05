@@ -1,37 +1,33 @@
-import { Player } from '@lottiefiles/react-lottie-player';
-import typingAnimation from '@/assets/lottie/typing.json';
-import { Box } from '@/MUI/MuiComponents';
+import { Box } from "@mui/material";
 
-const TypingAnimation = () => {
-  const size = 60;
-
-  return (
-    <Box
-      sx={{
-        width: `${size}px`,
-        height: `${40}px`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflowY: 'hidden',
-        position: 'relative'
-      }}
-    >
-      <Player
-        autoplay
-        loop
-        src={typingAnimation}
-        style={{
-          width: '100%',
-          height: '100%',
-          marginTop: '1rem',
-          objectFit: 'contain',
-          display: 'block'
+const TypingIndicator = () => (
+  <Box
+    sx={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      height: "100%",
+      gap: "4px",
+    }}
+  >
+    {[0, 1, 2].map((i) => (
+      <Box
+        key={i}
+        sx={{
+          width: "6px",
+          height: "6px",
+          borderRadius: "50%",
+          backgroundColor: "#fc0065",
+          animation: "bounce 1.4s infinite ease-in-out",
+          animationDelay: `${i * 0.2}s`,
+          "@keyframes bounce": {
+            "0%, 80%, 100%": { transform: "scale(0)" },
+            "40%": { transform: "scale(1)" },
+          },
         }}
-        renderer="svg"
       />
-    </Box>
-  );
-};
+    ))}
+  </Box>
+);
 
-export default TypingAnimation;
+export default TypingIndicator;

@@ -33,7 +33,6 @@ const StyledAudio = styled('audio')(({ theme }) => ({
 
 function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearActiveChat }) {
   const theme = useTheme();
-  const isTabletOrBelow = useMediaQuery('(max-width:775px)');
   const isSm = useMediaQuery('(max-width:936px)');
   const messagesEndRef = useRef(null);
   const [isTyping, setIsTyping] = useState(false);
@@ -62,30 +61,6 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
     window.addEventListener('focus', handleFocus);
     return () => window.removeEventListener('focus', handleFocus);
   }, [conversationId, socket]);
-
-  useEffect(() => {
-    // Only for mobile/tablet view
-    if (!isTabletOrBelow) return;
-
-    // Push a temporary history state when a chat is opened
-    if (selectedUserId) {
-      window.history.pushState({ fromChatWindow: true }, '');
-    }
-
-    const handlePopState = (event) => {
-      // If back pressed and state is from chat window, go back to sidebar
-      if (event.state?.fromChatWindow) {
-        handleBackToSidebar();
-
-        // Remove the custom state so next back behaves normally
-        window.history.replaceState({}, '');
-      }
-    };
-
-    window.addEventListener('popstate', handlePopState);
-
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [selectedUserId, isTabletOrBelow]);
 
   // Fetch messages when conversationId becomes available (especially important for mobile)
   useEffect(() => {
