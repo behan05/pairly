@@ -8,7 +8,7 @@ import StyledActionButton from '@/components/common/StyledActionButton';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { updateGeneralInfo } from '@/redux/slices/profile/profileAction';
+import { updateGeneralInfo, getProfile } from '@/redux/slices/profile/profileAction';
 import { useDispatch, useSelector } from 'react-redux';
 
 function GeneralInfo() {
@@ -37,6 +37,10 @@ function GeneralInfo() {
     shortBio: '',
     profileImage: ''
   });
+
+  React.useEffect(() => {
+    dispatch(getProfile());
+  }, []);
 
   // Pre-fill data when profileData is loaded
   React.useEffect(() => {

@@ -193,7 +193,7 @@ exports.deleteAccount = async (req, res) => {
             });
         };
 
-        const userProfile = await Profile.findOne({user: userId});
+        const userProfile = await Profile.findOne({ user: userId });
 
         // delete profile image from Cloudinary
         if (userProfile?.profileImagePublicId) {
@@ -201,8 +201,8 @@ exports.deleteAccount = async (req, res) => {
         };
 
         // Delete profile and settings if they exist
-        await Profile.findOneAndDelete({user: userId});
-        await Settings.findOneAndDelete({user: userId});
+        await Profile.findOneAndDelete({ user: userId });
+        await Settings.findOneAndDelete({ user: userId });
 
         return res.status(200).json({
             message: 'Your account has been deleted successfully.',
@@ -462,6 +462,7 @@ exports.updateChatSettings = async (req, res) => {
         messageSound,
         showTypingStatus,
         showOnlineStatus,
+        showLastSeen,
         enterToSend,
         chatTheme,
         chatFontSize
@@ -471,6 +472,7 @@ exports.updateChatSettings = async (req, res) => {
         typeof messageSound === 'boolean' &&
         typeof showTypingStatus === 'boolean' &&
         typeof showOnlineStatus === 'boolean' &&
+        typeof showLastSeen === 'boolean' &&
         typeof enterToSend === 'boolean' &&
         ['light', 'dark'].includes(chatTheme) &&
         ['small', 'medium', 'large'].includes(chatFontSize);
@@ -489,6 +491,7 @@ exports.updateChatSettings = async (req, res) => {
                 messageSound,
                 showTypingStatus,
                 showOnlineStatus,
+                showLastSeen,
                 enterToSend,
                 chatTheme,
                 chatFontSize

@@ -13,14 +13,13 @@ import CyberSwitch from '@/components/private/CyberSwitch';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { updateSettingsPrivacy } from '@/redux/slices/settings/settingsAction';
+import { updateSettingsPrivacy, getSettingsPrivacy } from '@/redux/slices/settings/settingsAction';
 import { useSelector, useDispatch } from 'react-redux';
 
 function Privacy() {
   const dispatch = useDispatch();
   const theme = useTheme();
-  const { settingsData } = useSelector((state) => state.settings);
-  const privacySettings = settingsData?.privacySettings;
+  const { privacySettings } = useSelector((state) => state.settings);
 
   const defaultSettings = {
     showProfilePic: true,
@@ -34,15 +33,16 @@ function Privacy() {
 
   const [formData, setFormData] = useState(defaultSettings);
 
+  useEffect(() => {
+    dispatch(getSettingsPrivacy());
+  }, []);
+
   // Sync Redux state -> Local form state
   useEffect(() => {
     if (privacySettings) {
-      setFormData((prev) => ({
-        ...prev,
-        ...settingsData.privacySettings
-      }));
+      setFormData(privacySettings)
     }
-  }, [settingsData]);
+  }, [privacySettings]);
 
   const handleToggle = (key) => async (e) => {
     const updatedValue = e.target.checked;

@@ -84,9 +84,11 @@ function PrivateChatSidebar() {
     };
 
     // filter users by search
-    const filteredUsers = allUsers.filter(user =>
-        user?.profile?.fullName?.toLowerCase().includes(searchValue.toLowerCase())
-    );
+    const filteredUsers = useMemo(() => {
+        return allUsers.filter(user =>
+            user?.profile?.fullName?.toLowerCase().includes(searchValue.toLowerCase())
+        );
+    }, [allUsers, searchValue]);
 
     return (
         <Box
@@ -360,6 +362,23 @@ function PrivateChatSidebar() {
                             {filteredUsers.map((user, index) => {
                                 const isActive = activeUserId === user.userId;
 
+                                // get the user's settings
+                                const userSettings = user?.settings || {};
+                                const showOnlineStatus = userSettings.showOnlineStatus;
+
+                                // determine online indicator
+                                const isOnline = chatUsers.find(u => u.partnerId === user.userId)?.isOnline;
+
+                                // color logic
+                                const dotColor = showOnlineStatus
+                                    ? (isOnline ? 'green' : 'gray')
+                                    : 'yellow';
+
+                                // tooltip text
+                                const tooltipText = showOnlineStatus
+                                    ? (isOnline ? 'Online' : 'Offline')
+                                    : 'Activity status hidden';
+
                                 const unseenCount = 1;
                                 return (
                                     <Stack
@@ -388,15 +407,15 @@ function PrivateChatSidebar() {
                                                 alignItems: 'center'
                                             }}
                                         >
-                                            <Tooltip title={user?.profile?.shortBio}>
+                                            <Tooltip title={tooltipText}>
                                                 <Badge
                                                     overlap="circular"
                                                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                                                     variant="dot"
                                                     sx={{
                                                         '& .MuiBadge-dot': {
-                                                            backgroundColor: onlineUserIds.includes(user.userId) ? 'green' : 'gray',
-                                                            animation: onlineUserIds.includes(user.userId) ? 'blink 2s infinite' : 'none',
+                                                            backgroundColor: dotColor,
+                                                            animation: (isOnline && showOnlineStatus) ? 'blink 2s infinite' : 'none',
                                                             width: 10,
                                                             height: 10,
                                                             borderRadius: '50%'
@@ -413,7 +432,6 @@ function PrivateChatSidebar() {
                                                         sx={{ width: 40, height: 40, objectFit: 'cover' }}
                                                     />
                                                 </Badge>
-
                                             </Tooltip>
                                             <Stack flex={1}>
                                                 <Stack

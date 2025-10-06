@@ -22,14 +22,12 @@ import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-import { updateSettingsNotification } from '@/redux/slices/settings/settingsAction';
+import { updateSettingsNotification , getSettingsNotification} from '@/redux/slices/settings/settingsAction';
 
 function Notifications() {
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { settingsData } = useSelector((state) => state.settings);
-  const notificationSettings = settingsData?.notificationSettings;
+  const { notificationSettings } = useSelector((state) => state.settings);
 
   const [notifSettings, setNotifSettings] = useState({
     newMatch: false,
@@ -40,6 +38,10 @@ function Notifications() {
   });
 
   // When Redux store updates, sync to local state
+  useEffect(() => {
+    dispatch(getSettingsNotification());
+  }, []);
+
   useEffect(() => {
     if (notificationSettings) {
       setNotifSettings(notificationSettings);

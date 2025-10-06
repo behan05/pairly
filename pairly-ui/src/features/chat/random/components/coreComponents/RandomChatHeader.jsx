@@ -144,8 +144,7 @@ function RandomChatHeader() {
     transition: 'all 0.3s ease-out',
     color: 'text.secondary',
     '&:hover': {
-      transform: `scale(0.99)`,
-      transform: `translate(1px, -1px)`,
+      transform: `translate(1px, -1px) scale(0.99)`,
       filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
     },
   };
@@ -215,7 +214,7 @@ function RandomChatHeader() {
         </Stack>
 
         {/* Right Section: Typing Indicator + Menu */}
-        <Stack direction="row" alignItems="center" justifyContent={'center'}>
+        <Stack direction="row" alignItems="center" justifyContent={'center'} gap={1}>
           {partnerTyping ? <TypingIndicator /> : <WaitingIndicator />}
 
           {/* Action Menu Icon */}

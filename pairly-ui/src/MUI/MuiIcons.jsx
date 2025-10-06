@@ -124,6 +124,7 @@ import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
 import UploadIcon from '@mui/icons-material/Upload';
 import GetAppIcon from '@mui/icons-material/GetApp';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 // ==================== Partner Profile Icons ====================
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
@@ -300,5 +301,6 @@ export {
   SosIcon,
   SupportAgentIcon,
   TextFieldsIcon,
-  UploadIcon
+  UploadIcon,
+  AccessTimeIcon
 };

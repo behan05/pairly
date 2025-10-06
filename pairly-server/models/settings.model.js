@@ -73,6 +73,10 @@ const settingsSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    showLastSeen: {
+        type: Boolean,
+        default: true
+    },
     chatTheme: {
         type: String,
         enum: ['light', 'dark'],

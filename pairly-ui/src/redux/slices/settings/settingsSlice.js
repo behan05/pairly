@@ -1,7 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  settingsData: null,
+  privacySettings: null,
+  notificationSettings: null,
+  chatSettings: null,
   loading: false,
   error: null
 };
@@ -23,7 +25,7 @@ const settingsSlice = createSlice({
     setSetting: (state, action) => {
       state.loading = false;
       state.error = null;
-      state.settingsData = action.payload;
+      Object.assign(state, action.payload);
     }
   }
 });

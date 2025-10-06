@@ -1,5 +1,6 @@
 const User = require('../../models/User.model');
 const Profile = require('../../models/Profile.model');
+const Settings = require('../../models/settings.model');
 const Conversation = require('../../models/chat/Conversation.model');
 const Message = require('../../models/chat/Message.model');
 const Block = require('../../models/chat/Block.model');
@@ -75,8 +76,9 @@ exports.listPrivateChatUsersController = async (req, res) => {
             });
         }
 
-        // Get profiles of allowed friends
+        // Get profiles & setting of allowed friends
         const profiles = await Profile.find({ user: { $in: allFriendsId } }).lean();
+        const settings = await Settings.find({ user: { $in: allFriendsId } }).lean();
 
         // Get conversations where current user is a participant
         const conversations = await Conversation.find({
@@ -126,6 +128,7 @@ exports.listPrivateChatUsersController = async (req, res) => {
         // Build user details
         const userDetails = allFriendsId.map(friendId => {
             const reqProfile = profiles.find(p => p.user.toString() === friendId.toString());
+            const reqSettings = settings.find(s => s.user.toString() === friendId.toString());
 
             const convo = conversations.find(c =>
                 c.participants.some(p => p.toString() === friendId.toString())
@@ -136,6 +139,7 @@ exports.listPrivateChatUsersController = async (req, res) => {
             return {
                 userId: friendId,
                 profile: reqProfile || null,
+                settings: reqSettings,
                 conversationId: convo?._id || null,
                 lastMessage,
                 lastMessageTime: lastMessage ? lastMessage.createdAt : null

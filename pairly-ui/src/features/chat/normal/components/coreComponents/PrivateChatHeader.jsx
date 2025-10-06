@@ -66,8 +66,24 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
   }, [users, userId]);
 
   const isPartnerOnline = useMemo(() => {
-    return chatUsers.find((u) => u.partnerId === userId) || {};
-  }, [userId, chatUsers]);
+    const user = chatUsers.find((u) => u.partnerId === userId) || {};
+    const settings = users.find((s) => s.userId === userId)?.settings || {};
+    const showOnlineStatus = settings.showOnlineStatus;
+    const showLastSeen = settings.showLastSeen;
+
+    return {
+      isOnline: user.isOnline && showOnlineStatus,
+      lastSeen: user.lastSeen && showLastSeen ? user.lastSeen : null,
+    };
+  }, [userId, chatUsers, users]);
+
+  const isPartnerTyping = useMemo(() => {
+    return users.find((s) => s.userId === userId)?.settings?.showTypingStatus
+  }, [users]);
+
+  const partnerSettings = useMemo(() => {
+    return users.find((u) => u.userId === userId)?.settings || {}
+  }, [users, userId]);
 
   const handleMenuOpen = (e) => {
     setAnchorEl(e.currentTarget);
@@ -122,8 +138,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
     transition: 'all 0.3s ease-out',
     color: 'text.secondary',
     '&:hover': {
-      transform: `scale(0.99)`,
-      transform: `translate(1px, -1px)`,
+      transform: `translate(1px, -1px) scale(0.99)`,
       filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
     },
   };
@@ -213,42 +228,41 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
             </Tooltip>
 
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              {isPartnerOnline?.isOnline ? (
-                <Stack justifyContent={'center'} direction={'row'} alignItems={'center'}>
+              {isPartnerOnline.isOnline && partnerSettings?.showOnlineStatus ? (
+                <Stack justifyContent="center" direction="row" alignItems="center">
                   <Box
                     sx={{
                       width: 8,
                       height: 8,
                       borderRadius: '50%',
                       backgroundColor: theme.palette.success.main,
-                      marginRight: 0.5,
+                      mr: 0.5,
                       mt: '2px',
                     }}
                   />
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ fontSize: isSm ? '0.8rem' : '0.9rem' }}
-                  >
+                  <Typography variant="body2" color="text.secondary" sx={{ fontSize: isSm ? '0.8rem' : '0.9rem' }}>
                     Online
                   </Typography>
                 </Stack>
-              ) : (
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ fontSize: isSm ? '0.8rem' : '0.9rem' }}
-                >
+              ) : partnerSettings?.showLastSeen ? (
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: isSm ? '0.8rem' : '0.9rem' }}>
                   Last active {formatMessageTime(isPartnerOnline.lastSeen)}
+                </Typography>
+              ) : (
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: isSm ? '0.8rem' : '0.9rem' }}>
+                  Online presence off
                 </Typography>
               )}
             </Box>
+
           </Box>
         </Stack>
 
         {/* Right Section: Typing Indicator + Menu */}
-        <Stack direction="row" alignItems="center" justifyContent="center">
-          {partnerTyping ? <TypingIndicator /> : <WaitingIndicator />}
+        <Stack direction="row" alignItems="center" justifyContent="center" gap={1}>
+          <Stack direction="row" alignItems="center" justifyContent="center" gap={1}>
+            {isPartnerTyping ? (partnerTyping ? <TypingIndicator /> : <WaitingIndicator />) : <WaitingIndicator />}
+          </Stack>
           {/* Action Menu Icon */}
           <Tooltip title='Menu'>
             <IconButton onClick={handleMenuOpen} size="small">

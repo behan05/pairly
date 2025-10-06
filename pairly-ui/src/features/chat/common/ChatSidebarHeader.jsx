@@ -267,8 +267,7 @@ const ChatSidebarHeader = ({ children }) => {
               transition: 'all 0.3s ease-out',
               color: 'text.secondary',
               '&:hover': {
-                transform: `scale(0.99)`,
-                transform: `translate(1px, -1px)`,
+                transform: `translate(1px, -1px) scale(0.99)`,
                 filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
               },
             }}
@@ -289,8 +288,7 @@ const ChatSidebarHeader = ({ children }) => {
             color: 'error.main',
             transition: 'all 0.3s ease-out',
             '&:hover': {
-              transform: `scale(0.99)`,
-              transform: `translate(1px, -1px)`,
+              transform: `translate(1px, -1px) scale(0.99)`,
               filter: `drop-shadow(0 20px 1rem ${theme.palette.error.main})`
             }
           }}

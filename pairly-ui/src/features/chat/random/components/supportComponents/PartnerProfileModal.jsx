@@ -336,8 +336,7 @@ function PartnerProfileModal({ open, onClose, partner }) {
                     transition: 'all 0.3s ease-out',
 
                     '&:hover': {
-                      transform: `scale(0.99)`,
-                      transform: `translate(1px, -2px)`,
+                      transform: `translate(1px, -2px) scale(0.99)`,
                     },
                   }}
                 >
@@ -377,8 +376,7 @@ function PartnerProfileModal({ open, onClose, partner }) {
                     transition: 'all 0.3s ease-out',
 
                     '&:hover': {
-                      transform: `scale(0.99)`,
-                      transform: `translate(1px, -2px)`,
+                      transform: `translate(1px, -2px) scale(0.99)`,
                     },
                   }}
                 >

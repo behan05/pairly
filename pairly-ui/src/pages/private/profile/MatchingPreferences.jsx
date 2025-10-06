@@ -23,7 +23,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import StyledActionButton from '@/components/common/StyledActionButton';
 import { Country, State, City } from 'country-state-city';
-import { updateMatchingPreferences } from '@/redux/slices/profile/profileAction';
+import { updateMatchingPreferences , getProfile} from '@/redux/slices/profile/profileAction';
 import { useDispatch, useSelector } from 'react-redux';
 
 function MatchingPreferences() {
@@ -53,6 +53,10 @@ function MatchingPreferences() {
     state: '',
     city: ''
   });
+
+  React.useEffect(() => {
+    dispatch(getProfile());
+  }, []);
 
   // Load profile data and populate form on mount
   React.useEffect(() => {

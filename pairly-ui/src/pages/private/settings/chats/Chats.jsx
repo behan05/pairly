@@ -15,31 +15,36 @@ import {
   Brightness4Icon,
   TextFieldsIcon,
   VisibilityIcon,
-  NotificationsActiveIcon
+  NotificationsActiveIcon,
+  AccessTimeIcon
 } from '@/MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import BlurWrapper from '@/components/common/BlurWrapper';
 import CyberSwitch from '@/components/private/CyberSwitch';
-import { updateChatSettings } from '@/redux/slices/settings/settingsAction';
 import { toggleTheme } from '@/redux/slices/theme/themeSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getChatSettings, updateChatSettings } from '@/redux/slices/settings/settingsAction';
 
 function Chats() {
   const dispatch = useDispatch();
   const theme = useTheme();
-  const { settingsData } = useSelector((state) => state.settings);
-  const chatSettings = settingsData?.chatSettings;
+  const { chatSettings } = useSelector((state) => state.settings);
 
   const [formData, setFormData] = React.useState({
     messageSound: true,
     showTypingStatus: true,
     showOnlineStatus: true,
+    showLastSeen: true,
     enterToSend: true,
     chatTheme: localStorage.getItem('theme') ?? 'dark',
     chatFontSize: 'medium'
   });
+
+  useEffect(() => {
+    dispatch(getChatSettings());
+  }, []);
 
   useEffect(() => {
     if (chatSettings) {
@@ -129,6 +134,13 @@ function Chats() {
       title: 'Online Status',
       description: 'Display your online presence to others.',
       children: getSwitch('showOnlineStatus', 'Show online status')
+    },
+    {
+      label: 'showLastSeen',
+      icon: <AccessTimeIcon sx={{ color: 'secondary.main' }} />,
+      title: 'Last Seen',
+      description: 'Display your Last Seen to others.',
+      children: getSwitch('showLastSeen', 'Show Last Seen status')
     },
     {
       label: 'enterToSend',

@@ -26,7 +26,7 @@ import StyledActionButton from '@/components/common/StyledActionButton';
 
 // Redux + Toast
 import { useDispatch, useSelector } from 'react-redux';
-import { updateTagsAndInterests } from '../../../redux/slices/profile/profileAction';
+import { updateTagsAndInterests, getProfile } from '@/redux/slices/profile/profileAction';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -78,6 +78,10 @@ function TagsAndInterests() {
       });
     }
   }, [profileData]);
+
+  React.useEffect(() => {
+    dispatch(getProfile());
+  }, []);
 
   // Toggle interest tags (chips)
   const handleTagToggle = (tag) => {
