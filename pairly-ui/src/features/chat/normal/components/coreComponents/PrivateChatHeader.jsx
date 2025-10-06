@@ -250,7 +250,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
                 </Typography>
               ) : (
                 <Typography variant="body2" color="text.secondary" sx={{ fontSize: isSm ? '0.8rem' : '0.9rem' }}>
-                  Online presence off
+                  Last seen hidden
                 </Typography>
               )}
             </Box>

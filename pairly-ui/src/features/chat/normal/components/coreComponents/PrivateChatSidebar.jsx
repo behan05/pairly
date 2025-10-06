@@ -372,7 +372,7 @@ function PrivateChatSidebar() {
                                 // color logic
                                 const dotColor = showOnlineStatus
                                     ? (isOnline ? 'green' : 'gray')
-                                    : 'yellow';
+                                    : 'gray';
 
                                 // tooltip text
                                 const tooltipText = showOnlineStatus
