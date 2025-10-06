@@ -24,8 +24,10 @@ import {
   ClearAllIcon,
   FavoriteIcon,
   CloseIcon,
-  MoreVertIcon
+  MoreVertIcon,
+  CheckCircleIcon
 } from "@/MUI/MuiIcons";
+import { blue } from "@mui/material/colors";
 
 import { deleteConversationMessage, clearConversationMessage, fetchAllUser } from '@/redux/slices/privateChat/privateChatAction';
 import { useDispatch, useSelector } from 'react-redux'
@@ -53,6 +55,10 @@ function PrivatePartnerProfileModel(
 
   const partnerProfile = useMemo(() => {
     return users.find((u) => u.userId === userId)?.profile || {};
+  }, [users, userId]);
+
+  const isPartnerVarified = useMemo(() => {
+    return users.find((u) => u.userId === userId)?.isUserVerifiedByEmail || false;
   }, [users, userId]);
 
   const location = useMemo(() => {
@@ -293,10 +299,20 @@ function PrivatePartnerProfileModel(
               }}
             />
             <Stack textAlign="center">
-              <Typography variant="h6">
+              <Typography
+                variant="h6"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                gap={0.5}
+              >
                 {partnerProfile?.fullName || "Stranger"}
+                {isPartnerVarified && (
+                  <CheckCircleIcon sx={{ color: blue[500], fontSize: 22 }} />
+                )}
               </Typography>
-              <Typography variant="body2" color="gray" guttorButtom>
+
+              <Typography variant="body2" color="gray" gutterBottom>
                 {location || "Unknown Location"}
               </Typography>
             </Stack>

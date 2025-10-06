@@ -22,23 +22,19 @@ import {
   LocalOfferOutlinedIcon,
   LockPersonOutlinedIcon,
   defaultAvatar,
-  GraphicEqIcon,
   LocationOnOutlinedIcon,
   WcOutlinedIcon,
   RecordVoiceOverOutlinedIcon,
-  SubjectOutlinedIcon,
   InterestsOutlinedIcon,
   ForumOutlinedIcon,
   Diversity3OutlinedIcon,
-  TranslateOutlinedIcon
+  TranslateOutlinedIcon,
+  CheckCircleIcon
 } from '@/MUI/MuiIcons';
+import { blue } from "@mui/material/colors";
 
 // components
 import BlurWrapper from '@/components/common/BlurWrapper';
-import StyledText from '@/components/common/StyledText';
-
-// Redux
-import { useSelector } from 'react-redux';
 
 // Country and State utilities
 import { Country, State } from 'country-state-city';
@@ -68,9 +64,6 @@ function PartnerProfileModal({ open, onClose, partner }) {
   const [activeSection, setActiveSection] = useState('general');
   const [requestingPrivateChat, setRequestingPrivateChat] = useState(false);
 
-  // Current user's profile data from Redux store
-  const { profileData } = useSelector((state) => state.profile);
-
   // Close modal handler
   const handleProfileClose = () => {
     onClose();
@@ -97,17 +90,6 @@ function PartnerProfileModal({ open, onClose, partner }) {
       ? Country.getCountryByCode(partner.location.country)?.name
       : '';
   }, [partner]);
-
-  // Shared styles for displaying key-value pairs
-  const detailsStyles = {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-Start',
-    alignItems: 'center',
-    gap: 1,
-    mb: 1,
-    flexWrap: 'wrap'
-  };
 
   // General info to display in "General" tab
   const generalInfo = [
@@ -230,8 +212,18 @@ function PartnerProfileModal({ open, onClose, partner }) {
               }
             }}
           />
-          <Typography variant="h6" fontWeight={600}>
+          <Typography
+            variant="h6"
+            fontWeight={600}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            gap={0.5}
+          >
             {splitPartnerFullName[0]} {splitPartnerFullName[1] || ''}
+            {partner.isUserVerifiedByEmail && (
+              <CheckCircleIcon sx={{ color: blue[500], fontSize: 22, ml: 0.5 }} />
+            )}
           </Typography>
           <Typography
             variant="body2"
