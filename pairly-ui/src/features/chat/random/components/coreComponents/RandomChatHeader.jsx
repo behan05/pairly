@@ -66,7 +66,6 @@ function RandomChatHeader() {
 
   // Redux state
   const { partnerProfile, partnerId, partnerTyping } = useSelector((state) => state.randomChat);
-  console.log(partnerProfile);
   
   /**
    * Opens menu

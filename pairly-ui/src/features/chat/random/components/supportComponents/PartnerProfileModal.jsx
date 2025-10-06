@@ -43,55 +43,36 @@ import { Country, State } from 'country-state-city';
 import toCapitalCase from '@/utils/textFormatting';
 // socket instance
 import { socket } from '@/services/socket'
-/**
- * PartnerProfileModal Component
- *
- * Displays the detailed profile of a connected partner during a random chat.
- * Shows general info, interests, and a button to request private chat.
- *
- * @param {Boolean} open - Controls visibility of the modal
- * @param {Function} onClose - Callback to close the modal
- * @param {Object} partner - Partner's profile data
- * @param {JSX.Element}
- */
 
 function PartnerProfileModal({ open, onClose, partner }) {
-  // Theme and responsive check
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.between('xs', 'sm'));
-
-  // Local state
+  
   const [activeSection, setActiveSection] = useState('general');
   const [requestingPrivateChat, setRequestingPrivateChat] = useState(false);
 
-  // Close modal handler
   const handleProfileClose = () => {
     onClose();
   };
 
-  // Switch between section tabs
   const handleClick = (target) => {
     setActiveSection(target);
   };
 
-  // Split partner name for display
   const splitPartnerFullName = partner.fullName?.split(' ');
 
-  // Get full state name from code
   const fullStateName = useMemo(() => {
     return partner?.location?.state
       ? State.getStateByCodeAndCountry(partner.location.state, partner.location.country)?.name
       : '';
   }, [partner]);
 
-  // Get full country name from code
   const fullCountryName = useMemo(() => {
     return partner?.location?.country
       ? Country.getCountryByCode(partner.location.country)?.name
       : '';
   }, [partner]);
 
-  // General info to display in "General" tab
   const generalInfo = [
     {
       label: 'Name',
@@ -120,7 +101,6 @@ function PartnerProfileModal({ open, onClose, partner }) {
     }
   ];
 
-  // Interests and chat preferences to show in "Interests" tab
   const partnerInterests = [
     {
       label: 'Interests',
@@ -153,10 +133,8 @@ function PartnerProfileModal({ open, onClose, partner }) {
     }
   ];
 
-  // handle friend request
   const handleFriendRequest = () => {
     setRequestingPrivateChat(true)
-    // Emiting parivate chat requesting.
     socket.emit('privateChat:request');
   }
 
@@ -222,7 +200,9 @@ function PartnerProfileModal({ open, onClose, partner }) {
           >
             {splitPartnerFullName[0]} {splitPartnerFullName[1] || ''}
             {partner.isUserVerifiedByEmail && (
-              <CheckCircleIcon sx={{ color: blue[500], fontSize: 22, ml: 0.5 }} />
+              <Tooltip title="Verified by email">
+                <CheckCircleIcon sx={{ color: blue[500], fontSize: 22, ml: 0.5 }} />
+              </Tooltip>
             )}
           </Typography>
           <Typography

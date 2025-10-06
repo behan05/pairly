@@ -8,7 +8,6 @@ import {
   useMediaQuery,
   IconButton,
   Menu,
-  MenuItem
 } from '@/MUI/MuiComponents';
 import { ArrowDropDownIcon, ForumRoundedIcon, DownloadIcon } from '@/MUI/MuiIcons';
 

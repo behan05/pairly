@@ -42,9 +42,9 @@ function PrivateChatSidebar() {
     const { setSelectedUserId, activeUserId, setActiveUserId } = useOutletContext();
     const { allUsers, chatUsers, loading } = useSelector(state => state.privateChat);
 
-    const onlineUserIds = useMemo(() => {
-        return chatUsers.filter(u => u.isOnline).map(u => u.partnerId);
-    }, [chatUsers]);
+    // const onlineUserIds = useMemo(() => {
+    //     return chatUsers.filter(u => u.isOnline).map(u => u.partnerId);
+    // }, [chatUsers]);
 
     const [searchValue, setSearchValue] = useState('');
 
