@@ -79,6 +79,7 @@ exports.listPrivateChatUsersController = async (req, res) => {
         // Get profiles & setting of allowed friends
         const profiles = await Profile.find({ user: { $in: allFriendsId } }).lean();
         const settings = await Settings.find({ user: { $in: allFriendsId } }).lean();
+        const users = await User.find({ _id: { $in: allFriendsId } }).lean();
 
         // Get conversations where current user is a participant
         const conversations = await Conversation.find({
@@ -129,6 +130,7 @@ exports.listPrivateChatUsersController = async (req, res) => {
         const userDetails = allFriendsId.map(friendId => {
             const reqProfile = profiles.find(p => p.user.toString() === friendId.toString());
             const reqSettings = settings.find(s => s.user.toString() === friendId.toString());
+            const reqUsers = users.find(s => s._id.toString() === friendId.toString());
 
             const convo = conversations.find(c =>
                 c.participants.some(p => p.toString() === friendId.toString())
@@ -139,7 +141,8 @@ exports.listPrivateChatUsersController = async (req, res) => {
             return {
                 userId: friendId,
                 profile: reqProfile || null,
-                settings: reqSettings,
+                settings: reqSettings || null,
+                isUserVerifiedByEmail: reqUsers?.emailVerified || false,
                 conversationId: convo?._id || null,
                 lastMessage,
                 lastMessageTime: lastMessage ? lastMessage.createdAt : null

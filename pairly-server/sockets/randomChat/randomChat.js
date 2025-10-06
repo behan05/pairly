@@ -5,6 +5,7 @@
 
 // Profile Model
 const Profile = require('../../models/Profile.model');
+const User = require('../../models/User.model');
 
 // Message Storage
 const Conversation = require('../../models/chat/Conversation.model')
@@ -38,7 +39,7 @@ function randomChatHandler(io, socket) {
 
     // === Join random chat ===
     socket.on('join-random', async () => {
-        await matchRandomUser(socket, waitingQueue, activeMatches, Profile, io, Block);
+        await matchRandomUser(socket, waitingQueue, activeMatches, Profile, io, Block, User);
     });
 
     // === Handle sending messages ===

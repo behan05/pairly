@@ -11,7 +11,7 @@
  * @param {Object} io - Socket.io server instance
 */
 
-async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io, Block) {
+async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io, Block, User) {
 
     //Prevent duplicate matching or multiple queue entries
     const isInQueue = waitingQueue.some(s => s.id === socket.id);
@@ -24,13 +24,16 @@ async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io,
 
     // Get current user’s profile to use for matching
     const currentUserProfile = await Profile.findOne({ user: socket.userId });
+    const currentEmailVarified = await User.findOne({ _id: socket.userId });
     if (!currentUserProfile) return;
+    console.log('Curent: ' + currentEmailVarified);
 
     // Iterate through waiting queue to find a match
     for (let index = 0; index < waitingQueue.length; index++) {
         const partnerSocket = waitingQueue[index];
         const partnerProfile = await Profile.findOne({ user: partnerSocket.userId });
-        if (!partnerProfile) continue;
+        const partnerEmailVarified = await Profile.findOne({ _id: partnerSocket.userId });
+        if (!partnerProfile || partnerEmailVarified) continue;
 
         // === MATCH FOUND TEMP: IMMEDIATELY MATCH WITHOUT FILTERS DUE TO SOME USERS===
 
@@ -71,6 +74,7 @@ async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io,
                         country: partnerData.country,
                         state: partnerData.state,
                     },
+                    isUserVerifiedByEmail: partnerData.isUserVerifiedByEmail
                 }
             });
         };
@@ -90,7 +94,8 @@ async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io,
             personalityType: currentUserProfile.personality,
             lookingFor: currentUserProfile.lookingFor,
             preferredLanguage: currentUserProfile.preferredLanguage,
-            preferredChatStyle: currentUserProfile.chatStyles
+            preferredChatStyle: currentUserProfile.chatStyles,
+            isUserVerifiedByEmail: currentEmailVarified?.emailVerified || false
         });
 
         // Emit match info to current socket
@@ -108,7 +113,8 @@ async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io,
             personalityType: partnerProfile.personality,
             lookingFor: partnerProfile.lookingFor,
             preferredLanguage: partnerProfile.preferredLanguage,
-            preferredChatStyle: partnerProfile.chatStyles
+            preferredChatStyle: partnerProfile.chatStyles,
+            isUserVerifiedByEmail: partnerEmailVarified?.emailVerified || false,
         });
 
         // Remove matched partner from queue
