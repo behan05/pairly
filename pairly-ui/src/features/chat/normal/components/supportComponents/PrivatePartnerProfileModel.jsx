@@ -57,6 +57,10 @@ function PrivatePartnerProfileModel(
     return users.find((u) => u.userId === userId)?.profile || {};
   }, [users, userId]);
 
+  const partnerSetting = useMemo(() => {
+    return users.find((u) => u.userId === userId)?.settings || {};
+  }, [users, userId]);
+
   const isPartnerVarified = useMemo(() => {
     return users.find((u) => u.userId === userId)?.isUserVerifiedByEmail || false;
   }, [users, userId]);
@@ -283,7 +287,7 @@ function PrivatePartnerProfileModel(
           <Stack alignItems="center" spacing={1} sx={{ py: 3 }}>
             <Box
               component="img"
-              src={partnerProfile?.profileImage || defaultAvatar}
+              src={partnerSetting.showProfilePic ? (partnerProfile?.profileImage || defaultAvatar) : defaultAvatar}
               alt="Partner Image"
               sx={{
                 width: isSm ? 90 : 120,
@@ -313,7 +317,7 @@ function PrivatePartnerProfileModel(
               </Typography>
 
               <Typography variant="body2" color="gray" gutterBottom>
-                {location || "Unknown Location"}
+                {partnerSetting.showLocation ? (location || "Unknown Location") : 'Location hidden'}
               </Typography>
             </Stack>
 

@@ -427,7 +427,7 @@ function PrivateChatSidebar() {
                                                     }}
                                                 >
                                                     <Avatar
-                                                        src={user?.profile?.profileImage || defaultAvatar}
+                                                        src={userSettings?.showProfilePic ? (user?.profile?.profileImage || defaultAvatar) : defaultAvatar}
                                                         alt={user?.profile?.fullName + ' profile Image'}
                                                         sx={{ width: 40, height: 40, objectFit: 'cover' }}
                                                     />

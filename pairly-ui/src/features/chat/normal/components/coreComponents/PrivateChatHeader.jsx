@@ -217,7 +217,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
           <Tooltip title={<StyledText text={`User Info`} />}>
             <Avatar
               alt={partnerProfile?.fullName ?? 'Stranger'}
-              src={partnerProfile?.profileImage || defaultAvatar}
+              src={partnerSettings.showProfilePic ? partnerProfile?.profileImage || defaultAvatar : defaultAvatar}
             />
           </Tooltip>
           <Box>

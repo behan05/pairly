@@ -41,6 +41,16 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
   // Get current user ID and chat state from Redux
   const currentUserId = useSelector((state) => state.profile.profileData?.user);
   const { chatUsers, conversations, loading } = useSelector((state) => state.privateChat);
+  const { chatSettings } = useSelector((state) => state.settings);
+  const chatFontSize = chatSettings?.chatFontSize;
+
+  // Font size mapping (slightly larger)
+  const fontSizeMap = {
+    small: '0.875rem',   // was 0.75rem
+    medium: '1rem',      // was 0.875rem
+    large: '1.125rem'    // was 1rem
+  };
+
 
   // Find the active chat user and their conversation ID
   const user = chatUsers.find(u => u.partnerId === selectedUserId);
@@ -167,6 +177,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                             sx={{
                               wordBreak: 'break-word',
                               fontWeight: 500,
+                              fontSize: fontSizeMap[chatFontSize] || '0.875rem',
                               color: isOwnMessage
                                 ? theme.palette.primary.contrastText
                                 : theme.palette.success.main,
@@ -183,7 +194,12 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                           </Typography>
 
                         ) : (
-                          <Typography variant="body1">{msg.content}</Typography>
+                          <Typography
+                            variant="body1"
+                            sx={{ fontSize: fontSizeMap[chatFontSize] || '0.875rem' }}
+                          >
+                            {msg.content}
+                          </Typography>
                         )}
                         <Typography
                           variant="caption"
@@ -194,6 +210,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                             alignItems: 'center',
                             gap: 0.5,
                             mt: 0.5,
+                            fontSize: fontSizeMap[chatFontSize] || '0.875rem'
                           }}
                         >
                           {formatBubbleTime(msg.createdAt)}
@@ -233,6 +250,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                             display: 'flex',
                             alignItems: 'center',
                             gap: 0.5,
+                            fontSize: fontSizeMap[chatFontSize] || '0.875rem'
                           }}
                         >
                           {formatBubbleTime(msg.createdAt)}
@@ -276,7 +294,8 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                             right: 8,
                             display: 'flex',
                             alignItems: 'center',
-                            gap: 0.5
+                            gap: 0.5,
+                            fontSize: fontSizeMap[chatFontSize] || '0.875rem'
                           }}
                         >
                           {formatBubbleTime(msg.createdAt)}
@@ -304,7 +323,8 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                             alignSelf: 'flex-end',
                             display: 'flex',
                             alignItems: 'center',
-                            gap: 0.5
+                            gap: 0.5,
+                            fontSize: fontSizeMap[chatFontSize] || '0.875rem'
                           }}
                         >
                           {formatBubbleTime(msg.createdAt)}
@@ -312,13 +332,15 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                             (msg.seen ? <DoneAllIcon
                               sx={{ fontSize: 16, color: "info.main" }} />
                               : <DoneIcon sx={{ fontSize: 16, color: "grey" }} />)}
-                        </Typography> </Stack>)}
+                        </Typography>
+                      </Stack>
+                    )}
 
                     {/* File */}
                     {msg.messageType === 'file' && (
                       <Stack sx={{ maxWidth: isSm ? '90vw' : '480px', flexWrap: 'wrap', gap: 0.5 }}>
                         <Stack flexDirection="row" alignItems="center" gap={0.3}>
-                          <Typography variant="body2" sx={{ wordBreak: 'break-word' }}>
+                          <Typography variant="body2" sx={{ wordBreak: 'break-word', fontSize: fontSizeMap[chatFontSize] || '0.875rem' }}>
                             {msg.fileName || 'file'}
                           </Typography>
                           <IconButton
@@ -337,7 +359,8 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                             right: 8,
                             display: 'flex',
                             alignItems: 'center',
-                            gap: 0.5
+                            gap: 0.5,
+                            fontSize: fontSizeMap[chatFontSize] || '0.875rem'
                           }}
                         >
                           {formatBubbleTime(msg.createdAt)}

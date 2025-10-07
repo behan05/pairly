@@ -62,6 +62,9 @@ function RandomMessageInput() {
   const partnerId = useSelector((state) => state.randomChat?.partnerId);
   const open = Boolean(anchorEl);
 
+  const { chatSettings } = useSelector((state) => state.settings);
+  const enterToSend = chatSettings?.enterToSend;
+
   // Reference to hidden file input
   const fileInputRef = useRef(null);
   const inputContainerRef = useRef(null);
@@ -579,7 +582,7 @@ function RandomMessageInput() {
           value={message}
           onChange={handleInputChange}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
+            if (enterToSend && e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
               handleSend();
             }

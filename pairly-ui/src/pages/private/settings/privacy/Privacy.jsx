@@ -124,7 +124,7 @@ function Privacy() {
                 onChange={handleToggle('showProfilePic')}
               />
             }
-            label="Show my profile picture"
+            label="Show profile image in private chat"
           />
           <FormControlLabel
             sx={{ display: 'flex', gap: 1, justifyContent: 'flex-start', alignItems: 'center' }}
@@ -135,7 +135,7 @@ function Privacy() {
                 onChange={handleToggle('showLocation')}
               />
             }
-            label="Show my location to others"
+            label="Show location in private chat"
           />
         </Section>
 

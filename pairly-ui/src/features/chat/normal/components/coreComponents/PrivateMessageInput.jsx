@@ -26,12 +26,14 @@ function PrivateMessageInput() {
   const [previews, setPreviews] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-
   const currentUserId = useSelector((state) => state.profile.profileData?.userId ?? state.profile.profileData?.user);
   const { conversationId, activePartnerId } = useSelector((state) => state.privateChat);
   const open = Boolean(anchorEl);
   const fileInputRef = useRef(null);
   const inputContainerRef = useRef(null);
+
+  const { chatSettings } = useSelector((state) => state.settings);
+  const enterToSend = chatSettings?.enterToSend;
 
   const typingTimeout = useRef(null);
   const lastTypingTime = useRef(0);
@@ -150,7 +152,7 @@ function PrivateMessageInput() {
       window.visualViewport.addEventListener('resize', handleViewportChange);
       window.visualViewport.addEventListener('scroll', handleViewportChange);
       handleViewportChange();
-    }
+    };
     return () => {
       if (window.visualViewport) {
         window.visualViewport.removeEventListener('resize', handleViewportChange);
@@ -603,19 +605,18 @@ function PrivateMessageInput() {
         <InputBase
           fullWidth
           multiline
-          maxRows={2}
+          maxRows={6}
           placeholder="Type a message..."
           value={message}
           onChange={handleInputChange}
           sx={{ mx: 2 }}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
+            if (enterToSend && e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
               handleSend();
             }
           }}
         />
-
         <Tooltip title="Emoji">
           <IconButton onClick={() => setShowEmojiPicker((prev) => !prev)}>
             <InsertEmoticonIcon />

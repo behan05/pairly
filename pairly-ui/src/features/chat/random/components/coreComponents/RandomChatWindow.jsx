@@ -59,6 +59,16 @@ function RandomChatWindow({ setShowChatWindow }) {
   } = useSelector((state) => state.randomChat);
   const [isTyping, setIsTyping] = useState(false);
 
+  const { chatSettings } = useSelector((state) => state.settings);
+  const chatFontSize = chatSettings?.chatFontSize;
+
+  // Font size mapping (slightly larger)
+  const fontSizeMap = {
+    small: '0.875rem',   // was 0.75rem
+    medium: '1rem',      // was 0.875rem
+    large: '1.125rem'    // was 1rem
+  };
+
   // Local state
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -344,13 +354,14 @@ function RandomChatWindow({ setShowChatWindow }) {
                             sx={{
                               wordBreak: 'break-word',
                               color: 'success.main',
-                              textDecoration: 'underline'
+                              textDecoration: 'underline',
+                              fontSize: fontSizeMap[chatFontSize] || '0.875rem',
                             }}
                           >
                             {msg.message}
                           </Typography>
                         ) : (
-                          <Typography variant="body1" sx={{ wordBreak: 'break-word' }}>
+                          <Typography variant="body1" sx={{ wordBreak: 'break-word', fontSize: fontSizeMap[chatFontSize] || '0.875rem' }}>
                             {msg.message}
                           </Typography>
                         )}
@@ -360,7 +371,8 @@ function RandomChatWindow({ setShowChatWindow }) {
                           sx={{
                             display: 'block',
                             textAlign: 'right',
-                            mt: 0.5
+                            mt: 0.5,
+                            fontSize: fontSizeMap[chatFontSize] || '0.875rem'
                           }}
                         >
                           {msg.timestamp}
@@ -397,7 +409,8 @@ function RandomChatWindow({ setShowChatWindow }) {
                             WebkitBackdropFilter: 'blur(4px)',
                             borderRadius: 0.5,
                             px: 1,
-                            py: 0.25
+                            py: 0.25,
+                            fontSize: fontSizeMap[chatFontSize] || '0.875rem'
                           }}
                         >
                           {msg.timestamp}
@@ -441,7 +454,8 @@ function RandomChatWindow({ setShowChatWindow }) {
                             WebkitBackdropFilter: 'blur(4px)',
                             borderRadius: 0.5,
                             px: 1,
-                            py: 0.25
+                            py: 0.25,
+                            fontSize: fontSizeMap[chatFontSize] || '0.875rem'
                           }}
                         >
                           {msg.timestamp}
@@ -481,7 +495,8 @@ function RandomChatWindow({ setShowChatWindow }) {
                             WebkitBackdropFilter: 'blur(4px)',
                             borderRadius: 0.5,
                             px: 1,
-                            py: 0.25
+                            py: 0.25,
+                            fontSize: fontSizeMap[chatFontSize] || '0.875rem'
                           }}
                         >
                           {msg.timestamp}
@@ -514,7 +529,8 @@ function RandomChatWindow({ setShowChatWindow }) {
                             WebkitBackdropFilter: 'blur(4px)',
                             borderRadius: 0.5,
                             px: 1,
-                            py: 0.25
+                            py: 0.25,
+                            fontSize: fontSizeMap[chatFontSize] || '0.875rem'
                           }}
                         >
                           {msg.timestamp}
@@ -633,7 +649,6 @@ function RandomChatWindow({ setShowChatWindow }) {
                     mt: 2,
                     borderRadius: 1,
                     cursor: 'pointer',
-                    transition: 'all 0.3s',
                     background: theme.palette.primary.main,
                     boxShadow: '0 8px 1rem',
                     fontStyle: 'oblique',
