@@ -1,6 +1,6 @@
 const ContactHelp = require('../models/ContactHelp.model');
 const BugReport = require('../models/ReportProblem.model');
-const Settings = require('../models/settings.model');
+const Settings = require('../models/Settings.model');
 const User = require('../models/User.model');
 const bcrypt = require('bcryptjs');
 const zlib = require('zlib');

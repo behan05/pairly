@@ -1,6 +1,6 @@
 const User = require('../../models/User.model');
 const Profile = require('../../models/Profile.model');
-const Settings = require('../../models/settings.model');
+const Settings = require('../../models/Settings.model');
 const Conversation = require('../../models/chat/Conversation.model');
 const Message = require('../../models/chat/Message.model');
 const Block = require('../../models/chat/Block.model');

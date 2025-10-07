@@ -3,47 +3,51 @@
  * - Prevents duplicate matches or queue entries
  * - Emits match info to both users if a partner is found
  * - Falls back to waiting if no match is available
- * 
- * @param {Object} socket - The current user socket
- * @param {Array} waitingQueue - List of user waiting to matched
- * @param {Map} activeMatches - Map of active socket ID pair
- * @param {Model} Profile - Mongoose model for user profile
- * @param {Object} io - Socket.io server instance
-*/
+ * - Ensures default Settings document exists for each user
+ */
 
-async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io, Block, User) {
-
-    //Prevent duplicate matching or multiple queue entries
+async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io, Block, User, Settings) {
+    // Prevent duplicate matching or multiple queue entries
     const isInQueue = waitingQueue.some(s => s.id === socket.id);
 
-    // If already matched or in queue, just re-emit waiting status
     if (activeMatches.has(socket.id) || isInQueue) {
         socket.emit('random:waiting');
         return;
     }
 
-    // Get current user’s profile to use for matching
-    const currentUserProfile = await Profile.findOne({ user: socket.userId });
-    const currentEmailVarified = await User.findOne({ _id: socket.userId });
+    // Fetch current user's profile and user document
+    const currentUserProfile = await Profile.findOne({ user: socket.userId }).lean();
+    const currentUser = await User.findById(socket.userId).lean();
     if (!currentUserProfile) return;
-    console.log('Curent: ' + currentEmailVarified);
 
-    // Iterate through waiting queue to find a match
+    // Ensure current user has Settings
+    let currentUserSettings = await Settings.findOne({ user: socket.userId });
+    if (!currentUserSettings) {
+        currentUserSettings = new Settings({ user: socket.userId });
+        await currentUserSettings.save();
+    }
+
+    // Try to find a partner in the waiting queue
     for (let index = 0; index < waitingQueue.length; index++) {
         const partnerSocket = waitingQueue[index];
-        const partnerProfile = await Profile.findOne({ user: partnerSocket.userId });
-        const partnerEmailVarified = await Profile.findOne({ _id: partnerSocket.userId });
-        if (!partnerProfile || partnerEmailVarified) continue;
+        const partnerProfile = await Profile.findOne({ user: partnerSocket.userId }).lean();
+        const partnerUser = await User.findById(partnerSocket.userId).lean();
+        if (!partnerProfile || !partnerUser) continue;
 
-        // === MATCH FOUND TEMP: IMMEDIATELY MATCH WITHOUT FILTERS DUE TO SOME USERS===
+        // Ensure partner also has Settings
+        let partnerSettings = await Settings.findOne({ user: partnerSocket.userId });
+        if (!partnerSettings) {
+            partnerSettings = new Settings({ user: partnerSocket.userId });
+            await partnerSettings.save();
+        }
 
-        // Check Block conditions.
+        // Check for block conditions
         const blockUsers = await Block.findOne({
             $or: [
                 { blocker: socket.userId, blocked: partnerSocket.userId },
                 { blocker: partnerSocket.userId, blocked: socket.userId }
             ]
-        });
+        }).lean();
 
         if (blockUsers) {
             waitingQueue.push(socket);
@@ -54,7 +58,7 @@ async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io,
         activeMatches.set(socket.id, partnerSocket.id);
         activeMatches.set(partnerSocket.id, socket.id);
 
-        // Emit match info to both users
+        // Helper: emit match info
         const emitMatch = (toSocket, partnerData) => {
             toSocket.emit('random:matched', {
                 partnerId: partnerData.id,
@@ -79,7 +83,7 @@ async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io,
             });
         };
 
-        // Emit match info to partnerSocket sockets
+        // Emit match info to partnerSocket
         emitMatch(partnerSocket, {
             id: socket.id,
             fullName: currentUserProfile.fullName,
@@ -95,7 +99,7 @@ async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io,
             lookingFor: currentUserProfile.lookingFor,
             preferredLanguage: currentUserProfile.preferredLanguage,
             preferredChatStyle: currentUserProfile.chatStyles,
-            isUserVerifiedByEmail: currentEmailVarified?.emailVerified || false
+            isUserVerifiedByEmail: currentUser?.emailVerified || false
         });
 
         // Emit match info to current socket
@@ -114,15 +118,15 @@ async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io,
             lookingFor: partnerProfile.lookingFor,
             preferredLanguage: partnerProfile.preferredLanguage,
             preferredChatStyle: partnerProfile.chatStyles,
-            isUserVerifiedByEmail: partnerEmailVarified?.emailVerified || false,
+            isUserVerifiedByEmail: partnerUser?.emailVerified || false,
         });
 
-        // Remove matched partner from queue
+        // Remove partner from queue after match
         waitingQueue.splice(index, 1);
         return;
     }
 
-    // If no match found, add current user to waiting queue
+    // If no match found → add to waiting queue
     waitingQueue.push(socket);
     socket.emit('random:waiting');
 }
