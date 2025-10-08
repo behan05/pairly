@@ -6,7 +6,7 @@ import ChatSidebarHeader from './ChatSidebarHeader';
 
 function Alerts() {
   return (
-    <Box sx={{ px: 1.5, py: 2 }}>
+    <Box sx={{ px: 1.5 }}>
       {/* Navbar */}
       <ChatSidebarHeader />
 
