@@ -50,7 +50,7 @@ const registerController = async (req, res) => {
       : null;
 
     // Create user (email already normalized)
-    const newUser = await User.create({
+    await User.create({
       fullName: fullNameTrimmed,
       email,
       password: hashedPassword,
@@ -61,12 +61,7 @@ const registerController = async (req, res) => {
     // Send success response
     return res.status(201).json({
       success: true,
-      message: 'Account created successfully!',
-      user: {
-        id: newUser._id,
-        email: newUser.email,
-        fullName: newUser.fullName,
-      }
+      message: 'Account created successfully!'
     });
 
   } catch (error) {
@@ -74,7 +69,6 @@ const registerController = async (req, res) => {
     return res.status(500).json({ success: false, error: 'Failed to create user', detail: error.message });
   }
 };
-
 
 const loginController = async (req, res) => {
   try {

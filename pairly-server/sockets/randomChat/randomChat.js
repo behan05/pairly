@@ -40,7 +40,7 @@ function randomChatHandler(io, socket) {
 
     // === Join random chat ===
     socket.on('join-random', async () => {
-        await matchRandomUser(socket, waitingQueue, activeMatches, Profile, io, Block, User, Settings);
+        await matchRandomUser(socket, waitingQueue, activeMatches, Profile, Block, User, Settings);
     });
 
     // === Handle sending messages ===

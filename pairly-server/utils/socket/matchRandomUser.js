@@ -6,7 +6,7 @@
  * - Ensures default Settings document exists for each user
  */
 
-async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, io, Block, User, Settings) {
+async function matchRandomUser(socket, waitingQueue, activeMatches, Profile, Block, User, Settings) {
     // Prevent duplicate matching or multiple queue entries
     const isInQueue = waitingQueue.some(s => s.id === socket.id);
 
