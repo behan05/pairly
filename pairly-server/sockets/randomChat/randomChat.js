@@ -5,7 +5,7 @@
 
 // Profile Model
 const Profile = require('../../models/Profile.model');
-const Settings = require('../../models/Settings.model');
+const Settings = require('../../models/settings.model');
 const User = require('../../models/User.model');
 
 // Message Storage
