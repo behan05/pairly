@@ -6,7 +6,6 @@ function SettingLayout() {
     <Box
       component={'section'}
       sx={{
-        p: 2,
         display: 'flex',
         flexDirection: 'column',
         bgcolor: 'background.paper',

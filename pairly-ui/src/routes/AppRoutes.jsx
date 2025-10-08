@@ -56,6 +56,8 @@ import PrivateChatLayout from '@/features/chat/normal/PrivateChatLayout';
 import PrivateChatSidebar from '@/features/chat/normal/components/coreComponents/PrivateChatSidebar';
 import Verify from '../middleware/Verify';
 import DataDeletionPage from '../pages/private/settings/account/HowToDeleteData/DataDeletionPage';
+import Premium from '../components/private/premium/Premium';
+import Alerts from '../features/chat/common/Alerts';
 
 export const routes = createBrowserRouter([
   // === Public routes ===
@@ -94,6 +96,7 @@ export const routes = createBrowserRouter([
           // Default view at /pairly
           { index: true, element: <RandomSidebar /> },
           { path: 'friend-requests', element: <FriendRequestList /> },
+          { path: 'alerts', element: <Alerts /> },
 
           // Settings
           {
@@ -135,6 +138,10 @@ export const routes = createBrowserRouter([
               {
                 path: 'blocked-users',
                 element: <BlockedList />,
+              },
+              {
+                path: 'premium',
+                element: <Premium />,
               },
 
               {

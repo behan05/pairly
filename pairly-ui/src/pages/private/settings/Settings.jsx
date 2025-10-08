@@ -22,7 +22,8 @@ import {
   ChatIcon,
   LogoutIcon,
   ShareIcon,
-  BlockIcon
+  BlockIcon,
+  StarIcon
 } from '@/MUI/MuiIcons';
 import { Link, useNavigate } from 'react-router-dom';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
@@ -78,6 +79,12 @@ function Settings() {
       title: 'Blocked',
       subTitle: 'Manage blocked users'
     },
+    // {
+    //   path: 'premium',
+    //   icon: <StarIcon sx={{ mr: 1.1, color: 'warning.main' }} />,
+    //   title: 'Premium',
+    //   subTitle: 'Upgrade plan, pricing, exclusive features'
+    // },
     {
       path: 'help',
       icon: <SosIcon sx={{ mr: 1.1, color: 'error.main' }} />,
@@ -137,7 +144,8 @@ function Settings() {
   }
 `;
   return (
-    <Box component={'section'} sx={{ minWidth: '290px' }}>
+    <Box component={'section'} 
+    sx={{ minWidth: '290px',p: 2 }}>
 
       {/* Header with arrow back icon */}
       <Stack mb={2}>

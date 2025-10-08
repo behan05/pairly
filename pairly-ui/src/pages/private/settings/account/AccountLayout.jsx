@@ -3,7 +3,7 @@ import { Box } from '@/MUI/MuiComponents';
 
 function AccountLayout() {
   return (
-    <Box component={'section'}>
+    <Box component={'section'} sx={{p: 2,}}>
       <Outlet />
     </Box>
   );

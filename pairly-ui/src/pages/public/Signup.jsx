@@ -95,7 +95,7 @@ function Signup() {
     if (!form.email.trim()) {
       newErrors.email = 'Email or username is required';
       isValid = false;
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+    } else if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(form.email.trim().toLowerCase())) {
       newErrors.email = 'Enter a valid email address';
       isValid = false;
     }
@@ -139,7 +139,7 @@ function Signup() {
           color: theme.palette.text.primary,
         }
       });
-      setTimeout(() => navigate('/login'), 1000);
+      setTimeout(() => navigate('/login'), 500);
     } else {
       toast.error(response.message || 'Signup failed!', {
         style: {

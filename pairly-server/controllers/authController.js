@@ -2,10 +2,33 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User.model');
 const generateToken = require('../utils/generateToken');
 
+// helper email regex (reasonable strictness)
+const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
 // auth Controllers
 const registerController = async (req, res) => {
   try {
-    const { fullName, email, password, confirmPassword, authProvider = 'local' } = req.body;
+    const {
+      fullName,
+      email: rawEmail,
+      password,
+      confirmPassword,
+      authProvider = 'local'
+    } = req.body;
+
+    // normalize input
+    const fullNameTrimmed = (fullName || '').trim();
+    const email = (rawEmail || '').trim().toLowerCase();
+
+    // Basic required fields
+    if (!email) {
+      return res.status(400).json({ success: false, error: 'Email is required' });
+    }
+
+    // Validate email format
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ success: false, error: 'Enter a valid email address' });
+    }
 
     // Check if user exists
     const existingUser = await User.findOne({ email });
@@ -15,8 +38,10 @@ const registerController = async (req, res) => {
 
     // Password validation for local
     if (authProvider === 'local') {
-      if (!password || !confirmPassword) return res.status(400).json({ success: false, error: 'Password required' });
-      if (password !== confirmPassword) return res.status(400).json({ success: false, error: 'Passwords do not match' });
+      if (!password || !confirmPassword)
+        return res.status(400).json({ success: false, error: 'Password required' });
+      if (password !== confirmPassword)
+        return res.status(400).json({ success: false, error: 'Passwords do not match' });
     }
 
     // Hash password
@@ -24,19 +49,32 @@ const registerController = async (req, res) => {
       ? await bcrypt.hash(password, await bcrypt.genSalt(10))
       : null;
 
-    // Create user
-    await User.create({
-      fullName,
+    // Create user (email already normalized)
+    const newUser = await User.create({
+      fullName: fullNameTrimmed,
       email,
       password: hashedPassword,
       authProvider,
       emailVerified: false,
     });
 
+    // Send success response
+    return res.status(201).json({
+      success: true,
+      message: 'Account created successfully!',
+      user: {
+        id: newUser._id,
+        email: newUser.email,
+        fullName: newUser.fullName,
+      }
+    });
+
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to create user', detail: error.message });
+    console.error('registerController error:', error);
+    return res.status(500).json({ success: false, error: 'Failed to create user', detail: error.message });
   }
 };
+
 
 const loginController = async (req, res) => {
   try {

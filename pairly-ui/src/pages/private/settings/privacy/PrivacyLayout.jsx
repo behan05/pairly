@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 function PrivacyLayout() {
   return (
-    <Box component={'section'}>
+    <Box component={'section'} sx={{p: 2,}}>
       <Outlet />
     </Box>
   );

@@ -12,6 +12,9 @@ import ContactMailOutlinedIcon from '@mui/icons-material/ContactMailOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
+import MarkunreadIcon from '@mui/icons-material/Markunread';
+import DraftsIcon from '@mui/icons-material/Drafts';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 
 // ==================== Authentication ====================
 import LockIcon from '@mui/icons-material/Lock';
@@ -125,6 +128,7 @@ import TextFieldsIcon from '@mui/icons-material/TextFields';
 import UploadIcon from '@mui/icons-material/Upload';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import StarIcon from '@mui/icons-material/Star';
 
 // ==================== Partner Profile Icons ====================
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
@@ -151,6 +155,11 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
+// // ==================== pricing Icons ====================
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
+import AspectRatioIcon from '@mui/icons-material/AspectRatio';
+
 // ==================== Export All ====================
 export {
   // Navigation & Layout
@@ -167,6 +176,9 @@ export {
   HomeOutlinedIcon,
   InfoOutlinedIcon,
   PersonAddAltOutlinedIcon,
+  MarkunreadIcon,
+  DraftsIcon,
+  NotificationsNoneIcon,
 
   // Authentication
   LockIcon,
@@ -302,5 +314,11 @@ export {
   SupportAgentIcon,
   TextFieldsIcon,
   UploadIcon,
-  AccessTimeIcon
+  AccessTimeIcon,
+  StarIcon,
+
+  // Pricing Icons
+  CheckIcon,
+  ClearIcon,
+  AspectRatioIcon
 };

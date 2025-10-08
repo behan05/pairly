@@ -21,7 +21,10 @@ import {
   ChatIcon,
   ShareIcon,
   ShuffleIcon,
-  defaultAvatar
+  defaultAvatar,
+  StarIcon,
+  MarkunreadIcon,
+  DraftsIcon,
 } from '@/MUI/MuiIcons';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -58,6 +61,8 @@ const ChatSidebarHeader = ({ children }) => {
     dispatch(getSettingsPrivacy());
   }, [dispatch]);
 
+  const hasNewAlert = 0 > 0;
+
   const navItems = [
     {
       path: '/pairly',
@@ -79,6 +84,15 @@ const ChatSidebarHeader = ({ children }) => {
         </Badge>
       ),
       label: 'Friend Requests'
+    },
+    {
+      path: '/pairly/alerts',
+      icon: hasNewAlert ? (
+        <MarkunreadIcon sx={{ color: theme.palette.warning.main }} />
+      ) : (
+        <DraftsIcon sx={{ color: theme.palette.text.disabled }} />
+      ),
+      label: 'Alert Messages',
     },
   ];
 
@@ -221,7 +235,7 @@ const ChatSidebarHeader = ({ children }) => {
             minWidth: 200,
             mt: 1,
             p: '0px 10px',
-            py: 0.75,
+            // py: 0.75,
             overflow: 'hidden'
           }
         }}
@@ -241,17 +255,24 @@ const ChatSidebarHeader = ({ children }) => {
             )
           },
           {
-            label: 'Help',
+            label: 'Help | Support',
             to: '/pairly/settings/help',
             icon: (
-              <HelpOutlineIcon fontSize="small" sx={{ mr: 1, color: theme.palette.warning.main }} />
+              <HelpOutlineIcon fontSize="small" sx={{ mr: 1, color: theme.palette.info.dark }} />
+            )
+          },
+          {
+            label: 'Upgrade plan',
+            to: '/pairly/settings/premium',
+            icon: (
+              <StarIcon fontSize="small" sx={{ mr: 1, color: theme.palette.warning.main }} />
             )
           },
           {
             label: 'Invite a Friend',
             onClick: handleShareClick,
             icon: <ShareIcon fontSize="small" sx={{ mr: 1, color: theme.palette.success.main }} />
-          }
+          },
         ].map(({ label, to, onClick, icon }) => (
           <MenuItem
             key={label}
