@@ -1,406 +1,119 @@
-import { useEffect, useRef, useState } from 'react';
-import { Box, Stack, Typography, useTheme } from '@mui/material';
-import gsap from 'gsap';
+import { useState, useEffect } from 'react';
+import { useTheme, useMediaQuery, Box, Typography, Stack } from '@/MUI/MuiComponents';
+import { Player } from '@lottiefiles/react-lottie-player';
+import searchingUsersInLightMode from '@/assets/lottie/searchingUsersInLightMode.json';
+import searchingUsersInDarkMode from '@/assets/lottie/searchingUsersInDarkMode.json';
 
-/**
- * Animated ripple loader with countdown, theme-aware.
- */
-const AdvancedCountdownLoader = ({ startFrom = 10, autoRestart = false }) => {
-  const [time, setTime] = useState(startFrom);
-  const numberRef = useRef(null);
+const messages = [
+  'Finding your best match…',
+  'Be kind 🙂',
+  'Respect everyone',
+  'Have fun!',
+  'Chat safely'
+];
+
+const CountdownTimer = ({ startFrom = 10, autoRestart = true }) => {
   const theme = useTheme();
+  const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMd = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
-  let themeMode = localStorage.getItem('theme');
+  const [count, setCount] = useState(startFrom);
+  const [msgIndex, setMsgIndex] = useState(0);
 
+  const getTheme = localStorage.getItem('theme');
+  const searchingUsers = getTheme === 'dark' ? searchingUsersInDarkMode : searchingUsersInLightMode
+
+
+  // Countdown logic
   useEffect(() => {
-    let timer;
-    const animate = () => {
-      if (numberRef.current) {
-        gsap.fromTo(
-          numberRef.current,
-          { scale: 0.7, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.7)' }
-        );
+    const timer = setTimeout(() => {
+      if (count <= 0) {
+        if (autoRestart) setCount(startFrom);
+        return;
       }
-    };
-
-    if (time > 0) {
-      animate();
-      timer = setTimeout(() => setTime((prev) => prev - 1), 1000);
-    } else if (autoRestart) {
-      timer = setTimeout(() => setTime(startFrom), 1000);
-    }
+      setCount(c => c - 1);
+    }, 1000);
 
     return () => clearTimeout(timer);
-  }, [time, startFrom, autoRestart]);
+  }, [count, startFrom, autoRestart]);
 
-  if (themeMode === 'dark') {
+  // Message rotation logic
+  useEffect(() => {
+    const msgTimer = setInterval(() => {
+      setMsgIndex(prev => (prev + 1) % messages.length);
+    }, 1000); // change message every second
+    return () => clearInterval(msgTimer);
+  }, []);
 
-    // Use theme palette for ripples and text
-    const rippleColor = theme.palette.mode === 'light'
-      ? theme.palette.primary.light
-      : theme.palette.primary.dark;
+  const maxSize = isXs ? '80vw' : isMd ? '60vw' : '50vw';
+  const maxHeight = isXs ? '50vh' : isMd ? '55vh' : '60vh';
 
-    const rippleGradient = `linear-gradient(0deg, ${rippleColor}20 0%, ${rippleColor}10 100%)`;
-
-    const numberColor = theme.palette.primary.main;
-    const subtitleColor = theme.palette.text.primary;
-
-    return (
+  return (
+    <Stack
+      alignItems="center"
+      justifyContent="center"
+      spacing={2}
+      sx={{ position: 'relative', width: '100%' }}
+    >
+      {/* Lottie Animation */}
       <Box
         sx={{
-          position: 'relative',
-          width: 250,
-          height: 250,
+          maxWidth: maxSize,
+          maxHeight: maxHeight,
+          width: '100%',
+          height: 'auto',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           mx: 'auto',
-          mb: 4
+          overflow: 'hidden',
+          filter: `drop-shadow(20px 10px 6px ${theme.palette.divider})`,
+          borderRadius: 1.5,
+          position: 'relative',
         }}
       >
-        {/* Ripple Loader */}
-        {[...Array(5)].map((_, index) => (
-          <Box
-            key={index}
-            sx={{
-              position: 'absolute',
-              borderRadius: '50%',
-              borderTop: `1px solid ${rippleColor}40`,
-              background: rippleGradient,
-              inset: `${40 - index * 10}%`,
-              zIndex: 100 - index,
-              animation: `ripple 2s ${index * 0.2}s infinite ease-in-out`,
-              boxShadow: `${rippleColor}40 0px 10px 10px -0px`,
-            }}
-          />
-        ))}
+        <Player
+          autoplay
+          loop
+          src={searchingUsers}
+          style={{ width: '100%', height: '100%', maxHeight }}
+        />
 
-        {/* Countdown */}
-        <Stack
+        {/* Countdown number */}
+        <Typography
+          variant={isXs ? 'h4' : 'h3'}
           sx={{
             position: 'absolute',
-            inset: 0,
-            display: 'grid',
-            placeContent: 'center',
-            padding: '30%',
+            top: getTheme === 'dark' ? '90%' : '50%',
+            color: theme.palette.text.primary,
+            fontWeight: 'bold',
+            textShadow: `0 0 8px ${theme.palette.primary.main}`,
           }}
         >
-          <Typography
-            ref={numberRef}
-            variant="h2"
-            sx={{
-              fontWeight: 700,
-              fontFamily: 'monospace',
-              color: numberColor,
-              textAlign: 'center',
-            }}
-          >
-            {time > 0 ? time : '🚀'}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            sx={{
-              textAlign: 'center',
-              color: subtitleColor,
-              fontSize: '1rem',
-              fontWeight: 900
-            }}
-          >
-            {time > 0 ? 'Finding best match...' : 'Time’s up!'}
-          </Typography>
-        </Stack>
-
-        {/* Ripple Keyframes */}
-        <style>
-          {`
-          @keyframes ripple {
-            0% {
-              transform: scale(1);
-              box-shadow: ${rippleColor}40 0px 10px 10px -0px;
-            }
-            50% {
-              transform: scale(1.3);
-              box-shadow: ${rippleColor}40 0px 30px 20px -0px;
-            }
-            100% {
-              transform: scale(1);
-              box-shadow: ${rippleColor}40 0px 10px 10px -0px;
-            }
-          }
-        `}
-        </style>
+          {count}
+        </Typography>
       </Box>
-    );
-  }
-  else {
 
-    return (
-      <>
-        <style>
-          {`
-        .pl {
-            box-shadow: 2em 0 2em rgba(0, 0, 0, 0.2) inset, -2em 0 2em rgba(255, 255, 255, 0.1) inset;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            transform: rotateX(30deg) rotateZ(45deg);
-            width: 14em;
-            height: 14em;
-            color: white;
-          }
+      {/* Rotating messages */}
+      <Typography
+        variant="subtitle1"
+        sx={{
+          color: theme.palette.text.primary,
+          fontWeight: 600,
+          textAlign: 'center',
+          fontStyle: 'italic',
+          fontSize: isXs ? '1rem' : '1.1rem',
+          textShadow: `0 0 6px ${theme.palette.primary.main}33, 0 0 2px ${theme.palette.info.main}33`, // subtle glow
+          transition: 'all 0.3s ease-in-out',
+          mx: 2,
+          letterSpacing: 0.5,
+        }}
+      >
+        {messages[msgIndex]}
+      </Typography>
 
-          .pl, .pl__dot {
-            border-radius: 50%;
-          }
-
-          .pl__dot {
-            animation-name: shadow724;
-            box-shadow: 0.1em 0.1em 0 0.1em black, 0.3em 0 0.3em rgba(0, 0, 0, 0.5);
-            top: calc(50% - 0.75em);
-            left: calc(50% - 0.75em);
-            width: 1.5em;
-            height: 1.5em;
-          }
-
-          .pl__dot, .pl__dot:before, .pl__dot:after {
-            animation-duration: 2s;
-            animation-iteration-count: infinite;
-            position: absolute;
-          }
-
-          .pl__dot:before, .pl__dot:after {
-            content: "";
-            display: block;
-            left: 0;
-            width: inherit;
-            transition: background-color var(--trans-dur);
-          }
-
-          .pl__dot:before {
-            animation-name: pushInOut1724;
-            background-color: var(--bg);
-            border-radius: inherit;
-            box-shadow: 0.05em 0 0.1em rgba(255, 255, 255, 0.2) inset;
-            height: inherit;
-            z-index: 1;
-          }
-
-          .pl__dot:after {
-            animation-name: pushInOut2724;
-            background-color: var(--primary1);
-            border-radius: 0.75em;
-            box-shadow: 0.1em 0.3em 0.2em rgba(255, 255, 255, 0.4) inset, 0 -0.4em 0.2em #2e3138 inset, 0 -1em 0.25em rgba(0, 0, 0, 0.3) inset;
-            bottom: 0;
-            clip-path: polygon(0 75%, 100% 75%, 100% 100%, 0 100%);
-            height: 3em;
-            transform: rotate(-45deg);
-            transform-origin: 50% 2.25em;
-          }
-            .pl__dot:nth-child(1) { transform: rotate(0deg) translateX(5em) rotate(0deg); z-index:5; animation-delay: 0s; }
-          .pl__dot:nth-child(2) { transform: rotate(-30deg) translateX(5em) rotate(30deg); z-index:4; animation-delay: -0.1666666667s; }
-          .pl__dot:nth-child(3) { transform: rotate(-60deg) translateX(5em) rotate(60deg); z-index:3; animation-delay: -0.3333333333s; }
-          .pl__dot:nth-child(4) { transform: rotate(-90deg) translateX(5em) rotate(90deg); z-index:2; animation-delay: -0.5s; }
-          .pl__dot:nth-child(5) {
-  transform: rotate(-120deg) translateX(5em) rotate(120deg);
-  z-index: 1;
-}
-
-.pl__dot:nth-child(5), .pl__dot:nth-child(5):before, .pl__dot:nth-child(5):after {
-  animation-delay: -0.6666666667s;
-}
-
-.pl__dot:nth-child(6) {
-  transform: rotate(-150deg) translateX(5em) rotate(150deg);
-  z-index: 1;
-}
-
-.pl__dot:nth-child(6), .pl__dot:nth-child(6):before, .pl__dot:nth-child(6):after {
-  animation-delay: -0.8333333333s;
-}
-
-.pl__dot:nth-child(7) {
-  transform: rotate(-180deg) translateX(5em) rotate(180deg);
-  z-index: 2;
-}
-
-.pl__dot:nth-child(7), .pl__dot:nth-child(7):before, .pl__dot:nth-child(7):after {
-  animation-delay: -1s;
-}
-
-.pl__dot:nth-child(8) {
-  transform: rotate(-210deg) translateX(5em) rotate(210deg);
-  z-index: 3;
-}
-
-.pl__dot:nth-child(8), .pl__dot:nth-child(8):before, .pl__dot:nth-child(8):after {
-  animation-delay: -1.1666666667s;
-}
-
-.pl__dot:nth-child(9) {
-  transform: rotate(-240deg) translateX(5em) rotate(240deg);
-  z-index: 4;
-}
-
-.pl__dot:nth-child(9), .pl__dot:nth-child(9):before, .pl__dot:nth-child(9):after {
-  animation-delay: -1.3333333333s;
-}
-
-.pl__dot:nth-child(10) {
-  transform: rotate(-270deg) translateX(5em) rotate(270deg);
-  z-index: 5;
-}
-
-.pl__dot:nth-child(10), .pl__dot:nth-child(10):before, .pl__dot:nth-child(10):after {
-  animation-delay: -1.5s;
-}
-
-.pl__dot:nth-child(11) {
-  transform: rotate(-300deg) translateX(5em) rotate(300deg);
-  z-index: 6;
-}
-
-.pl__dot:nth-child(11), .pl__dot:nth-child(11):before, .pl__dot:nth-child(11):after {
-  animation-delay: -1.6666666667s;
-}
-
-.pl__dot:nth-child(12) {
-  transform: rotate(-330deg) translateX(5em) rotate(330deg);
-  z-index: 6;
-}
-
-.pl__dot:nth-child(12), .pl__dot:nth-child(12):before, .pl__dot:nth-child(12):after {
-  animation-delay: -1.8333333333s;
-}
-
-.pl__text {
-  font-size: 0.75em;
-  max-width: 5rem;
-  position: relative;
-  text-shadow: 0 0 0.1em var(--fg-t);
-  transform: rotateZ(-45deg);
-}
-@keyframes shadow724 {
-  from {
-    animation-timing-function: ease-in;
-    box-shadow: 0.1em 0.1em 0 0.1em black, 0.3em 0 0.3em rgba(0, 0, 0, 0.3);
-  }
-
-  25% {
-    animation-timing-function: ease-out;
-    box-shadow: 0.1em 0.1em 0 0.1em black, 0.8em 0 0.8em rgba(0, 0, 0, 0.5);
-  }
-
-  50%, to {
-    box-shadow: 0.1em 0.1em 0 0.1em black, 0.3em 0 0.3em rgba(0, 0, 0, 0.3);
-  }
-}
-
-@keyframes pushInOut1724 {
-  from {
-    animation-timing-function: ease-in;
-    background-color: var(--bg);
-    transform: translate(0, 0);
-  }
-
-  25% {
-    animation-timing-function: ease-out;
-    background-color: var(--primary2);
-    transform: translate(-71%, -71%);
-  }
-
-  50%, to {
-    background-color: var(--bg);
-    transform: translate(0, 0);
-  }
-}
-
-@keyframes pushInOut2724 {
-  from {
-    animation-timing-function: ease-in;
-    background-color: var(--bg);
-    clip-path: polygon(0 75%, 100% 75%, 100% 100%, 0 100%);
-  }
-
-  25% {
-    animation-timing-function: ease-out;
-    background-color: var(--primary1);
-    clip-path: polygon(0 25%, 100% 25%, 100% 100%, 0 100%);
-  }
-
-  50%, to {
-    background-color: var(--bg);
-    clip-path: polygon(0 75%, 100% 75%, 100% 100%, 0 100%);
-  }
-}
-        `}
-        </style>
-        <Box sx={{
-          position: 'relative',
-          width: 250,
-          height: 250,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          mx: 'auto',
-        }}>
-          <Box className="pl">
-            <Box className="pl__dot"></Box>
-            <Box className="pl__dot"></Box>
-            <Box className="pl__dot"></Box>
-            <Box className="pl__dot"></Box>
-            <Box className="pl__dot"></Box>
-            <Box className="pl__dot"></Box>
-            <Box className="pl__dot"></Box>
-            <Box className="pl__dot"></Box>
-            <Box className="pl__dot"></Box>
-            <Box className="pl__dot"></Box>
-            <Box className="pl__dot"></Box>
-            <Box className="pl__dot"></Box>
-            <Box className="pl__text">
-              {/* Countdown */}
-              <Stack
-                sx={{
-                  position: 'absolute',
-                  inset: 0,
-                  display: 'grid',
-                  placeContent: 'center',
-                  padding: '30%',
-                }}
-              >
-                <Typography
-                  ref={numberRef}
-                  variant="h2"
-                  sx={{
-                    fontWeight: 700,
-                    fontFamily: 'monospace',
-                    textAlign: 'center',
-                    color: theme.palette.text.primary
-                  }}
-                >
-                  {time > 0 ? time : '🚀'}
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  sx={{
-                    textAlign: 'center',
-                    color: theme.palette.text.secondary,
-                    fontSize: '0.5rem',
-                    fontWeight: 600
-                  }}
-                >
-                  {time > 0 ? 'Finding best match...' : 'Time’s up!'}
-                </Typography>
-              </Stack>
-            </Box>
-          </Box>
-        </Box>
-      </>
-    )
-  }
+    </Stack>
+  );
 };
 
-export default AdvancedCountdownLoader;
+export default CountdownTimer;

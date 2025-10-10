@@ -145,7 +145,6 @@ const ChatSidebarHeader = ({ children }) => {
         position: 'sticky',
         top: 0,
         zIndex: 999,
-        backgroundColor: 'background.paper',
         backdropFilter: 'blur(4px)',
         WebkitBackdropFilter: 'blur(4px)'
       }}

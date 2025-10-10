@@ -1,7 +1,8 @@
 import { useMediaQuery, useTheme, Box } from '@/MUI/MuiComponents';
-import video from '@/assets/videos/landingPageSidebarVideo.mp4';
+import { Player } from '@lottiefiles/react-lottie-player'; // or 'lottie-react'
+import randomChatWelcome from '@/assets/lottie/randomChatWelcome.json';
 
-const RandomLandingVideo = () => {
+const RandomLandingLottie = () => {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('sm'));
   const isMd = useMediaQuery(theme.breakpoints.between('sm', 'md'));
@@ -25,22 +26,18 @@ const RandomLandingVideo = () => {
         borderRadius: 1.5,
       }}
     >
-      <video
-        src={video}
-        autoPlay
+      <Player
+        autoplay
         loop
-        muted
-        playsInline
+        src={randomChatWelcome}
         style={{
           width: '100%',
           height: '100%',
-          objectFit: 'contain',
-          display: 'block',
-
+          maxHeight: maxHeight,
         }}
       />
     </Box>
   );
 };
 
-export default RandomLandingVideo;
+export default RandomLandingLottie;

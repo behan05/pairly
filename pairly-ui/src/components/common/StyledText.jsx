@@ -1,18 +1,40 @@
-import { Box, useTheme } from '@/MUI/MuiComponents';
+import { Box, useTheme, keyframes } from '@mui/system'; // <-- important
 
-// StyledText component for rendering gradient-colored, bold text
-function StyledText({ text }) {
+const shimmer = keyframes`
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+`;
+
+function StyledText({ text, sx = {} }) {
   const theme = useTheme();
+
+  const gradientColors =
+    theme.palette.mode === 'dark'
+      ? [
+        theme.palette.primary.main, // rich purple
+        theme.palette.info.main,    // cyan accent
+        theme.palette.success.main  // subtle green
+      ]
+      : [
+        theme.palette.primary.dark, // darker purple for light background
+        theme.palette.info.dark,    // darker cyan
+        theme.palette.success.dark  // darker green
+      ];
+
+
   return (
     <Box
-      component={'span'} // Render as a span element
+      component="span"
       sx={{
-        background: `
-                linear-gradient(270deg, #b355d1, #ccc, 
-                ${theme.palette.warning.main}, #B047ED)`, // Gradient background
-        WebkitBackgroundClip: 'text', // Clip background to text
-        WebkitTextFillColor: 'transparent', // Make text fill transparent for gradient effect
-        fontWeight: 'bold' // Bold font weight
+        display: 'inline-block',
+        background: `linear-gradient(270deg, ${gradientColors.join(', ')})`,
+        backgroundSize: '400% 400%',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        fontWeight: 'bold',
+        animation: `${shimmer} 4s ease infinite`,
+        ...sx,
       }}
     >
       {text}
