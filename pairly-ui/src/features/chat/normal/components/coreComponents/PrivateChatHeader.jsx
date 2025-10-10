@@ -366,6 +366,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
       <ProposeToPartnerModel
         open={proposeModel}
         onClose={setProposeModel}
+        partnerId={userId}
       />
 
       <BlockUserModal

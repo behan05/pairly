@@ -23,7 +23,6 @@ const CountdownTimer = ({ startFrom = 10, autoRestart = true }) => {
   const getTheme = localStorage.getItem('theme');
   const searchingUsers = getTheme === 'dark' ? searchingUsersInDarkMode : searchingUsersInLightMode
 
-
   // Countdown logic
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -84,7 +83,7 @@ const CountdownTimer = ({ startFrom = 10, autoRestart = true }) => {
           variant={isXs ? 'h4' : 'h3'}
           sx={{
             position: 'absolute',
-            top: getTheme === 'dark' ? '90%' : '50%',
+            top: getTheme === 'dark' ? '80%' : '50%',
             color: theme.palette.text.primary,
             fontWeight: 'bold',
             textShadow: `0 0 8px ${theme.palette.primary.main}`,

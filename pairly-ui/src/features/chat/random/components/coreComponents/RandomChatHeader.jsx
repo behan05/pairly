@@ -19,7 +19,9 @@ import {
   ContentCopyIcon,
   NotificationsOffIcon,
   defaultAvatar,
+  CheckCircleIcon
 } from '@/MUI/MuiIcons';
+import { blue } from "@mui/material/colors";
 
 // Components
 import TypingIndicator from '@/components/private/randomChat/TypingIndicator';
@@ -66,7 +68,9 @@ function RandomChatHeader() {
 
   // Redux state
   const { partnerProfile, partnerId, partnerTyping } = useSelector((state) => state.randomChat);
-  
+
+  // isUserVerifiedByEmail
+
   /**
    * Opens menu
    * @param {React.MouseEvent<HTMLButtonElement>} event
@@ -183,7 +187,7 @@ function RandomChatHeader() {
         {/* Left Section: Avatar + Name + Location */}
         <Stack
           direction="row"
-          spacing={2}
+          spacing={1.5}
           alignItems="center"
           sx={{ cursor: 'pointer' }}
           onClick={() => setOpenProfileModal(true)}
@@ -195,11 +199,24 @@ function RandomChatHeader() {
             />
           </Tooltip>
           <Box>
-            <Tooltip title={<StyledText text={'Partner Profile'} />}>
-              <Typography variant="subtitle1" fontWeight={600} color="text.primary">
-                {partnerProfile?.fullName ?? 'Stranger'}
-              </Typography>
-            </Tooltip>
+            <Stack
+              variant="h6"
+              fontWeight={600}
+              display="flex"
+              flexDirection={'row'}
+              alignItems="center"
+            >
+              <Tooltip title={<StyledText text={'Partner Profile'} />}>
+                <Typography variant="subtitle1" fontWeight={600} color="text.primary">
+                  {partnerProfile?.fullName ?? 'Stranger'}
+                </Typography>
+              </Tooltip>
+              {partnerProfile.isUserVerifiedByEmail && (
+                <Tooltip title="Verified">
+                  <CheckCircleIcon sx={{ color: blue[500], fontSize: 22, ml: 0.5 }} />
+                </Tooltip>
+              )}
+            </Stack>
 
             <Typography
               variant="body2"

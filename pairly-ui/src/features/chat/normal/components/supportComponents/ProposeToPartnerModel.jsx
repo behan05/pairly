@@ -1,34 +1,4 @@
-import React from 'react'
-
-// ------------------------------------ Options overview -------------------------------
-/**
- * @Select Proposal type
- * 1 - Be my love
- * 2 - Be my life partner
- * 3 - Be best friend
- * 4 - Have fun with me
- * 5 - Be a gaming partner
- * 6 - can you maintain long-distance relationship
- * 
- * @Write Personl message or your feelings
- * 
- * @Choose theme/style
- * 
- * @Pick backgroud
- * 1 - Romantic
- * 2 - fun
- * 3 - elegant
- * 4 - casual
- * 5 - choose from local device (your own background)
- * 
- * @Select Cake/Gift
- * Added different variant or varity
- * 
- * @Add background music/sound effect
- *  
- * @Preview proposal (Allow all edit to options)
- * 
- */
+import React, { useEffect, useMemo, useState } from 'react'
 
 import {
     Box,
@@ -42,277 +12,543 @@ import {
     Stack,
     useTheme,
     IconButton,
+    Tooltip,
+    Divider,
+    Button
 } from '../../../../../MUI/MuiComponents';
 import {
     defaultAvatar,
     CloseIcon,
+    RefreshIcon,
 } from '../../../../../MUI/MuiIcons';
+import { useDispatch, useSelector } from 'react-redux';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-const backgroundOptions = {
-    romantic: [
-        { id: "rom1", src: "https://picsum.photos/id/237/300/200" },
-        { id: "rom2", src: "https://picsum.photos/id/238/300/200" },
-        { id: "rom3", src: "https://picsum.photos/id/239/300/200" },
-    ],
-    fun: [
-        { id: "fun1", src: "https://picsum.photos/id/240/300/200" },
-        { id: "fun2", src: "https://picsum.photos/id/241/300/200" },
-    ],
-    elegant: [
-        { id: "eleg1", src: "https://picsum.photos/id/242/300/200" },
-        { id: "eleg2", src: "https://picsum.photos/id/243/300/200" },
-    ],
-    casual: [
-        { id: "cas1", src: "https://picsum.photos/id/244/300/200" },
-        { id: "cas2", src: "https://picsum.photos/id/245/300/200" },
-    ],
-    gaming: [
-        { id: "game1", src: "https://picsum.photos/id/246/300/200" },
-        { id: "game2", src: "https://picsum.photos/id/247/300/200" },
-    ],
-};
+import ProposalLottie from './ProposalLottieAnimation';
+import { proposeMessages } from '@/utils/proposeMessages';
 
-const giftOptions = [
-    { id: "cake1", src: "https://picsum.photos/id/250/200/200", label: "Cake" },
-    { id: "gift1", src: "https://picsum.photos/id/251/200/200", label: "Gift Box" },
-    { id: "ring1", src: "https://picsum.photos/id/252/200/200", label: "Ring" },
+// Accessing Music via Pixabay API
+import { PIXABAY_AUDIO_API } from '@/api/config';
+
+const proposeTypes = [
+    { type: "Be my life partner 💖", label: "life_partner" },
+    { type: "Will you marry me? 💍", label: "forever_marry" },
+    { type: "You feel like home 🏡", label: "home_forever" },
+    { type: "Two souls, one heart 💓", label: "two_souls" },
+    { type: "You’re my sunrise 🌅", label: "sunrise" },
+    { type: "Steal my fries & heart 🍟❤️", label: "steal_fries" },
+    { type: "Grow old with me 👵👴", label: "grow_old" },
+    { type: "Together forever 💞", label: "together_place" },
 ];
 
-const musicOptions = {
-    romantic_piano: [
-        { id: "track1", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-        { id: "track2", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-        { id: "track3", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-    ],
-    fun_party_beat: [
-        { id: "track4", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-        { id: "track5", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-        { id: "track6", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-    ],
-    elegant_string: [
-        { id: "track7", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
-        { id: "track8", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
-        { id: "track9", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
-    ],
-    casual_chill_vibes: [
-        { id: "track10", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
-        { id: "track11", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
-        { id: "track12", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
-    ],
-    gaming_electron: [
-        { id: "track13", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" },
-        { id: "track14", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" },
-        { id: "track15", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" },
-    ],
-};
+const proposalThemes = [
+    { type: "Romantic Glow", label: "romantic_glow" },
+    { type: "Dreamy Pastel", label: "dreamy_pastel" },
+    { type: "Elegant Minimal", label: "elegant_minimal" },
+    { type: "Night Sky", label: "night_sky" },
+    { type: "Sunset Romance", label: "sunset_romance" },
+    { type: "Vintage Charm", label: "vintage_charm" },
+    { type: "Magical Fantasy", label: "magical_fantasy" },
+    { type: "Floral Bliss", label: "floral_bliss" },
+    { type: "Modern Chic", label: "modern_chic" },
+    { type: "Winter Sparkle", label: "winter_sparkle" }
+];
 
-function ProposeToPartnerModel({ open, onClose }) {
+const backgroundOptions = [
+    { type: "Light", label: "light" },
+    { type: "Dark", label: "dark" },
+    { type: "Gradient", label: "gradient" },
+    { type: "Custom Image", label: "custom_image" },
+    { type: "Blur", label: "blur" },
+    { type: "Starry Night", label: "starry_night" },
+    { type: "Sunset", label: "sunset" },
+    { type: "Floral", label: "floral" },
+    { type: "Minimal Pattern", label: "minimal_pattern" },
+    { type: "Winter Snow", label: "winter_snow" }
+];
+
+const animationStyles = [
+    { type: "Heartbeat", label: "heartbeat" },
+    { type: "Floating Particles", label: "floating_particles" },
+    { type: "Glow Pulse", label: "glow_pulse" },
+    { type: "Fade In/Out", label: "fade_in_out" },
+    { type: "Slide From Sides", label: "slide_from_sides" },
+    { type: "Sparkles", label: "sparkles" },
+    { type: "Bouncing Icons", label: "bouncing_icons" },
+    { type: "Slow Zoom", label: "slow_zoom" },
+    { type: "Rotating Hearts", label: "rotating_hearts" },
+    { type: "Twinkling Stars", label: "twinkling_stars" }
+];
+
+const giftTokens = [
+    { type: "Flower 🌹", label: "flower" },
+    { type: "Ring 💍", label: "ring" },
+    { type: "Heart ❤️", label: "heart" },
+    { type: "Star ⭐", label: "star" },
+    { type: "Chocolate 🍫", label: "chocolate" },
+    { type: "Teddy 🧸", label: "teddy" },
+    { type: "Balloon 🎈", label: "balloon" },
+    { type: "Candle 🕯️", label: "candle" },
+    { type: "Gift Box 🎁", label: "gift_box" },
+    { type: "Custom Emoji ✨", label: "custom_emoji" }
+];
+
+function ProposeToPartnerModel({ open, onClose, partnerId }) {
+
+    const { allUsers } = useSelector(state => state.privateChat);
+    const { profileData } = useSelector(state => state.profile);
+    const myProfile = {
+        profileImage: profileData?.profileImage,
+        fullName: profileData?.fullName?.split(' ')[0],
+    };
+
+    const partnerProfileData = useMemo(() => {
+        return allUsers.find((p) => p.userId === partnerId)?.profile || null
+    }, [allUsers]);
+
+    const showProfilePic = useMemo(() => {
+        return allUsers.find((p) => p.userId === partnerId)?.settings?.showProfilePic || false
+    }, [allUsers]);
+
+    const partnerProfile = {
+        profileImage: partnerProfileData?.profileImage,
+        fullName: partnerProfileData?.fullName?.split(' ')[0]
+    }
+
     const theme = useTheme();
     const [formData, setFormData] = React.useState({
         proposalType: '',
         personalMessage: '',
-        theme: '',
-        background: '',
-        gift: '',
-        music: '',
     });
+
+    const [generateRandomMessage, setGenerateRandomMessage] = useState('')
+    const [page, setPage] = useState(0)
+
+    useEffect(() => {
+        if (page === 4) {
+            setPage(0)
+        } else if (page === -1) {
+            setPage(3)
+        }
+    }, [page]);
 
     const handleClose = () => {
         onClose()
-    }
+    };
+
+    // Pick a random bio
+    const randomMessage = proposeMessages[Math.floor(Math.random() * proposeMessages.length)];
+
+    useEffect(() => {
+        setGenerateRandomMessage(randomMessage);
+    }, [])
     return (
-        <Modal open={open} onClose={handleClose}>
-            <Box component={'form'} sx={{
-                maxWidth: 800,
-                overflowY: 'auto',
-                maxHeight: '80vh',
-                bgcolor: 'background.paper',
-                boxShadow: 24,
-                p: 4,
-                borderRadius: 1,
-                mx: 'auto',
-                mt: 10,
-                position: 'relative',
-            }}>
-                {/* Close Button */}
-                <IconButton
-                    onClick={handleClose}
-                    sx={{ position: 'absolute', top: 8, right: 8 }}
-                >
-                    <CloseIcon />
-                </IconButton>
+        <Modal
+            open={open}
+            onClose={handleClose}
+            closeAfterTransition
+            BackdropProps={{
+                timeout: 500,
+                sx: {
+                    // Backdrop styling with blur effect and transparency
+                    backdropFilter: 'blur(8px)',
+                    backgroundColor:
+                        theme.palette.mode === 'dark'
+                            ? theme.palette.background.paper + 'AA'
+                            : theme.palette.background.default + 'AA',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                },
+            }}
+        >
+            <Box
+                sx={{
+                    // Modal container styling and center positioning
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: { xs: '90%', sm: 400 },
+                    bgcolor: 'background.paper',
+                    borderRadius: 3,
+                    boxShadow: 24,
+                    p: 4,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    outline: 'none',
+                }}
+            >
+                {/* Profile images and Lottie animation */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                    {/* User profile image */}
+                    {myProfile.profileImage && (
+                        <Box
+                            component="img"
+                            src={myProfile.profileImage}
+                            alt="My Profile"
+                            sx={{
+                                width: 90,
+                                height: 90,
+                                borderRadius: '50%',
+                                objectFit: 'cover',
+                                border: `3px solid ${theme.palette.primary.main}`,
+                                boxShadow: `0 0 25px ${theme.palette.primary.main}55`,
+                                animation: 'floatMine 4s ease-in-out infinite, pulseGlowMine 2s infinite',
+                                transition: 'all 0.4s ease',
+                                '@keyframes floatMine': {
+                                    '0%, 100%': { transform: 'translateY(0px)' },
+                                    '50%': { transform: 'translateY(6px)' },
+                                },
+                                '@keyframes pulseGlowMine': {
+                                    '0%, 100%': { boxShadow: `0 0 15px ${theme.palette.primary.main}55` },
+                                    '50%': { boxShadow: `0 0 30px ${theme.palette.primary.light}88` },
+                                },
+                            }}
+                        />
+                    )}
 
-                <Typography variant="h4" color='text.main'>
-                    Create Your Personalized Proposal (under development)
-                </Typography>
-
-                {/* Proposal Type */}
-                <FormControl fullWidth sx={{ mt: 2 }}>
-                    <InputLabel id="proposal-type-label">Proposal Type</InputLabel>
-                    <Select
-                        labelId="proposal-type-label"
-                        id="proposal-type"
-                        value={formData.proposalType}
-                        label="Proposal Type"
-                        onChange={(e) => setFormData({ ...formData, proposalType: e.target.value })}
-                    >
-                        <MenuItem value='love'>Be my love</MenuItem>
-                        <MenuItem value='life_partner'>Be my life partner</MenuItem>
-                        <MenuItem value='best_friend'>Be best friend</MenuItem>
-                        <MenuItem value='have_fun'>Have fun with me</MenuItem>
-                        <MenuItem value='gaming_partner'>Be a gaming partner</MenuItem>
-                        <MenuItem value='long_distance'>Long distance relationship</MenuItem>
-                    </Select>
-                </FormControl>
-
-                {/* input field for personal message */}
-                <TextField
-                    label="Attach a personal message"
-                    name="personalMessage"
-                    multiline
-                    rows={4}
-                    fullWidth
-                    placeholder='Write your feelings or message here...'
-                    variant="outlined"
-                    sx={{ mt: 2 }}
-                />
-
-                {/* Theme/Style selection */}
-                <FormControl fullWidth sx={{ mt: 2 }}>
-                    <InputLabel id="theme-style-label">Choose Theme/Style</InputLabel>
-                    <Select
-                        labelId="theme-style-label"
-                        id="theme-style"
-                        value={formData.theme}
-                        label="Choose Theme/Style"
-                        onChange={(e) => setFormData({ ...formData, theme: e.target.value })}
-                    >
-                        <MenuItem value="romantic">Romantic</MenuItem>
-                        <MenuItem value="elegant">Elegant</MenuItem>
-                        <MenuItem value="casual">Casual</MenuItem>
-                        <MenuItem value="fun">Fun</MenuItem>
-                        <MenuItem value="gaming">Gaming</MenuItem>
-                    </Select>
-                </FormControl>
-
-                {formData.theme && (
-                    <Box sx={{ mt: 2 }}>
-                        <Typography variant="subtitle1">Choose Background</Typography>
-                        <Stack direction="row" spacing={2} sx={{ mt: 1, flexWrap: "wrap" }}>
-                            {backgroundOptions[formData.theme]?.map((bg) => (
-                                <Box
-                                    key={bg.id}
-                                    sx={{
-                                        width: 100,
-                                        height: 80,
-                                        borderRadius: 1,
-                                        overflow: "hidden",
-                                        p: 1,
-                                    }}
-                                >
-                                    <img
-                                        src={bg.src}
-                                        alt={bg.id}
-                                        style={{
-                                            width: "100%",
-                                            height: "100%",
-                                            objectFit: "cover",
-                                        }}
-                                    />
-                                </Box>
-                            ))}
-                        </Stack>
+                    {/* Lottie heartbeat animation */}
+                    <Box sx={{ width: 60, height: 60 }}>
+                        <ProposalLottie />
                     </Box>
-                )}
 
-                {/*  Cake/Gift */}
-                <Box sx={{ mt: 2 }}>
-                    <Typography variant="subtitle1">Choose a Cake/Gift</Typography>
-                    <Stack direction="row" spacing={2} sx={{ mt: 1, flexWrap: "wrap" }}>
-                        {giftOptions.map((gift) => (
-                            <Box
-                                key={gift.id}
-                                sx={{
-                                    width: 80,
-                                    height: 80,
-                                    borderRadius: 1,
-                                    p: 1,
-                                }}
-                            >
-                                <img
-                                    src={gift.src}
-                                    alt={gift.label}
-                                    style={{ width: "100%", height: "70%", objectFit: "cover" }}
-                                />
-                                <Typography variant="caption">{gift.label}</Typography>
-                            </Box>
-                        ))}
-                    </Stack>
+                    {/* Partner profile image */}
+                    {partnerProfile && (
+                        <Box
+                            component="img"
+                            src={showProfilePic ? partnerProfile?.profileImage : defaultAvatar}
+                            alt="Partner Profile"
+                            sx={{
+                                width: 90,
+                                height: 90,
+                                borderRadius: '50%',
+                                objectFit: 'cover',
+                                border: `3px solid ${theme.palette.primary.main}`,
+                                boxShadow: `0 0 25px ${theme.palette.primary.main}55`,
+                                animation: 'floatImage 4s ease-in-out infinite, pulseGlow 2s infinite',
+                                transition: 'all 0.4s ease',
+                                '@keyframes floatImage': {
+                                    '0%, 100%': { transform: 'translateY(0px)' },
+                                    '50%': { transform: 'translateY(-6px)' },
+                                },
+                                '@keyframes pulseGlow': {
+                                    '0%, 100%': { boxShadow: `0 0 15px ${theme.palette.primary.main}55` },
+                                    '50%': { boxShadow: `0 0 30px ${theme.palette.primary.light}88` },
+                                },
+                            }}
+                        />
+                    )}
                 </Box>
 
-                {/* Background Music */}
-                <FormControl fullWidth sx={{ mt: 2 }}>
-                    <InputLabel id="theme-music-label">Choose Background Music</InputLabel>
-                    <Select
-                        labelId="theme-music-label"
-                        id="theme-music"
-                        value={formData.music}
-                        label="Choose Background Music"
-                        onChange={(e) => setFormData({ ...formData, music: e.target.value })}
+                {/* Names of users */}
+                <Stack direction="row" spacing={2} alignItems="center" justifyContent="center" sx={{ mb: 1 }}>
+                    {/* My Name */}
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            fontWeight: 600,
+                            color: 'text.primary',
+                            textShadow: (theme) => `0 0 6px ${theme.palette.primary.main}33`,
+                            letterSpacing: 0.5,
+                            animation: 'fadeInLeft 1s ease forwards',
+                            '@keyframes fadeInLeft': {
+                                '0%': { opacity: 0, transform: 'translateX(-10px)' },
+                                '100%': { opacity: 1, transform: 'translateX(0)' },
+                            },
+                        }}
                     >
-                        <MenuItem value="romantic_piano">Romantic Piano</MenuItem>
-                        <MenuItem value="fun_party_beat">Fun Party Beat</MenuItem>
-                        <MenuItem value="elegant_string">Elegant String</MenuItem>
-                        <MenuItem value="casual_chill_vibes">Casual Chill Vibes</MenuItem>
-                        <MenuItem value="gaming_electron">Gaming Electron</MenuItem>
-                    </Select>
-                </FormControl>
+                        {myProfile.fullName}
+                    </Typography>
 
-                {formData.music && (
-                    <Box sx={{ mt: 2 }}>
-                        <Typography variant="subtitle1">Choose Background Music</Typography>
-                        <Stack
-                            spacing={2}
-                            sx={{
-                                display: "flex",
-                                flexDirection: "row",
-                                flexWrap: "wrap",
-                                alignItems: "center",
-                                gap: 1,
-                                p: 1,
-                            }}
-                        >
-                            {musicOptions[formData.music]?.map((track) => (
-                                <Box
-                                    key={track.id}
+                    {/* Partner Name */}
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            fontWeight: 600,
+                            color: 'text.primary',
+                            textShadow: (theme) => `0 0 6px ${theme.palette.secondary.main}33`,
+                            letterSpacing: 0.5,
+                            animation: 'fadeInRight 1s ease forwards',
+                            '@keyframes fadeInRight': {
+                                '0%': { opacity: 0, transform: 'translateX(10px)' },
+                                '100%': { opacity: 1, transform: 'translateX(0)' },
+                            },
+                        }}
+                    >
+                        {partnerProfile.fullName}
+                    </Typography>
+                </Stack>
+
+                {/* Form / Proposal input area */}
+                <Box component="form" sx={{ width: '100%' }}>
+                    <Typography variant="body2" sx={{ mb: 2, textAlign: 'center', color: 'text.secondary' }}>
+                        Create a memorable moment! ✨💖
+                    </Typography>
+
+                    {page === 0 ? (
+                        <Stack gap={1.5}>
+                            {/* Proposal Type Dropdown */}
+                            <FormControl fullWidth>
+                                <InputLabel id="proposal-type-label">Proposal Type</InputLabel>
+                                <Select
+                                    labelId="proposal-type-label"
+                                    id="proposal-type-select"
+                                    label="Proposal Type"
+                                >
+                                    {proposeTypes.map((type, i) => (
+                                        <MenuItem key={i} value={type.label}>
+                                            {type.type}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+
+                            {/* Custom message input */}
+                            <TextField
+                                fullWidth
+                                multiline
+                                rows={6}
+                                value={generateRandomMessage}
+                                InputProps={{
+                                    endAdornment: (
+                                        <Tooltip title="Change Message" arrow>
+                                            <IconButton
+                                                size="small"
+                                                sx={{
+                                                    p: 0.5,
+                                                    color: 'primary.main',
+                                                    backgroundColor: 'action.hover',
+                                                    '&:hover': {
+                                                        color: 'primary.dark',
+                                                    },
+                                                }}
+                                            >
+                                                <RefreshIcon
+                                                    onClick={() => setGenerateRandomMessage(randomMessage)}
+                                                    fontSize="medium"
+                                                    sx={{
+                                                        transition: 'transform 0.6s ease-in-out',
+                                                        color: 'info.main',
+                                                        '&:hover': {
+                                                            color: 'warning.main',
+                                                            transform: 'rotate(360deg)',
+                                                        },
+                                                    }}
+                                                />
+                                            </IconButton>
+                                        </Tooltip>
+                                    ),
+                                }}
+                            />
+                        </Stack>
+                    ) : page === 1 ? (
+                        <Stack gap={1.5}>
+                            {/* Proposal Theme Dropdown */}
+                            <FormControl fullWidth>
+                                <InputLabel id="proposal-theme-label">Proposal Theme</InputLabel>
+                                <Select
+                                    labelId="proposal-theme-label"
+                                    id="proposal-theme-select"
+                                    label="Proposal theme"
+                                >
+                                    {proposalThemes.map((theme, i) => (
+                                        <MenuItem key={i} value={theme.label}>
+                                            {theme.type}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+
+                            {/* Background Dropdown */}
+                            <FormControl fullWidth>
+                                <InputLabel id="proposal-backgroundOptions-label">Select Background Type</InputLabel>
+                                <Select
+                                    labelId="proposal-backgroundOptions-label"
+                                    id="proposal-backgroundOptions-select"
+                                    label="Select Background Type"
+                                >
+                                    {backgroundOptions.map((background, i) => (
+                                        <MenuItem key={i} value={background.label}>
+                                            {background.type}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+
+                            {/* Animation Style Dropdown */}
+                            <FormControl fullWidth>
+                                <InputLabel id="proposal-animationStyles-label">Select Animation Style</InputLabel>
+                                <Select
+                                    labelId="proposal-animationStyles-label"
+                                    id="proposal-animationStyles-select"
+                                    label="Select Background Type"
+                                >
+                                    {animationStyles.map((animation, i) => (
+                                        <MenuItem key={i} value={animation.label}>
+                                            {animation.type}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Stack>
+                    ) : page === 2 ? (
+                        <Stack gap={1.5}>
+                            {/* Gift / Token Dropdown */}
+                            <FormControl fullWidth>
+                                <InputLabel id="proposal-giftToken-label">Select Gift Tokens</InputLabel>
+                                <Select
+                                    labelId="proposal-giftToken-label"
+                                    id="proposal-giftToken-label"
+                                    label="Select Gift Tokens"
+                                >
+                                    {giftTokens.map((gift, i) => (
+                                        <MenuItem key={i} value={gift.label}>
+                                            {gift.type}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+
+                            {/* Custom intentions and notes */}
+                            <TextField
+                                placeholder="I want to express my love and commitment..."
+                                multiline
+                                rows={2.5}
+                                helperText="What’s the main intention or feeling behind this proposal?"
+                                required
+                            />
+                            <TextField
+                                placeholder="Remember to mention our favorite trip or inside joke..."
+                                multiline
+                                rows={2.5}
+                                required
+                                helperText="Any special notes or reminders for this proposal?"
+                            />
+                        </Stack>
+                    ) : (
+                        <Stack direction="column" mt={3}>
+                            {/* Background music selection */}
+                            <FormControl>
+                                <InputLabel id="background-music-label">Select Background Music</InputLabel>
+                                <Select
+                                    id="background-music-label"
+                                    labelId="background-music-label"
+                                    label="Select Background Music"
+                                >
+                                    <MenuItem>
+                                        <audio
+                                            controls
+                                            src={''} // TODO: Pixabay audio URL
+                                            style={{ width: '100%', borderRadius: 8 }}
+                                        >
+                                            Your browser does not support the audio element.
+                                        </audio>
+                                    </MenuItem>
+                                </Select>
+                            </FormControl>
+
+                            {/* Preview, Edit, Send buttons */}
+                            <Stack direction="rows" gap={2} justifyContent="center" mt={3}>
+                                <Button
+                                    variant="outlined"
+                                    color="primary"
                                     sx={{
-                                        p: 1,
-                                        cursor: "pointer",
-                                        maxWidth: 260,
-                                        bgcolor: "background.paper",
-                                        flex: "1 1 220px",
-                                        boxShadow: `inset 0 2px 8px ${theme.palette.divider}`,
-                                        borderRadius: 1,
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "center",
-                                        justifyContent: "center",
+                                        textTransform: 'none',
+                                        fontWeight: 600,
+                                        '&:hover': {
+                                            backgroundColor: 'primary.light',
+                                            transform: 'scale(1.05)',
+                                        },
+                                        transition: 'all 0.3s ease',
                                     }}
                                 >
-                                    <Typography fontWeight="500" gutterBottom>
-                                        {track.name}
-                                    </Typography>
-                                    <audio controls style={{ width: "100%" }}>
-                                        <source src={track.src} type="audio/mpeg" />
-                                        Your browser does not support the audio tag.
-                                    </audio>
-                                </Box>
-                            ))}
+                                    Preview
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    color="secondary"
+                                    sx={{
+                                        textTransform: 'none',
+                                        fontWeight: 600,
+                                        '&:hover': {
+                                            backgroundColor: 'secondary.light',
+                                            transform: 'scale(1.05)',
+                                        },
+                                        transition: 'all 0.3s ease',
+                                    }}
+                                >
+                                    Edit
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    sx={{
+                                        textTransform: 'none',
+                                        fontWeight: 600,
+                                        '&:hover': {
+                                            backgroundColor: 'primary.dark',
+                                            transform: 'scale(1.05)',
+                                        },
+                                        transition: 'all 0.3s ease',
+                                    }}
+                                >
+                                    Send
+                                </Button>
+                            </Stack>
                         </Stack>
-                    </Box>
-                )}
+                    )}
+
+                    {/* Arrow navigation buttons */}
+                    <Stack flex={1} direction={'row'} justifyContent={'space-evenly'} mt={page === 3 ? 8 : 2}>
+                        {/* Previous button */}
+                        <Tooltip title="Previous" arrow onClick={() => setPage((prev) => prev - 1)}>
+                            <IconButton
+                                sx={{
+                                    p: 1.2,
+                                    color: 'primary.main',
+                                    backgroundColor: 'action.hover',
+                                    borderRadius: 2,
+                                    transition: 'all 0.3s ease',
+                                    '&:hover': {
+                                        color: 'primary.contrastText',
+                                        backgroundColor: 'primary.main',
+                                        transform: 'translateX(-5px) scale(1.1)',
+                                    },
+                                    boxShadow: 1,
+                                }}
+                            >
+                                <ArrowBackIcon fontSize="medium" />
+                            </IconButton>
+                        </Tooltip>
+
+                        {/* Next button */}
+                        <Tooltip title="Next" arrow onClick={() => setPage((prev) => prev + 1)}>
+                            <IconButton
+                                sx={{
+                                    p: 1.2,
+                                    color: 'primary.main',
+                                    backgroundColor: 'action.hover',
+                                    borderRadius: 2,
+                                    transition: 'all 0.3s ease',
+                                    '&:hover': {
+                                        color: 'primary.contrastText',
+                                        backgroundColor: 'primary.main',
+                                        transform: 'translateX(5px) scale(1.1)',
+                                    },
+                                    boxShadow: 1,
+                                }}
+                            >
+                                <ArrowForwardIcon fontSize="medium" />
+                            </IconButton>
+                        </Tooltip>
+                    </Stack>
+                </Box>
             </Box>
         </Modal>
+
     )
 }
 
