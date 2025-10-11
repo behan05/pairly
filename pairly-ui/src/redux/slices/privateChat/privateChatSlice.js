@@ -7,6 +7,8 @@ const initialState = {
     activeChat: null,      // conversationId
     activePartnerId: null,  // active partner id
     partnerTyping: false,
+    proposalData: {},
+    proposalMusic: [],
     loading: false,
     error: null,
 };
@@ -104,6 +106,22 @@ const privateChatSlice = createSlice({
             state.loading = false;
         },
 
+        setProposalData: (state, action) => {
+            state.proposalData = { ...state.proposalData, ...action.payload };
+        },
+
+        resetProposalData: (state) => {
+            state.proposalData = {};
+        },
+
+        setProposalMusic: (state, action) => {
+            state.proposalMusic = Array.isArray(action.payload) ? action.payload : [];
+        },
+
+        clearProposalMusic: (state) => {
+            state.proposalMusic = [];
+        },
+
         reset: (state) => {
             state.allUsers = [];
             state.chatUsers = [];
@@ -126,7 +144,11 @@ export const {
     setLoading,
     setConversationMessages,
     updateMessagesAsRead,
-    setActivePartnerId
+    setActivePartnerId,
+    setProposalData,
+    resetProposalData,
+    setProposalMusic,
+    clearProposalMusic
 } = privateChatSlice.actions;
 
 export default privateChatSlice.reducer;

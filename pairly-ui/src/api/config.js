@@ -45,6 +45,4 @@ export const PRIVATE_REPORT_API = `${BASE_ENDPOINT}/private-report`;
 // Private chat API endpoint
 export const PRIVATE_BLOCK_API = `${BASE_ENDPOINT}/private-block`;
 
-// ---------------------- PIXABAY API -------------------------
-
-export const PIXABAY_AUDIO_API = `${BASE_ENDPOINT}/audio`
+export const PROPOSAL_REQUEST_API = `${BASE_ENDPOINT}/proposal-request`

@@ -4,9 +4,14 @@ import {
     setConversationMessages,
     setLoading,
     setError,
+    setProposalMusic,
+    clearProposalMusic,
+    setProposalData,
+    resetProposalData
 } from './privateChatSlice';
 import { getAuthHeaders } from '@/utils/authHeaders';
 import { PRIVATE_CHAT_API } from '@/api/config';
+import { PROPOSAL_REQUEST_API } from '@/api/config';
 
 export function fetchAllUser() {
     return async (dispatch) => {
@@ -120,4 +125,33 @@ export const clearConversationMessage = (conversationId) => {
         }
     };
 };
+
+export const getMusicBySelectType = (musicType) => {
+    return async (dispatch) => {
+        dispatch(setLoading(true));
+
+        const headers = getAuthHeaders();
+        if (!headers) {
+            dispatch(setError('Unauthorized: Token is missing'));
+            dispatch(setLoading(false));
+            return;
+        }
+
+        try {
+            const res = await axios.get(`${PROPOSAL_REQUEST_API}/audio/${musicType}`, { headers });
+            
+            if (res.data.success) {
+                dispatch(setProposalMusic(res.data.data || []));
+            } else {
+                dispatch(setProposalMusic([]));
+            }
+        } catch (error) {
+            dispatch(setError(error.message));
+            dispatch(setProposalMusic([]));
+        } finally {
+            dispatch(setLoading(false));
+        }
+    }
+}
+
 

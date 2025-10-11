@@ -15,6 +15,8 @@ import {
   Stack, // Vertical/horizontal layout spacing
   Toolbar, // AppBar content wrapper
   Divider, // Section separator
+  Pagination,
+  PaginationItem,
 
   // ─── Typography & Text ──────────────────────────────────
   Typography, // Headings, paragraphs, and text
@@ -122,6 +124,8 @@ export {
   DialogContentText,
   DialogActions,
   Snackbar,
+  Pagination,
+  PaginationItem,
 
   // Lists & Menus
   List,

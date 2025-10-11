@@ -1,5 +1,6 @@
 // ==================== Navigation & Layout ====================
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/MenuOpen';
@@ -164,6 +165,7 @@ import AspectRatioIcon from '@mui/icons-material/AspectRatio';
 export {
   // Navigation & Layout
   ArrowBackIcon,
+  ArrowForwardIcon,
   CheckCircleIcon,
   CloseIcon,
   MenuIcon,

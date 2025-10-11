@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 import {
     Box,
@@ -6,6 +6,7 @@ import {
     Typography,
     TextField,
     FormControl,
+    FormHelperText,
     MenuItem,
     Select,
     InputLabel,
@@ -14,22 +15,21 @@ import {
     IconButton,
     Tooltip,
     Divider,
+    Pagination,
+    PaginationItem,
     Button
 } from '../../../../../MUI/MuiComponents';
 import {
     defaultAvatar,
-    CloseIcon,
     RefreshIcon,
+    ArrowBackIcon,
+    ArrowForwardIcon
 } from '../../../../../MUI/MuiIcons';
-import { useDispatch, useSelector } from 'react-redux';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 import ProposalLottie from './ProposalLottieAnimation';
 import { proposeMessages } from '@/utils/proposeMessages';
-
-// Accessing Music via Pixabay API
-import { PIXABAY_AUDIO_API } from '@/api/config';
+import { useDispatch, useSelector } from 'react-redux';
+import { getMusicBySelectType } from '@/redux/slices/privateChat/privateChatAction';
 
 const proposeTypes = [
     { type: "Be my life partner 💖", label: "life_partner" },
@@ -94,32 +94,71 @@ const giftTokens = [
     { type: "Custom Emoji ✨", label: "custom_emoji" }
 ];
 
+const proposalAudioOptions = [
+    // Indian regional flavors
+    { type: "Hindi Songs 🎶", label: "hindi_songs" },
+    { type: "Bhojpuri Songs 🎵", label: "pawan_singh" },
+    { type: "Punjabi Beats 🥁", label: "punjabi_beats" },
+    { type: "Romantic Bollywood 🎬", label: "bollywood_romantic" },
+    { type: "Classical Indian 🎻", label: "indian_classical" },
+    { type: "Sufi Soul 🌙", label: "sufi_songs" },
+    { type: "Bollywood Hits 🎶", label: "south_indian_songs" },
+
+    { type: "Romantic Piano", label: "romantic_piano" },
+    { type: "Wedding Bells", label: "wedding_bells" },
+    { type: "Calm Acoustic Guitar", label: "calm_acoustic_guitar" },
+    { type: "Heartbeats Rhythm", label: "heartbeats_rhythm" },
+    { type: "Morning Breeze Melody", label: "morning_breeze_melody" },
+    { type: "Playful Tune", label: "playful_tune" },
+    { type: "Soft Violin", label: "soft_violin" },
+    { type: "Eternal Love Theme", label: "eternal_love_theme" },
+
+    // International/global flavors
+    { type: "Jazz Nights 🎷", label: "jazz_nights" },
+    { type: "Pop Hits 🎤", label: "pop_hits" },
+    { type: "Chill Lo-fi 🎧", label: "lofi_chill" },
+    { type: "EDM Party 💿", label: "edm_party" },
+    { type: "Acoustic Love 🎸", label: "acoustic_love" },
+];
+
 function ProposeToPartnerModel({ open, onClose, partnerId }) {
 
     const { allUsers } = useSelector(state => state.privateChat);
+    const { proposalMusic } = useSelector(state => state.privateChat);
+    const [musicPage, setMusicPage] = useState(1);
+
     const { profileData } = useSelector(state => state.profile);
     const myProfile = {
         profileImage: profileData?.profileImage,
         fullName: profileData?.fullName?.split(' ')[0],
     };
 
+    const dispatch = useDispatch();
+
     const partnerProfileData = useMemo(() => {
         return allUsers.find((p) => p.userId === partnerId)?.profile || null
-    }, [allUsers]);
+    }, [allUsers, partnerId]);
 
     const showProfilePic = useMemo(() => {
         return allUsers.find((p) => p.userId === partnerId)?.settings?.showProfilePic || false
-    }, [allUsers]);
+    }, [allUsers, partnerId]);
 
     const partnerProfile = {
         profileImage: partnerProfileData?.profileImage,
         fullName: partnerProfileData?.fullName?.split(' ')[0]
-    }
+    };
 
     const theme = useTheme();
     const [formData, setFormData] = React.useState({
         proposalType: '',
         personalMessage: '',
+        proposalThemes: '',
+        proposalBackground: '',
+        proposalAnimationStyle: '',
+        proposalGiftToken: '',
+        proposalMusictype: '',
+        proposalIntentionNote: '',
+        proposalPrivateNote: '',
     });
 
     const [generateRandomMessage, setGenerateRandomMessage] = useState('')
@@ -142,7 +181,28 @@ function ProposeToPartnerModel({ open, onClose, partnerId }) {
 
     useEffect(() => {
         setGenerateRandomMessage(randomMessage);
-    }, [])
+    }, []);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        setFormData((prev) => (
+            { ...prev, [name]: value }
+        ));
+
+        if (name === 'proposalMusictype') {
+            dispatch(getMusicBySelectType(value));
+        };
+    };
+
+    const handlePreview = () => {
+
+    }
+
+    const handleProposalRequest = () => {
+
+    }
+
     return (
         <Modal
             open={open}
@@ -170,8 +230,11 @@ function ProposeToPartnerModel({ open, onClose, partnerId }) {
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    width: { xs: '90%', sm: 400 },
-                    bgcolor: 'background.paper',
+                    width: { xs: '90%', sm: 500 },
+                    background: `linear-gradient(135deg,
+                    ${theme.palette.primary.light}15,
+                    ${theme.palette.background.default} 70%)`,
+                    overflow: 'hidden',
                     borderRadius: 3,
                     boxShadow: 24,
                     p: 4,
@@ -190,8 +253,8 @@ function ProposeToPartnerModel({ open, onClose, partnerId }) {
                             src={myProfile.profileImage}
                             alt="My Profile"
                             sx={{
-                                width: 90,
-                                height: 90,
+                                width: 110,
+                                height: 110,
                                 borderRadius: '50%',
                                 objectFit: 'cover',
                                 border: `3px solid ${theme.palette.primary.main}`,
@@ -211,7 +274,7 @@ function ProposeToPartnerModel({ open, onClose, partnerId }) {
                     )}
 
                     {/* Lottie heartbeat animation */}
-                    <Box sx={{ width: 60, height: 60 }}>
+                    <Box sx={{ width: 70, height: 70 }}>
                         <ProposalLottie />
                     </Box>
 
@@ -222,8 +285,8 @@ function ProposeToPartnerModel({ open, onClose, partnerId }) {
                             src={showProfilePic ? partnerProfile?.profileImage : defaultAvatar}
                             alt="Partner Profile"
                             sx={{
-                                width: 90,
-                                height: 90,
+                                width: 110,
+                                height: 110,
                                 borderRadius: '50%',
                                 objectFit: 'cover',
                                 border: `3px solid ${theme.palette.primary.main}`,
@@ -297,6 +360,8 @@ function ProposeToPartnerModel({ open, onClose, partnerId }) {
                                     labelId="proposal-type-label"
                                     id="proposal-type-select"
                                     label="Proposal Type"
+                                    name='proposalType'
+                                    onChange={handleChange}
                                 >
                                     {proposeTypes.map((type, i) => (
                                         <MenuItem key={i} value={type.label}>
@@ -312,6 +377,8 @@ function ProposeToPartnerModel({ open, onClose, partnerId }) {
                                 multiline
                                 rows={6}
                                 value={generateRandomMessage}
+                                name='proposalMessage'
+                                onChange={handleChange}
                                 InputProps={{
                                     endAdornment: (
                                         <Tooltip title="Change Message" arrow>
@@ -353,6 +420,8 @@ function ProposeToPartnerModel({ open, onClose, partnerId }) {
                                     labelId="proposal-theme-label"
                                     id="proposal-theme-select"
                                     label="Proposal theme"
+                                    name='proposalThemes'
+                                    onChange={handleChange}
                                 >
                                     {proposalThemes.map((theme, i) => (
                                         <MenuItem key={i} value={theme.label}>
@@ -369,6 +438,8 @@ function ProposeToPartnerModel({ open, onClose, partnerId }) {
                                     labelId="proposal-backgroundOptions-label"
                                     id="proposal-backgroundOptions-select"
                                     label="Select Background Type"
+                                    name='proposalBackground'
+                                    onChange={handleChange}
                                 >
                                     {backgroundOptions.map((background, i) => (
                                         <MenuItem key={i} value={background.label}>
@@ -385,6 +456,8 @@ function ProposeToPartnerModel({ open, onClose, partnerId }) {
                                     labelId="proposal-animationStyles-label"
                                     id="proposal-animationStyles-select"
                                     label="Select Background Type"
+                                    name='proposalAnimationStyle'
+                                    onChange={handleChange}
                                 >
                                     {animationStyles.map((animation, i) => (
                                         <MenuItem key={i} value={animation.label}>
@@ -403,6 +476,8 @@ function ProposeToPartnerModel({ open, onClose, partnerId }) {
                                     labelId="proposal-giftToken-label"
                                     id="proposal-giftToken-label"
                                     label="Select Gift Tokens"
+                                    name='proposalGiftToken'
+                                    onChange={handleChange}
                                 >
                                     {giftTokens.map((gift, i) => (
                                         <MenuItem key={i} value={gift.label}>
@@ -419,83 +494,131 @@ function ProposeToPartnerModel({ open, onClose, partnerId }) {
                                 rows={2.5}
                                 helperText="What’s the main intention or feeling behind this proposal?"
                                 required
+                                name='proposalIntentionNote'
+                                onChange={handleChange}
                             />
                             <TextField
                                 placeholder="Remember to mention our favorite trip or inside joke..."
                                 multiline
                                 rows={2.5}
                                 required
+                                name='proposalPrivateNote'
+                                onChange={handleChange}
                                 helperText="Any special notes or reminders for this proposal?"
                             />
                         </Stack>
                     ) : (
                         <Stack direction="column" mt={3}>
                             {/* Background music selection */}
-                            <FormControl>
-                                <InputLabel id="background-music-label">Select Background Music</InputLabel>
+                            {/* Background music selection */}
+                            <FormControl fullWidth sx={{ mb: 2 }}>
+                                <InputLabel id="music-type-label">Choose Music Type</InputLabel>
                                 <Select
-                                    id="background-music-label"
-                                    labelId="background-music-label"
-                                    label="Select Background Music"
+                                    id="music-type-select"
+                                    labelId="music-type-label"
+                                    label="Choose Music Type"
+                                    name="proposalMusictype"
+                                    onChange={(e) => {
+                                        handleChange(e);
+                                        setMusicPage(1); // reset page when type changes
+                                    }}
                                 >
-                                    <MenuItem>
-                                        <audio
-                                            controls
-                                            src={''} // TODO: Pixabay audio URL
-                                            style={{ width: '100%', borderRadius: 8 }}
-                                        >
-                                            Your browser does not support the audio element.
-                                        </audio>
-                                    </MenuItem>
+                                    {proposalAudioOptions.map((audio, i) => (
+                                        <MenuItem key={i} value={audio.label}>
+                                            {audio.type}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
+                                <FormHelperText>
+                                    Select a music style to unlock matching background tracks 🎵
+                                </FormHelperText>
                             </FormControl>
 
-                            {/* Preview, Edit, Send buttons */}
-                            <Stack direction="rows" gap={2} justifyContent="center" mt={3}>
+                            {/* Paginated audio tracks */}
+                            {proposalMusic.length > 0 &&
+                                proposalMusic
+                                    .slice((musicPage - 1) * 3, musicPage * 3) // show 5 per page
+                                    .map((music, i) => (
+                                        <Box key={i}
+                                            sx={{
+                                                mb: 1,
+                                                boxShadow: `inset 0 0 1rem ${theme.palette.success.main}`,
+                                                borderRadius: 2,
+                                                transition: 'all 0.3s ease-in-out',
+                                                ':hover': {
+                                                    boxShadow: ` 0 0 1rem ${theme.palette.success.main}`,
+                                                    transform: 'scale(1.04) translateX(8px)'
+                                                }
+                                            }}>
+                                            <audio
+                                                src={music.previewUrl}
+                                                aria-label={`${music.artistName} - ${music.trackName} music track`}
+                                                controls
+                                                style={{ width: '100%' }}
+                                            >
+                                                Your browser does not support audio playback!
+                                            </audio>
+                                        </Box>
+                                    ))}
+
+                            {/* Pagination */}
+                            {proposalMusic.length > 5 && (
+                                <Pagination
+                                    count={Math.ceil(proposalMusic.length / 5)}
+                                    page={musicPage}
+                                    onChange={(e, value) => setMusicPage(value)}
+                                    renderItem={(item) => (
+                                        <PaginationItem
+                                            components={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
+                                            {...item}
+                                        />
+                                    )}
+                                    sx={{ mt: 2 }}
+                                />
+                            )}
+
+                            {/* Preview, Send buttons */}
+                            <Stack direction="row" spacing={2} justifyContent="center" mt={3}>
                                 <Button
                                     variant="outlined"
                                     color="primary"
+                                    disabled='true'
                                     sx={{
                                         textTransform: 'none',
                                         fontWeight: 600,
+                                        px: 3,
+                                        borderRadius: 2,
+                                        boxShadow: 'none',
+                                        transition: 'all 0.3s ease',
                                         '&:hover': {
                                             backgroundColor: 'primary.light',
                                             transform: 'scale(1.05)',
+                                            boxShadow: 2,
                                         },
-                                        transition: 'all 0.3s ease',
                                     }}
                                 >
                                     Preview
                                 </Button>
-                                <Button
-                                    variant="outlined"
-                                    color="secondary"
-                                    sx={{
-                                        textTransform: 'none',
-                                        fontWeight: 600,
-                                        '&:hover': {
-                                            backgroundColor: 'secondary.light',
-                                            transform: 'scale(1.05)',
-                                        },
-                                        transition: 'all 0.3s ease',
-                                    }}
-                                >
-                                    Edit
-                                </Button>
+
                                 <Button
                                     variant="contained"
                                     color="primary"
+                                    disabled='true'
                                     sx={{
                                         textTransform: 'none',
                                         fontWeight: 600,
+                                        px: 3,
+                                        borderRadius: 2,
+                                        boxShadow: 3,
+                                        transition: 'all 0.3s ease',
                                         '&:hover': {
                                             backgroundColor: 'primary.dark',
                                             transform: 'scale(1.05)',
+                                            boxShadow: 6,
                                         },
-                                        transition: 'all 0.3s ease',
                                     }}
                                 >
-                                    Send
+                                    Send Proposal
                                 </Button>
                             </Stack>
                         </Stack>
@@ -508,16 +631,17 @@ function ProposeToPartnerModel({ open, onClose, partnerId }) {
                             <IconButton
                                 sx={{
                                     p: 1.2,
-                                    color: 'primary.main',
-                                    backgroundColor: 'action.hover',
                                     borderRadius: 2,
+                                    filter: `drop-shadow(0 0 0.5rem ${theme.palette.primary.main})`,
+                                    color: 'primary.contrastText',
+                                    backgroundColor: 'primary.main',
                                     transition: 'all 0.3s ease',
-                                    '&:hover': {
-                                        color: 'primary.contrastText',
-                                        backgroundColor: 'primary.main',
-                                        transform: 'translateX(-5px) scale(1.1)',
-                                    },
                                     boxShadow: 1,
+                                    '&:hover': {
+                                        transform: 'translateX(-5px) scale(1.1)',
+                                        boxShadow: `inset 0 0 1rem ${theme.palette.primary.main}`,
+                                        filter: `drop-shadow(0 0 1rem ${theme.palette.primary.main})`,
+                                    },
                                 }}
                             >
                                 <ArrowBackIcon fontSize="medium" />
@@ -529,16 +653,17 @@ function ProposeToPartnerModel({ open, onClose, partnerId }) {
                             <IconButton
                                 sx={{
                                     p: 1.2,
-                                    color: 'primary.main',
-                                    backgroundColor: 'action.hover',
                                     borderRadius: 2,
+                                    filter: `drop-shadow(0 0 0.5rem ${theme.palette.primary.main})`,
+                                    color: 'primary.contrastText',
+                                    backgroundColor: 'primary.main',
                                     transition: 'all 0.3s ease',
-                                    '&:hover': {
-                                        color: 'primary.contrastText',
-                                        backgroundColor: 'primary.main',
-                                        transform: 'translateX(5px) scale(1.1)',
-                                    },
                                     boxShadow: 1,
+                                    '&:hover': {
+                                        transform: 'translateX(-5px) scale(1.1)',
+                                        boxShadow: `inset 0 0 1rem ${theme.palette.primary.main}`,
+                                        filter: `drop-shadow(0 0 1rem ${theme.palette.primary.main})`,
+                                    },
                                 }}
                             >
                                 <ArrowForwardIcon fontSize="medium" />

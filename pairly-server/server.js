@@ -38,6 +38,7 @@ const randomReportRoutes = require('./routers/chat/random/randomReportRoutes');
 const privateChatRoutes = require('./routers/chat/private/privateChatRoutes');
 const privateBlockRoutes = require('./routers/chat/private/privateBlockRoutes')
 const privateReportRoutes = require('./routers/chat/private/privateReportRoutes')
+const proposalRequestRoutes = require('./routers/chat/private/proposalRequestRoutes')
 
 // ==========================
 // App Configuration
@@ -89,12 +90,14 @@ app.use('/api/blocked', blockedUser)
 app.use('/api/random-chat', randomChatRoutes);
 app.use('/api/random-block', randomBlockRoutes);
 app.use('/api/random-report', randomReportRoutes);
-app.use('/api/friend-request', friendRequestRoutes)
+app.use('/api/friend-request', friendRequestRoutes);
 
 // ------------- Private Chat Routes --------------------
 app.use('/api/private-chat', privateChatRoutes);
 app.use('/api/private-block', privateBlockRoutes);
 app.use('/api/private-report', privateReportRoutes);
+app.use('/api/private-report', privateReportRoutes);
+app.use('/api/proposal-request', proposalRequestRoutes);
 
 // ==========================
 // Health Check Route
