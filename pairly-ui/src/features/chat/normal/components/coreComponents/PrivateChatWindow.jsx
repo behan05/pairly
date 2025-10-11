@@ -38,48 +38,53 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
   const [isTyping, setIsTyping] = useState(false);
   const dispatch = useDispatch();
 
-  // Get current user ID and chat state from Redux
+  // Fix: Dynamic viewport height to handle keyboard on mobile
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+  useEffect(() => {
+    const updateHeight = () => {
+      const vh = window.visualViewport?.height || window.innerHeight;
+      setViewportHeight(vh);
+    };
+    window.visualViewport?.addEventListener('resize', updateHeight);
+    updateHeight();
+    return () => {
+      window.visualViewport?.removeEventListener('resize', updateHeight);
+    };
+  }, []);
+
   const currentUserId = useSelector((state) => state.profile.profileData?.user);
   const { chatUsers, conversations, loading } = useSelector((state) => state.privateChat);
   const { chatSettings } = useSelector((state) => state.settings);
   const chatFontSize = chatSettings?.chatFontSize;
 
-  // Font size mapping (slightly larger)
   const fontSizeMap = {
-    small: '0.875rem',   // was 0.75rem
-    medium: '1rem',      // was 0.875rem
-    large: '1.125rem'    // was 1rem
+    small: '0.875rem',
+    medium: '1rem',
+    large: '1.125rem'
   };
 
-
-  // Find the active chat user and their conversation ID
   const user = chatUsers.find(u => u.partnerId === selectedUserId);
   const conversationId = user?.conversationId;
 
-  // Extract messages from Redux store for the current conversation
   const messages = conversationId && conversations[conversationId]?.messages
     ? conversations[conversationId].messages
     : [];
 
-  // Emit read receipt when window gains focus
   useEffect(() => {
     const handleFocus = () => {
       if (!conversationId) return;
       socket.emit('privateChat:readMessage', { conversationId });
     };
-
     window.addEventListener('focus', handleFocus);
     return () => window.removeEventListener('focus', handleFocus);
   }, [conversationId, socket]);
 
-  // Fetch messages when conversationId becomes available (especially important for mobile)
   useEffect(() => {
     if (selectedUserId && !messages.length && conversationId) {
       dispatch(fetchConversationMessages(conversationId));
     }
   }, [conversationId, selectedUserId, messages.length, dispatch]);
 
-  // Utility: Trigger file download from a given URL
   const handleDownload = (url, fileName = 'file') => {
     const a = document.createElement('a');
     a.href = url;
@@ -89,12 +94,10 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
     a.remove();
   };
 
-  // Utility: Validate if a string is a proper URL
   const isValidURL = (text) => {
     try { new URL(text); return true; } catch { return false; }
   };
 
-  // Auto-scroll to bottom when new messages arrive or typing state changes
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -103,7 +106,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
 
   return (
     <Stack
-      height="100dvh"
+      height={viewportHeight}  // ✅ Fixed: dynamic height
       width="100%"
       justifyContent="space-between"
       sx={{
@@ -117,6 +120,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
         onBack={onBack}
         onCloseChatWindow={onCloseChatWindow}
         clearActiveChat={clearActiveChat}
+        sx={{ position: 'sticky', top: 0, zIndex: 100, backgroundColor: theme.palette.background.paper }} // ✅ sticky header
       />
 
       {loading ? <Loading /> : (

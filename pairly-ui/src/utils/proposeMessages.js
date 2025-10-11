@@ -93,3 +93,93 @@ export const proposeMessages = [
 
     "You make the ordinary feel magical and the impossible feel possible. I want to live in this love — endlessly, fearlessly, with you."
 ];
+
+export const proposeTypes = [
+    { type: "Be my life partner 💖", label: "life_partner" },
+    { type: "Will you marry me? 💍", label: "forever_marry" },
+    { type: "You feel like home 🏡", label: "home_forever" },
+    { type: "Two souls, one heart 💓", label: "two_souls" },
+    { type: "You’re my sunrise 🌅", label: "sunrise" },
+    { type: "Steal my fries & heart 🍟❤️", label: "steal_fries" },
+    { type: "Grow old with me 👵👴", label: "grow_old" },
+    { type: "Together forever 💞", label: "together_place" },
+];
+
+export const proposalThemes = [
+    { type: "Romantic Glow", label: "romantic_glow" },
+    { type: "Dreamy Pastel", label: "dreamy_pastel" },
+    { type: "Elegant Minimal", label: "elegant_minimal" },
+    { type: "Night Sky", label: "night_sky" },
+    { type: "Sunset Romance", label: "sunset_romance" },
+    { type: "Vintage Charm", label: "vintage_charm" },
+    { type: "Magical Fantasy", label: "magical_fantasy" },
+    { type: "Floral Bliss", label: "floral_bliss" },
+    { type: "Modern Chic", label: "modern_chic" },
+    { type: "Winter Sparkle", label: "winter_sparkle" }
+];
+
+export const backgroundOptions = [
+    { type: "Light", label: "light" },
+    { type: "Dark", label: "dark" },
+    { type: "Gradient", label: "gradient" },
+    { type: "Custom Image", label: "custom_image" },
+    { type: "Blur", label: "blur" },
+    { type: "Starry Night", label: "starry_night" },
+    { type: "Sunset", label: "sunset" },
+    { type: "Floral", label: "floral" },
+    { type: "Minimal Pattern", label: "minimal_pattern" },
+    { type: "Winter Snow", label: "winter_snow" }
+];
+
+export const animationStyles = [
+    { type: "Heartbeat", label: "heartbeat" },
+    { type: "Floating Particles", label: "floating_particles" },
+    { type: "Glow Pulse", label: "glow_pulse" },
+    { type: "Fade In/Out", label: "fade_in_out" },
+    { type: "Slide From Sides", label: "slide_from_sides" },
+    { type: "Sparkles", label: "sparkles" },
+    { type: "Bouncing Icons", label: "bouncing_icons" },
+    { type: "Slow Zoom", label: "slow_zoom" },
+    { type: "Rotating Hearts", label: "rotating_hearts" },
+    { type: "Twinkling Stars", label: "twinkling_stars" }
+];
+
+export const giftTokens = [
+    { type: "Flower 🌹", label: "flower" },
+    { type: "Ring 💍", label: "ring" },
+    { type: "Heart ❤️", label: "heart" },
+    { type: "Star ⭐", label: "star" },
+    { type: "Chocolate 🍫", label: "chocolate" },
+    { type: "Teddy 🧸", label: "teddy" },
+    { type: "Balloon 🎈", label: "balloon" },
+    { type: "Candle 🕯️", label: "candle" },
+    { type: "Gift Box 🎁", label: "gift_box" },
+    { type: "Custom Emoji ✨", label: "custom_emoji" }
+];
+
+export const proposalAudioOptions = [
+    // Indian regional flavors
+    { type: "Hindi Songs 🎶", label: "hindi_songs" },
+    { type: "Bhojpuri Songs 🎵", label: "pawan_singh" },
+    { type: "Punjabi Beats 🥁", label: "punjabi_beats" },
+    { type: "Romantic Bollywood 🎬", label: "bollywood_romantic" },
+    { type: "Classical Indian 🎻", label: "indian_classical" },
+    { type: "Sufi Soul 🌙", label: "sufi_songs" },
+    { type: "Bollywood Hits 🎶", label: "south_indian_songs" },
+
+    { type: "Romantic Piano", label: "romantic_piano" },
+    { type: "Wedding Bells", label: "wedding_bells" },
+    { type: "Calm Acoustic Guitar", label: "calm_acoustic_guitar" },
+    { type: "Heartbeats Rhythm", label: "heartbeats_rhythm" },
+    { type: "Morning Breeze Melody", label: "morning_breeze_melody" },
+    { type: "Playful Tune", label: "playful_tune" },
+    { type: "Soft Violin", label: "soft_violin" },
+    { type: "Eternal Love Theme", label: "eternal_love_theme" },
+
+    // International/global flavors
+    { type: "Jazz Nights 🎷", label: "jazz_nights" },
+    { type: "Pop Hits 🎤", label: "pop_hits" },
+    { type: "Chill Lo-fi 🎧", label: "lofi_chill" },
+    { type: "EDM Party 💿", label: "edm_party" },
+    { type: "Acoustic Love 🎸", label: "acoustic_love" },
+];
