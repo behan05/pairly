@@ -322,7 +322,7 @@ function Login() {
               <IconButton
                 edge="start"
                 onClick={() => handleSocialLogin('google')}
-                sx={{ color: 'warning.main' }}
+                sx={{color: theme.palette.warning.main}}
               >
                 <GoogleIcon />
               </IconButton>
@@ -335,7 +335,7 @@ function Login() {
                 onClick={() => handleSocialLogin('github')}
                 sx={{ color: '#2F2F2F' }}
               >
-                <GithubIcon />
+                <GithubIcon sx={{color: theme.palette.text.primary}} />
               </IconButton>
             </Tooltip>
           </Stack>

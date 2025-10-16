@@ -1,7 +1,6 @@
-import { Box, Typography, Button, Stack, useTheme, useMediaQuery, Divider } from '../../../MUI/MuiComponents';
+import { Box, Typography, Button, Stack, useTheme, useMediaQuery, Divider, Paper } from '../../../MUI/MuiComponents';
 import { CheckIcon, ClearIcon, StarIcon } from '../../../MUI/MuiIcons';
 import ChatSidebarHeader from '../../../features/chat/common/ChatSidebarHeader';
-import BoltIcon from '@mui/icons-material/Bolt';
 import { styled } from '@mui/system';
 
 function Premium() {
@@ -11,101 +10,94 @@ function Premium() {
         {
             title: 'Starter',
             price: '₹0',
-            label: 'Basic features for individual use (100% Ad-Free)',
+            label: 'Basic features for individual use',
             features: [
-                '25 new matches/day',
+                '25 matches/day',
                 '100 messages/day',
                 'Basic AI personality',
-                'Standard response speed',
-                'No ads — forever',
             ],
             notAvailable: [
                 'Unlimited messages',
-                'Send media',
-                'Send location',
-                'All AI personalities',
-                'Propose to partner',
+                'Send media & location',
+                'Propose To Partner',
+                'Priority support',
+                'No ads',
                 'Multi-device sync',
-                'Chat export',
-                'Verified match filter',
-                'Block notifications',
-                'Matching preferences',
-                'Global match toggle',
-                'Strict interest match',
-                'Private friend requests',
-                'Couple mode',
+                'Extra personalization',
             ],
-        },
-        {
-            title: 'Pro',
-            price: '₹399',
-            label: 'Enhanced features for active users (100% Ad-Free)',
-            features: [
-                'Everything in Starter',
-                'Unlimited messages',
-                'Send media',
-                'Send location',
-                'All AI personalities',
-                'Faster responses',
-                'Custom themes',
-                'Multi-device sync',
-                'Chat export',
-                'Propose to partner',
-                'Verified match filter',
-                'Block notifications',
-                'Matching preferences',
-                'Global match toggle',
-                'Strict interest match',
-                'Private friend requests',
-                'Couple mode',
-                'No ads — forever',
-            ],
-            notAvailable: [],
         },
         {
             title: 'Premium',
+            price: '₹399',
+            label: 'Enhanced features for active users',
+            features: [
+                'Unlimited messages',
+                'Send media & location',
+                'Propose To Partner',
+                'Faster responses',
+                'No ads',
+                'Multi-device sync',
+            ],
+            notAvailable: [
+                'Priority support',
+                'Extra personalization',
+            ],
+        },
+        {
+            title: 'Super Premium',
             price: '₹699',
-            label: 'Full access with priority support (100% Ad-Free)',
+            label: 'Full access with priority support',
             features: [
                 'Everything in Pro',
-                'Priority responses',
+                'Priority support',
                 'Extra personalization',
                 'Early access to new features',
-                'No ads — forever',
             ],
             notAvailable: [],
         },
     ];
 
-    // Styled button with zanina-yassine CSS
     const CustomButton = styled(Button)(({ theme }) => ({
-        minWidth: '120px',
+        width: '140px',
+        height: '40px',
+        border: 'none',
+        borderRadius: '20px',
+        background: 'linear-gradient(to right,#77530a,#ffd277,#77530a,#77530a,#ffd277,#77530a)',
+        backgroundSize: '250%',
+        backgroundPosition: 'left',
+        color: theme.palette.warning.main,
         position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         cursor: 'pointer',
-        padding: '12px 17px',
-        border: 0,
-        borderRadius: '7px',
-        boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.1)',
-        background: 'radial-gradient(ellipse at bottom, rgba(71, 81, 92, 1) 0%, rgba(11, 21, 30, 1) 45%)',
-        color: 'rgba(255, 255, 255, 0.66)',
-        transition: 'all 1s cubic-bezier(0.15, 0.83, 0.66, 1)',
+        overflow: 'hidden',
+        transition: 'all 1s ease',
+
         '&::before': {
-            content: '""',
-            width: '70%',
-            height: '1px',
+            content: '"Go Premium"',
             position: 'absolute',
-            bottom: 0,
-            left: '15%',
-            background: 'linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%)',
-            opacity: 0.2,
-            transition: 'all 1s cubic-bezier(0.15, 0.83, 0.66, 1)',
+            width: '97%',
+            height: '90%',
+            borderRadius: '20px',
+            backgroundColor: 'rgba(0, 0, 0, 0.842)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: theme.palette.warning.main,
+            backgroundSize: '200%',
+            transition: 'all 1s ease',
         },
+
         '&:hover': {
-            color: 'rgba(255, 255, 255, 1)',
-            transform: 'scale(1.1) translateY(-3px)',
+            backgroundPosition: 'right',
             '&::before': {
-                opacity: 1,
+                backgroundPosition: 'right',
             },
+        },
+
+        '&:active': {
+            transform: 'scale(0.95)',
         },
     }));
 
@@ -138,20 +130,57 @@ function Premium() {
                     px: 2
                 }}>
                     {plans.map((plan, i) => (
-                        <Box
+                        <Paper
+                            elevation={4}
                             key={i}
                             sx={{
-                                width: isSm ? '70dvw' : '100%',
-                                maxWidth: 380,
-                                boxShadow: `inset 0 0 2px ${theme.palette.action.hover}`,
-                                borderRadius: 1,
-                                pt: 1,
-                                px: 2,
-                                background: `radial-gradient(
-                        circle at 0% 0%,
-                        ${theme.palette.divider} 15%,
-                        ${theme.palette.background.default} 55%)`,
-                            }}>
+                                borderRadius: 4,
+                                p: isSm ? 3 : 4,
+                                width: '100%',
+                                maxWidth: 360,
+                                backdropFilter: 'blur(10px)',
+                                background:
+                                    theme.palette.mode === 'dark'
+                                        ? theme.palette.background.paper + '99'
+                                        : theme.palette.background.default + '99',
+                                border: `1px solid ${theme.palette.divider}`,
+                                gap: 3,
+                                transition: 'all 0.5s ease',
+                                position: 'relative',
+                                overflow: 'hidden',
+
+                                // sunlight from top
+                                ':before': {
+                                    content: '""',
+                                    position: 'absolute',
+                                    top: '-50%',
+                                    left: 0,
+                                    width: '100%',
+                                    height: '100%',
+                                    background: `linear-gradient(
+                                    to bottom, 
+                                    ${theme.palette.mode === 'dark'
+                                            ? theme.palette.primary.light + '33'
+                                            : theme.palette.primary.main + '55'},
+                                    transparent 60%)`,
+                                    opacity: 0,
+                                    transition: 'opacity 0.5s ease, transform 0.5s ease',
+                                    pointerEvents: 'none',
+                                    zIndex: 1,
+                                    transform: 'translateY(0%)',
+                                },
+                                ':hover:before': {
+                                    opacity: 1,
+                                    transform: 'translateY(50%)',
+                                },
+
+                                // Make inner content above the pseudo-element
+                                '& > *': {
+                                    position: 'relative',
+                                    zIndex: 2,
+                                },
+                            }}
+                        >
 
                             {/* Title with icon */}
                             <Stack direction="row" spacing={1} alignItems="center">
@@ -191,14 +220,8 @@ function Premium() {
                                     </Stack>
                                 ))}
                             </Stack>
-                            <CustomButton
-                                variant="outlined"
-                                startIcon={<BoltIcon sx={{ color: 'success.main' }} fontSize="medium" />}
-                                sx={{ my: 1, width: '100%' }}
-                            >
-                                Upgrade Now
-                            </CustomButton>
-                        </Box>
+                            <CustomButton sx={{ mt: 2.5, mx: 'auto', width: '80%' }} />
+                        </Paper>
                     ))}
                 </Box>
             </Stack>

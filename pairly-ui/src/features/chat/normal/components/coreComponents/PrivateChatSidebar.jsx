@@ -40,11 +40,7 @@ function PrivateChatSidebar() {
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const dispatch = useDispatch();
     const { setSelectedUserId, activeUserId, setActiveUserId } = useOutletContext();
-    const { allUsers, chatUsers, loading } = useSelector(state => state.privateChat);
-
-    // const onlineUserIds = useMemo(() => {
-    //     return chatUsers.filter(u => u.isOnline).map(u => u.partnerId);
-    // }, [chatUsers]);
+    const { allUsers, chatUsers, loading, conversations } = useSelector(state => state.privateChat);
 
     const [searchValue, setSearchValue] = useState('');
 
@@ -54,7 +50,9 @@ function PrivateChatSidebar() {
 
     useEffect(() => {
         const handlePartnerJoined = ({ partnerId, conversationId }) => {
-            if (partnerId === activeUserId) {
+            // Only fetch if this conversation is not already loaded
+            const userConversation = chatUsers.find(u => u.partnerId === partnerId);
+            if (!userConversation?.conversationId) {
                 dispatch(fetchConversationMessages(conversationId));
             }
         };
@@ -64,30 +62,44 @@ function PrivateChatSidebar() {
         return () => {
             socket.off('privateChat:partner-joined', handlePartnerJoined);
         };
-    }, [dispatch, activeUserId]);
+
+    }, [dispatch]);
 
     const handleUserClick = (userId) => {
+        if (!userId) return;
+
         setActiveUserId(userId);
         setSelectedUserId(userId);
         dispatch(setActivePartnerId(userId));
 
-        if (!userId) return;
-
         // Emit to socket to join
         socket.emit('privateChat:join', { partnerUserId: userId });
 
-        // If conversation already exists, load immediately
         const userConversation = chatUsers.find(u => u.partnerId === userId);
-        if (userConversation?.conversationId) {
+
+        // Only fetch if it's a new conversation or not loaded yet
+        if (userConversation?.conversationId && userConversation.partnerId !== activeUserId) {
             dispatch(fetchConversationMessages(userConversation.conversationId));
-        };
+        }
     };
 
     // filter users by search
     const filteredUsers = useMemo(() => {
-        return allUsers.filter(user =>
-            user?.profile?.fullName?.toLowerCase().includes(searchValue.toLowerCase())
-        );
+        return allUsers
+            .map(u => ({
+                ...u,
+                lastMessage: u.lastMessage || {},
+            }))
+            .filter(user =>
+                user?.profile?.fullName
+                    ?.toLowerCase()
+                    .includes(searchValue.toLowerCase())
+            )
+            .sort((a, b) => {
+                const aTime = new Date(a?.lastMessage?.createdAt || 0).getTime();
+                const bTime = new Date(b?.lastMessage?.createdAt || 0).getTime();
+                return bTime - aTime; // most recent first
+            });
     }, [allUsers, searchValue]);
 
     return (

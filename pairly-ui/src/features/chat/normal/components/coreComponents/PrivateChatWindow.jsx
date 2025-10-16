@@ -106,7 +106,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
 
   return (
     <Stack
-      height={viewportHeight}  // ✅ Fixed: dynamic height
+      height={viewportHeight}
       width="100%"
       justifyContent="space-between"
       sx={{
@@ -214,7 +214,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                             alignItems: 'center',
                             gap: 0.5,
                             mt: 0.5,
-                            fontSize: fontSizeMap[chatFontSize] || '0.875rem'
+                            fontSize: '0.875rem'
                           }}
                         >
                           {formatBubbleTime(msg.createdAt)}

@@ -14,7 +14,9 @@ function NormalChatController() {
     const dispatch = useDispatch();
 
     const { activePartnerId } = useSelector(state => state.privateChat);
-    const currentUserId = useSelector((state) => state.profile.profileData?.userId ?? state.profile.profileData?.user);
+    const currentUserId = useSelector(
+        (state) => state.profile.profileData?.userId ?? state.profile.profileData?.user
+    );
 
     useEffect(() => {
         if (!socket.connected) socket.connect();
@@ -22,20 +24,27 @@ function NormalChatController() {
         // request current online/offline users
         socket.emit('privateChat:getOnlineUsers');
 
+        // --- partner joined ---
         socket.on('privateChat:partner-joined', ({ partnerId, conversationId }) => {
-            dispatch(addChatUser({
-                partnerId,
-                conversationId,
-            }));
+            if (!partnerId || !conversationId) return;
+            dispatch(addChatUser({ partnerId, conversationId }));
             dispatch(setActiveChat(conversationId));
         });
 
+        // --- error handler ---
         socket.on('privateChat:error', ({ error }) => {
             dispatch(setError(error || 'Something went wrong in private chat.'));
         });
 
-        socket.on('privateChat:message', ({ conversationId, message }) => {
+        // --- new message ---
+        socket.on('privateChat:message', ({ conversationId, message, partnerId }) => {
+            if (!message) return;
             const createdAt = message?.timestamp ?? message?.createdAt ?? new Date().toISOString();
+
+            // auto-join if partner not active
+            if (partnerId && String(partnerId) !== String(activePartnerId)) {
+                socket.emit('privateChat:join', { partnerUserId: partnerId });
+            }
 
             dispatch(addMessage({
                 conversationId,
@@ -50,21 +59,23 @@ function NormalChatController() {
             }));
         });
 
+        // --- mark messages as read ---
         socket.on('privateChat:readMessage', ({ conversationId, messageIds }) => {
-            dispatch(updateMessagesAsRead({
-                conversationId,
-                messageIds
-            }));
+            if (conversationId && Array.isArray(messageIds)) {
+                dispatch(updateMessagesAsRead({ conversationId, messageIds }));
+            }
         });
 
+        // --- user status updates ---
         socket.on('privateChat:userOnline', ({ userId }) => {
-            dispatch(addChatUser({ partnerId: userId, isOnline: true }));
+            if (userId) dispatch(addChatUser({ partnerId: userId, isOnline: true }));
         });
 
         socket.on('privateChat:userOffline', ({ userId, lastSeen }) => {
-            dispatch(addChatUser({ partnerId: userId, isOnline: false, lastSeen }));
+            if (userId) dispatch(addChatUser({ partnerId: userId, isOnline: false, lastSeen }));
         });
 
+        // --- typing indicators ---
         socket.on('privateChat:partner-typing', ({ from, to }) => {
             if (
                 String(to) === String(currentUserId) &&
@@ -84,7 +95,9 @@ function NormalChatController() {
             }
         });
 
+        // --- all friends online/offline ---
         socket.on('privateChat:allUsers', (users) => {
+            if (!Array.isArray(users)) return;
             users.forEach(user => {
                 dispatch(addChatUser({
                     partnerId: user.userId,
@@ -94,9 +107,7 @@ function NormalChatController() {
             });
         });
 
-        //  disconnected keep stubs
-        socket.on('privateChat:partner-disconnected', () => { });
-
+        // cleanup
         return () => {
             socket.off('privateChat:partner-joined');
             socket.off('privateChat:error');
@@ -106,7 +117,7 @@ function NormalChatController() {
             socket.off('privateChat:readMessage');
             socket.off('privateChat:userOnline');
             socket.off('privateChat:userOffline');
-            socket.off('privateChat:partner-disconnected');
+            socket.off('privateChat:allUsers');
         };
     }, [dispatch, currentUserId, activePartnerId]);
 

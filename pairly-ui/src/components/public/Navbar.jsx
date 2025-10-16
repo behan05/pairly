@@ -16,7 +16,7 @@ import BgToggle from './BgToggle';
 
 const navListBtn = [
   { path: '/login', text: 'Login', icon: <LockOpenIcon sx={{ color: 'success.main' }} /> },
-  { path: '/register', text: 'Create Access', icon: <LockIcon sx={{ color: 'success.main' }} /> }
+  { path: '/register', text: 'Create Account', icon: <LockIcon sx={{ color: 'success.main' }} /> }
 ];
 
 function Navbar() {

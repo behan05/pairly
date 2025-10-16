@@ -123,8 +123,8 @@ function Signup() {
     // Dispatch register action
     const response = await dispatch(
       register({
-        fullName: form.fullName,
-        email: form.email,
+        fullName: form.fullName.trim(),
+        email: form.email.trim().toLowerCase(),
         password: form.password,
         confirmPassword: form.confirmPassword
       })
@@ -373,7 +373,7 @@ function Signup() {
               <IconButton
                 edge="start"
                 onClick={() => handleSocialSignup('google')}
-                sx={{ color: 'warning.main' }}
+                sx={{ color: theme.palette.warning.main }}
               >
                 <GoogleIcon />
               </IconButton>
@@ -386,7 +386,7 @@ function Signup() {
                 onClick={() => handleSocialSignup('github')}
                 sx={{ color: '#2F2F2F' }}
               >
-                <GithubIcon />
+                <GithubIcon sx={{ color: theme.palette.text.primary }} />
               </IconButton>
             </Tooltip>
           </Stack>

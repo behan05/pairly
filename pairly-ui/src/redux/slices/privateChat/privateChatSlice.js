@@ -8,6 +8,7 @@ const initialState = {
     activePartnerId: null,  // active partner id
     partnerTyping: false,
     proposalData: {},
+    proposalSelectedMusic: '',
     proposalMusic: [],
     loading: false,
     error: null,
@@ -88,6 +89,15 @@ const privateChatSlice = createSlice({
 
             // Push new message
             state.conversations[cid].messages.push(message);
+
+            // Update sidebar's user list in real-time
+            if (state.allUsers?.length) {
+                const matchedUser = state.allUsers.find(u => u.conversationId === conversationId);
+                if (matchedUser) {
+                    matchedUser.lastMessage = message || {};
+                    matchedUser.lastMessageTime = message.createdAt;
+                }
+            }
         },
 
         updateMessagesAsRead: (state, action) => {
@@ -122,6 +132,10 @@ const privateChatSlice = createSlice({
             state.proposalMusic = [];
         },
 
+        setProposalSelectedMusic: (state, action) => {
+            state.proposalSelectedMusic = action?.payload;
+        },
+
         reset: (state) => {
             state.allUsers = [];
             state.chatUsers = [];
@@ -148,7 +162,8 @@ export const {
     setProposalData,
     resetProposalData,
     setProposalMusic,
-    clearProposalMusic
+    clearProposalMusic,
+    setProposalSelectedMusic
 } = privateChatSlice.actions;
 
 export default privateChatSlice.reducer;

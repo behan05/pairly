@@ -241,7 +241,7 @@ function PrivatePartnerProfileModel(
             {[
               {
                 icon: <FavoriteIcon fontSize="small" sx={{ mr: 1, color: 'primary.main' }} />,
-                label: 'Send Proposal',
+                label: 'Create Proposal',
                 onClick: () => handleAction('proposeToPartner'),
               },
               {

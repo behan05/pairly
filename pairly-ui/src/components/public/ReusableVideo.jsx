@@ -1,29 +1,42 @@
-import { Box, Stack, useTheme } from '@/MUI/MuiComponents';
-import socialVideo from '@/assets/videos/socialVideo.mp4';
+import { useMediaQuery, useTheme, Box } from '@/MUI/MuiComponents';
+import { Player } from '@lottiefiles/react-lottie-player'; // or 'lottie-react'
+import chattingIllustration from '@/assets/lottie/chattingIllustration.json';
 
 function ReusableVideo() {
   const theme = useTheme();
+  const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMd = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+
+  // Set max size relative to viewport to prevent scrollbar
+  const maxSize = isXs ? '80vw' : isMd ? '60vw' : '50vw';
+  const maxHeight = isXs ? '50vh' : isMd ? '55vh' : '60vh';
+
   return (
-    <Stack flex={1} justifyContent="center" alignItems="center" position="relative">
-      <Box
-        component="video"
-        src={socialVideo}
-        aria-label="social video on landing page"
-        autoPlay
+    <Box
+      sx={{
+        maxWidth: maxSize,
+        height: 'auto',
+        maxHeight: maxHeight,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        mx: 'auto',
+        overflow: 'hidden',
+        filter: `drop-shadow(20px 10px 6px ${theme.palette.divider})`,
+        borderRadius: 1.5,
+      }}
+    >
+      <Player
+        autoplay
         loop
-        muted
-        sx={{
-          maxWidth: '100%',
-          maxHeight: '100%',
-          bgcolor: 'transparent',
-          objectFit: 'cover',
-          borderRadius: 2,
-          boxShadow: 3,
-          borderBottom: `1px dotted ${theme.palette.text.secondary}`,
+        src={chattingIllustration}
+        style={{
+          width: '100%',
+          height: '100%',
+          maxHeight: maxHeight,
         }}
       />
-    </Stack>
-
+    </Box>
   );
 }
 

@@ -45,6 +45,19 @@ function privateChatHandler(io, socket, onlineUsers) {
                 conversationId: conversation._id.toString(),
                 profile: null
             });
+
+            // notify partner that current user joined (so they can show chat in sidebar or auto-join)
+            const partnerSockets = [...io.sockets.sockets.values()]
+                .filter(s => String(s.userId) === String(partnerUserId));
+
+            for (const ps of partnerSockets) {
+                io.to(ps.id).emit('privateChat:partner-joined', {
+                    partnerId: currentUserId,
+                    conversationId: conversation._id.toString(),
+                    profile: null
+                });
+            }
+
         } catch (err) {
             console.error('privateChat:join error', err);
             socket.emit('privateChat:error', { error: 'Failed to join private chat.' });
@@ -92,16 +105,36 @@ function privateChatHandler(io, socket, onlineUsers) {
 
             await newMessage.save();
 
-            io.to(roomId).emit('privateChat:message', {
+            const payload = {
                 conversationId: conversation._id.toString(),
                 message: {
                     _id: newMessage._id.toString(),
                     content: newMessage.content,
-                    sender: typeof newMessage.sender === 'object' && newMessage.sender.toString ? newMessage.sender.toString() : String(newMessage.sender),
+                    sender: typeof newMessage.sender === 'object' && newMessage.sender.toString
+                        ? newMessage.sender.toString()
+                        : String(newMessage.sender),
                     messageType: newMessage.messageType || 'text',
                     timestamp: newMessage.createdAt ? newMessage.createdAt.toISOString() : new Date().toISOString()
                 },
-            });
+            };
+
+            // emit to everyone currently in the conversation room
+            io.to(roomId).emit('privateChat:message', payload);
+
+            // also try to find all partner sockets and emit directly (in case they're not joined to the room)
+            const partnerSockets = [...io.sockets.sockets.values()]
+                .filter(s => String(s.userId) === String(partnerId));
+
+            for (const ps of partnerSockets) {
+                if (ps.id !== socket.id) {
+                    io.to(ps.id).emit('privateChat:message', {
+                        ...payload,
+                        fromSocketId: socket.id,
+                        partnerId: currentUserId
+                    });
+                }
+            }
+
         } catch (err) {
             console.error('privateChat:message error', err);
             socket.emit('privateChat:error', { error: 'Failed to send message.' });
@@ -148,12 +181,12 @@ function privateChatHandler(io, socket, onlineUsers) {
         const session = privateChatSessions.get(currentUserId);
         if (!session || session.partnerId !== to) return;
 
-        // find partner's socket
-        const partnerSocket = [...io.sockets.sockets.values()]
-            .find(s => String(s.userId) === String(to));
+        // find all partner sockets
+        const partnerSockets = [...io.sockets.sockets.values()]
+            .filter(s => String(s.userId) === String(to));
 
-        if (partnerSocket) {
-            io.to(partnerSocket.id).emit('privateChat:partner-typing', { from, to });
+        for (const ps of partnerSockets) {
+            io.to(ps.id).emit('privateChat:partner-typing', { from, to });
         }
     });
 
@@ -162,12 +195,12 @@ function privateChatHandler(io, socket, onlineUsers) {
         const session = privateChatSessions.get(currentUserId);
         if (!session || session.partnerId !== to) return;
 
-        // find partner's socket
-        const partnerSocket = [...io.sockets.sockets.values()]
-            .find(s => String(s.userId) === String(to));
+        // find all partner sockets
+        const partnerSockets = [...io.sockets.sockets.values()]
+            .filter(s => String(s.userId) === String(to));
 
-        if (partnerSocket) {
-            io.to(partnerSocket.id).emit('privateChat:partner-stopTyping', { from, to });
+        for (const ps of partnerSockets) {
+            io.to(ps.id).emit('privateChat:partner-stopTyping', { from, to });
         }
     });
 
@@ -209,6 +242,12 @@ function privateChatHandler(io, socket, onlineUsers) {
             console.error('privateChat:getOnlineUsers error', err);
             socket.emit('privateChat:error', { error: 'Failed to fetch online partners.' });
         }
+    });
+
+    socket.on('disconnect', () => {
+        const session = privateChatSessions.get(currentUserId);
+        if (session?.roomId) socket.leave(session.roomId);
+        privateChatSessions.delete(currentUserId);
     });
 
 }

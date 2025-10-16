@@ -140,7 +140,8 @@ function Home() {
             fontWeight={700}
             sx={{ color: 'text.primary', lineHeight: 1.2 }}
           >
-            {<StyledText text={'Talk Freely.'} />} Pairly Instantly.
+            Say What You Feel.{' '}
+            {<StyledText text={'Pair Instantly.'} />}
           </Typography>
 
           {/* Short Description */}
@@ -188,7 +189,6 @@ function Home() {
           >
             <StyledText text={'“'} />We protect your emotions until couple mode. Pairly helps you know each other clearly before taking the next step.<StyledText text={'”'} />
           </Typography>
-
 
           {/* CTA Buttons */}
           <Stack direction="row" gap={2} sx={{ mt: 3, flexWrap: 'wrap' }}>

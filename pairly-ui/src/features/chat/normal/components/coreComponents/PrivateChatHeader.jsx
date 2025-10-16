@@ -301,7 +301,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
               },
               {
                 icon: <FavoriteIcon fontSize="small" sx={{ mr: 1, color: 'secondary.main' }} />,
-                label: 'Send Proposal',
+                label: 'Create Proposal',
                 onClick: () => handleAction('proposeToPartner'),
               },
               {
