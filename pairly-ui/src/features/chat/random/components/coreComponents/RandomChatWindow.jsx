@@ -32,6 +32,9 @@ import Button from '@mui/material/Button';
 import randomChatWindowImage from '@/assets/images/chatWindowImage1.png'
 import randomChatWindowImage2 from '@/assets/images/chatWindowImage.png'
 
+// Festival
+import Diwali from '../../../../../components/common/fastivalMessage/Diwali';
+
 /**
  * RandomChatWindow component
  * - Displays chat messages, input, and controls for random chat
@@ -602,7 +605,7 @@ function RandomChatWindow({ setShowChatWindow }) {
                 alignItems: 'center'
               }}
             >
-              <Box sx={{ mb: 20 }}>
+              {/* <Box sx={{ mb: 20 }}>
                 <Tooltip
                   title="Your chat will appear here once you're matched">
                   <ForumRoundedIcon
@@ -634,7 +637,12 @@ function RandomChatWindow({ setShowChatWindow }) {
                   </Typography>
                 </Stack>
 
-              </Box>
+              </Box> */}
+
+              {/* Temporary Diwali Wish */}
+              {/* ========================================== */}
+              <Diwali />
+              {/* ========================================== */}
 
               {!isConnected && isSm && (
                 <Button

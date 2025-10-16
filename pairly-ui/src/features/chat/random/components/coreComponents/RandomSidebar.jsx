@@ -23,6 +23,9 @@ import { socket } from '@/services/socket';
 import { resetRandomChat, setWaiting } from '@/redux/slices/randomChat/randomChatSlice';
 import { useOutletContext } from 'react-router-dom';
 
+// Fastival Greatting
+import Diwali from '../../../../../components/common/fastivalMessage/Diwali';
+
 function RandomSidebar() {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -102,6 +105,7 @@ function RandomSidebar() {
         justifyContent="center"
         p={isSm ? 3 : 4}
       >
+
         <Paper
           elevation={4}
           sx={{
@@ -160,6 +164,13 @@ function RandomSidebar() {
 
           {/* Title */}
           <StyledText text="Random Chat" sx={{ fontSize: isSm ? '1.5rem' : '2rem' }} />
+
+          {/* Diwali greeting */}
+          {isSm && (
+            <Box sx={{ width: 120, height: 120, mx: 'auto', mb: 2 }}>
+              <Diwali />
+            </Box>
+          )}
 
           <Typography
             variant="subtitle1"
