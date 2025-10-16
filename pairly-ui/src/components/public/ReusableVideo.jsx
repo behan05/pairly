@@ -1,6 +1,6 @@
 import { useMediaQuery, useTheme, Box } from '@/MUI/MuiComponents';
 import { Player } from '@lottiefiles/react-lottie-player'; // or 'lottie-react'
-import chattingIllustration from '@/assets/lottie/chattingIllustration.json';
+import chattingIllustration from '@/assets/lottie/ChattingIllustration.json';
 
 function ReusableVideo() {
   const theme = useTheme();
