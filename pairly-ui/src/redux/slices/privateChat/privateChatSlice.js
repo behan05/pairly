@@ -4,8 +4,9 @@ const initialState = {
     allUsers: [],          // full users fetched from API to show in sidebar list
     chatUsers: [],         // users you have active chats with
     conversations: {},     // { conversationId: { messages: [...] } }
+    unreadCount: {},       // {conversationId,partnerId, unreadMessageCount}
     activeChat: null,      // conversationId
-    activePartnerId: null,  // active partner id
+    activePartnerId: null, // active partner id
     partnerTyping: false,
     proposalData: {},
     proposalSelectedMusic: '',
@@ -45,6 +46,16 @@ const privateChatSlice = createSlice({
                     ...newUser
                 };
             }
+        },
+
+        setUnreadCount: (state, action) => {
+            const { conversationId, partnerId, count } = action.payload;
+            if (!conversationId || partnerId == null || count == null) return;
+
+            state.unreadCount[conversationId] = {
+                partnerId,
+                count
+            };
         },
 
         setConversationMessages: (state, action) => {
@@ -152,6 +163,7 @@ export const {
     addChatUser,
     setActiveChat,
     addMessage,
+    setUnreadCount,
     setPartnerTyping,
     setError,
     reset,
@@ -167,3 +179,12 @@ export const {
 } = privateChatSlice.actions;
 
 export default privateChatSlice.reducer;
+
+export const totalNumberOfUnreadMessages = (state) => {
+    if (!state.privateChat || !state.privateChat.unreadCount) return 0;
+
+    return Object.values(state.privateChat.unreadCount).reduce(
+        (total, { count }) => total + (count || 0),
+        0
+    );
+};

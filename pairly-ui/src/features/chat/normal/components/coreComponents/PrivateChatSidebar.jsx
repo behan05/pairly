@@ -29,8 +29,8 @@ import SettingsAction from '@/components/private/SettingsAction';
 import Loading from '@/components/common/Loading';
 
 // redux and Socket
-import { fetchAllUser, fetchConversationMessages } from '@/redux/slices/privateChat/privateChatAction';
-import { setActivePartnerId } from '@/redux/slices/privateChat/privateChatSlice';
+import { setActivePartnerId, setUnreadCount } from '@/redux/slices/privateChat/privateChatSlice';
+import { fetchAllUser, fetchUnreadCounts, fetchConversationMessages } from '@/redux/slices/privateChat/privateChatAction';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useOutletContext } from 'react-router-dom';
 import { socket } from '@/services/socket';
@@ -40,13 +40,14 @@ function PrivateChatSidebar() {
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const dispatch = useDispatch();
     const { setSelectedUserId, activeUserId, setActiveUserId } = useOutletContext();
-    const { allUsers, chatUsers, loading, conversations } = useSelector(state => state.privateChat);
+    const { allUsers, chatUsers, loading, unreadCount } = useSelector(state => state.privateChat);
 
     const [searchValue, setSearchValue] = useState('');
 
-    useEffect(() => {
-        dispatch(fetchAllUser());
-    }, [dispatch]);
+    // useEffect(() => {
+    //     dispatch(fetchAllUser());
+    //     dispatch(fetchUnreadCounts());
+    // }, [dispatch]);
 
     useEffect(() => {
         const handlePartnerJoined = ({ partnerId, conversationId }) => {
@@ -72,12 +73,24 @@ function PrivateChatSidebar() {
         setSelectedUserId(userId);
         dispatch(setActivePartnerId(userId));
 
-        // Emit to socket to join
         socket.emit('privateChat:join', { partnerUserId: userId });
 
         const userConversation = chatUsers.find(u => u.partnerId === userId);
 
-        // Only fetch if it's a new conversation or not loaded yet
+        if (userConversation?.conversationId) {
+            // Tell server to mark messages as read
+            socket.emit('privateChat:readMessage', {
+                conversationId: userConversation.conversationId
+            });
+
+            // Clear local badge immediately
+            dispatch(setUnreadCount({
+                conversationId: userConversation.conversationId,
+                partnerId: userId,
+                count: 0
+            }));
+        }
+
         if (userConversation?.conversationId && userConversation.partnerId !== activeUserId) {
             dispatch(fetchConversationMessages(userConversation.conversationId));
         }
@@ -391,7 +404,8 @@ function PrivateChatSidebar() {
                                     ? (isOnline ? 'Online' : 'Offline')
                                     : 'Activity status hidden';
 
-                                const unseenCount = 1;
+                                const unseenCount = unreadCount[user.conversationId]?.count || 0;
+
                                 return (
                                     <Stack
                                         key={index}
@@ -522,23 +536,23 @@ function PrivateChatSidebar() {
                                                         }
                                                     </Typography>
 
-                                                    {/* {unseenCount > 0 && (
-                                                <Badge
-                                                    badgeContent={unseenCount}
-                                                    color={'success'}
-                                                    sx={{
-                                                        '& .MuiBadge-badge': {
-                                                            right: 10,
-                                                            top: 0,
-                                                            fontSize: '0.7rem',
-                                                            minWidth: 20,
-                                                            height: 20,
-                                                            borderRadius: 50,
-                                                            color: 'text.primary'
-                                                        }
-                                                    }}
-                                                />
-                                            )} */}
+                                                    {unseenCount > 0 && (
+                                                        <Badge
+                                                            badgeContent={unseenCount}
+                                                            color={'success'}
+                                                            sx={{
+                                                                '& .MuiBadge-badge': {
+                                                                    right: 10,
+                                                                    top: 0,
+                                                                    fontSize: '0.7rem',
+                                                                    minWidth: 20,
+                                                                    height: 20,
+                                                                    borderRadius: 50,
+                                                                    color: 'text.primary'
+                                                                }
+                                                            }}
+                                                        />
+                                                    )}
                                                 </Stack>
 
                                             </Stack>

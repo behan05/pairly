@@ -1,6 +1,7 @@
 const Routers = require('express').Router();
 const {
     listPrivateChatUsersController,
+    getUnreadCountsController,
     getConversationMessagesController,
     clearPrivateChatMessageControllerById,
     deletePrivateChatWithUserControllerById,
@@ -14,6 +15,7 @@ const upload = require('../../../middlewares/uploadPrivateMedia');
 const authMiddleware = require('../../../middlewares/authMiddleware');
 
 Routers.get('/users', authMiddleware, listPrivateChatUsersController);
+Routers.get('/unreadCounts', authMiddleware, getUnreadCountsController);
 Routers.get('/user/:conversationId', authMiddleware, getConversationMessagesController);
 Routers.delete('/conversations/:conversationId', authMiddleware, deletePrivateChatWithUserControllerById);
 Routers.delete('/conversations/:conversationId/messages', authMiddleware, clearPrivateChatMessageControllerById);

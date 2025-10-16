@@ -9,7 +9,7 @@ const ChatClearLog = require('../../models/chat/ChatClearLog.model');
 const { getIO } = require('../../sockets/socketServer');
 
 exports.listPrivateChatUsersController = async (req, res) => {
-    const currentUserId = req.user.id;
+    const currentUserId = req.user.id?.toString();
 
     if (!currentUserId) {
         return res.status(401).json({
@@ -27,7 +27,6 @@ exports.listPrivateChatUsersController = async (req, res) => {
             });
         }
 
-        // Find all accepted chat requests where user is involved
         const currentUserFriends = await PrivateChatRequest.find({
             $or: [
                 { to: currentUserId },
@@ -44,12 +43,10 @@ exports.listPrivateChatUsersController = async (req, res) => {
             });
         }
 
-        // Extract friend IDs
         let allFriendsId = currentUserFriends.map(f =>
-            f.from.toString() === currentUserId.toString() ? f.to : f.from
+            f.from.toString() === currentUserId ? f.to : f.from
         );
 
-        // Get blocked users (both directions)
         const blockedUsers = await Block.find({
             isRandomChat: false,
             $or: [
@@ -58,14 +55,12 @@ exports.listPrivateChatUsersController = async (req, res) => {
             ]
         }).lean();
 
-        // Collect blocked IDs
         const blockedIds = blockedUsers.map(b =>
-            b.blocker.toString() === currentUserId.toString()
+            b.blocker.toString() === currentUserId
                 ? b.blocked.toString()
                 : b.blocker.toString()
         );
 
-        // Filter out blocked users
         allFriendsId = allFriendsId.filter(id => !blockedIds.includes(id.toString()));
 
         if (!allFriendsId.length) {
@@ -76,12 +71,10 @@ exports.listPrivateChatUsersController = async (req, res) => {
             });
         }
 
-        // Get profiles & setting of allowed friends
         const profiles = await Profile.find({ user: { $in: allFriendsId } }).lean();
         const settings = await Settings.find({ user: { $in: allFriendsId } }).lean();
         const users = await User.find({ _id: { $in: allFriendsId } }).lean();
 
-        // Get conversations where current user is a participant
         const conversations = await Conversation.find({
             isRandomChat: false,
             participants: currentUserId
@@ -89,19 +82,16 @@ exports.listPrivateChatUsersController = async (req, res) => {
 
         const conversationIds = conversations.map(c => c._id);
 
-        // get clear logs for this user
         const clearLogs = await ChatClearLog.find({
             user: currentUserId,
             conversation: { $in: conversationIds }
         }).lean();
 
-        // make a map for fast lookup
         const clearLogsMap = {};
         clearLogs.forEach(log => {
             clearLogsMap[log.conversation.toString()] = log.clearTimestamp;
         });
 
-        // Get last message for each conversation
         const lastMessages = await Message.aggregate([
             { $match: { conversation: { $in: conversationIds } } },
             { $sort: { createdAt: -1 } },
@@ -113,12 +103,10 @@ exports.listPrivateChatUsersController = async (req, res) => {
             }
         ]);
 
-        // filter by clear timestamp
         const lastMessagesMap = {};
         lastMessages.forEach(m => {
             const convId = m._id.toString();
             const clearTime = clearLogsMap[convId];
-
             if (clearTime && m.lastMessage.createdAt <= clearTime) {
                 lastMessagesMap[convId] = null;
             } else {
@@ -126,7 +114,37 @@ exports.listPrivateChatUsersController = async (req, res) => {
             }
         });
 
-        // Build user details
+        // ✅ FIXED unread count aggregation
+        const unreadCounts = await Message.aggregate([
+            {
+                $match: {
+                    conversation: { $in: conversationIds },
+                    seen: false
+                }
+            },
+            {
+                $addFields: {
+                    senderStr: { $toString: "$sender" }
+                }
+            },
+            {
+                $match: {
+                    senderStr: { $ne: currentUserId }
+                }
+            },
+            {
+                $group: {
+                    _id: "$conversation",
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
+
+        const unreadCountsMap = {};
+        unreadCounts.forEach(u => {
+            unreadCountsMap[u._id.toString()] = u.count;
+        });
+
         const userDetails = allFriendsId.map(friendId => {
             const reqProfile = profiles.find(p => p.user.toString() === friendId.toString());
             const reqSettings = settings.find(s => s.user.toString() === friendId.toString());
@@ -137,6 +155,7 @@ exports.listPrivateChatUsersController = async (req, res) => {
             );
 
             const lastMessage = convo ? lastMessagesMap[convo._id.toString()] || null : null;
+            const unreadCount = convo ? unreadCountsMap[convo._id.toString()] || 0 : 0;
 
             return {
                 userId: friendId,
@@ -145,11 +164,11 @@ exports.listPrivateChatUsersController = async (req, res) => {
                 isUserVerifiedByEmail: reqUsers?.emailVerified || false,
                 conversationId: convo?._id || null,
                 lastMessage,
-                lastMessageTime: lastMessage ? lastMessage.createdAt : null
+                lastMessageTime: lastMessage ? lastMessage.createdAt : null,
+                unreadCount
             };
         });
 
-        // Sort by lastMessageTime (latest first)
         userDetails.sort((user1, user2) => {
             if (!user1?.lastMessageTime && !user2?.lastMessageTime) return 0;
             if (!user1?.lastMessageTime) return 1;
@@ -164,6 +183,71 @@ exports.listPrivateChatUsersController = async (req, res) => {
 
     } catch (error) {
         console.error(error);
+        return res.status(500).json({
+            success: false,
+            error: 'Server error. Please try again later.'
+        });
+    }
+};
+
+exports.getUnreadCountsController = async (req, res) => {
+    const currentUserId = req.user.id.toString();
+
+    if (!currentUserId) {
+        return res.status(401).json({
+            success: false,
+            error: 'Unauthorized: access token is missing'
+        });
+    }
+
+    try {
+        // Get all conversations where current user is a participant
+        const conversations = await Conversation.find({
+            participants: currentUserId,
+            isRandomChat: false
+        }).lean();
+
+        const conversationIds = conversations.map(c => c._id);
+
+        // Aggregate unread messages count per conversation
+        const unreadCounts = await Message.aggregate([
+            {
+                $match: {
+                    conversation: { $in: conversationIds },
+                    seen: false
+                }
+            },
+            {
+                $addFields: {
+                    senderStr: { $toString: "$sender" }
+                }
+            },
+            {
+                $match: {
+                    senderStr: { $ne: currentUserId.toString() }
+                }
+            },
+            {
+                $group: {
+                    _id: "$conversation",
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
+
+        // Convert to a map for easier use in frontend
+        const unreadCountsMap = {};
+        unreadCounts.forEach(u => {
+            unreadCountsMap[u._id.toString()] = { count: u.count };
+        });
+
+        return res.status(200).json({
+            success: true,
+            data: unreadCountsMap
+        });
+
+    } catch (error) {
+        console.error('Error fetching unread counts:', error);
         return res.status(500).json({
             success: false,
             error: 'Server error. Please try again later.'

@@ -39,7 +39,9 @@ import { pendingFriendRequestCount } from '@/redux/slices/randomChat/friendReque
 import { getChatSettings } from '@/redux/slices/settings/settingsAction';
 import { getSettingsNotification } from '@/redux/slices/settings/settingsAction';
 import { getSettingsPrivacy } from '@/redux/slices/settings/settingsAction';
+import { fetchAllUser, fetchUnreadCounts } from '@/redux/slices/privateChat/privateChatAction';
 
+import { totalNumberOfUnreadMessages } from '@/redux/slices/privateChat/privateChatSlice';
 const ChatSidebarHeader = ({ children }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -59,9 +61,12 @@ const ChatSidebarHeader = ({ children }) => {
     dispatch(getChatSettings());
     dispatch(getSettingsNotification());
     dispatch(getSettingsPrivacy());
+    dispatch(fetchAllUser());
+    dispatch(fetchUnreadCounts());
   }, [dispatch]);
 
   const hasNewAlert = 0 > 0;
+  const unreadTotal = useSelector(totalNumberOfUnreadMessages);
 
   const navItems = [
     {
@@ -72,7 +77,9 @@ const ChatSidebarHeader = ({ children }) => {
     {
       path: '/pairly/chat',
       icon: (
-        <ChatIcon sx={{ color: theme.palette.text.primary }} />
+        <Badge badgeContent={unreadTotal} color="error" invisible={unreadTotal === 0}>
+          <ChatIcon sx={{ color: theme.palette.text.primary }} />
+        </Badge>
       ),
       label: 'Private Chat'
     },
@@ -234,7 +241,6 @@ const ChatSidebarHeader = ({ children }) => {
             minWidth: 200,
             mt: 1,
             p: '0px 10px',
-            // py: 0.75,
             overflow: 'hidden'
           }
         }}

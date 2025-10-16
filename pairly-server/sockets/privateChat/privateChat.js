@@ -110,30 +110,36 @@ function privateChatHandler(io, socket, onlineUsers) {
                 message: {
                     _id: newMessage._id.toString(),
                     content: newMessage.content,
-                    sender: typeof newMessage.sender === 'object' && newMessage.sender.toString
-                        ? newMessage.sender.toString()
-                        : String(newMessage.sender),
+                    sender: String(newMessage.sender),
                     messageType: newMessage.messageType || 'text',
-                    timestamp: newMessage.createdAt ? newMessage.createdAt.toISOString() : new Date().toISOString()
+                    timestamp: newMessage.createdAt.toISOString()
                 },
             };
 
-            // emit to everyone currently in the conversation room
             io.to(roomId).emit('privateChat:message', payload);
 
-            // also try to find all partner sockets and emit directly (in case they're not joined to the room)
             const partnerSockets = [...io.sockets.sockets.values()]
                 .filter(s => String(s.userId) === String(partnerId));
 
+            const unreadCountForPartner = await Message.countDocuments({
+                conversation: conversation._id,
+                sender: currentUserId,
+                seen: false
+            });
+
             for (const ps of partnerSockets) {
-                if (ps.id !== socket.id) {
-                    io.to(ps.id).emit('privateChat:message', {
-                        ...payload,
-                        fromSocketId: socket.id,
-                        partnerId: currentUserId
-                    });
-                }
+                io.to(ps.id).emit('privateChat:unreadCountUpdate', {
+                    conversationId: conversation._id.toString(),
+                    partnerId: currentUserId,
+                    count: unreadCountForPartner
+                });
             }
+
+            io.to(socket.id).emit('privateChat:unreadCountUpdate', {
+                conversationId: conversation._id.toString(),
+                partnerId,
+                count: 0
+            });
 
         } catch (err) {
             console.error('privateChat:message error', err);
@@ -142,18 +148,14 @@ function privateChatHandler(io, socket, onlineUsers) {
     });
 
     // --- READ MESSAGES ---
-    socket.on('privateChat:readMessage', async () => {
+    socket.on('privateChat:readMessage', async ({ conversationId }) => {
         const session = privateChatSessions.get(currentUserId);
-        if (!session) {
-            socket.emit('privateChat:error', { error: 'Session not found' });
+        if (!session || !conversationId) {
+            socket.emit('privateChat:error', { error: 'Session not found or conversationId missing' });
             return;
         }
 
-        const { conversationId, roomId, partnerId } = session;
-        if (!conversationId || !roomId) {
-            socket.emit('privateChat:error', { error: 'Error: you are not connected to anyone yet' });
-            return;
-        }
+        const { roomId, partnerId } = session;
 
         try {
             await Message.updateMany(
@@ -171,6 +173,30 @@ function privateChatHandler(io, socket, onlineUsers) {
                 conversationId,
                 messageIds: seenMessages.map(m => m._id.toString())
             });
+
+            io.to(socket.id).emit('privateChat:unreadCountUpdate', {
+                conversationId,
+                partnerId,
+                count: 0
+            });
+
+            const partnerSockets = [...io.sockets.sockets.values()]
+                .filter(s => String(s.userId) === String(partnerId));
+
+            const partnerUnreadCount = await Message.countDocuments({
+                conversation: conversationId,
+                sender: currentUserId,
+                seen: false
+            });
+
+            for (const ps of partnerSockets) {
+                io.to(ps.id).emit('privateChat:unreadCountUpdate', {
+                    conversationId,
+                    partnerId: currentUserId,
+                    count: partnerUnreadCount
+                });
+            }
+
         } catch (error) {
             socket.emit('privateChat:error', { message: 'Failed to mark messages as read.' });
         }

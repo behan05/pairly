@@ -7,7 +7,8 @@ import {
     addMessage,
     setError,
     updateMessagesAsRead,
-    setPartnerTyping
+    setPartnerTyping,
+    setUnreadCount
 } from '@/redux/slices/privateChat/privateChatSlice';
 
 function NormalChatController() {
@@ -57,6 +58,20 @@ function NormalChatController() {
                     seen: message?.seen ?? false
                 }
             }));
+
+            // Clear unread count if current user is the sender
+            const senderId = message?.sender ?? message?.senderId;
+            if (String(senderId) === String(currentUserId)) {
+                dispatch(setUnreadCount({
+                    conversationId,
+                    partnerId,
+                    count: 0
+                }));
+            }
+        });
+
+        socket.on('privateChat:unreadCountUpdate', ({ conversationId, partnerId, count }) => {
+            dispatch(setUnreadCount({ conversationId, partnerId, count }));
         });
 
         // --- mark messages as read ---
@@ -112,6 +127,7 @@ function NormalChatController() {
             socket.off('privateChat:partner-joined');
             socket.off('privateChat:error');
             socket.off('privateChat:message');
+            socket.off('privateChat:unreadCountUpdate');
             socket.off('privateChat:partner-typing');
             socket.off('privateChat:partner-stopTyping');
             socket.off('privateChat:readMessage');

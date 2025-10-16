@@ -16,6 +16,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import { socket } from '@/services/socket';
 import { fetchConversationMessages } from '@/redux/slices/privateChat/privateChatAction'
+import { setActivePartnerId } from '@/redux/slices/privateChat/privateChatSlice';
 
 // Styled audio element
 const StyledAudio = styled('audio')(({ theme }) => ({
@@ -71,13 +72,21 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
     : [];
 
   useEffect(() => {
-    const handleFocus = () => {
-      if (!conversationId) return;
+    if (!conversationId || !messages.length) return;
+
+    const lastMessage = messages[messages.length - 1];
+    const isFromPartner = lastMessage?.sender?.toString() === selectedUserId?.toString();
+
+    if (isFromPartner) {
       socket.emit('privateChat:readMessage', { conversationId });
+    }
+  }, [conversationId, messages, selectedUserId]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(setActivePartnerId(null));
     };
-    window.addEventListener('focus', handleFocus);
-    return () => window.removeEventListener('focus', handleFocus);
-  }, [conversationId, socket]);
+  }, [dispatch]);
 
   useEffect(() => {
     if (selectedUserId && !messages.length && conversationId) {

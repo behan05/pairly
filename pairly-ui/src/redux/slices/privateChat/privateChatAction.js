@@ -5,9 +5,7 @@ import {
     setLoading,
     setError,
     setProposalMusic,
-    clearProposalMusic,
-    setProposalData,
-    resetProposalData
+    setUnreadCount,
 } from './privateChatSlice';
 import { getAuthHeaders } from '@/utils/authHeaders';
 import { PRIVATE_CHAT_API } from '@/api/config';
@@ -28,7 +26,20 @@ export function fetchAllUser() {
             const response = await axios.get(`${PRIVATE_CHAT_API}/users`, { headers });
 
             if (response.data.success) {
-                dispatch(setAllUsers(response.data.users));
+                const users = response.data.users || [];
+                dispatch(setAllUsers(users));
+
+                // Extract unread counts from API if provided
+                users.forEach(user => {
+                    if (user.conversationId && user.unreadCount) {
+                        dispatch(setUnreadCount({
+                            conversationId: user.conversationId,
+                            partnerId: user.userId,
+                            count: user.unreadCount
+                        }));
+                    }
+                });
+
             } else {
                 dispatch(setError(response.data.error || 'Failed to fetch users'));
             }
@@ -38,6 +49,23 @@ export function fetchAllUser() {
             dispatch(setLoading(false));
         }
     };
+};
+
+export const fetchUnreadCounts = () => async (dispatch) => {
+    const headers = getAuthHeaders();
+    if (!headers) return;
+
+    try {
+        const res = await axios.get(`${PRIVATE_CHAT_API}/unreadCounts`, { headers });
+        if (res.data.success) {
+            const counts = res.data.data; // should be { conversationId: { partnerId, count } }
+            Object.entries(counts).forEach(([conversationId, { partnerId, count }]) => {
+                dispatch(setUnreadCount({ conversationId, partnerId, count }));
+            });
+        }
+    } catch (err) {
+        console.error('Failed to fetch unread counts:', err);
+    }
 };
 
 export const fetchConversationMessages = (conversationId) => async (dispatch) => {
@@ -139,7 +167,7 @@ export const getMusicBySelectType = (musicType) => {
 
         try {
             const res = await axios.get(`${PROPOSAL_REQUEST_API}/audio/${musicType}`, { headers });
-            
+
             if (res.data.success) {
                 dispatch(setProposalMusic(res.data.data || []));
             } else {
