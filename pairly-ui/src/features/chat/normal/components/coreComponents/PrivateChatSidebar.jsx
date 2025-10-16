@@ -43,11 +43,11 @@ function PrivateChatSidebar() {
     const { allUsers, chatUsers, loading, unreadCount } = useSelector(state => state.privateChat);
 
     const [searchValue, setSearchValue] = useState('');
-
-    // useEffect(() => {
-    //     dispatch(fetchAllUser());
-    //     dispatch(fetchUnreadCounts());
-    // }, [dispatch]);
+ 
+    useEffect(() => {
+        dispatch(fetchAllUser());
+        dispatch(fetchUnreadCounts());
+    }, [dispatch]);
 
     useEffect(() => {
         const handlePartnerJoined = ({ partnerId, conversationId }) => {
