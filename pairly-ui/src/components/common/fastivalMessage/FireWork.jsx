@@ -1,6 +1,6 @@
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { Player } from '@lottiefiles/react-lottie-player';
-import FireWorks from '@/assets/lottie/FireWorks.json';
+import fireWork from '@/assets/lottie/Fireworks.json';
 
 function FireWork({ width = '100%', height = '100%', maxWidth = 500, maxHeight = 500 }) {
     const theme = useTheme();
@@ -28,7 +28,7 @@ function FireWork({ width = '100%', height = '100%', maxWidth = 500, maxHeight =
             <Player
                 autoplay
                 loop={isSm ? false : true}
-                src={FireWorks}
+                src={fireWork}
                 style={{
                     width: '100%',
                     height: '100%',
