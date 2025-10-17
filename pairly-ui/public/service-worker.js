@@ -1,5 +1,5 @@
 // Name + version of your cache (bump version when you deploy new build)
-const CACHE_NAME = 'connect-cache-v5';
+const CACHE_NAME = 'connect-cache-v6';
 
 // Only cache static core files that won’t change between builds
 // (index.html is handled by network fallback, not cache)

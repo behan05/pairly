@@ -260,7 +260,7 @@ function RandomSidebar() {
       </Box>
 
       {/* Settings */}
-      {isSm && (
+      {!isSm && (
         <Box sx={{ py: 2, display: 'flex', justifyContent: 'center' }}>
           <SettingsAction />
         </Box>

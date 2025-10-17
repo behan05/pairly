@@ -34,6 +34,7 @@ function FireWork({ width = '100%', height = '100%', maxWidth = 500, maxHeight =
                     height: '100%',
                     maxWidth: '100%',
                     maxHeight: '100%',
+                    filter: 'brightness(140%) contrast(150%)',
                 }}
             />
         </Box>

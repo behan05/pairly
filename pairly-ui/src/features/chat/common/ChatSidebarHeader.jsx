@@ -165,7 +165,7 @@ const ChatSidebarHeader = ({ children }) => {
             aria-label="Pairly logo"
             maxWidth={isSm ? 48 : 55}
             sx={{
-              filter: 'brightness(120%) drop-shadow(0 4px 2px)',
+              filter: `brightness(120%) `,
             }}
           />
         </Link>
