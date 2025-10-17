@@ -4,27 +4,35 @@ const formatBubbleTime = (timestamp) => {
     const messageDate = new Date(timestamp);
     const now = new Date();
 
-    const isToday =
-        messageDate.getDate() === now.getDate() &&
-        messageDate.getMonth() === now.getMonth() &&
-        messageDate.getFullYear() === now.getFullYear();
+    // More reliable yesterday detection (crosses month/year boundaries safely)
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
 
-    const isYesterday =
-        messageDate.getDate() === now.getDate() - 1 &&
-        messageDate.getMonth() === now.getMonth() &&
-        messageDate.getFullYear() === now.getFullYear();
+    const isToday = messageDate.toDateString() === now.toDateString();
+    const isYesterday = messageDate.toDateString() === yesterday.toDateString();
 
+    // Common time format options
+    const timeOptions = {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true, // ensures readable AM/PM format (you can switch to false for 24h)
+    };
+
+    // Today → only show time
     if (isToday) {
-        return messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        return messageDate.toLocaleTimeString([], timeOptions);
     }
 
+    // Yesterday → "Yesterday, 10:35 PM"
     if (isYesterday) {
-        return `Yesterday, ${messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+        return `Yesterday, ${messageDate.toLocaleTimeString([], timeOptions)}`;
     }
 
-    return messageDate.toLocaleDateString([], { day: 'numeric', month: 'short' }) +
-        ', ' +
-        messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    // Older → "16 Oct, 10:35 PM"
+    return `${messageDate.toLocaleDateString([], {
+        day: 'numeric',
+        month: 'short',
+    })}, ${messageDate.toLocaleTimeString([], timeOptions)}`;
 };
 
 export default formatBubbleTime;

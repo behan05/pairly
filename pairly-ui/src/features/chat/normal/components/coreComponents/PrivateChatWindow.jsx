@@ -108,7 +108,13 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
   };
 
   useEffect(() => {
-    if (messagesEndRef.current) {
+    const messagesContainer = document.getElementById('chat-window');
+    if (!messagesContainer || !messagesEndRef.current) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = messagesContainer;
+    const isNearBottom = scrollHeight - scrollTop - clientHeight < 100; // 100px threshold
+
+    if (isNearBottom) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, isTyping]);
@@ -178,59 +184,49 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                   >
 
                     {/* Text message */}
-                    {msg.messageType === 'text' && (
-                      <>
-                        {isValidURL(msg.content) ? (
+                    {msg.messageType === 'text' && (() => {
+                      const isShort = msg.content.length < (isSm ? 10 : 35); // tweak threshold
+
+                      return (
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            flexDirection: isShort ? 'row' : 'column',
+                            alignItems: isShort ? 'center' : 'flex-end',
+                            gap: isShort ? 1 : 0,
+                            fontSize: fontSizeMap[chatFontSize] || '0.875rem',
+                            textAlign: 'start'
+                          }}
+                        >
                           <Typography
-                            variant="body1"
-                            component="a"
-                            href={msg.content}
-                            target="_blank"
-                            rel="noopener noreferrer"
                             sx={{
                               wordBreak: 'break-word',
-                              fontWeight: 500,
-                              fontSize: fontSizeMap[chatFontSize] || '0.875rem',
-                              color: isOwnMessage
-                                ? theme.palette.primary.contrastText
-                                : theme.palette.success.main,
-                              textDecoration: 'underline',
-                              textUnderlineOffset: 2,
-                              '&:hover': {
-                                color: isOwnMessage
-                                  ? theme.palette.info.light
-                                  : theme.palette.success.dark,
-                              },
                             }}
                           >
                             {msg.content}
                           </Typography>
 
-                        ) : (
                           <Typography
-                            variant="body1"
-                            sx={{ fontSize: fontSizeMap[chatFontSize] || '0.875rem' }}
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 0.5,
+                              fontSize: '0.75rem',
+                            }}
                           >
-                            {msg.content}
+                            {formatBubbleTime(msg.createdAt)}
+                            {isOwnMessage &&
+                              (msg.seen ? (
+                                <DoneAllIcon sx={{ fontSize: 16, color: 'info.main' }} />
+                              ) : (
+                                <DoneIcon sx={{ fontSize: 16, color: 'grey' }} />
+                              ))}
                           </Typography>
-                        )}
-                        <Typography
-                          variant="caption"
-                          color="text.secondary"
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'flex-end',
-                            alignItems: 'center',
-                            gap: 0.5,
-                            mt: 0.5,
-                            fontSize: '0.875rem'
-                          }}
-                        >
-                          {formatBubbleTime(msg.createdAt)}
-                          {isOwnMessage && (msg.seen ? <DoneAllIcon sx={{ fontSize: 16, color: "info.main" }} /> : <DoneIcon sx={{ fontSize: 16, color: "grey" }} />)}
-                        </Typography>
-                      </>
-                    )}
+                        </Box>
+                      );
+                    })()}
 
                     {/* Image */}
                     {msg.messageType === 'image' && (

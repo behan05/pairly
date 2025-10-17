@@ -25,6 +25,7 @@ import { useOutletContext } from 'react-router-dom';
 
 // Fastival Greatting
 import Diwali from '../../../../../components/common/fastivalMessage/Diwali';
+import FireWork from '../../../../../components/common/fastivalMessage/FireWork';
 
 function RandomSidebar() {
   const theme = useTheme();
@@ -58,6 +59,16 @@ function RandomSidebar() {
     return () => socket.off('onlineCount');
   }, []);
 
+  // Firework corner style
+  const fireWorkStyle = {
+    position: 'absolute',
+    width: 120,
+    height: 120,
+    zIndex: 0,
+    opacity: 0.5,
+    pointerEvents: 'none',
+  };
+
   return (
     <Box
       display="flex"
@@ -73,6 +84,21 @@ function RandomSidebar() {
         overflow: 'hidden',
       }}
     >
+
+      {/* Fireworks at corners */}
+      <Box sx={{ ...fireWorkStyle, top: 0, left: 0 }}>
+        <FireWork />
+      </Box>
+      <Box sx={{ ...fireWorkStyle, top: 0, right: 0 }}>
+        <FireWork />
+      </Box>
+      <Box sx={{ ...fireWorkStyle, bottom: 0, left: 0 }}>
+        <FireWork />
+      </Box>
+      <Box sx={{ ...fireWorkStyle, bottom: 0, right: 0 }}>
+        <FireWork />
+      </Box>
+
       {/* Header */}
       <Stack sx={{ px: 1.5 }}>
         <ChatSidebarHeader />
@@ -105,7 +131,6 @@ function RandomSidebar() {
         justifyContent="center"
         p={isSm ? 3 : 4}
       >
-
         <Paper
           elevation={4}
           sx={{
@@ -235,9 +260,11 @@ function RandomSidebar() {
       </Box>
 
       {/* Settings */}
-      <Box sx={{ py: 2, display: 'flex', justifyContent: 'center' }}>
-        <SettingsAction />
-      </Box>
+      {isSm && (
+        <Box sx={{ py: 2, display: 'flex', justifyContent: 'center' }}>
+          <SettingsAction />
+        </Box>
+      )}
     </Box>
   );
 }

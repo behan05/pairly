@@ -165,7 +165,7 @@ const ChatSidebarHeader = ({ children }) => {
             aria-label="Pairly logo"
             maxWidth={isSm ? 48 : 55}
             sx={{
-              filter: 'brightness(120%) drop-shadow(0 4px 2px',
+              filter: 'brightness(120%) drop-shadow(0 4px 2px)',
             }}
           />
         </Link>
@@ -174,24 +174,50 @@ const ChatSidebarHeader = ({ children }) => {
         <Stack
           direction="row"
           alignItems="center"
-          gap={3.5}
+          gap={isSm ? 2 : 3.5}
         >
           {navItems.map(({ path, icon, label }) => {
-            if (path === currentUrlPath) return;
+            // if (path === currentUrlPath) return null;
 
             return (
-              <Tooltip key={label} title={label} arrow >
-                <IconButton component={NavLink} to={path}
+              <Tooltip key={label} title={label} arrow>
+                <IconButton
+                  component={NavLink}
+                  to={path}
+                  end={path === '/pairly'}
                   sx={{
-                    transition: 'all 0.3s linear',
+                    transition: 'all 0.4s ease',
+                    borderRadius: '50%',
+                    backdropFilter: 'blur(8px)',
+                    background: `${theme.palette.background.paper}44`,
+                    boxShadow: `0 0 4px ${theme.palette.primary.main}22`,
                     '&:hover': {
-                      transform: 'scale(1.1)'
-                    }
-                  }}>
-                  {icon}
+                      transform: 'scale(1.15)',
+                      background: `linear-gradient(135deg, 
+        ${theme.palette.primary.light}55, 
+        ${theme.palette.background.paper}99)`,
+                      boxShadow: `0 0 12px ${theme.palette.primary.main}66`,
+                    },
+                    '&.active': {
+                      background: `linear-gradient(135deg, 
+        ${theme.palette.primary.main}88, 
+        ${theme.palette.secondary.main}55)`,
+                      boxShadow: `0 0 12px ${theme.palette.primary.main}99`,
+                    },
+                  }}
+                >
+                  {React.cloneElement(icon, {
+                    sx: {
+                      fontSize: 24,
+                      transition: 'color 0.3s ease',
+                      color: theme.palette.text.primary,
+                      '&:hover': { color: theme.palette.primary.main },
+                    },
+                  })}
                 </IconButton>
+
               </Tooltip>
-            )
+            );
           })}
 
           <Tooltip title="Menu" arrow>

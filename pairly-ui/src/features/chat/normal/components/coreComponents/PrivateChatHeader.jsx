@@ -194,7 +194,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
         direction="row"
         alignItems="center"
         justifyContent="space-between"
-        spacing={2}
+        spacing={isSm ? 0.2 : 2}
         px={isSm ? 0.5 : 2}
         py={1}
         sx={{
@@ -212,7 +212,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
         {/* Left Section: Avatar + Name */}
         <Stack
           direction="row"
-          spacing={2}
+          spacing={1.2}
           alignItems="center"
           sx={{ cursor: 'pointer', flexGrow: 1 }}
           onClick={() => setOpenProfileModal(true)}
@@ -262,9 +262,9 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
         </Stack>
 
         {/* Right Section: Typing Indicator + Menu */}
-        <Stack direction="row" alignItems="center" justifyContent="center" gap={1}>
+        <Stack direction="row" alignItems="center" justifyContent="center" gap={0.5}>
           <Diya />
-          <Stack direction="row" alignItems="center" justifyContent="center" gap={1}>
+          <Stack direction="row" alignItems="center" justifyContent="center" gap={0.5}>
             {isPartnerTyping ? (partnerTyping ? <TypingIndicator /> : <WaitingIndicator />) : <WaitingIndicator />}
           </Stack>
           {/* Action Menu Icon */}
