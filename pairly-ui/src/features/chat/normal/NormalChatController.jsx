@@ -92,21 +92,14 @@ function NormalChatController() {
 
         // --- typing indicators ---
         socket.on('privateChat:partner-typing', ({ from, to }) => {
-            if (
-                String(to) === String(currentUserId) &&
-                String(from) !== String(currentUserId) &&
-                String(from) === String(activePartnerId)
-            ) {
-                dispatch(setPartnerTyping(true));
+            if (String(to) === String(currentUserId)) {
+                dispatch(setPartnerTyping({ partnerId: from, isTyping: true }));
             }
         });
 
         socket.on('privateChat:partner-stopTyping', ({ from, to }) => {
-            if (
-                String(to) === String(currentUserId) &&
-                String(from) === String(activePartnerId)
-            ) {
-                dispatch(setPartnerTyping(false));
+            if (String(to) === String(currentUserId)) {
+                dispatch(setPartnerTyping({ partnerId: from, isTyping: false }));
             }
         });
 

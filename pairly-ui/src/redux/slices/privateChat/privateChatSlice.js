@@ -7,7 +7,7 @@ const initialState = {
     unreadCount: {},       // {conversationId,partnerId, unreadMessageCount}
     activeChat: null,      // conversationId
     activePartnerId: null, // active partner id
-    partnerTyping: false,
+    partnerTyping: {},
     proposalData: {},
     proposalSelectedMusic: '',
     proposalMusic: [],
@@ -73,7 +73,9 @@ const privateChatSlice = createSlice({
         },
 
         setPartnerTyping: (state, action) => {
-            state.partnerTyping = action.payload;
+            const { partnerId, isTyping } = action.payload;
+            if (!partnerId) return;
+            state.partnerTyping[partnerId] = isTyping;
         },
 
         addMessage: (state, action) => {
@@ -181,10 +183,14 @@ export const {
 export default privateChatSlice.reducer;
 
 export const totalNumberOfUnreadMessages = (state) => {
-    if (!state.privateChat || !state.privateChat.unreadCount) return 0;
+    const { conversations } = state.privateChat;
+    if (!conversations) return 0;
 
-    return Object.values(state.privateChat.unreadCount).reduce(
-        (total, { count }) => total + (count || 0),
-        0
-    );
+    // Sum all messages that are not seen
+    return Object.values(conversations).reduce((total, conv) => {
+        if (!conv.messages) return total;
+        const unseen = conv.messages.filter(msg => !msg.seen).length;
+        return total + unseen;
+    }, 0);
 };
+

@@ -80,9 +80,9 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
     };
   }, [userId, chatUsers, users]);
 
-  const isPartnerTyping = useMemo(() => {
-    return users.find((s) => s.userId === userId)?.settings?.showTypingStatus
-  }, [users]);
+  const isPartnerTyping = useSelector(
+    (state) => state.privateChat.partnerTyping[userId] ?? false
+  );
 
   const partnerSettings = useMemo(() => {
     return users.find((u) => u.userId === userId)?.settings || {}
@@ -265,7 +265,9 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
         <Stack direction="row" alignItems="center" justifyContent="center" gap={0.5}>
           <Diya />
           <Stack direction="row" alignItems="center" justifyContent="center" gap={0.5}>
-            {isPartnerTyping ? (partnerTyping ? <TypingIndicator /> : <WaitingIndicator />) : <WaitingIndicator />}
+            {partnerSettings?.showTypingStatus ?
+              (isPartnerTyping ? <TypingIndicator /> : <WaitingIndicator />)
+              : <WaitingIndicator />}
           </Stack>
           {/* Action Menu Icon */}
           <Tooltip title='Menu'>
