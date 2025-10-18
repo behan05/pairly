@@ -114,6 +114,7 @@ function privateChatHandler(io, socket, onlineUsers) {
                     messageType: newMessage.messageType || 'text',
                     timestamp: newMessage.createdAt.toISOString()
                 },
+                partnerId: String(partnerId)
             };
 
             io.to(roomId).emit('privateChat:message', payload);

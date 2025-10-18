@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import {
   Avatar,
   Box,
@@ -11,7 +11,6 @@ import {
   Tooltip,
   Divider,
   useMediaQuery,
-  Badge
 } from '@/MUI/MuiComponents';
 import {
   MoreVertIcon,
@@ -39,6 +38,7 @@ import BlockUserModal from '../supportComponents/BlockUsermodal'
 import formatMessageTime from '@/utils/formatMessageTime';
 
 import { deleteConversationMessage, clearConversationMessage, fetchAllUser } from '@/redux/slices/privateChat/privateChatAction';
+import { updateSettingsNotification } from '@/redux/slices/settings/settingsAction';
 import { useDispatch, useSelector } from 'react-redux'
 
 // Festival
@@ -61,7 +61,13 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
   const open = Boolean(anchorEl);
 
   // get all users from redux
-  const { allUsers: users, chatUsers, activeChat, partnerTyping } = useSelector(state => state.privateChat);
+  const { allUsers: users, chatUsers, activeChat } = useSelector(state => state.privateChat);
+  const { notificationSettings } = useSelector((state) => state.settings);
+  const [notification, setNotification] = useState(notificationSettings?.newMessage ?? false);
+
+  useEffect(() => {
+    setNotification(notificationSettings?.newMessage ?? false);
+  }, [notificationSettings]);
 
   // fallback if not found
   const partnerProfile = useMemo(() => {
@@ -132,6 +138,30 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
     }
   };
 
+  /** Handle notification */
+  const handleNotification = async () => {
+    if (!notificationSettings) return;
+
+    try {
+      // Determine the new value by toggling the current 'newMessage' setting
+      const newValue = !notificationSettings.newMessage;
+
+      const updatedSettings = {
+        ...notificationSettings,
+        newMessage: newValue,
+      };
+
+      // Dispatch the updated settings to Redux
+      const response = await dispatch(updateSettingsNotification(updatedSettings));
+
+      if (response?.success) {
+        // Update local state to reflect the actual toggle
+        setNotification(newValue);
+      }
+    } catch (_) {
+    }
+  };
+
   /**
    * Common menu item styling
    */
@@ -164,7 +194,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
         break;
 
       case 'muteNotification':
-        // your logic here
+        handleNotification();
         break;
 
       case 'report':
@@ -316,8 +346,13 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
                 onClick: () => handleAction('closeChat'),
               },
               {
-                icon: <NotificationsOffIcon fontSize="small" sx={{ mr: 1, color: 'warning.main' }} />,
-                label: 'Mute Notifications',
+                icon: (
+                  <NotificationsOffIcon
+                    fontSize="small"
+                    sx={{ mr: 1, color: notification ? 'warning.main' : 'text.disabled' }}
+                  />
+                ),
+                label: notification ? 'Mute Notifications' : 'Notifications Muted',
                 onClick: () => handleAction('muteNotification'),
               },
             ].map((item, index) => (

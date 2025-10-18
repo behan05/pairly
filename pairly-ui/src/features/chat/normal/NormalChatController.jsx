@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { socket } from '@/services/socket';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -11,10 +11,14 @@ import {
     setUnreadCount
 } from '@/redux/slices/privateChat/privateChatSlice';
 
+// toast prompt
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function NormalChatController() {
     const dispatch = useDispatch();
 
-    const { activePartnerId } = useSelector(state => state.privateChat);
+    const { activePartnerId, allUsers } = useSelector(state => state.privateChat);
     const currentUserId = useSelector(
         (state) => state.profile.profileData?.userId ?? state.profile.profileData?.user
     );
@@ -42,10 +46,17 @@ function NormalChatController() {
             if (!message) return;
             const createdAt = message?.timestamp ?? message?.createdAt ?? new Date().toISOString();
 
+            // new message ringtone 
+            const partnerSettings = allUsers.find((u) => u.userId === partnerId)?.settings || {};
+            
+            if (partnerId !== currentUserId && partnerSettings.newMessage) {
+                new Audio('/messageTone/message-ringtone-magic.ogg').play()
+            };
+
             // auto-join if partner not active
             if (partnerId && String(partnerId) !== String(activePartnerId)) {
                 socket.emit('privateChat:join', { partnerUserId: partnerId });
-            }
+            };
 
             dispatch(addMessage({
                 conversationId,
