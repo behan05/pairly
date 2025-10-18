@@ -49,6 +49,15 @@ function Chats() {
   useEffect(() => {
     if (chatSettings) {
       setFormData(chatSettings);
+
+      // Sync localStorage theme with DB theme
+      const localTheme = localStorage.getItem('theme') ?? 'dark';
+
+      if (chatSettings.chatTheme !== localTheme) {
+        const updated = { ...chatSettings, chatTheme: localTheme }
+        setFormData(updated);
+        dispatch(updateChatSettings(updated));
+      }
     }
   }, [chatSettings]);
 
