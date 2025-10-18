@@ -31,12 +31,12 @@ import StyledText from '@/components/common/StyledText';
 import BlockUserModal from '../supportComponents/BlockUserModal';
 import ReportUserModal from '../supportComponents/ReportUserModal';
 import PrivateChatRequestPopupModal from '../supportComponents/PrivateChatRequestPopupModal';
-
+import { updateSettingsNotification } from '@/redux/slices/settings/settingsAction';
 // Festival
 import Diya from '../../../../../components/common/fastivalMessage/Diya';
 
 // Redux
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux'
 // Country and State utilities
 import { Country, State } from 'country-state-city';
 // Toast notifications
@@ -60,7 +60,8 @@ import { socket } from '@/services/socket';
 function RandomChatHeader() {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
-
+  const dispatch = useDispatch();
+  
   // Local state
   const [openBlockDialog, setOpenBlockDialog] = useState(false);
   const [openReportDialog, setOpenReportDialog] = useState(false);
@@ -71,8 +72,12 @@ function RandomChatHeader() {
 
   // Redux state
   const { partnerProfile, partnerId, partnerTyping } = useSelector((state) => state.randomChat);
+  const { notificationSettings } = useSelector((state) => state.settings);
+  const [notification, setNotification] = useState(notificationSettings?.newMessage ?? false);
 
-  // isUserVerifiedByEmail
+  useEffect(() => {
+    setNotification(notificationSettings?.newMessage ?? false);
+  }, [notificationSettings]);
 
   /**
    * Opens menu
@@ -113,6 +118,30 @@ function RandomChatHeader() {
     setIsFriendRequestSend(true)
   };
 
+  /** Handle notification */
+  const handleNotification = async () => {
+    if (!notificationSettings) return;
+
+    try {
+      // Determine the new value by toggling the current 'newMessage' setting
+      const newValue = !notificationSettings.newMessage;
+
+      const updatedSettings = {
+        ...notificationSettings,
+        newMessage: newValue,
+      };
+
+      // Dispatch the updated settings to Redux
+      const response = await dispatch(updateSettingsNotification(updatedSettings));
+
+      if (response?.success) {
+        // Update local state to reflect the actual toggle
+        setNotification(newValue);
+      }
+    } catch (_) {
+    }
+  };
+
   /**
    * Handles action selection from menu
    * @param {'block'|'report'|'copy'|'mute'} action
@@ -135,6 +164,10 @@ function RandomChatHeader() {
 
       case 'requestForPrivateChat':
         handlePrivateChatRequest();
+        break;
+
+      case 'muteNotification':
+        handleNotification();
         break;
 
       default:
@@ -236,7 +269,7 @@ function RandomChatHeader() {
         {/* Right Section: Typing Indicator + Menu */}
         <Stack direction="row" alignItems="center" justifyContent={'center'} gap={1}>
           <Diya />
-          
+
           {partnerTyping ? <TypingIndicator /> : <WaitingIndicator />}
 
           {/* Action Menu Icon */}
@@ -283,9 +316,9 @@ function RandomChatHeader() {
               <ContentCopyIcon fontSize="small" sx={{ mr: 1, color: 'success.main' }} />
               Copy Partner ID
             </MenuItem>
-            <MenuItem onClick={() => handleAction('mute')} sx={menuItemStyle}>
-              <NotificationsOffIcon fontSize="small" sx={{ mr: 1, color: 'info.main' }} />
-              Mute Notifications
+            <MenuItem onClick={() => handleAction('muteNotification')} sx={menuItemStyle}>
+              <NotificationsOffIcon fontSize="small" sx={{ mr: 1, color: notification ? 'warning.main' : 'text.disabled' }} />
+              {notification ? 'Mute Notifications' : 'Notifications Muted'}
             </MenuItem>
           </Menu>
         </Stack>
