@@ -1,8 +1,6 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const { createServer } = require('node:http');
-const { setupSocket } = require('./sockets/socketServer');
 const path = require('path');
 const dotenv = require('dotenv');
 
@@ -10,8 +8,8 @@ const dotenv = require('dotenv');
 const envFile = `.env.${process.env.NODE_ENV || 'development'}`;
 dotenv.config({ path: path.resolve(process.cwd(), envFile) });
 
-console.log(`Environment: ${process.env.NODE_ENV}`);
-console.log(`Loaded: ${envFile}`);
+const { createServer } = require('node:http');
+const { setupSocket } = require('./sockets/socketServer');
 
 // Social OAuth Provider
 const passport = require('passport');
@@ -103,7 +101,6 @@ app.use('/api/friend-request', friendRequestRoutes);
 // ------------- Private Chat Routes --------------------
 app.use('/api/private-chat', privateChatRoutes);
 app.use('/api/private-block', privateBlockRoutes);
-app.use('/api/private-report', privateReportRoutes);
 app.use('/api/private-report', privateReportRoutes);
 app.use('/api/proposal-request', proposalRequestRoutes);
 

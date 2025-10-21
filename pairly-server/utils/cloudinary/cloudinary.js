@@ -1,5 +1,3 @@
-// Load environment variables from the .env file and Import Cloudinary's v2 API
-require('dotenv').config();
 const cloudinary = require('cloudinary').v2;
 
 // Configure Cloudinary with credentials from .env file
