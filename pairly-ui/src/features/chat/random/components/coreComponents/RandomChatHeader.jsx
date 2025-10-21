@@ -32,8 +32,6 @@ import BlockUserModal from '../supportComponents/BlockUserModal';
 import ReportUserModal from '../supportComponents/ReportUserModal';
 import PrivateChatRequestPopupModal from '../supportComponents/PrivateChatRequestPopupModal';
 import { updateSettingsNotification } from '@/redux/slices/settings/settingsAction';
-// Festival
-import Diya from '../../../../../components/common/fastivalMessage/Diya';
 
 // Redux
 import { useDispatch, useSelector } from 'react-redux'
@@ -268,8 +266,6 @@ function RandomChatHeader() {
 
         {/* Right Section: Typing Indicator + Menu */}
         <Stack direction="row" alignItems="center" justifyContent={'center'} gap={1}>
-          <Diya />
-
           {partnerTyping ? <TypingIndicator /> : <WaitingIndicator />}
 
           {/* Action Menu Icon */}

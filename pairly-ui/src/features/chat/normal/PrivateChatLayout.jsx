@@ -10,9 +10,6 @@ import privateChatWindowImage2 from '@/assets/images/chatWindowImage.png'
 import chatWindowBackgroundDarkImage from '@/assets/images/chatWindowBackgroundDarkImage.png';
 import chatWindowBackgroundLightImage from '@/assets/images/chatWindowBackgroundLightImage.png';
 
-// Festival
-import Diwali from '../../../components/common/fastivalMessage/Diwali';
-
 /**
  * NormalChatLayout component
  * Main layout for the chat page
@@ -135,7 +132,7 @@ function NormalChatLayout() {
                   alignItems: 'center'
                 }}
               >
-                {/* <Box sx={{
+                <Box sx={{
                   mb: 20,
                   display: 'flex',
                   flexDirection: 'column',
@@ -162,12 +159,7 @@ function NormalChatLayout() {
                     }}>
                     Select a chat to start messaging
                   </Typography>
-                </Box> */}
-
-                {/* Temporary Diwali Wish */}
-                {/* ========================================== */}
-                <Diwali />
-                {/* ========================================== */}
+                </Box>
               </Box>
             )}
           </Stack>

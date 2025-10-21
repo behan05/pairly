@@ -23,10 +23,6 @@ import { socket } from '@/services/socket';
 import { resetRandomChat, setWaiting } from '@/redux/slices/randomChat/randomChatSlice';
 import { useOutletContext } from 'react-router-dom';
 
-// Fastival Greatting
-import Diwali from '../../../../../components/common/fastivalMessage/Diwali';
-import FireWork from '../../../../../components/common/fastivalMessage/FireWork';
-
 function RandomSidebar() {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -59,16 +55,6 @@ function RandomSidebar() {
     return () => socket.off('onlineCount');
   }, []);
 
-  // Firework corner style
-  const fireWorkStyle = {
-    position: 'absolute',
-    width: 120,
-    height: 120,
-    zIndex: 0,
-    opacity: 0.5,
-    pointerEvents: 'none',
-  };
-
   return (
     <Box
       display="flex"
@@ -84,20 +70,6 @@ function RandomSidebar() {
         overflow: 'hidden',
       }}
     >
-
-      {/* Fireworks at corners */}
-      <Box sx={{ ...fireWorkStyle, top: 0, left: 0 }}>
-        <FireWork />
-      </Box>
-      <Box sx={{ ...fireWorkStyle, top: 0, right: 0 }}>
-        <FireWork />
-      </Box>
-      <Box sx={{ ...fireWorkStyle, bottom: 0, left: 0 }}>
-        <FireWork />
-      </Box>
-      <Box sx={{ ...fireWorkStyle, bottom: 0, right: 0 }}>
-        <FireWork />
-      </Box>
 
       {/* Header */}
       <Stack sx={{ px: 1.5 }}>
@@ -190,13 +162,6 @@ function RandomSidebar() {
           {/* Title */}
           <StyledText text="Random Chat" sx={{ fontSize: isSm ? '1.5rem' : '2rem' }} />
 
-          {/* Diwali greeting */}
-          {isSm && (
-            <Box sx={{ width: 120, height: 120, mx: 'auto', mb: 2 }}>
-              <Diwali />
-            </Box>
-          )}
-
           <Typography
             variant="subtitle1"
             color="text.secondary"
@@ -260,11 +225,9 @@ function RandomSidebar() {
       </Box>
 
       {/* Settings */}
-      {!isSm && (
-        <Box sx={{ py: 2, display: 'flex', justifyContent: 'center' }}>
-          <SettingsAction />
-        </Box>
-      )}
+      <Box sx={{ py: 2, display: 'flex', justifyContent: 'center' }}>
+        <SettingsAction />
+      </Box>
     </Box>
   );
 }

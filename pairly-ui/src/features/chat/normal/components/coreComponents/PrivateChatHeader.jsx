@@ -41,9 +41,6 @@ import { deleteConversationMessage, clearConversationMessage, fetchAllUser } fro
 import { updateSettingsNotification } from '@/redux/slices/settings/settingsAction';
 import { useDispatch, useSelector } from 'react-redux'
 
-// Festival
-import Diya from '../../../../../components/common/fastivalMessage/Diya';
-
 function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat }) {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -293,7 +290,6 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
 
         {/* Right Section: Typing Indicator + Menu */}
         <Stack direction="row" alignItems="center" justifyContent="center" gap={0.5}>
-          <Diya />
           <Stack direction="row" alignItems="center" justifyContent="center" gap={0.5}>
             {partnerSettings?.showTypingStatus ?
               (isPartnerTyping ? <TypingIndicator /> : <WaitingIndicator />)
