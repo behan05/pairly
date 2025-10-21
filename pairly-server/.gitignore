@@ -2,7 +2,8 @@
 node_modules/
 
 # Ignore environment variables
-.env
+.env.production
+.env.development
 
 # Ignore logs
 logs/

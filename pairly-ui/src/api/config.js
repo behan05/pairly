@@ -1,3 +1,6 @@
+// Detect current environment mode
+console.log('Running mode:', import.meta.env.MODE);
+
 // API endpoint configuration for client-side requests.
 // Uses environment variable for base URL, falls back to production server if not set.
 
