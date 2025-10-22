@@ -160,6 +160,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import AspectRatioIcon from '@mui/icons-material/AspectRatio';
+import PaymentIcon from '@mui/icons-material/Payment';
 
 // ==================== Export All ====================
 export {
@@ -322,5 +323,6 @@ export {
   // Pricing Icons
   CheckIcon,
   ClearIcon,
-  AspectRatioIcon
+  AspectRatioIcon,
+  PaymentIcon
 };

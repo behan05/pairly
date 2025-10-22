@@ -23,7 +23,8 @@ import {
   LogoutIcon,
   ShareIcon,
   BlockIcon,
-  StarIcon
+  StarIcon,
+  PaymentIcon
 } from '@/MUI/MuiIcons';
 import { Link, useNavigate } from 'react-router-dom';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
@@ -84,6 +85,12 @@ function Settings() {
       icon: <StarIcon sx={{ mr: 1.1, color: 'warning.main' }} />,
       title: 'Premium',
       subTitle: 'Upgrade plan, pricing, exclusive features'
+    },
+    {
+      path: 'payments',
+      icon: <PaymentIcon sx={{ mr: 1.1, color: 'success.main' }} />, // or another icon you prefer
+      title: 'Payments',
+      subTitle: 'Manage subscriptions, invoices, transactions'
     },
     {
       path: 'help',

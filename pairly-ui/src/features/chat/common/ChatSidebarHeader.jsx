@@ -33,7 +33,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // friend request selector
-import { fetchFriendRequests } from '@/redux/slices/randomChat/friendRequestAction';
 import { getProfile } from '@/redux/slices/profile/profileAction';
 import { pendingFriendRequestCount } from '@/redux/slices/randomChat/friendRequestSlice'
 import { getChatSettings } from '@/redux/slices/settings/settingsAction';
@@ -41,6 +40,7 @@ import { getSettingsNotification } from '@/redux/slices/settings/settingsAction'
 import { getSettingsPrivacy } from '@/redux/slices/settings/settingsAction';
 
 import { totalNumberOfUnreadMessages } from '@/redux/slices/privateChat/privateChatSlice';
+
 const ChatSidebarHeader = ({ children }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -56,7 +56,6 @@ const ChatSidebarHeader = ({ children }) => {
   // Fetch initial settings | Preferences data
   useEffect(() => {
     dispatch(getProfile());
-    dispatch(fetchFriendRequests());
     dispatch(getChatSettings());
     dispatch(getSettingsNotification());
     dispatch(getSettingsPrivacy());
@@ -99,8 +98,6 @@ const ChatSidebarHeader = ({ children }) => {
       label: 'Alert Messages',
     },
   ];
-
-  const currentUrlPath = location.pathname;
 
   const handleShareClick = () => {
     const shareData = {
@@ -177,7 +174,6 @@ const ChatSidebarHeader = ({ children }) => {
           gap={isSm ? 2 : 3.5}
         >
           {navItems.map(({ path, icon, label }) => {
-            // if (path === currentUrlPath) return null;
 
             return (
               <Tooltip key={label} title={label} arrow>

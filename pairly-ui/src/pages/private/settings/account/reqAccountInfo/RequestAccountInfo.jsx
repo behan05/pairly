@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, useTheme, Stack, Typography, Button } from '@/MUI/MuiComponents';
 import { DownloadIcon, CheckCircleIcon } from '@/MUI/MuiIcons';
 import { toast, ToastContainer } from 'react-toastify';
@@ -8,14 +8,27 @@ import StyledText from '@/components/common/StyledText';
 import BlurWrapper from '@/components/common/BlurWrapper';
 import { SETTINGS_API } from '@/api/config';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
+import PremiumFeatureModel from '@/components/private/premium/PremiumFeatureModal';
 
 function RequestAccountInfo() {
   const theme = useTheme();
   const [requested, setRequested] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
+  const { plan, status } = useSelector((state) => state.auth.user.subscription);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [premiumFeatureName, setPremiumFeatureName] = useState('');
 
   const handleRequest = async (e) => {
     e.preventDefault();
+
+    const isFreeUser = status === 'active' && plan === 'free';
+    if (isFreeUser) {
+      setPremiumFeatureName('Account Info');
+      setModalOpen(true);
+      return;
+    };
+
     setIsLoading(true);
     const token = localStorage.getItem('token');
 
@@ -90,6 +103,12 @@ function RequestAccountInfo() {
           </Button>
         </Stack>
       </BlurWrapper>
+
+      <PremiumFeatureModel
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        featureName={premiumFeatureName}
+      />
     </Box>
   );
 }

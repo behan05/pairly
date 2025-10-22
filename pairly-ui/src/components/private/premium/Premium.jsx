@@ -1,231 +1,221 @@
-import { Box, Typography, Button, Stack, useTheme, useMediaQuery, Divider, Paper } from '../../../MUI/MuiComponents';
-import { CheckIcon, ClearIcon, StarIcon } from '../../../MUI/MuiIcons';
-import ChatSidebarHeader from '../../../features/chat/common/ChatSidebarHeader';
+import { Box, Typography, Stack, Paper, useTheme } from '@/MUI/MuiComponents';
+import { CheckIcon, ClearIcon } from '@/MUI/MuiIcons';
+import ChatSidebarHeader from '@/features/chat/common/ChatSidebarHeader';
 import { styled } from '@mui/system';
+import { alpha } from '@mui/material/styles';
+import { useEffect } from 'react';
 
 function Premium() {
     const theme = useTheme();
-    const isSm = useMediaQuery(theme => theme.breakpoints.down('sm'));
+
+    useEffect(() => {
+        document.title = 'Pairly - Plans'
+    }, []);
+
     const plans = [
         {
-            title: 'Starter',
-            price: '₹0',
+            title: 'Free',
+            price: 0,
             label: 'Basic features for individual use',
-            features: [
-                '25 matches/day',
-                '100 messages/day',
-                'Basic AI personality',
-            ],
+            limits: { matches: '25/day', messages: '100/day', media: '2/day' },
+            features: ['Basic AI personality'],
             notAvailable: [
-                'Unlimited messages',
-                'Send media & location',
-                'Propose To Partner',
-                'Priority support',
-                'No ads',
-                'Multi-device sync',
-                'Extra personalization',
+                'Unlimited messages', 'Send media beyond limit', 'Propose to partner',
+                'Priority support', 'No ads', 'Multi-device sync', 'Extra personalization'
             ],
         },
         {
             title: 'Premium',
-            price: '₹399',
+            price: 299,
             label: 'Enhanced features for active users',
+            limits: { matches: '∞', messages: '∞', media: 50 },
             features: [
-                'Unlimited messages',
-                'Send media & location',
-                'Propose To Partner',
-                'Faster responses',
-                'No ads',
-                'Multi-device sync',
+                'Unlimited messages', 'Send media & location', 'Propose to partner',
+                'Faster responses', 'No ads', 'Multi-device sync'
             ],
-            notAvailable: [
-                'Priority support',
-                'Extra personalization',
-            ],
+            notAvailable: ['Priority support', 'Extra personalization'],
+            promoCode: 'WELCOME100',
+            discountAmount: 100,
+            featured: true
         },
         {
             title: 'Super Premium',
-            price: '₹699',
+            price: 399,
             label: 'Full access with priority support',
+            limits: { matches: '∞', messages: '∞', media: '∞' },
             features: [
-                'Everything in Pro',
-                'Priority support',
-                'Extra personalization',
-                'Early access to new features',
+                'Everything in Premium', 'Priority support', 'Extra personalization', 'Early access to new features'
             ],
             notAvailable: [],
+            promoCode: 'WELCOME100',
+            discountAmount: 100,
         },
     ];
 
-    const CustomButton = styled(Button)(({ theme }) => ({
-        width: '140px',
-        height: '40px',
-        border: 'none',
-        borderRadius: '20px',
-        background: 'linear-gradient(to right,#77530a,#ffd277,#77530a,#77530a,#ffd277,#77530a)',
-        backgroundSize: '250%',
-        backgroundPosition: 'left',
-        color: theme.palette.warning.main,
+    // Main card
+    const Card = styled(Paper)(({ theme, featured }) => ({
         position: 'relative',
+        borderRadius: 20,
+        overflow: 'hidden',
+        padding: '1rem',
+        background: alpha(theme.palette.background.paper, 0.95),
+        border: featured
+            ? `2px solid ${theme.palette.warning.main}`
+            : `1px solid ${alpha(theme.palette.divider, 0.2)}`,
+        boxShadow: featured
+            ? '0 15px 25px rgba(0,0,0,0.1)'
+            : '0 5px 10px rgba(0,0,0,0.05)',
+        transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        '&:hover': {
+            transform: 'translateY(-8px)',
+            boxShadow:
+                '0 20px 30px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.05)',
+            borderColor: alpha(theme.palette.warning.main, 0.4),
+        },
+        '&:hover .shine': { opacity: 1, animation: 'shine 3s infinite' },
+        '&:hover .glow': { opacity: 1 },
+        '&:hover .cardButton': {
+            transform: 'scale(1)',
+            boxShadow: `0 0 0 4px ${alpha(theme.palette.warning.main, 0.2)}`
+        }
+    }));
+
+    const Shine = styled('div')({
+        position: 'absolute',
+        inset: 0,
+        background:
+            'linear-gradient(120deg, rgba(255,255,255,0) 40%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 60%)',
+        opacity: 0,
+        transition: 'opacity 0.3s ease',
+        pointerEvents: 'none',
+        '@keyframes shine': {
+            '0%': { backgroundPosition: '-100% 0' },
+            '100%': { backgroundPosition: '200% 0' },
+        },
+    });
+
+    const Glow = styled('div')(({ theme }) => ({
+        position: 'absolute',
+        inset: '-10px',
+        background: `radial-gradient(circle at 50% 0%, ${alpha(
+            theme.palette.warning.main,
+            0.3
+        )} 0%, transparent 70%)`,
+        opacity: 0,
+        transition: 'opacity 0.5s ease',
+        pointerEvents: 'none',
+    }));
+
+    const CardButton = styled('div')(({ theme }) => ({
+        width: 30,
+        height: 30,
+        background: theme.palette.warning.main,
+        borderRadius: '50%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        color: '#fff',
         cursor: 'pointer',
-        overflow: 'hidden',
-        transition: 'all 1s ease',
-
-        '&::before': {
-            content: '"Go Premium"',
-            position: 'absolute',
-            width: '97%',
-            height: '90%',
-            borderRadius: '20px',
-            backgroundColor: 'rgba(0, 0, 0, 0.842)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: theme.palette.warning.main,
-            backgroundSize: '200%',
-            transition: 'all 1s ease',
-        },
-
+        transition: 'all 0.3s ease',
+        transform: 'scale(0.9)',
         '&:hover': {
-            backgroundPosition: 'right',
-            '&::before': {
-                backgroundPosition: 'right',
-            },
-        },
-
-        '&:active': {
-            transform: 'scale(0.95)',
-        },
+            transform: 'scale(1.1)',
+            boxShadow: `0 0 10px ${alpha(theme.palette.warning.main, 0.4)}`
+        }
     }));
 
     return (
-        <Box
-            position="relative"
-            minWidth={isSm ? '100%' : 380}
-            px={1.5}
-        >
-            {/* Navbar */}
+        <Box px={2} py={1}>
             <ChatSidebarHeader />
+            <Typography textAlign="center" variant="body1" color="text.secondary" mb={4}>
+                Start free or upgrade to enjoy unlimited chats and premium features
+            </Typography>
 
-            {/* Pricing Card */}
+            <Stack spacing={2}>
+                {plans.map((plan, i) => (
+                    <Card key={i} featured={plan.featured}>
+                        <Shine className="shine" />
+                        <Glow className="glow" />
 
-            <Stack alignItems="center" sx={{ mb: 4 }}>
+                        <Typography variant="subtitle1" fontWeight={700} mb={0.5}>
+                            {plan.title} {plan.featured && '★'}
+                        </Typography>
+                        <Typography variant="h6" color="success.main">
+                            ₹{plan.price}/mo
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                            {plan.label}
+                        </Typography>
 
-                {/* Title */}
+                        <Stack direction="row" spacing={1} justifyContent="space-between" mt={1} mb={1}>
+                            <Typography variant="caption">Matches: {plan.limits.matches}</Typography>
+                            <Typography variant="caption">Messages: {plan.limits.messages}</Typography>
+                            <Typography variant="caption">Media: {plan.limits.media}</Typography>
+                        </Stack>
 
-                <Typography variant="body1" mb={2} color="text.secondary" textAlign="center">
-                    Start free or upgrade to enjoy unlimited chats and premium features
-                </Typography>
+                        <Stack spacing={0.5} mb={1}>
+                            {plan.features.map((f, idx) => (
+                                <Stack key={idx} direction="row" spacing={0.5} alignItems="center">
+                                    <CheckIcon fontSize="small" color="success" />
+                                    <Typography variant="body2">{f}</Typography>
+                                </Stack>
+                            ))}
+                            {plan.notAvailable.map((f, idx) => (
+                                <Stack key={idx} direction="row" spacing={0.5} alignItems="center" opacity={0.5}>
+                                    <ClearIcon fontSize="small" color="error" />
+                                    <Typography variant="body2">{f}</Typography>
+                                </Stack>
+                            ))}
+                        </Stack>
 
-                {/* Card */}
-                <Box sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 1,
-                    alignItems: 'center',
-                    minWidth: isSm ? '100%' : 380,
-                    px: 2
-                }}>
-                    {plans.map((plan, i) => (
-                        <Paper
-                            elevation={4}
-                            key={i}
+                        <Box
+                            className="card__footer"
                             sx={{
-                                borderRadius: 4,
-                                p: isSm ? 3 : 4,
-                                width: '100%',
-                                maxWidth: 360,
-                                backdropFilter: 'blur(10px)',
-                                background:
-                                    theme.palette.mode === 'dark'
-                                        ? theme.palette.background.paper + '99'
-                                        : theme.palette.background.default + '99',
-                                border: `1px solid ${theme.palette.divider}`,
-                                gap: 3,
-                                transition: 'all 0.5s ease',
-                                position: 'relative',
-                                overflow: 'hidden',
-
-                                // sunlight from top
-                                ':before': {
-                                    content: '""',
-                                    position: 'absolute',
-                                    top: '-50%',
-                                    left: 0,
-                                    width: '100%',
-                                    height: '100%',
-                                    background: `linear-gradient(
-                                    to bottom, 
-                                    ${theme.palette.mode === 'dark'
-                                            ? theme.palette.primary.light + '33'
-                                            : theme.palette.primary.main + '55'},
-                                    transparent 60%)`,
-                                    opacity: 0,
-                                    transition: 'opacity 0.5s ease, transform 0.5s ease',
-                                    pointerEvents: 'none',
-                                    zIndex: 1,
-                                    transform: 'translateY(0%)',
-                                },
-                                ':hover:before': {
-                                    opacity: 1,
-                                    transform: 'translateY(50%)',
-                                },
-
-                                // Make inner content above the pseudo-element
-                                '& > *': {
-                                    position: 'relative',
-                                    zIndex: 2,
-                                },
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                mt: 1
                             }}
                         >
-
-                            {/* Title with icon */}
-                            <Stack direction="row" spacing={1} alignItems="center">
-                                <StarIcon sx={{ color: 'warning.main' }} fontSize="small" />
-                                <Typography variant="h6" fontWeight="bold" color="text.primary">
-                                    {plan.title}
+                            {plan.promoCode ? (
+                                <Box
+                                    sx={{
+                                        bgcolor: alpha(theme.palette.warning.light, 0.7),
+                                        px: 1.5,
+                                        py: 0.5,
+                                        borderRadius: 1,
+                                        fontSize: 10,
+                                        fontWeight: 600
+                                    }}
+                                >
+                                    {plan.promoCode} - ₹{plan.discountAmount} off
+                                </Box>
+                            ) : (
+                                <Typography sx={{
+                                    bgcolor: alpha(theme.palette.warning.light, 0.7),
+                                    px: 1.5,
+                                    py: 0.5,
+                                    borderRadius: 1,
+                                    fontSize: 10,
+                                    fontWeight: 600
+                                }}>
+                                    <s>WELCOME100 - ₹100 off</s>
                                 </Typography>
-                            </Stack>
-
-                            {/* Price */}
-                            <Typography
-                                variant="body1"
-                                fontWeight="bold"
-                                color="success.main"
-                                pt={1}
-                            >
-                                {plan.price}/month
-                            </Typography>
-
-                            {/* Label / subtitle */}
-                            <Typography variant="body2" gutterBottom color="text.secondary">
-                                {plan.label}
-                            </Typography>
-                            <Divider />
-                            {/* Features */}
-                            <Stack spacing={1} alignItems="flex-start" mt={1.5}>
-                                {plan.features.map((feat, i) => (
-                                    <Stack key={i} direction="row" spacing={1} alignItems="center">
-                                        <CheckIcon color="success" fontSize="small" />
-                                        <Typography variant="body2">{feat}</Typography>
-                                    </Stack>
-                                ))}
-                                {plan.notAvailable?.map((feat, i) => (
-                                    <Stack key={i} direction="row" spacing={1} alignItems="center" opacity={0.5}>
-                                        <ClearIcon color="error" fontSize="small" />
-                                        <Typography variant="body2">{feat}</Typography>
-                                    </Stack>
-                                ))}
-                            </Stack>
-                            <CustomButton sx={{ mt: 2.5, mx: 'auto', width: '80%' }} />
-                        </Paper>
-                    ))}
-                </Box>
+                            )}
+                            <CardButton className="cardButton">
+                                <svg height="16" width="16" viewBox="0 0 24 24">
+                                    <path
+                                        strokeWidth="2"
+                                        stroke="currentColor"
+                                        d="M4 12H20M12 4V20"
+                                        fill="currentColor"
+                                    ></path>
+                                </svg>
+                            </CardButton>
+                        </Box>
+                    </Card>
+                ))}
             </Stack>
-
         </Box>
     );
 }

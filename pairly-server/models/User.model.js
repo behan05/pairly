@@ -30,8 +30,24 @@ const usersSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    emailToken: { type: String }
+    emailToken: { type: String },
 
+    // Subscription Plan
+    subscriptionPlan: {
+        type: String,
+        enum: ['free', 'premium', 'superPremium'],
+        default: 'free'
+    },
+    subscriptionStatus: {
+        type: String,
+        enum: ['active', 'inactive', 'expired', 'pending'],
+        default: 'active'
+    },
+    currentSubscriptionId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Subscription',
+        default: null
+    }
 
 }, { timestamps: true });
 

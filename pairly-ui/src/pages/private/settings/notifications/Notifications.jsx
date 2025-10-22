@@ -22,12 +22,17 @@ import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { updateSettingsNotification , getSettingsNotification} from '@/redux/slices/settings/settingsAction';
+import { updateSettingsNotification, getSettingsNotification } from '@/redux/slices/settings/settingsAction';
+import PremiumFeatureModel from '@/components/private/premium/PremiumFeatureModal';
 
 function Notifications() {
   const theme = useTheme();
   const dispatch = useDispatch();
   const { notificationSettings } = useSelector((state) => state.settings);
+  const { plan, status } = useSelector((state) => state.auth.user.subscription);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [premiumFeatureName, setPremiumFeatureName] = useState('');
 
   const [notifSettings, setNotifSettings] = useState({
     newMatch: false,
@@ -51,6 +56,22 @@ function Notifications() {
   // Toggle handler
   const handleToggle = useCallback(
     async (key) => {
+
+      const premiumFeatures = ['warningAlerts', 'friendRequest', 'blockNotification'];
+      const isFreeUser = status === 'active' && plan === 'free';
+
+      if (premiumFeatures.includes(key) && isFreeUser) {
+        const featureNames = {
+          warningAlerts: 'Safety & Alerts Notifications',
+          friendRequest: 'Friend Request Notifications',
+          blockNotification: 'Advanced Block Alerts'
+        };
+
+        setPremiumFeatureName(featureNames[key] || 'Premium Feature');
+        setModalOpen(true);
+        return;
+      };
+
       const updated = { ...notifSettings, [key]: !notifSettings[key] };
       setNotifSettings(updated);
 
@@ -164,7 +185,7 @@ function Notifications() {
         <Section
           icon={<PersonAddIcon sx={{ color: theme.palette.primary.main }} />}
           title="Friend Requests"
-          description="Receive notifications when someone sends you a friend request."
+          description="Notify when a friend request is sent or accepted."
         >
           <FormControlLabel
             sx={{ display: 'flex', ml: 0.2, gap: 1, justifyContent: 'flex-start', alignItems: 'center' }}
@@ -199,6 +220,12 @@ function Notifications() {
           />
         </Section>
       </BlurWrapper>
+
+      <PremiumFeatureModel
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        featureName={premiumFeatureName}
+      />
     </Box>
   );
 }

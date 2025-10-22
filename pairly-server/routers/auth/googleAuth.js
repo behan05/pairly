@@ -16,7 +16,18 @@ router.get(
     passport.authenticate('google', { session: false, failureRedirect: '/login' }),
     async (req, res) => {
         const token = generateToken(req.user.id);
-        const user = await User.findById(req.user.id);
+        const user = await User.findById(req.user.id).populate('currentSubscriptionId');
+
+        const subscriptionInfo = user.currentSubscriptionId
+            ? {
+                plan: user.currentSubscriptionId.plan,
+                status: user.currentSubscriptionId.status,
+                startDate: user.currentSubscriptionId.startDate,
+                endDate: user.currentSubscriptionId.endDate,
+                promoCode: user.currentSubscriptionId.promoCode || null,
+                discountAmount: user.currentSubscriptionId.discountAmount || 0
+            }
+            : { plan: 'free', status: 'active' };
 
         const userData = {
             success: true,
@@ -27,6 +38,7 @@ router.get(
                 id: user._id,
                 fullName: user.fullName,
                 email: user.email,
+                subscription: subscriptionInfo
             }
         };
 

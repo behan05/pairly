@@ -12,6 +12,7 @@ import BlurWrapper from '@/components/common/BlurWrapper';
 import CyberSwitch from '@/components/private/CyberSwitch';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PremiumFeatureModel from '@/components/private/premium/PremiumFeatureModal';
 
 import { updateSettingsPrivacy, getSettingsPrivacy } from '@/redux/slices/settings/settingsAction';
 import { useSelector, useDispatch } from 'react-redux';
@@ -20,6 +21,9 @@ function Privacy() {
   const dispatch = useDispatch();
   const theme = useTheme();
   const { privacySettings } = useSelector((state) => state.settings);
+  const { plan, status } = useSelector((state) => state.auth.user.subscription);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [premiumFeatureName, setPremiumFeatureName] = useState('');
 
   const defaultSettings = {
     showProfilePic: true,
@@ -37,7 +41,7 @@ function Privacy() {
     dispatch(getSettingsPrivacy());
   }, []);
 
-  // Sync Redux state -> Local form state
+  // Sync Redux state for Local form state
   useEffect(() => {
     if (privacySettings) {
       setFormData(privacySettings)
@@ -46,6 +50,19 @@ function Privacy() {
 
   const handleToggle = (key) => async (e) => {
     const updatedValue = e.target.checked;
+
+    const premiumFeatures = ['matchVerifiedOnly', 'allowExportData', 'autoDeleteChats'];
+    const isFreeUser = status === 'active' && plan === 'free';
+
+    if (premiumFeatures.includes(key) && isFreeUser) {
+      setPremiumFeatureName(key === 'autoDeleteChats'
+        ? 'Auto-delete chats'
+        : key === 'matchVerifiedOnly' ? 'Match with verified users only'
+          : key === 'allowExportData' ? '' : 'Export my data');
+      setModalOpen(true);
+      return;
+    };
+
     const updatedFormData = {
       ...formData,
       [key]: updatedValue
@@ -230,6 +247,13 @@ function Privacy() {
           />
         </Section>
       </BlurWrapper>
+
+      <PremiumFeatureModel
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        featureName={premiumFeatureName}
+      />
+
     </Box>
   );
 }

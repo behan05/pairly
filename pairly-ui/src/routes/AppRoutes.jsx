@@ -58,6 +58,7 @@ import Verify from '../middleware/Verify';
 import DataDeletionPage from '../pages/private/settings/account/HowToDeleteData/DataDeletionPage';
 import Premium from '../components/private/premium/Premium';
 import Alerts from '../features/chat/common/Alerts';
+import SubscriptionManager from '../components/private/SubscriptionManager/SubscriptionManager';
 
 export const routes = createBrowserRouter([
   // === Public routes ===
@@ -143,7 +144,10 @@ export const routes = createBrowserRouter([
                 path: 'premium',
                 element: <Premium />,
               },
-
+              {
+                path: 'payments',
+                element: <SubscriptionManager />,
+              },
               {
                 path: 'help',
                 element: <HelpLayout />,

@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/User.model');
 const generateToken = require('../utils/generateToken');
+const Subscription = require('../models/payment/Subscription.model');
 
 // helper email regex (reasonable strictness)
 const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
@@ -49,14 +50,27 @@ const registerController = async (req, res) => {
       ? await bcrypt.hash(password, await bcrypt.genSalt(10))
       : null;
 
-    // Create user (email already normalized)
-    await User.create({
+    // Create user
+    const user = await User.create({
       fullName: fullNameTrimmed,
       email,
       password: hashedPassword,
       authProvider,
       emailVerified: false,
     });
+
+    // Create subscription for the user
+    const subscription = await Subscription.create({
+      userId: user._id,
+      plan: 'free',
+      status: 'active',
+      paymentProvider: null,
+      amount: 0
+    });
+
+    // Link subscription to user
+    user.currentSubscriptionId = subscription._id;
+    await user.save();
 
     // Send success response
     return res.status(201).json({
@@ -81,7 +95,7 @@ const loginController = async (req, res) => {
       });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate('currentSubscriptionId');
 
     // User not found
     if (!user) {
@@ -113,6 +127,17 @@ const loginController = async (req, res) => {
     // Generate JWT token
     const token = generateToken(user._id);
 
+    // Prepare subscription info
+    const subscription = user.currentSubscriptionId;
+    const subscriptionInfo = subscription ? {
+      plan: subscription?.plan,
+      status: subscription?.status,
+      startDate: subscription?.startDate,
+      endDate: subscription?.endDate,
+      promoCode: subscription?.promoCode || null,
+      discountAmount: subscription?.discountAmount || 0
+    } : { plan: 'free', status: 'active' };
+
     return res.status(200).json({
       success: true,
       message: 'Login successful!',
@@ -120,6 +145,7 @@ const loginController = async (req, res) => {
         id: user._id,
         fullName: user.fullName,
         email: user.email,
+        subscription: subscriptionInfo
       },
       token,
     });
