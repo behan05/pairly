@@ -4,9 +4,12 @@ import ChatSidebarHeader from '@/features/chat/common/ChatSidebarHeader';
 import { styled } from '@mui/system';
 import { alpha } from '@mui/material/styles';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 function Premium() {
     const theme = useTheme();
+    const { plan, status } = useSelector((state) => state.auth.user.subscription);
+    const isFreeUser = plan === 'free' && status === 'active';
 
     useEffect(() => {
         document.title = 'Pairly - Plans'
@@ -14,7 +17,7 @@ function Premium() {
 
     const plans = [
         {
-            title: 'Free',
+            title: isFreeUser ? 'Current Plan: Free' : 'Free',
             price: 0,
             label: 'Basic features for individual use',
             limits: { matches: '25/day', messages: '100/day', media: '2/day' },
@@ -202,7 +205,15 @@ function Premium() {
                                     <s>WELCOME100 - ₹100 off</s>
                                 </Typography>
                             )}
-                            <CardButton className="cardButton">
+
+                            <CardButton
+                                className="cardButton"
+                                style={{
+                                    cursor: plan.price === 0 ? 'not-allowed' : 'pointer',
+                                    opacity: plan.price === 0 ? 0.5 : 1
+                                }}
+                                onClick={() => plan.price !== 0 && handleUpgrade(plan.title)}
+                            >
                                 <svg height="16" width="16" viewBox="0 0 24 24">
                                     <path
                                         strokeWidth="2"
@@ -212,6 +223,7 @@ function Premium() {
                                     ></path>
                                 </svg>
                             </CardButton>
+
                         </Box>
                     </Card>
                 ))}

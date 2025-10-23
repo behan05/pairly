@@ -11,6 +11,7 @@ import {
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import StyledText from '@/components/common/StyledText';
 import { ExpandMoreIcon } from '@/MUI/MuiIcons';
+import { alpha } from '@mui/material/styles';
 
 function FAQHelp() {
   const theme = useTheme();
@@ -21,7 +22,7 @@ function FAQHelp() {
   };
 
   React.useEffect(() => {
-    document.title = 'Pairly - Help with FAQs ❓';
+    document.title = 'Pairly - Help with FAQs';
   }, []);
 
   const faqsHelpData = [
@@ -80,27 +81,24 @@ function FAQHelp() {
   return (
     <Box
       sx={{
-        background: 'transparent',
         display: 'flex',
         flexDirection: 'column',
-        gap: 1
+        gap: 1,
       }}
     >
-      {/* Header with arrow back icon */}
+      {/* Header */}
       <Stack mb={2}>
         <NavigateWithArrow redirectTo={'/pairly/settings/help'} text={'FAQs'} />
       </Stack>
 
-      {/* === FAQs heading === */}
-      <Typography variant="h4" fontWeight={600} gutterBottom>
+      <Typography variant="h5" fontWeight={600} gutterBottom>
         Frequently <StyledText text="Asked Questions" />
       </Typography>
-
-      <Typography variant="subtitle1" color="text.secondary" mb={4}>
+      <Typography variant="subtitle2" color="text.secondary" mb={3}>
         Get quick answers to the most common questions about Pairly.
       </Typography>
 
-      {/* === FAQs === */}
+      {/* FAQ Items */}
       {faqsHelpData.map((faq, index) => (
         <Accordion
           key={index}
@@ -108,10 +106,13 @@ function FAQHelp() {
           onChange={handleChange(index)}
           disableGutters
           sx={{
-            backdropFilter: `blur(14px)`,
             background: 'transparent',
-            boxShadow: `inset 0 1px 0.1rem ${theme.palette.text.secondary}`,
-            borderRadius: 0.5
+            boxShadow: 'none',
+            borderBottom: `1px solid ${alpha(theme.palette.text.secondary, 0.2)}`,
+            borderRadius: 0,
+            '&:hover': {
+              background: alpha(theme.palette.primary.main, 0.03),
+            },
           }}
         >
           <AccordionSummary
@@ -119,29 +120,27 @@ function FAQHelp() {
               <ExpandMoreIcon
                 sx={{
                   color: expanded === index ? 'success.main' : 'text.secondary',
-                  transition: 'color 0.3s ease',
-                  '&:hover': {
-                    color: 'secondary.main'
-                  },
-                  '&:active': {
-                    color: 'warning.main'
-                  }
+                  transition: 'color 0.25s ease',
                 }}
               />
             }
+            sx={{ px: 1, py: 0 }}
           >
-            <Typography variant="subtitle1" letterSpacing={1} fontWeight={600} color={'text.primary'}>
+            <Typography
+              variant="body1"
+              fontWeight={500}
+              color="text.primary"
+              sx={{ lineHeight: 1.4 }}
+            >
               {faq.question}
             </Typography>
           </AccordionSummary>
-          <AccordionDetails>
+
+          <AccordionDetails sx={{ px: 2, pb: 1, pt: 0 }}>
             <Typography
-              color="text.secondary"
               variant="body2"
-              sx={{
-                textAlign: 'left',
-                lineHeight: 1.6
-              }}
+              color="text.secondary"
+              sx={{ lineHeight: 1.5, fontSize: '0.875rem' }}
             >
               {faq.answer}
             </Typography>

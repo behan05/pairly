@@ -2,11 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="/pairly-icon.svg" type="image/svg+xml" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pairly - Chat with Strangers Worldwide</title>
+
+    <!-- Icons & manifest -->
+    <link rel="icon" href="/pairly-icon.svg" type="image/svg+xml" />
     <link rel="manifest" href="/manifest.json" />
 
+    <!-- SEO Meta Tags -->
     <meta
       name="description"
       content="Pairly is a random chat web app where you can instantly start chatting with strangers worldwide. Simple, fast, and free."
@@ -18,13 +21,22 @@
     <meta name="author" content="Behan Kumar" />
     <meta name="theme-color" content="#1976d2" />
 
+    <!-- Theme setup -->
     <script>
       const getTheme = localStorage.getItem('theme');
       if (!getTheme) {
         localStorage.setItem('theme', 'dark');
       }
     </script>
+
+    <!-- AdSense library (global, async) -->
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8711176865382424"
+      crossorigin="anonymous"
+    ></script>
   </head>
+
   <body>
     <noscript>
       <strong>This app requires JavaScript to run. Please enable it to continue.</strong>

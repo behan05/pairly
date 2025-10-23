@@ -57,13 +57,12 @@ function Notifications() {
   const handleToggle = useCallback(
     async (key) => {
 
-      const premiumFeatures = ['warningAlerts', 'friendRequest', 'blockNotification'];
+      const premiumFeatures = ['warningAlerts', 'blockNotification'];
       const isFreeUser = status === 'active' && plan === 'free';
 
       if (premiumFeatures.includes(key) && isFreeUser) {
         const featureNames = {
           warningAlerts: 'Safety & Alerts Notifications',
-          friendRequest: 'Friend Request Notifications',
           blockNotification: 'Advanced Block Alerts'
         };
 

@@ -265,7 +265,7 @@ function GeneralInfo() {
   };
 
   return (
-    <Box component={'section'}>
+    <Box component={'section'} sx={{p:2}}>
       <ToastContainer position="top-right" autoClose={1000} theme="colored" />
 
       <Stack mb={2}>

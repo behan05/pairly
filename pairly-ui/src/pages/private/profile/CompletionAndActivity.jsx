@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function CompletionAndActivity() {
   return (
-    <Box component={'section'}>
+    <Box component={'section'} sx={{p:2}}>
       <ToastContainer position="top-right" autoClose={1000} theme="colored" />
 
       {/* Header with arrow back icon */}

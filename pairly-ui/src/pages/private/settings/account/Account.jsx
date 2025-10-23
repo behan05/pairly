@@ -5,14 +5,16 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Stack
+  Stack,
+  useTheme
 } from '@/MUI/MuiComponents';
 import { LockResetIcon, InfoIcon, DeleteForeverIcon, InfoOutlinedIcon } from '@/MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
-
 import { Link } from 'react-router-dom';
+import { alpha } from '@mui/material/styles';
 
 function Account() {
+  const theme = useTheme();
   const accountItems = [
     {
       icon: <LockResetIcon fontSize="medium" sx={{ color: 'warning.main' }} />,
@@ -46,12 +48,16 @@ function Account() {
             component={Link}
             to={item.path}
             sx={{
-              p: 2,
-              borderRadius: 1,
-              transition: 'all 0.3s ease',
+              borderRadius: 1.5,
+              py: 0.7, // reduced vertical padding
+              px: 1.6,
+              mb: 0.4,
+              alignItems: 'flex-start',
+              transition: 'all 0.25s ease',
               '&:hover': {
-                transform: 'translateY(-5px)'
-              }
+                transform: 'translateY(-3px)',
+                backgroundColor: alpha(theme.palette.primary.main, 0.05),
+              },
             }}
           >
             <ListItemIcon>{item.icon}</ListItemIcon>
@@ -63,12 +69,16 @@ function Account() {
           component={Link}
           to={'delete-account'}
           sx={{
-            borderRadius: 1,
-            p: 2,
-            transition: 'all 0.3s ease',
+            borderRadius: 1.5,
+            py: 0.7, // reduced vertical padding
+            px: 1.6,
+            mb: 0.4,
+            alignItems: 'flex-start',
+            transition: 'all 0.25s ease',
             '&:hover': {
-              transform: 'translateY(-5px)'
-            }
+              transform: 'translateY(-3px)',
+              backgroundColor: alpha(theme.palette.primary.main, 0.05),
+            },
           }}
         >
           <ListItemIcon>{<DeleteForeverIcon sx={{ mr: 1.1, color: 'error.main' }} />}</ListItemIcon>

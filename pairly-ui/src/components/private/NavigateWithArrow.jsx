@@ -1,7 +1,7 @@
-import { Stack } from '../../MUI/MuiComponents';
-import { ArrowBackIcon } from '../../MUI/MuiIcons';
+import { Stack } from '@/MUI/MuiComponents';
+import { ArrowBackIcon } from '@/MUI/MuiIcons';
 
-import StyledText from '../../components/common/StyledText';
+import StyledText from '@/components/common/StyledText';
 import { Link } from 'react-router-dom';
 
 {

@@ -5,15 +5,17 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Stack
+  Stack,
+  useTheme
 } from '@/MUI/MuiComponents';
 
 import { HelpOutlineIcon, SupportAgentIcon, GavelIcon, BugReportIcon } from '@/MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
-
+import { alpha } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 
 function Help() {
+  const theme = useTheme();
   const helpItems = [
     {
       icon: <HelpOutlineIcon fontSize="medium" sx={{ color: 'info.main' }} />,
@@ -52,12 +54,16 @@ function Help() {
             component={Link}
             to={item.path}
             sx={{
-              borderRadius: 1,
-              p: 2,
-              transition: 'all 0.3s ease',
+              borderRadius: 1.5,
+              py: 0.7,
+              px: 1.6,
+              mb: 0.4,
+              alignItems: 'flex-start',
+              transition: 'all 0.25s ease',
               '&:hover': {
-                transform: 'translateY(-5px)'
-              }
+                transform: 'translateY(-3px)',
+                backgroundColor: alpha(theme.palette.primary.main, 0.05),
+              },
             }}
           >
             <ListItemIcon>{item.icon}</ListItemIcon>

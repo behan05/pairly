@@ -24,7 +24,8 @@ import {
   ShareIcon,
   BlockIcon,
   StarIcon,
-  PaymentIcon
+  PaymentIcon,
+  PersonIcon
 } from '@/MUI/MuiIcons';
 import { Link, useNavigate } from 'react-router-dom';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
@@ -35,6 +36,7 @@ import { keyframes } from '@emotion/react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import toCapitalCase from '@/utils/textFormatting';
+import {alpha } from '@mui/material/styles';
 
 function Settings() {
   const [searchValue, setSearchValue] = React.useState('');
@@ -55,6 +57,12 @@ function Settings() {
       icon: <KeyIcon sx={{ mr: 1.1, color: 'warning.main' }} />,
       title: 'Account',
       subTitle: 'Login, security alerts, account details'
+    },
+    {
+      path: 'profile',
+      icon: <PersonIcon sx={{ mr: 1.1, color: 'secondary.main' }} />,
+      title: 'Profile',
+      subTitle: 'Manage profile, bio, and match preferences'
     },
     {
       path: 'privacy',
@@ -95,7 +103,7 @@ function Settings() {
     {
       path: 'help',
       icon: <SosIcon sx={{ mr: 1.1, color: 'error.main' }} />,
-      title: 'Help',
+      title: 'Help | Support',
       subTitle: 'FAQs, contact support, policies'
     }
   ];
@@ -249,55 +257,102 @@ function Settings() {
               component={Link}
               to={item.path}
               sx={{
-                borderRadius: 1,
-                transition: 'all 0.3s ease',
+                borderRadius: 1.5,
+                py: 0.7,
+                px: 1.6,
+                mb: 0.4,
+                alignItems: 'flex-start',
+                transition: 'all 0.25s ease',
                 '&:hover': {
-                  transform: 'translateY(-5px)'
-                }
+                  transform: 'translateY(-3px)',
+                  backgroundColor: alpha(theme.palette.primary.main, 0.05),
+                },
               }}
             >
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <Stack>
-                <ListItemText primary={item.title} sx={{ m: 0 }} />
-                <ListItemText secondary={item.subTitle} sx={{ m: 0 }} />
+              <ListItemIcon
+                sx={{
+                  minWidth: '36px',
+                  color: theme.palette.text.secondary,
+                  mt: 0.3,
+                }}
+              >
+                {item.icon}
+              </ListItemIcon>
+
+              <Stack spacing={0.2}>
+                <ListItemText
+                  primary={item.title}
+                  primaryTypographyProps={{
+                    fontSize: '0.92rem',
+                    fontWeight: 500,
+                    color: theme.palette.text.primary,
+                  }}
+                />
+                <ListItemText
+                  secondary={item.subTitle}
+                  secondaryTypographyProps={{
+                    fontSize: '0.78rem',
+                    color: theme.palette.text.secondary,
+                  }}
+                />
               </Stack>
             </ListItemButton>
           ))}
 
           <Divider sx={{ bgcolor: theme.palette.divider, mt: 2 }} />
+
+          {/* Invite a Friend */}
           <ListItemButton
             onClick={handleShareClick}
             sx={{
-              borderRadius: 1,
-              px: 2,
+              borderRadius: 1.5,
+              px: 1.6,
+              py: 0.8,
               mt: 2,
-              transition: 'all 0.3s ease',
+              transition: 'all 0.25s ease',
               '&:hover': {
-                transform: 'translateY(-5px)'
-              }
+                transform: 'translateY(-3px)',
+                backgroundColor: alpha(theme.palette.success.main, 0.05),
+              },
             }}
           >
-            <ListItemIcon>
+            <ListItemIcon sx={{ minWidth: '36px' }}>
               <ShareIcon sx={{ mr: 1.1, color: 'success.main' }} />
             </ListItemIcon>
-            <ListItemText primary="Invite a Friend" />
+            <ListItemText
+              primary="Invite a Friend"
+              primaryTypographyProps={{
+                fontSize: '0.9rem',
+                fontWeight: 500,
+              }}
+            />
           </ListItemButton>
 
+          {/* Logout */}
           <ListItemButton
             onClick={handleLogout}
             sx={{
-              borderRadius: 1,
-              px: 2,
-              transition: 'all 0.3s ease',
+              borderRadius: 1.5,
+              px: 1.6,
+              py: 0.8,
+              transition: 'all 0.25s ease',
               '&:hover': {
-                transform: 'translateY(-5px)'
-              }
+                transform: 'translateY(-3px)',
+                backgroundColor: alpha(theme.palette.error.main, 0.05),
+              },
             }}
           >
-            <ListItemIcon>
+            <ListItemIcon sx={{ minWidth: '36px' }}>
               <LogoutIcon sx={{ mr: 1.1, color: 'error.main' }} />
             </ListItemIcon>
-            <ListItemText primary="Logout" sx={{ color: 'error.main' }} />
+            <ListItemText
+              primary="Logout"
+              primaryTypographyProps={{
+                fontSize: '0.9rem',
+                fontWeight: 600,
+                color: theme.palette.error.main,
+              }}
+            />
           </ListItemButton>
         </List>
       )}

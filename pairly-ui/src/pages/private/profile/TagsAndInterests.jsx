@@ -29,6 +29,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateTagsAndInterests, getProfile } from '@/redux/slices/profile/profileAction';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PremiumFeatureModel from '@/components/private/premium/PremiumFeatureModal';
 
 // Predefined interest and chat style options
 const interestOptions = [
@@ -55,6 +56,9 @@ const chatPreferences = [
 function TagsAndInterests() {
   const dispatch = useDispatch();
   const { profileData, loading } = useSelector((state) => state.profile);
+  const { plan, status } = useSelector((state) => state.auth.user.subscription);
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const [premiumFeatureName, setPremiumFeatureName] = React.useState('');
 
   // Form data state
   const [formData, setFormData] = React.useState({
@@ -103,6 +107,22 @@ function TagsAndInterests() {
     }));
   };
 
+  // Toggle Strict match
+  const handleStrictMatch = (e) => {
+    const isFreeUser = status === 'active' && plan === 'free';
+    if (e.target.checked && isFreeUser) {
+      setPremiumFeatureName('Strict Interest Match');
+      setModalOpen(true);
+      return;
+    };
+
+    setFormData((prev) => ({
+      ...prev,
+      strictInterestMatch: e.target.checked
+    }))
+
+  }
+
   // Handle form submission with validation
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -146,7 +166,7 @@ function TagsAndInterests() {
   };
 
   return (
-    <Box component="section">
+    <Box component="section" sx={{p:2}}>
       <ToastContainer position="top-right" autoClose={1000} theme="colored" />
 
       {/* Page Header with back button */}
@@ -229,12 +249,7 @@ function TagsAndInterests() {
               control={
                 <Switch
                   checked={formData.strictInterestMatch}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      strictInterestMatch: e.target.checked
-                    }))
-                  }
+                  onChange={handleStrictMatch}
                 />
               }
               label={
@@ -251,6 +266,13 @@ function TagsAndInterests() {
           </StyledActionButton>
         </Stack>
       </BlurWrapper>
+
+
+      <PremiumFeatureModel
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        featureName={premiumFeatureName}
+      />
     </Box>
   );
 }

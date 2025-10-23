@@ -23,8 +23,9 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import StyledActionButton from '@/components/common/StyledActionButton';
 import { Country, State, City } from 'country-state-city';
-import { updateMatchingPreferences , getProfile} from '@/redux/slices/profile/profileAction';
+import { updateMatchingPreferences, getProfile } from '@/redux/slices/profile/profileAction';
 import { useDispatch, useSelector } from 'react-redux';
+import PremiumFeatureModel from '@/components/private/premium/PremiumFeatureModal';
 
 function MatchingPreferences() {
   // Local state declarations
@@ -32,6 +33,9 @@ function MatchingPreferences() {
   const [stateOptions, setStateOptions] = React.useState([]);
   const [stateCity, setStateCity] = React.useState([]);
   const [isDisabled, setIsDisabled] = React.useState(false);
+  const { plan, status } = useSelector((state) => state.auth.user.subscription);
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const [premiumFeatureName, setPremiumFeatureName] = React.useState('');
 
   const dispatch = useDispatch();
   const { profileData } = useSelector((state) => state.profile);
@@ -154,6 +158,14 @@ function MatchingPreferences() {
   // Toggle for global/nearby match
   const handleMatchScopeChange = (e) => {
     const { checked } = e.target;
+
+    const isFreeUser = status === 'active' && plan === 'free';
+    if (!checked && isFreeUser) {
+      setPremiumFeatureName('Nearby Match');
+      setModalOpen(true);
+      return;
+    };
+
     setFormData((prev) => ({
       ...prev,
       matchScope: checked ? 'global' : 'nearby'
@@ -220,7 +232,7 @@ function MatchingPreferences() {
   };
 
   return (
-    <Box component={'section'}>
+    <Box component={'section'} sx={{p:2}}>
       <ToastContainer position="top-right" autoClose={1000} theme="colored" />
 
       {/* Header */}
@@ -395,6 +407,12 @@ function MatchingPreferences() {
           </StyledActionButton>
         </Stack>
       </BlurWrapper>
+
+      <PremiumFeatureModel
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        featureName={premiumFeatureName}
+      />
     </Box>
   );
 }

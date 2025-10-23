@@ -6,9 +6,10 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Stack
+  Stack,
+  useTheme
 } from '@/MUI/MuiComponents';
-
+import { alpha } from '@mui/material/styles';
 import {
   PersonOutlineIcon,
   FavoriteBorderIcon,
@@ -24,6 +25,7 @@ import { useDispatch } from 'react-redux';
 
 function Profile() {
   const dispatch = useDispatch();
+  const theme = useTheme();
 
   useEffect(() => {
     dispatch(getProfile());
@@ -53,7 +55,7 @@ function Profile() {
   ];
 
   return (
-    <Box component={'section'}>
+    <Box component={'section'} sx={{ p: 2 }}>
       {/* Header with arrow back icon */}
       <Stack mb={2}>
         <NavigateWithArrow redirectTo={'/pairly'} text={'Profile'} />
@@ -67,12 +69,16 @@ function Profile() {
             component={Link}
             to={item.path}
             sx={{
-              p: 2,
-              borderRadius: 1,
-              transition: 'all 0.3s ease',
+              borderRadius: 1.5,
+              py: 0.7,
+              px: 1.6,
+              mb: 0.4,
+              alignItems: 'flex-start',
+              transition: 'all 0.25s ease',
               '&:hover': {
-                transform: 'translateY(-5px)'
-              }
+                transform: 'translateY(-3px)',
+                backgroundColor: alpha(theme.palette.primary.main, 0.05),
+              },
             }}
           >
             <ListItemIcon>{item.icon}</ListItemIcon>

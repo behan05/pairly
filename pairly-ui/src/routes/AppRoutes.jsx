@@ -148,6 +148,18 @@ export const routes = createBrowserRouter([
                 path: 'payments',
                 element: <SubscriptionManager />,
               },
+              // Profile inside settings (main section)
+              {
+                path: 'profile',
+                element: <ProfileLayout />,
+                children: [
+                  { index: true, element: <Profile /> },
+                  { path: 'activity', element: <CompletionAndActivity /> },
+                  { path: 'general-info', element: <GeneralInfo /> },
+                  { path: 'matching-preferences', element: <MatchingPreferences /> },
+                  { path: 'interests', element: <TagsAndInterests /> }
+                ]
+              },
               {
                 path: 'help',
                 element: <HelpLayout />,
