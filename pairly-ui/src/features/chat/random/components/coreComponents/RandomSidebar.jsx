@@ -30,6 +30,8 @@ function RandomSidebar() {
   const { waiting: isWaiting, connected: isConnected } = useSelector((state) => state.randomChat);
   const { setShowChatWindow, showChatWindow } = useOutletContext();
   const [numberOfActiveUsers, setNumberOfActiveUsers] = useState(0);
+  const { plan, status } = useSelector((state) => state?.auth?.user?.subscription);
+  const isFreeUser = status === 'active' && plan === 'free';
 
   useEffect(() => {
     if (!isConnected && isSm) setShowChatWindow(false);
@@ -54,6 +56,17 @@ function RandomSidebar() {
     socket.on('onlineCount', (count) => setNumberOfActiveUsers(count));
     return () => socket.off('onlineCount');
   }, []);
+
+  // Ads push on mount
+  useEffect(() => {
+    if (isFreeUser && window.adsbygoogle) {
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {
+        console.error("AdSense push error", e);
+      }
+    }
+  }, [isFreeUser]);
 
   return (
     <Box
@@ -125,7 +138,6 @@ function RandomSidebar() {
             position: 'relative',
             overflow: 'hidden',
 
-            // sunlight from top
             ':before': {
               content: '""',
               position: 'absolute',
@@ -151,7 +163,6 @@ function RandomSidebar() {
               boxShadow: `inset 0 -4px 1px ${theme.palette.divider}`,
             },
 
-            // Make inner content above the pseudo-element
             '& > *': {
               position: 'relative',
               zIndex: 2,
@@ -159,7 +170,6 @@ function RandomSidebar() {
           }}
         >
 
-          {/* Title */}
           <StyledText text="Random Chat" sx={{ fontSize: isSm ? '1.5rem' : '2rem' }} />
 
           <Typography
@@ -170,7 +180,6 @@ function RandomSidebar() {
             Meet someone new instantly
           </Typography>
 
-          {/* Lottie / Countdown */}
           {isWaiting ? (
             <CountdownTimer startFrom={10} autoRestart />
           ) : (
@@ -179,7 +188,6 @@ function RandomSidebar() {
             </Box>
           )}
 
-          {/* Buttons */}
           <Stack
             direction={isSm ? 'column' : 'row'}
             spacing={2}
@@ -205,7 +213,6 @@ function RandomSidebar() {
             )}
           </Stack>
 
-          {/* Online count */}
           <Typography
             variant="body2"
             sx={{
@@ -223,6 +230,20 @@ function RandomSidebar() {
           </Typography>
         </Paper>
       </Box>
+
+      {/* Ads for Free User */}
+      {isFreeUser && (
+        <Box sx={{ width: '100%', mt: 2, textAlign: 'center', position: 'absolute', bottom: 0 }}>
+          <ins
+            className="adsbygoogle"
+            style={{ display: 'block' }}
+            data-ad-client="ca-pub-8711176865382424"
+            data-ad-slot="9308698789"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          ></ins>
+        </Box>
+      )}
 
       {/* Settings */}
       <Box sx={{ py: 2, display: 'flex', justifyContent: 'center' }}>

@@ -43,6 +43,8 @@ function RandomChatWindow({ setShowChatWindow }) {
   const isSm = useMediaQuery('(max-width:936px)');
   const isLg = useMediaQuery(theme.breakpoints.down('lg'));
   const dispatch = useDispatch();
+  const { plan, status } = useSelector((state) => state?.auth?.user?.subscription);
+  const isFreeUser = status === 'active' && plan === 'free';
 
   let bgChatImg =
     localStorage.getItem('theme') === 'dark'
@@ -221,6 +223,17 @@ function RandomChatWindow({ setShowChatWindow }) {
       input.removeEventListener("focus", handleFocus);
     };
   }, [messages, isTyping]);
+
+  // Ads
+  useEffect(() => {
+    if (isFreeUser && window.adsbygoogle) {
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {
+        console.error("AdSense push error", e);
+      }
+    }
+  }, [isFreeUser]);
 
   return (
     <Stack
@@ -564,6 +577,7 @@ function RandomChatWindow({ setShowChatWindow }) {
         </>
       ) : (
         // === Not Connected Placeholder ===
+        // === Not Connected Placeholder ===
         <Box
           sx={{
             display: 'flex',
@@ -603,8 +617,7 @@ function RandomChatWindow({ setShowChatWindow }) {
               }}
             >
               <Box sx={{ mb: 20 }}>
-                <Tooltip
-                  title="Your chat will appear here once you're matched">
+                <Tooltip title="Your chat will appear here once you're matched">
                   <ForumRoundedIcon
                     sx={{
                       fontSize: 80,
@@ -634,6 +647,17 @@ function RandomChatWindow({ setShowChatWindow }) {
                   </Typography>
                 </Stack>
 
+                {/* === Free User Ad === */}
+                {isFreeUser && (
+                  <Box sx={{ width: '100%', mt: 2, textAlign: 'center' }}>
+                    <ins className="adsbygoogle"
+                      style={{ display: 'block' }}
+                      data-ad-client="ca-pub-8711176865382424"
+                      data-ad-slot="3527563531"
+                      data-ad-format="auto"
+                      data-full-width-responsive="true"></ins>
+                  </Box>
+                )}
               </Box>
 
               {!isConnected && isSm && (
@@ -666,6 +690,7 @@ function RandomChatWindow({ setShowChatWindow }) {
             </Stack>
           )}
         </Box>
+
       )}
     </Stack>
   );
