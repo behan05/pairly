@@ -15,7 +15,7 @@ function RequestAccountInfo() {
   const theme = useTheme();
   const [requested, setRequested] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
-  const { plan, status } = useSelector((state) => state.auth.user.subscription);
+  const { plan, status } = useSelector((state) => state?.auth?.user?.subscription);
   const [modalOpen, setModalOpen] = useState(false);
   const [premiumFeatureName, setPremiumFeatureName] = useState('');
 

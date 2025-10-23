@@ -36,7 +36,6 @@ const PremiumFeatureModal = ({
                     borderRadius: 4,
                     p: 3,
                     maxWidth: 400,
-                    boxShadow: '0 12px 35px rgba(0,0,0,0.25)',
                     background: alpha(theme.palette.background.paper),
                     border: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
                     boxShadow: '0 15px 25px rgba(0,0,0,0.1)',

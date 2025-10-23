@@ -29,7 +29,7 @@ function Notifications() {
   const theme = useTheme();
   const dispatch = useDispatch();
   const { notificationSettings } = useSelector((state) => state.settings);
-  const { plan, status } = useSelector((state) => state.auth.user.subscription);
+  const { plan, status } = useSelector((state) => state?.auth?.user?.subscription);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [premiumFeatureName, setPremiumFeatureName] = useState('');
