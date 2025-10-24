@@ -20,7 +20,7 @@ function Premium() {
             title: isFreeUser ? 'Current Plan: Free' : 'Free',
             price: 0,
             label: 'Basic features for individual use',
-            limits: { matches: '25/day', messages: '100/day', media: '2/day' },
+            limits: { matches: '25/day', messages: '100/day', media: '5/day' },
             features: ['Basic AI personality'],
             notAvailable: [
                 'Unlimited messages', 'Send media beyond limit', 'Propose to partner',

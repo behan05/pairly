@@ -164,7 +164,9 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
    */
   const menuItemStyle = {
     borderRadius: 0.5,
-    p: '8px 10px',
+    px: 1,
+    py: 0.7,
+    minHeight: 'unset',
     transition: 'all 0.3s ease-out',
     color: 'text.secondary',
     '&:hover': {

@@ -19,7 +19,9 @@ import {
   InsertEmoticonIcon,
   PhotoCameraBackIcon,
   MusicNoteIcon,
-  DescriptionIcon
+  DescriptionIcon,
+  LocationOnIcon,
+  MicIcon
 } from '@/MUI/MuiIcons';
 
 // Emoji Picker and Toast Notifications
@@ -38,6 +40,10 @@ import { socket } from '@/services/socket';
 import axios from 'axios';
 import { RANDOM_API } from '@/api/config';
 
+// Premium Model 
+import PremiumFeatureModel from '@/components/private/premium/PremiumFeatureModal';
+import LimitReachedModal from '../../../common/LimitReachedModal';
+
 /**
  * RandomMessageInput component
  * - Handles text and media input for random chat
@@ -50,6 +56,12 @@ function RandomMessageInput() {
   const theme = useTheme();
   const dispatch = useDispatch();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+  const [premiumFeatureName, setPremiumFeatureName] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const { plan, status } = useSelector((state) => state?.auth?.user?.subscription);
+  const [limitModalOpen, setLimitModalOpen] = useState(false);
+  const [limitType, setLimitType] = useState(null);
+  const isFreeUser = status === 'active' && plan === 'free';
 
   // Local state for message, media previews, emoji picker, and file menu
   const [message, setMessage] = useState('');
@@ -171,9 +183,49 @@ function RandomMessageInput() {
   const handleSend = async () => {
     const hasText = message.trim() !== '';
     const hasMedia = previews.length > 0;
-
     if (!hasText && !hasMedia) return;
 
+    // ---- Free user limits ----
+    if (isFreeUser) {
+      const today = new Date().toDateString();
+
+      // Get counts from localStorage or reset if a new day
+      const storedDate = localStorage.getItem('messageLimitDate');
+      if (storedDate !== today) {
+        localStorage.setItem('messageLimitDate', today);
+        localStorage.setItem('textMessageCount', '0');
+        localStorage.setItem('mediaCount', '0');
+      }
+
+      let textCount = parseInt(localStorage.getItem('textMessageCount') || '0', 10);
+      let mediaCount = parseInt(localStorage.getItem('mediaCount') || '0', 10);
+
+      // Check limits
+      if (hasText && textCount >= 100) {
+        setLimitType('text');
+        setLimitModalOpen(true);
+        return;
+      }
+
+      if (hasMedia && mediaCount >= 5) {
+        setLimitType('media');
+        setLimitModalOpen(true);
+        return;
+      }
+
+      // Increment counters after send
+      if (hasText) {
+        textCount += 1;
+        localStorage.setItem('textMessageCount', textCount.toString());
+      }
+      if (hasMedia) {
+        mediaCount += previews.length;
+        localStorage.setItem('mediaCount', mediaCount.toString());
+      }
+
+    }
+
+    // ---- Sending text messages ----
     // Optimistic UI update for text
     if (hasText) {
       socket.emit('random:message', {
@@ -252,9 +304,11 @@ function RandomMessageInput() {
   // Common style for file menu items
   const menuCommonStyle = {
     borderRadius: 0.5,
-    p: '8px 10px',
     transition: 'all 0.3s ease-out',
     color: 'text.secondary',
+    px: 1,
+    py: 0.5,
+    minHeight: 'unset',
     '&:hover': {
       transform: `translate(1px, -1px) scale(0.99)`,
       filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
@@ -282,6 +336,57 @@ function RandomMessageInput() {
       }
     };
   }, []);
+
+  const handleLocationClick = () => {
+    if (isFreeUser) {
+      setPremiumFeatureName('Location exchange');
+      setModalOpen(true);
+      handleCloseMenu();
+      return;
+    } else {
+      if (!navigator.geolocation) {
+        toast.error("Geolocation is not supported by your browser.");
+        handleCloseMenu();
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const locationUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+
+          // Emit via socket
+          socket.emit("random:message", {
+            message: locationUrl,
+            senderId: userId,
+            type: "location"
+          });
+
+          // Optimistic UI update
+          dispatch(
+            addMessage({
+              senderId: userId,
+              message: locationUrl,
+              type: "location",
+              timestamp: new Date().toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit"
+              })
+            })
+          );
+        },
+        () => {
+          toast.error("Unable to retrieve your location.");
+        }
+      );
+      handleCloseMenu();
+    }
+  };
+
+  // Audio chat handle
+  const handleAudioChat = () => {
+
+  };
 
   return (
     <Box
@@ -506,7 +611,7 @@ function RandomMessageInput() {
           anchorEl={anchorEl}
           open={open}
           onClose={handleCloseMenu}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          anchorOrigin={{ vertical: 'top', horizontal: 'end' }}
           transformOrigin={{ vertical: 'bottom', horizontal: 'bottom' }}
           PaperProps={{
             sx: {
@@ -530,10 +635,10 @@ function RandomMessageInput() {
               fileInputRef.current.click();
               handleCloseMenu();
             }}
-            sx={menuCommonStyle}
+            sx={{ ...menuCommonStyle, display: 'flex', alignItems: 'center' }}
           >
-            <PhotoCameraBackIcon sx={{ mr: 1, color: 'primary.main' }} />
-            <Typography>Photo & Video</Typography>
+            <PhotoCameraBackIcon sx={{ mr: 1, fontSize: '1.3rem', color: 'primary.main' }} />
+            <Typography variant="subtitle2">Photo & Video</Typography>
           </MenuItem>
 
           {/* Audio */}
@@ -543,10 +648,10 @@ function RandomMessageInput() {
               fileInputRef.current.click();
               handleCloseMenu();
             }}
-            sx={menuCommonStyle}
+            sx={{ ...menuCommonStyle, display: 'flex', alignItems: 'center' }}
           >
-            <MusicNoteIcon sx={{ mr: 1, color: 'secondary.main' }} />
-            <Typography>Audio</Typography>
+            <MusicNoteIcon sx={{ mr: 1, fontSize: '1.3rem', color: 'secondary.main' }} />
+            <Typography variant="subtitle2">Audio</Typography>
           </MenuItem>
 
           {/* Document */}
@@ -556,13 +661,30 @@ function RandomMessageInput() {
               fileInputRef.current.click();
               handleCloseMenu();
             }}
-            sx={menuCommonStyle}
+            sx={{ ...menuCommonStyle, display: 'flex', alignItems: 'center' }}
           >
-            <DescriptionIcon sx={{ mr: 1, color: 'success.main' }} />
-            <Typography>Document</Typography>
+            <DescriptionIcon sx={{ mr: 1, fontSize: '1.3rem', color: 'success.main' }} />
+            <Typography variant="subtitle2">Document</Typography>
           </MenuItem>
-        </Menu>
 
+          {/* Location */}
+          <MenuItem
+            onClick={handleLocationClick}
+            sx={{ ...menuCommonStyle, display: 'flex', alignItems: 'center' }}
+          >
+            <LocationOnIcon sx={{ color: 'error.main', fontSize: '1.3rem', mr: 1 }} />
+            <Typography variant="subtitle2">
+              Send Location
+            </Typography>
+          </MenuItem>
+
+        </Menu>
+        {/* Emoji Button */}
+        <Tooltip title="Emoji">
+          <IconButton onClick={() => setShowEmojiPicker((prev) => !prev)}>
+            <InsertEmoticonIcon />
+          </IconButton>
+        </Tooltip>
         {/* Hidden Input for file selection */}
         <input
           type="file"
@@ -590,19 +712,45 @@ function RandomMessageInput() {
           sx={{ mx: 2 }}
         />
 
-        {/* Emoji Button */}
-        <Tooltip title="Emoji">
-          <IconButton onClick={() => setShowEmojiPicker((prev) => !prev)}>
-            <InsertEmoticonIcon />
-          </IconButton>
-        </Tooltip>
-
-        {/* Send Button */}
-        <Tooltip title="Send">
-          <IconButton onClick={handleSend}>
-            <SendIcon />
-          </IconButton>
-        </Tooltip>
+        {message.trim() || previews.length > 0 ? (
+          <Tooltip title="Send">
+            <IconButton
+              onClick={handleSend}
+              sx={{
+                bgcolor: theme.palette.primary.main,
+                color: theme.palette.mode === "dark" ? '#ddd' : '#000',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  bgcolor: theme.palette.success.main,
+                  color: theme.palette.mode === "dark" ? '#000' : '#ddd',
+                  transform: 'scale(1.1)',
+                  boxShadow: `0 4px 12px ${theme.palette.success.main}60`
+                },
+              }}
+            >
+              <SendIcon fontSize="medium" />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <Tooltip title="Mic">
+            <IconButton
+              onClick={handleAudioChat}
+              sx={{
+                bgcolor: theme.palette.primary.main,
+                color: theme.palette.mode === "dark" ? '#ddd' : '#000',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  bgcolor: theme.palette.success.main,
+                  color: theme.palette.mode === "dark" ? '#000' : '#ddd',
+                  transform: 'scale(1.1)',
+                  boxShadow: `0 4px 12px ${theme.palette.success.main}60`
+                },
+              }}
+            >
+              <MicIcon fontSize="medium" />
+            </IconButton>
+          </Tooltip>
+        )}
       </Paper>
 
       {/* Emoji Picker */}
@@ -630,6 +778,17 @@ function RandomMessageInput() {
           </Box>
         </ClickAwayListener>
       )}
+
+      <PremiumFeatureModel
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        featureName={premiumFeatureName}
+      />
+      <LimitReachedModal
+        open={limitModalOpen}
+        onClose={() => setLimitModalOpen(false)}
+        type={limitType}
+      />
     </Box>
   );
 }

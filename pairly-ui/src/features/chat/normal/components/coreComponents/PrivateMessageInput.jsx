@@ -3,8 +3,17 @@ import {
   Box, IconButton, InputBase, Menu, MenuItem, Paper, Tooltip, Typography, useTheme, useMediaQuery, Stack
 } from '../../../../../MUI/MuiComponents';
 import {
-  CloseIcon, SendIcon, AttachFileIcon, InsertEmoticonIcon, PhotoCameraBackIcon, MusicNoteIcon,
-  DescriptionIcon, NoteAltIcon, LockIcon, LocationOnIcon,
+  CloseIcon,
+  SendIcon,
+  AttachFileIcon,
+  InsertEmoticonIcon,
+  PhotoCameraBackIcon,
+  MusicNoteIcon,
+  DescriptionIcon,
+  NoteAltIcon,
+  LockIcon,
+  LocationOnIcon,
+  MicIcon
 } from '@/MUI/MuiIcons';
 import Picker from '@emoji-mart/react';
 import data from '@emoji-mart/data';
@@ -17,6 +26,10 @@ import { PRIVATE_CHAT_API } from '@/api/config'
 import { socket } from '@/services/socket';
 import axios from 'axios';
 
+// Premium Model 
+import PremiumFeatureModel from '@/components/private/premium/PremiumFeatureModal';
+import LimitReachedModal from '../../../common/LimitReachedModal';
+
 function PrivateMessageInput() {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -26,11 +39,18 @@ function PrivateMessageInput() {
   const [previews, setPreviews] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [premiumFeatureName, setPremiumFeatureName] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const { plan, status } = useSelector((state) => state?.auth?.user?.subscription);
   const currentUserId = useSelector((state) => state.profile.profileData?.userId ?? state.profile.profileData?.user);
   const { conversationId, activePartnerId } = useSelector((state) => state.privateChat);
   const open = Boolean(anchorEl);
   const fileInputRef = useRef(null);
   const inputContainerRef = useRef(null);
+
+  const [limitModalOpen, setLimitModalOpen] = useState(false);
+  const [limitType, setLimitType] = useState(null);
+  const isFreeUser = status === 'active' && plan === 'free';
 
   const { chatSettings } = useSelector((state) => state.settings);
   const enterToSend = chatSettings?.enterToSend;
@@ -88,31 +108,119 @@ function PrivateMessageInput() {
     return 'text';
   };
 
+  // Share location
+  const handleLocationClick = () => {
+    if (isFreeUser) {
+      setPremiumFeatureName('Location exchange');
+      setModalOpen(true);
+      handleCloseMenu();
+      return;
+    } else {
+      if (!navigator.geolocation) {
+        toast.error("Geolocation is not supported by your browser.");
+        handleCloseMenu();
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const locationUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+
+          // Emit via socket
+          socket.emit('privateChat:message', { message: locationUrl, messageType: 'location' })
+
+          // Optimistic UI update
+          dispatch(
+            addMessage({
+              sender: String(currentUserId ?? ''),
+              message: locationUrl,
+              messageType: "location",
+              createdAt: new Date().toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit"
+              }),
+              seen: false
+            })
+          );
+        },
+        () => {
+          toast.error("Unable to retrieve your location.");
+        }
+      );
+      handleCloseMenu();
+    }
+  };
+
+  // Audio chat handle
+  const handleAudioChat = () => {
+
+  };
+
   const handleSend = async () => {
     const hasText = message.trim() !== '';
     const hasMedia = previews.length > 0;
     if (!hasText && !hasMedia) return;
-    const createdAtIso = new Date().toISOString();
 
+    // ---- Free user limits ----
+    if (isFreeUser) {
+      const today = new Date().toDateString();
+
+      // Get counts from localStorage or reset if a new day
+      const storedDate = localStorage.getItem('messageLimitDate');
+      if (storedDate !== today) {
+        localStorage.setItem('messageLimitDate', today);
+        localStorage.setItem('textMessageCount', '0');
+        localStorage.setItem('mediaCount', '0');
+      }
+
+      let textCount = parseInt(localStorage.getItem('textMessageCount') || '0', 10);
+      let mediaCount = parseInt(localStorage.getItem('mediaCount') || '0', 10);
+
+      // Check limits
+      if (hasText && textCount >= 100) {
+        setLimitType('text');
+        setLimitModalOpen(true);
+        return;
+      }
+
+      if (hasMedia && mediaCount >= 5) {
+        setLimitType('media');
+        setLimitModalOpen(true);
+        return;
+      }
+
+      // Increment counters after send
+      if (hasText) {
+        textCount += 1;
+        localStorage.setItem('textMessageCount', textCount.toString());
+      }
+      if (hasMedia) {
+        mediaCount += previews.length;
+        localStorage.setItem('mediaCount', mediaCount.toString());
+      }
+    }
+
+    // ---- Sending text messages ----
     if (hasText) {
       socket.emit('privateChat:message', { message, messageType: 'text' });
+
+      dispatch(
+        addMessage({
+          sender: String(currentUserId ?? ''),
+          message,
+          messageType: 'text',
+          createdAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          seen: false,
+        })
+      );
+
       setMessage('');
     }
 
+    // ---- Sending media ----
     if (hasMedia) {
-      previews.forEach((file) => dispatch(addMessage({
-        sender: String(currentUserId ?? ''),
-        message: file.data,
-        fileName: file.name,
-        messageType: getContentType(file),
-        createdAt: createdAtIso,
-        seen: false
-      })));
-      setPreviews([]);
-    }
-
-    try {
-      if (hasMedia) {
+      try {
         for (let file of previews) {
           const formData = new FormData();
           formData.append('media', file.file);
@@ -122,21 +230,48 @@ function PrivateMessageInput() {
           const token = localStorage.getItem('token');
           if (!token) return toast.error('You must be logged in to send media.');
 
+          // Optimistic UI
+          dispatch(
+            addMessage({
+              sender: String(currentUserId ?? ''),
+              message: file.data,
+              fileName: file.name,
+              messageType: getContentType(file),
+              createdAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              seen: false,
+            })
+          );
+
           await axios.post(`${PRIVATE_CHAT_API}/media`, formData, {
-            headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` }
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${token}`,
+            },
           });
         }
+
+        setPreviews([]);
+      } catch (err) {
+        console.error(err);
+        toast.error('Upload failed. Please try again.');
       }
-    } catch (err) {
-      toast.error('Upload failed. Try again.', err?.message);
     }
   };
 
   const handleEmojiSelect = (emoji) => setMessage((prev) => prev + emoji.native);
 
+  // Common style for file menu items
   const menuCommonStyle = {
-    borderRadius: 0.5, p: '8px 10px', transition: 'all 0.3s ease-out', color: 'text.secondary',
-    '&:hover': { transform: 'scale(0.99) translate(1px, -1px)', filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})` }
+    borderRadius: 0.5,
+    transition: 'all 0.3s ease-out',
+    color: 'text.secondary',
+    px: 1,
+    py: 0.5,
+    minHeight: 'unset',
+    '&:hover': {
+      transform: `translate(1px, -1px) scale(0.99)`,
+      filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
+    },
   };
 
   const handleAttachClick = (event) => setAnchorEl(event.currentTarget);
@@ -397,7 +532,7 @@ function PrivateMessageInput() {
               sx={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: 2,
+                rowGap: 1.2,
                 textAlign: 'center'
               }}
             >
@@ -416,7 +551,7 @@ function PrivateMessageInput() {
                 <IconButton
                   sx={{
                     bgcolor: theme.palette.action.hover,
-                    p: 1.5,
+                    p: 1,
                     borderRadius: 2,
                   }}
                   onClick={() => {
@@ -425,7 +560,7 @@ function PrivateMessageInput() {
                     handleCloseMenu();
                   }}
                 >
-                  <PhotoCameraBackIcon sx={{ color: 'primary.main', fontSize: '1.8rem' }} />
+                  <PhotoCameraBackIcon sx={{ color: 'primary.main', fontSize: '1.4rem' }} />
                 </IconButton>
                 <Typography variant="caption">Gallery</Typography>
               </Stack>
@@ -439,14 +574,14 @@ function PrivateMessageInput() {
                 }
               }}>
                 <IconButton
-                  sx={{ bgcolor: theme.palette.action.hover, p: 1.5, borderRadius: 2 }}
+                  sx={{ bgcolor: theme.palette.action.hover, p: 1, borderRadius: 2 }}
                   onClick={() => {
                     fileInputRef.current.value = null;
                     fileInputRef.current.click();
                     handleCloseMenu();
                   }}
                 >
-                  <MusicNoteIcon sx={{ color: 'secondary.main', fontSize: '1.8rem' }} />
+                  <MusicNoteIcon sx={{ color: 'secondary.main', fontSize: '1.4rem' }} />
                 </IconButton>
                 <Typography variant="caption">Audio</Typography>
               </Stack>
@@ -460,14 +595,14 @@ function PrivateMessageInput() {
                 }
               }}>
                 <IconButton
-                  sx={{ bgcolor: theme.palette.action.hover, p: 1.5, borderRadius: 2 }}
+                  sx={{ bgcolor: theme.palette.action.hover, p: 1, borderRadius: 2 }}
                   onClick={() => {
                     fileInputRef.current.value = null;
                     fileInputRef.current.click();
                     handleCloseMenu();
                   }}
                 >
-                  <DescriptionIcon sx={{ color: 'success.main', fontSize: '1.8rem' }} />
+                  <DescriptionIcon sx={{ color: 'success.main', fontSize: '1.4rem' }} />
                 </IconButton>
                 <Typography variant="caption">Document</Typography>
               </Stack>
@@ -481,28 +616,32 @@ function PrivateMessageInput() {
                 }
               }}>
                 <IconButton
-                  sx={{ bgcolor: theme.palette.action.hover, p: 1.5, borderRadius: 2 }}
+                  sx={{ bgcolor: theme.palette.action.hover, p: 1, borderRadius: 2 }}
                   onClick={() => {
                     fileInputRef.current.value = null;
                     fileInputRef.current.click();
                     handleCloseMenu();
                   }}
                 >
-                  <NoteAltIcon sx={{ color: 'info.main', fontSize: '1.8rem' }} />
+                  <NoteAltIcon sx={{ color: 'info.main', fontSize: '1.4rem' }} />
                 </IconButton>
                 <Typography variant="caption">Notes</Typography>
               </Stack>
 
               {/* Location */}
-              <Stack alignItems="center" spacing={1} sx={{
-                transition: 'all 0.3s ease-in-out',
-                '&:hover': {
-                  transform: `translate(1px, -2px) scale(0.99)`,
-                  filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
-                }
-              }}>
-                <IconButton sx={{ bgcolor: theme.palette.action.hover, p: 1.5, borderRadius: 2 }}>
-                  <LocationOnIcon sx={{ color: 'error.main', fontSize: '1.8rem' }} />
+              <Stack
+                onClick={handleLocationClick}
+                alignItems="center"
+                spacing={1}
+                sx={{
+                  transition: 'all 0.3s ease-in-out',
+                  '&:hover': {
+                    transform: `translate(1px, -2px) scale(0.99)`,
+                    filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
+                  }
+                }}>
+                <IconButton sx={{ bgcolor: theme.palette.action.hover, p: 1, borderRadius: 2 }}>
+                  <LocationOnIcon sx={{ color: 'error.main', fontSize: '1.4rem' }} />
                 </IconButton>
                 <Typography variant="caption">Location</Typography>
               </Stack>
@@ -515,14 +654,13 @@ function PrivateMessageInput() {
                   filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
                 }
               }}>
-                <IconButton sx={{ bgcolor: theme.palette.action.hover, p: 1.5, borderRadius: 2 }}>
-                  <LockIcon sx={{ color: 'warning.main', fontSize: '1.8rem' }} />
+                <IconButton sx={{ bgcolor: theme.palette.action.hover, p: 1, borderRadius: 2 }}>
+                  <LockIcon sx={{ color: 'warning.main', fontSize: '1.4rem' }} />
                 </IconButton>
                 <Typography variant="caption">Secret</Typography>
               </Stack>
             </Box>
           </Menu>
-
         ) : (
           <Menu
             anchorEl={anchorEl}
@@ -553,8 +691,8 @@ function PrivateMessageInput() {
               }}
               sx={menuCommonStyle}
             >
-              <DescriptionIcon sx={{ mr: 1, color: 'success.main' }} />
-              <Typography>Document</Typography>
+              <DescriptionIcon sx={{ mr: 1, color: 'success.main', fontSize: '1.3rem', }} />
+              <Typography variant="subtitle2">Document</Typography>
             </MenuItem>
             <MenuItem
               onClick={() => {
@@ -564,8 +702,8 @@ function PrivateMessageInput() {
               }}
               sx={menuCommonStyle}
             >
-              <PhotoCameraBackIcon sx={{ mr: 1, color: 'primary.main' }} />
-              <Typography>Photo & Video</Typography>
+              <PhotoCameraBackIcon sx={{ mr: 1, color: 'primary.main', fontSize: '1.3rem', }} />
+              <Typography variant="subtitle2">Photo & Video</Typography>
             </MenuItem>
             <MenuItem
               onClick={() => {
@@ -575,20 +713,26 @@ function PrivateMessageInput() {
               }}
               sx={menuCommonStyle}
             >
-              <MusicNoteIcon sx={{ mr: 1, color: 'secondary.main' }} />
-              <Typography>Audio</Typography>
+              <MusicNoteIcon sx={{ mr: 1, color: 'secondary.main', fontSize: '1.3rem', }} />
+              <Typography variant="subtitle2">Audio</Typography>
             </MenuItem>
             <MenuItem sx={menuCommonStyle}>
-              <NoteAltIcon sx={{ mr: 1, color: 'info.main' }} />
-              <Typography>Private Notes</Typography>
+              <NoteAltIcon sx={{ mr: 1, color: 'info.main', fontSize: '1.3rem', }} />
+              <Typography variant="subtitle2">Private Notes</Typography>
             </MenuItem>
             <MenuItem sx={menuCommonStyle}>
-              <LockIcon sx={{ mr: 1, color: 'warning.main' }} />
-              <Typography>Secret Messages</Typography>
+              <LockIcon sx={{ mr: 1, color: 'warning.main', fontSize: '1.3rem', }} />
+              <Typography variant="subtitle2">Secret Messages</Typography>
             </MenuItem>
-            <MenuItem sx={menuCommonStyle}>
-              <LocationOnIcon sx={{ mr: 1, color: 'error.main' }} />
-              <Typography>Send Location</Typography>
+            {/* Location */}
+            <MenuItem
+              onClick={handleLocationClick}
+              sx={{ ...menuCommonStyle, display: 'flex', alignItems: 'center' }}
+            >
+              <LocationOnIcon sx={{ color: 'error.main', fontSize: '1.3rem', mr: 1 }} />
+              <Typography variant="subtitle2">
+                Send Location
+              </Typography>
             </MenuItem>
           </Menu>
         )}
@@ -601,6 +745,12 @@ function PrivateMessageInput() {
           ref={fileInputRef}
           onChange={handleFileClick}
         />
+
+        <Tooltip title="Emoji">
+          <IconButton onClick={() => setShowEmojiPicker((prev) => !prev)}>
+            <InsertEmoticonIcon />
+          </IconButton>
+        </Tooltip>
 
         <InputBase
           fullWidth
@@ -617,17 +767,45 @@ function PrivateMessageInput() {
             }
           }}
         />
-        <Tooltip title="Emoji">
-          <IconButton onClick={() => setShowEmojiPicker((prev) => !prev)}>
-            <InsertEmoticonIcon />
-          </IconButton>
-        </Tooltip>
-
-        <Tooltip title="Send">
-          <IconButton onClick={handleSend}>
-            <SendIcon />
-          </IconButton>
-        </Tooltip>
+        {message.trim() || previews.length > 0 ? (
+          <Tooltip title="Send">
+            <IconButton
+              onClick={handleSend}
+              sx={{
+                bgcolor: theme.palette.primary.main,
+                color: theme.palette.mode === "dark" ? '#ddd' : '#000',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  bgcolor: theme.palette.success.main,
+                  color: theme.palette.mode === "dark" ? '#000' : '#ddd',
+                  transform: 'scale(1.1)',
+                  boxShadow: `0 4px 12px ${theme.palette.success.main}60`
+                },
+              }}
+            >
+              <SendIcon fontSize="medium" />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <Tooltip title="Mic">
+            <IconButton
+              onClick={handleAudioChat}
+              sx={{
+                bgcolor: theme.palette.primary.main,
+                color: theme.palette.mode === "dark" ? '#ddd' : '#000',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  bgcolor: theme.palette.success.main,
+                  color: theme.palette.mode === "dark" ? '#000' : '#ddd',
+                  transform: 'scale(1.1)',
+                  boxShadow: `0 4px 12px ${theme.palette.success.main}60`
+                },
+              }}
+            >
+              <MicIcon fontSize="medium" />
+            </IconButton>
+          </Tooltip>
+        )}
       </Paper>
 
       {showEmojiPicker && (
@@ -636,7 +814,7 @@ function PrivateMessageInput() {
             sx={{
               position: 'absolute',
               bottom: 72,
-              right: 24,
+              left: 10,
               zIndex: 1000
             }}
           >
@@ -654,6 +832,17 @@ function PrivateMessageInput() {
           </Box>
         </ClickAwayListener>
       )}
+
+      <PremiumFeatureModel
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        featureName={premiumFeatureName}
+      />
+      <LimitReachedModal
+        open={limitModalOpen}
+        onClose={() => setLimitModalOpen(false)}
+        type={limitType}
+      />
     </Box>
   );
 }

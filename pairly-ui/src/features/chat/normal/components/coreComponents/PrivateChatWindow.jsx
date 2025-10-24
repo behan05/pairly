@@ -7,7 +7,7 @@ import {
   useMediaQuery,
   IconButton
 } from '@/MUI/MuiComponents';
-import { DownloadIcon, DoneIcon, DoneAllIcon } from '@/MUI/MuiIcons';
+import { DownloadIcon, DoneIcon, DoneAllIcon, LocationOnIcon } from '@/MUI/MuiIcons';
 import Loading from '@/components/common/Loading';
 import PrivateChatHeader from './PrivateChatHeader';
 import PrivateMessageInput from './PrivateMessageInput';
@@ -213,7 +213,8 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                               display: 'flex',
                               alignItems: 'center',
                               gap: 0.5,
-                              fontSize: '0.75rem',
+                              fontSize: '0.65rem',
+                              pt: 0.8
                             }}
                           >
                             {formatBubbleTime(msg.createdAt)}
@@ -343,6 +344,96 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                               : <DoneIcon sx={{ fontSize: 16, color: "grey" }} />)}
                         </Typography>
                       </Stack>
+                    )}
+
+                    {/* Location Message */}
+                    {msg.messageType === 'location' && (
+                      <Box
+                        sx={{
+                          width: '100%',
+                          maxWidth: isSm ? '80vw' : '480px',
+                          maxHeight: isSm ? '40vh' : '60vh',
+                          borderRadius: 2
+                        }}
+                        component="a"
+                        href={msg.content}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {/* Fake map preview */}
+                        <Box
+                          sx={{
+                            width: '100%',
+                            height: 120,
+                            position: 'relative',
+                            backgroundColor: theme.palette.grey[200],
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundSize: '20px 20px',
+                            backgroundImage: `
+                             linear-gradient(to right, ${theme.palette.grey[300]} 1px, transparent 1px),
+                             linear-gradient(to left, ${theme.palette.grey[300]} 1px, transparent 1px),
+                             linear-gradient(to top, ${theme.palette.grey[300]} 1px, transparent 1px),
+                          linear-gradient(to bottom, ${theme.palette.grey[300]} 1px, transparent 1px)
+                            `,
+                          }}
+                        >
+                          <Typography
+                            sx={{
+                              position: 'absolute',
+                              color: 'gray',
+                              fontSize: '0.75rem'
+                            }}
+                          >
+                            Map preview
+                          </Typography>
+                          <LocationOnIcon sx={{ fontSize: 40, color: 'error.main' }} />
+                        </Box>
+
+                        {/* Label */}
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          px={1}
+                          py={0.5}
+                          gap={1}
+                          sx={{ backgroundColor: theme.palette.background.paper }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontWeight: 500,
+                              color: theme.palette.text.primary,
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 0.5,
+                            }}
+                          >
+                            <LocationOnIcon sx={{ fontSize: 'medium', color: 'error.main' }} />
+                            Shared Location
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 0.5,
+                              fontSize: '0.65rem',
+                              pt: 0.4
+                            }}
+                          >
+                            {formatBubbleTime(msg.createdAt)}
+                            {isOwnMessage &&
+                              (msg.seen ? (
+                                <DoneAllIcon sx={{ fontSize: 16, color: 'info.main' }} />
+                              ) : (
+                                <DoneIcon sx={{ fontSize: 16, color: 'grey' }} />
+                              ))}
+                          </Typography>
+                        </Stack>
+                      </Box>
                     )}
 
                     {/* File */}

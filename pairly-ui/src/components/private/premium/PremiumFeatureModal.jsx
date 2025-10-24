@@ -36,20 +36,17 @@ const PremiumFeatureModal = ({
                     borderRadius: 4,
                     p: 3,
                     maxWidth: 400,
-                    background: alpha(theme.palette.background.paper),
-                    border: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
-                    boxShadow: '0 15px 25px rgba(0,0,0,0.1)',
-                    transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                    boxShadow:
+                        '0 20px 30px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.05)',
+                    borderColor: alpha(theme.palette.warning.main, 0.4),
+                    background: `radial-gradient(circle at 30% 0%, ${alpha(
+                        theme.palette.warning.main,
+                        0.9
+                    )} 0%, ${theme.palette.background.paper} 70%)`,
+                    transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
 
                     '&:hover': {
-                        transform: 'translateY(-8px)',
-                        boxShadow:
-                            '0 20px 30px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.05)',
-                        borderColor: alpha(theme.palette.warning.main, 0.4),
-                        background: `radial-gradient(circle at 30% 0%, ${alpha(
-                            theme.palette.warning.main,
-                            0.9
-                        )} 0%, ${theme.palette.background.paper} 70%)`,
+                        transform: 'translateX(5px) scale(1.01)',
                     }
                 },
             }}

@@ -9,7 +9,7 @@ import {
   IconButton,
   Menu,
 } from '@/MUI/MuiComponents';
-import { ArrowDropDownIcon, ForumRoundedIcon, DownloadIcon } from '@/MUI/MuiIcons';
+import { ArrowDropDownIcon, ForumRoundedIcon, DownloadIcon, LocationOnIcon } from '@/MUI/MuiIcons';
 
 // Custom Components
 import RandomChatHeader from './RandomChatHeader';
@@ -368,7 +368,7 @@ function RandomChatWindow({ setShowChatWindow }) {
                               wordBreak: 'break-word',
                               color: 'success.main',
                               textDecoration: 'underline',
-                              fontSize: fontSizeMap[chatFontSize] || '0.875rem',
+                              fontSize: '0.775rem'
                             }}
                           >
                             {msg.message}
@@ -385,7 +385,7 @@ function RandomChatWindow({ setShowChatWindow }) {
                             display: 'block',
                             textAlign: 'right',
                             mt: 0.5,
-                            fontSize: fontSizeMap[chatFontSize] || '0.875rem'
+                            fontSize: '0.775rem'
                           }}
                         >
                           {msg.timestamp}
@@ -483,6 +483,89 @@ function RandomChatWindow({ setShowChatWindow }) {
                       </Stack>
                     )}
 
+                    {/* Location Message */}
+                    {msg.type === 'location' && (
+                      <Box
+                        sx={{
+                          width: '100%',
+                          maxWidth: isSm ? '80vw' : '480px',
+                          maxHeight: isSm ? '40vh' : '60vh',
+                          borderRadius: 2
+                        }}
+                        component="a"
+                        href={msg.message}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {/* Fake map preview */}
+                        <Box
+                          sx={{
+                            width: '100%',
+                            height: 120,
+                            position: 'relative',
+                            backgroundColor: theme.palette.grey[200],
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundSize: '20px 20px',
+                            backgroundImage: `
+                             linear-gradient(to right, ${theme.palette.grey[300]} 1px, transparent 1px),
+                             linear-gradient(to left, ${theme.palette.grey[300]} 1px, transparent 1px),
+                             linear-gradient(to top, ${theme.palette.grey[300]} 1px, transparent 1px),
+                          linear-gradient(to bottom, ${theme.palette.grey[300]} 1px, transparent 1px)
+                            `,
+                          }}
+                        >
+                          <Typography
+                            sx={{
+                              position: 'absolute',
+                              color: 'gray',
+                              fontSize: '0.75rem'
+                            }}
+                          >
+                            Map preview
+                          </Typography>
+                          <LocationOnIcon sx={{ fontSize: 40, color: 'error.main' }} />
+                        </Box>
+
+                        {/* Label */}
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          px={1}
+                          py={0.5}
+                          gap={1}
+                          sx={{ backgroundColor: theme.palette.background.paper }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontWeight: 500,
+                              color: theme.palette.text.primary,
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 0.5,
+                            }}
+                          >
+                            <LocationOnIcon sx={{ fontSize: 'medium', color: 'error.main' }} />
+                            Shared Location
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{
+                              display: 'block',
+                              textAlign: 'right',
+                              mt: 0.5,
+                              fontSize: '0.775rem'
+                            }}
+                          >
+                            {msg.timestamp}
+                          </Typography>
+                        </Stack>
+                      </Box>
+                    )}
+
                     {/* Audio Message */}
                     {msg.type === 'audio' && (
                       <Stack
@@ -576,7 +659,6 @@ function RandomChatWindow({ setShowChatWindow }) {
 
         </>
       ) : (
-        // === Not Connected Placeholder ===
         // === Not Connected Placeholder ===
         <Box
           sx={{

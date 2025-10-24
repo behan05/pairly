@@ -59,7 +59,7 @@ function RandomChatHeader() {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const dispatch = useDispatch();
-  
+
   // Local state
   const [openBlockDialog, setOpenBlockDialog] = useState(false);
   const [openReportDialog, setOpenReportDialog] = useState(false);
@@ -178,7 +178,9 @@ function RandomChatHeader() {
    */
   const menuItemStyle = {
     borderRadius: 0.5,
-    p: '8px 10px',
+    px: 1,
+    py: 0.7,
+    minHeight: 'unset',
     transition: 'all 0.3s ease-out',
     color: 'text.secondary',
     '&:hover': {

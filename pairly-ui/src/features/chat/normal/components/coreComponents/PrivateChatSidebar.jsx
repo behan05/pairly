@@ -14,6 +14,7 @@ import {
 import {
     SearchIcon,
     defaultAvatar,
+    LocationOnIcon,
 } from '@/MUI/MuiIcons';
 import BoltIcon from '@mui/icons-material/Bolt';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
@@ -43,7 +44,7 @@ function PrivateChatSidebar() {
     const { allUsers, chatUsers, loading, unreadCount } = useSelector(state => state.privateChat);
 
     const [searchValue, setSearchValue] = useState('');
- 
+
     useEffect(() => {
         dispatch(fetchAllUser());
         dispatch(fetchUnreadCounts());
@@ -528,11 +529,17 @@ function PrivateChatSidebar() {
                                                                                 <Typography variant={'body2'}>audio</Typography>
                                                                             </Stack>
                                                                             :
-                                                                            user?.lastMessage?.messageType === 'text'
-                                                                                ? user.lastMessage.content.length > 36
-                                                                                    ? user.lastMessage.content.slice(0, 36) + '...'
-                                                                                    : user.lastMessage.content
-                                                                                : 'No chat message yet'
+                                                                            user?.lastMessage?.messageType === 'location' ?
+                                                                                <Stack flexDirection='row' alignItems='center' gap={0.5}>
+                                                                                    <LocationOnIcon fontSize="small" sx={{ color: 'error.main' }} />
+                                                                                    <Typography variant={'body2'}>location</Typography>
+                                                                                </Stack>
+                                                                                :
+                                                                                user?.lastMessage?.messageType === 'text'
+                                                                                    ? user.lastMessage.content.length > 36
+                                                                                        ? user.lastMessage.content.slice(0, 36) + '...'
+                                                                                        : user.lastMessage.content
+                                                                                    : 'No chat message yet'
                                                         }
                                                     </Typography>
 

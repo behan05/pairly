@@ -46,7 +46,7 @@ export const lightPalette = {
   },
 
   background: {
-    default: "#F2F2F5",
+    default: "#F9FAFB",
     paper: "#FFFFFF",
   },
 
