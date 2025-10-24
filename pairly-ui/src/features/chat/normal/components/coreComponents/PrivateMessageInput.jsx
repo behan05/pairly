@@ -25,10 +25,12 @@ import { addMessage } from '@/redux/slices/privateChat/privateChatSlice';
 import { PRIVATE_CHAT_API } from '@/api/config'
 import { socket } from '@/services/socket';
 import axios from 'axios';
+import RecordRTC from 'recordrtc';
 
 // Premium Model 
 import PremiumFeatureModel from '@/components/private/premium/PremiumFeatureModal';
 import LimitReachedModal from '../../../common/LimitReachedModal';
+import AudioErrorModal from '../../../common/AudioErrorModal';
 
 function PrivateMessageInput() {
   const theme = useTheme();
@@ -51,6 +53,10 @@ function PrivateMessageInput() {
   const [limitModalOpen, setLimitModalOpen] = useState(false);
   const [limitType, setLimitType] = useState(null);
   const isFreeUser = status === 'active' && plan === 'free';
+
+  const [isRecording, setIsRecording] = useState(false);
+  const [micErrorModalOpen, setMicErrorModalOpen] = useState(false);
+  const recorderRef = useRef(null);
 
   const { chatSettings } = useSelector((state) => state.settings);
   const enterToSend = chatSettings?.enterToSend;
@@ -152,9 +158,79 @@ function PrivateMessageInput() {
     }
   };
 
-  // Audio chat handle
-  const handleAudioChat = () => {
+  // --- Audio Recording ---
+  const startRecording = async () => {
+    try {
+      // Check if any audio input device exists
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const hasMic = devices.some(device => device.kind === 'audioinput');
 
+      if (!hasMic) {
+        setMicErrorModalOpen(true);
+        return;
+      }
+
+      // Ask for microphone permission
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      recorderRef.current = new RecordRTC(stream, {
+        type: 'audio',
+        mimeType: 'audio/webm',
+        recorderType: RecordRTC.StereoAudioRecorder,
+        numberOfAudioChannels: 1,
+        desiredSampRate: 16000,
+      });
+
+      recorderRef.current.startRecording();
+      setIsRecording(true);
+
+    } catch (err) {
+      console.error(err);
+      setMicErrorModalOpen(true);
+    }
+  };
+
+  const stopRecording = async () => {
+    if (!recorderRef.current) return;
+
+    recorderRef.current.stopRecording(async () => {
+      const blob = recorderRef.current.getBlob();
+      const file = new File([blob], `audio_${Date.now()}.webm`, { type: blob.type });
+
+      setIsRecording(false);
+      handleAudioSend(file);
+    });
+  };
+
+  const handleAudioSend = async (file) => {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('media', file);
+    formData.append('conversationId', String(conversationId));
+    formData.append('messageType', 'audio');
+
+    // Optimistic UI
+    dispatch(
+      addMessage({
+        sender: String(currentUserId),
+        message: URL.createObjectURL(file),
+        fileName: file.name,
+        messageType: 'audio',
+        createdAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        seen: false,
+      })
+    );
+
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(`${PRIVATE_CHAT_API}/media`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` },
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error('Audio upload failed!');
+    }
   };
 
   const handleSend = async () => {
@@ -787,22 +863,19 @@ function PrivateMessageInput() {
             </IconButton>
           </Tooltip>
         ) : (
-          <Tooltip title="Mic">
+          <Tooltip title={isRecording ? 'Recording...' : 'Hold to Record'}>
             <IconButton
-              onClick={handleAudioChat}
+              onMouseDown={startRecording}
+              onMouseUp={stopRecording}
+              onTouchStart={startRecording}
+              onTouchEnd={stopRecording}
               sx={{
                 bgcolor: theme.palette.primary.main,
-                color: theme.palette.mode === "dark" ? '#ddd' : '#000',
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  bgcolor: theme.palette.success.main,
-                  color: theme.palette.mode === "dark" ? '#000' : '#ddd',
-                  transform: 'scale(1.1)',
-                  boxShadow: `0 4px 12px ${theme.palette.success.main}60`
-                },
+                color: theme.palette.getContrastText(theme.palette.primary.main),
+                '&:hover': { bgcolor: theme.palette.success.main },
               }}
             >
-              <MicIcon fontSize="medium" />
+              <MicIcon />
             </IconButton>
           </Tooltip>
         )}
@@ -841,6 +914,11 @@ function PrivateMessageInput() {
       <LimitReachedModal
         open={limitModalOpen}
         onClose={() => setLimitModalOpen(false)}
+        type={limitType}
+      />
+      <AudioErrorModal
+        open={micErrorModalOpen}
+        onClose={() => setMicErrorModalOpen(false)}
         type={limitType}
       />
     </Box>
