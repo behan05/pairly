@@ -128,9 +128,9 @@ function Premium() {
     }));
 
     return (
-        <Box px={2} py={1}>
+        <Box px={2}>
             <ChatSidebarHeader />
-            <Typography textAlign="center" variant="body1" color="text.secondary" mb={4}>
+            <Typography textAlign="center" variant="body1" color="text.secondary" my={4}>
                 Start free or upgrade to enjoy unlimited chats and premium features
             </Typography>
 

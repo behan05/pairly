@@ -130,6 +130,9 @@ import UploadIcon from '@mui/icons-material/Upload';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import StarIcon from '@mui/icons-material/Star';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import LanguageIcon from '@mui/icons-material/Language';
 
 // ==================== Partner Profile Icons ====================
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
@@ -319,6 +322,9 @@ export {
   UploadIcon,
   AccessTimeIcon,
   StarIcon,
+  EmojiEventsIcon,
+  MonetizationOnIcon,
+  LanguageIcon,
 
   // Pricing Icons
   CheckIcon,

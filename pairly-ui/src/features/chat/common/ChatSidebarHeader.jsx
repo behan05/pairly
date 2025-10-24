@@ -1,16 +1,19 @@
 import React, { useEffect } from 'react';
 import {
   Box,
-  Menu,
   MenuItem,
   IconButton,
+  Button,
   Stack,
   Tooltip,
   Divider,
   useTheme,
   Avatar,
   Badge,
-  useMediaQuery
+  useMediaQuery,
+  Drawer,
+  Typography,
+  TextField
 } from '@/MUI/MuiComponents';
 import {
   PersonAddIcon,
@@ -25,12 +28,15 @@ import {
   StarIcon,
   MarkunreadIcon,
   DraftsIcon,
+  SearchIcon
 } from '@/MUI/MuiIcons';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@/redux/slices/auth/authAction';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { keyframes } from '@emotion/react';
+import toCapitalCase from '@/utils/textFormatting';
 
 // friend request selector
 import { getProfile } from '@/redux/slices/profile/profileAction';
@@ -45,6 +51,8 @@ const ChatSidebarHeader = ({ children }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { profileData } = useSelector((state) => state.profile);
+  const { plan, status } = useSelector((state) => state?.auth?.user?.subscription);
+  const isFreeUser = status === 'active' && plan === 'free';
 
   const pendingCount = useSelector(pendingFriendRequestCount);
   const theme = useTheme();
@@ -138,6 +146,25 @@ const ChatSidebarHeader = ({ children }) => {
     });
     setTimeout(() => navigate('/login', { replace: true }), 1000);
   };
+
+  // split bio
+  const userBio = profileData?.shortBio.split(' ');
+
+  // Get the first 6 words only for settings profile bio
+  const shortBioPreview = userBio?.slice(0, 6).join(' ');
+
+  // glow animation
+  const glowDot = keyframes`
+    0% {
+      box-shadow: 0 0 0px 0px rgba(0, 255, 0, 0.51);
+    }
+    50% {
+      box-shadow: 0 0 5px 1px rgba(0, 255, 0, 0.4);
+    }
+    100% {
+      box-shadow: 0 0 0px 0px rgba(0, 255, 0, 0.44);
+    }
+  `;
 
   return (
     <Box
@@ -242,28 +269,172 @@ const ChatSidebarHeader = ({ children }) => {
       {/* Search Bar if needed */}
       {children}
 
-      {/* Dropdown Menu */}
-      <Menu
-        anchorEl={menuAnchorEl}
+      {/* Drawer Menu */}
+
+      <Drawer
         open={isMenuOpen}
         onClose={() => setMenuAnchorEl(null)}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        variant="temporary"
+        ModalProps={{ keepMounted: false }}
         PaperProps={{
           sx: {
-            background: `linear-gradient(130deg,
-             ${theme.palette.primary.dark} 0%, 
-            ${theme.palette.background.paper} 30%,
-             ${theme.palette.background.paper} 100%)`,
+            background: `linear-gradient(180deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default} 100%)`,
             boxShadow: theme.shadows[6],
-            borderRadius: 1,
-            minWidth: 200,
-            mt: 1,
+            minWidth: 280,
             p: '0px 10px',
-            overflow: 'hidden'
-          }
+            overflow: 'hidden',
+          },
         }}
       >
+
+        {/* Profile avatar */}
+        <Stack
+          component={Link}
+          to="/pairly/profile/general-info"
+          direction="row"
+          alignItems="center"
+          gap={2.5}
+          sx={{
+            my: 2,
+            p: 1.5,
+            borderRadius: 1,
+            position: 'relative',
+            background: `linear-gradient(135deg, ${theme.palette.background.paper}ff, ${theme.palette.primary.main}04)`,
+            boxShadow: `0 4px 20px ${theme.palette.primary.main}22`,
+            textDecoration: 'none',
+            transition: 'boxShadow 0.3s ease',
+            '&:hover': { boxShadow: `inset 0 4px 20px ${theme.palette.primary.main}22`, },
+          }}
+        >
+          {/* Avatar with glow ring */}
+          <Box
+            sx={{
+              position: 'relative',
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                inset: -3,
+                borderRadius: '50%',
+                background: `linear-gradient(135deg, ${theme.palette.primary.light}, ${theme.palette.secondary.main})`,
+                filter: 'blur(4px)',
+                opacity: 0.6,
+              },
+            }}
+          >
+            <Avatar
+              src={profileData?.profileImage || defaultAvatar}
+              alt="user"
+              sx={{
+                width: 78,
+                height: 78,
+                border: `2px solid ${theme.palette.background.paper}`,
+              }}
+            />
+          </Box>
+
+          {/* User Info */}
+          <Stack spacing={0.6} zIndex={1}>
+            <Typography
+              variant="subtitle1"
+              fontWeight={600}
+              color="text.primary"
+              sx={{ letterSpacing: 0.4 }}
+            >
+              {toCapitalCase(profileData?.fullName)} ({profileData?.age})
+            </Typography>
+
+            <Stack direction="row" alignItems="center" gap={0.7}>
+              <Box
+                sx={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  background: 'linear-gradient(90deg, limegreen, #00ff99)',
+                  animation: `${glowDot} 1.5s infinite ease-in-out`,
+                }}
+              />
+              <Typography variant="body2" color="success.main">
+                Online
+              </Typography>
+            </Stack>
+
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{
+                fontStyle: 'italic',
+                maxWidth: 210,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {shortBioPreview || 'Add your bio to personalize your profile'}
+            </Typography>
+
+            {/* Plan Badge */}
+            <Stack
+              direction="row"
+              alignItems="center"
+              gap={0.6}
+              sx={{
+                mt: 0.4,
+                alignSelf: 'flex-start',
+                px: 1.2,
+                py: 0.4,
+                borderRadius: 999,
+                background:
+                  plan === 'free'
+                    ? `${theme.palette.grey[800]}55`
+                    : `linear-gradient(90deg, #ffb300, #ff9800)`,
+                boxShadow:
+                  plan !== 'free'
+                    ? `0 0 10px ${theme.palette.warning.main}66`
+                    : `0 0 4px ${theme.palette.divider}`,
+              }}
+            >
+              <StarIcon
+                sx={{
+                  fontSize: 18,
+                  color: plan === 'free' ? theme.palette.text.secondary : '#fff',
+                }}
+              />
+              <Typography
+                variant="caption"
+                color={plan === 'free' ? 'text.secondary' : '#fff'}
+                fontWeight={600}
+              >
+                {toCapitalCase(plan)} Plan
+              </Typography>
+            </Stack>
+          </Stack>
+        </Stack>
+
+        {/* Find User by userId */}
+        <Box component={'section'} mt={1}>
+          <TextField
+            size="small"
+            fullWidth
+            placeholder={'Search userId...'}
+            value={''}
+            onChange={''}
+            InputProps={{
+              startAdornment: <SearchIcon fontSize="small" sx={{ mr: 1, color: 'text.secondary' }} />,
+            }}
+            sx={{
+              mb: 2,
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 2,
+                backgroundColor: `${theme.palette.background.paper}aa`,
+                transition: 'all 0.3s ease',
+                '&:hover fieldset': { borderColor: theme.palette.primary.main },
+                '&.Mui-focused fieldset': { borderColor: theme.palette.primary.main },
+              },
+            }}
+          />
+        </Box>
+        <Divider sx={{ bgcolor: theme.palette.divider, height: 2 }} />
+
         {/* Menu Items */}
         {[
           {
@@ -309,6 +480,7 @@ const ChatSidebarHeader = ({ children }) => {
             sx={{
               borderRadius: 0.5,
               p: '8px 10px',
+              mt: 0.5,
               transition: 'all 0.3s ease-out',
               color: 'text.secondary',
               '&:hover': {
@@ -322,7 +494,7 @@ const ChatSidebarHeader = ({ children }) => {
           </MenuItem>
         ))}
 
-        <Divider sx={{ my: 0.5 }} />
+        <Divider sx={{ my: 0.5, height: 2 }} />
 
         {/* Logout Item */}
         <MenuItem
@@ -341,9 +513,91 @@ const ChatSidebarHeader = ({ children }) => {
           <LogoutIcon fontSize="small" sx={{ mr: 1, color: theme.palette.error.main }} />
           Logout
         </MenuItem>
-      </Menu>
 
-      <Divider sx={{ my: 2 }} />
+        <Stack
+          sx={{
+            position: 'absolute',
+            bottom: 16,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '90%',
+            maxWidth: 320,
+          }}
+        >
+          {isFreeUser ? (
+            // --- Shiny Upgrade Button for Free Users ---
+            <Button
+              component={Link}
+              to="/pairly/settings/premium"
+              startIcon={<StarIcon sx={{ fontSize: 20 }} />}
+              sx={{
+                position: 'relative',
+                overflow: 'hidden',
+                height: 52,
+                borderRadius: 3,
+                fontSize: '1rem',
+                fontWeight: 600,
+                letterSpacing: 0.4,
+                color: '#fff',
+                textTransform: 'none',
+                background: `linear-gradient(135deg, #7a5af8, #df71ff)`,
+                boxShadow: '0 0 18px rgba(122, 90, 248, 0.4)',
+                transition: 'all 0.35s ease',
+                backdropFilter: 'blur(10px)',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 0 25px rgba(223, 113, 255, 0.6)',
+                  background: `linear-gradient(135deg, #8b6bff, #e782ff)`,
+                },
+                '&::after': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: '-75%',
+                  width: '50%',
+                  height: '100%',
+                  background:
+                    'linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent)',
+                  transform: 'skewX(-20deg)',
+                  animation: 'shine 2.8s infinite ease-in-out',
+                },
+                '@keyframes shine': {
+                  '0%': { left: '-75%' },
+                  '60%': { left: '125%' },
+                  '100%': { left: '125%' },
+                },
+              }}
+            >
+              Level Up Your Chat
+            </Button>
+          ) : (
+            // --- Premium Users: Compact Badge or Info Strip ---
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="center"
+              gap={1}
+              sx={{
+                py: 1.3,
+                borderRadius: 3,
+                background: `linear-gradient(90deg, #ffb300, #ff9800)`,
+                color: '#fff',
+                boxShadow: '0 0 18px rgba(255, 193, 7, 0.4)',
+              }}
+            >
+              <StarIcon sx={{ fontSize: 18 }} />
+              <Typography
+                variant="body2"
+                fontWeight={600}
+                sx={{ textShadow: '0 0 5px rgba(0,0,0,0.2)' }}
+              >
+                You’re enjoying Premium Features ✨
+              </Typography>
+            </Stack>
+          )}
+        </Stack>
+
+      </Drawer>
     </Box>
   );
 };

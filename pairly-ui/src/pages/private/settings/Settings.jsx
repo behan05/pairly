@@ -4,9 +4,7 @@ import {
   Stack,
   Typography,
   TextField,
-  Avatar,
   Divider,
-  Tooltip,
   List,
   ListItemButton,
   ListItemText,
@@ -25,23 +23,24 @@ import {
   BlockIcon,
   StarIcon,
   PaymentIcon,
-  PersonIcon
+  PersonIcon,
+  EmojiEventsIcon,
+  MonetizationOnIcon,
+  LanguageIcon
 } from '@/MUI/MuiIcons';
+
 import { Link, useNavigate } from 'react-router-dom';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import { logout } from '@/redux/slices/auth/authAction';
 import { getProfile } from '@/redux/slices/profile/profileAction';
-import { useDispatch, useSelector } from 'react-redux';
-import { keyframes } from '@emotion/react';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import toCapitalCase from '@/utils/textFormatting';
-import {alpha } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 
 function Settings() {
   const [searchValue, setSearchValue] = React.useState('');
   const dispatch = useDispatch();
-  const { profileData } = useSelector((state) => state.profile);
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -96,9 +95,27 @@ function Settings() {
     },
     {
       path: 'payments',
-      icon: <PaymentIcon sx={{ mr: 1.1, color: 'success.main' }} />, // or another icon you prefer
+      icon: <PaymentIcon sx={{ mr: 1.1, color: 'success.main' }} />,
       title: 'Payments',
       subTitle: 'Manage subscriptions, invoices, transactions'
+    },
+    {
+      path: 'achievements',
+      icon: <EmojiEventsIcon sx={{ mr: 1.1, color: 'secondary.main' }} />,
+      title: 'Achievements',
+      subTitle: 'View badges and milestones you earned'
+    },
+    {
+      path: 'rewards',
+      icon: <MonetizationOnIcon sx={{ mr: 1.1, color: 'warning.main' }} />,
+      title: 'Rewards',
+      subTitle: 'Coins, referral bonuses, in-app perks'
+    },
+    {
+      path: 'language',
+      icon: <LanguageIcon sx={{ mr: 1.1, color: 'info.main' }} />,
+      title: 'Language / Region',
+      subTitle: 'Change app language and regional settings'
     },
     {
       path: 'help',
@@ -140,24 +157,6 @@ function Settings() {
     }
   };
 
-  // split bio
-  const userBio = profileData?.shortBio.split(' ');
-
-  // Get the first 6 words only for settings profile bio
-  const shortBioPreview = userBio?.slice(0, 6).join(' ');
-
-  // glow animation
-  const glowDot = keyframes`
-  0% {
-    box-shadow: 0 0 0px 0px rgba(0, 255, 0, 0.51);
-  }
-  50% {
-    box-shadow: 0 0 5px 1px rgba(0, 255, 0, 0.4);
-  }
-  100% {
-    box-shadow: 0 0 0px 0px rgba(0, 255, 0, 0.44);
-  }
-`;
   return (
     <Box component={'section'}
       sx={{ minWidth: '290px', p: 2 }}>
@@ -166,8 +165,9 @@ function Settings() {
       <Stack mb={2}>
         <NavigateWithArrow redirectTo={'/pairly'} text={'Settings'} />
       </Stack>
+
       {/* Search keywords */}
-      <Box component={'section'} mt={1}>
+      <Box component={'section'} my={2.5}>
         <TextField
           size="small"
           fullWidth
@@ -180,57 +180,7 @@ function Settings() {
         />
       </Box>
 
-      {/* Profile avatar */}
-      <Stack
-        component={Link}
-        to={'/pairly/profile/general-info'}
-        my={4}
-        flexDirection={'row'}
-        gap={2}
-      >
-        <Stack background={'red'} alignItems={'center'} justifyContent={'center'}>
-          <Tooltip title="Profile">
-            <Avatar
-              src={profileData?.profileImage}
-              alt="user profile image"
-              aria-level="user profile image"
-              sx={{
-                width: 100,
-                height: 100
-              }}
-            />
-          </Tooltip>
-        </Stack>
-
-        <Stack justifyContent="center">
-          <Typography variant="body1" color={'text.primary'}>
-            {toCapitalCase(profileData?.fullName)} ({profileData?.age})
-          </Typography>
-          <Stack direction="row" alignItems={'center'} gap={1}>
-            <Typography variant="body2" letterSpacing={1} color={'success.main'}>
-              Online
-            </Typography>
-            <Stack
-              sx={{
-                background: 'green',
-                width: '10px',
-                height: '10px',
-                borderRadius: '50%',
-                boxShadow: theme.shadows[8],
-                transition: 'all 0.3s ease',
-                animation: `${glowDot} 1.5s infinite ease-in-out`
-              }}
-            />
-          </Stack>
-          <Typography variant="body2" color={'text.secondary'}>
-            {shortBioPreview || 'Empty Bio (Please add bio.)'}
-          </Typography>
-        </Stack>
-      </Stack>
-      <Divider sx={{ bgcolor: theme.palette.divider }} />
-
       {/* Setting items */}
-
       {filterSettings.length === 0 ? (
         <Typography
           variant="body2"
