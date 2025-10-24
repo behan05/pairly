@@ -186,8 +186,9 @@ function RandomMessageInput() {
   const startRecording = async () => {
     try {
       // Check if any audio input device exists
+      await navigator.mediaDevices.getUserMedia({ audio: true });
       const devices = await navigator.mediaDevices.enumerateDevices();
-      const hasMic = devices.some(device => device.kind === 'audioinput');
+      const hasMic = devices.some(d => d.kind === 'audioinput');
 
       if (!hasMic) {
         setMicErrorModalOpen(true);
