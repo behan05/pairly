@@ -110,15 +110,6 @@ const ChatSidebarHeader = ({ children }) => {
       ),
       label: 'Friend Requests'
     },
-    // {
-    //   path: '/pairly/alerts',
-    //   icon: hasNewAlert ? (
-    //     <MarkunreadIcon sx={{ color: theme.palette.warning.main }} />
-    //   ) : (
-    //     <DraftsIcon sx={{ color: theme.palette.text.disabled }} />
-    //   ),
-    //   label: 'Alert Messages',
-    // },
   ];
 
   const handleShareClick = () => {
@@ -452,6 +443,19 @@ const ChatSidebarHeader = ({ children }) => {
         {[
           { label: 'Profile', to: '/pairly/profile', icon: <PersonIcon fontSize="small" sx={{ mr: 1, color: theme.palette.info.main }} /> },
           { label: 'Settings', to: '/pairly/settings', icon: <SettingsIcon fontSize="small" sx={{ mr: 1, color: theme.palette.primary.main }} /> },
+          {
+            to: '/pairly/alerts',
+            icon: (
+              <Tooltip title={hasNewAlert ? 'You have new alerts' : 'No new alerts'}>
+                {hasNewAlert ? (
+                  <MarkunreadIcon fontSize="small" sx={{ color: theme.palette.warning.main, mr: 1 }} />
+                ) : (
+                  <DraftsIcon fontSize="small" sx={{ color: theme.palette.text.disabled, mr: 1 }} />
+                )}
+              </Tooltip>
+            ),
+            label: 'Alert Messages',
+          },
           { label: 'Help | Support', to: '/pairly/settings/help', icon: <HelpOutlineIcon fontSize="small" sx={{ mr: 1, color: theme.palette.info.dark }} /> },
           { label: 'Upgrade plan', to: '/pairly/settings/premium', icon: <StarIcon fontSize="small" sx={{ mr: 1, color: theme.palette.warning.main }} /> },
           { label: 'Invite a Friend', onClick: handleShareClick, icon: <ShareIcon fontSize="small" sx={{ mr: 1, color: theme.palette.success.main }} /> },
