@@ -30,6 +30,11 @@ import {
   DraftsIcon,
   SearchIcon
 } from '@/MUI/MuiIcons';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import CheckIcon from '@mui/icons-material/Check';
+
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@/redux/slices/auth/authAction';
@@ -44,19 +49,28 @@ import { pendingFriendRequestCount } from '@/redux/slices/randomChat/friendReque
 import { getChatSettings } from '@/redux/slices/settings/settingsAction';
 import { getSettingsNotification } from '@/redux/slices/settings/settingsAction';
 import { getSettingsPrivacy } from '@/redux/slices/settings/settingsAction';
+import { toggleTheme } from '@/redux/slices/theme/themeSlice';
 
 import { totalNumberOfUnreadMessages } from '@/redux/slices/privateChat/privateChatSlice';
 
 const ChatSidebarHeader = ({ children }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { profileData } = useSelector((state) => state.profile);
+  const { profileData } = useSelector((state) => state?.profile);
+  const { publicId } = useSelector((state) => state.auth?.user);
   const { plan, status } = useSelector((state) => state?.auth?.user?.subscription);
   const isFreeUser = status === 'active' && plan === 'free';
 
   const pendingCount = useSelector(pendingFriendRequestCount);
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+  const isCustomXs = useMediaQuery('(max-width:411px)');
+
+  const [themeMode, setThemeMode] = React.useState(
+    localStorage.getItem('theme') || 'dark'
+  );
+
+  const [copied, setCopied] = React.useState(false);
 
   const [menuAnchorEl, setMenuAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(menuAnchorEl);
@@ -96,15 +110,15 @@ const ChatSidebarHeader = ({ children }) => {
       ),
       label: 'Friend Requests'
     },
-    {
-      path: '/pairly/alerts',
-      icon: hasNewAlert ? (
-        <MarkunreadIcon sx={{ color: theme.palette.warning.main }} />
-      ) : (
-        <DraftsIcon sx={{ color: theme.palette.text.disabled }} />
-      ),
-      label: 'Alert Messages',
-    },
+    // {
+    //   path: '/pairly/alerts',
+    //   icon: hasNewAlert ? (
+    //     <MarkunreadIcon sx={{ color: theme.palette.warning.main }} />
+    //   ) : (
+    //     <DraftsIcon sx={{ color: theme.palette.text.disabled }} />
+    //   ),
+    //   label: 'Alert Messages',
+    // },
   ];
 
   const handleShareClick = () => {
@@ -165,6 +179,32 @@ const ChatSidebarHeader = ({ children }) => {
       box-shadow: 0 0 0px 0px rgba(0, 255, 0, 0.44);
     }
   `;
+
+  // toggle Theme Mode
+  const toggleThemeMode = () => {
+    dispatch(toggleTheme());
+
+    if (themeMode === 'light') {
+      setThemeMode('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      setThemeMode('light');
+      localStorage.setItem('theme', 'light');
+    }
+  }
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(publicId);
+    setCopied(true);
+  };
+
+  useEffect(() => {
+    const resetSetCopied = setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+
+    return () => clearTimeout(resetSetCopied);
+  }, [copied]);
 
   return (
     <Box
@@ -270,7 +310,6 @@ const ChatSidebarHeader = ({ children }) => {
       {children}
 
       {/* Drawer Menu */}
-
       <Drawer
         open={isMenuOpen}
         onClose={() => setMenuAnchorEl(null)}
@@ -280,95 +319,90 @@ const ChatSidebarHeader = ({ children }) => {
           sx: {
             background: `linear-gradient(180deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default} 100%)`,
             boxShadow: theme.shadows[6],
-            minWidth: 280,
+            minWidth: 260,
             p: '0px 10px',
             overflow: 'hidden',
           },
         }}
       >
-
-        {/* Profile avatar */}
+        {/* Profile Card */}
         <Stack
-          component={Link}
-          to="/pairly/profile/general-info"
-          direction="row"
+          direction={isCustomXs ? 'column' : 'row'}
           alignItems="center"
-          gap={2.5}
+          spacing={1.5}
           sx={{
-            my: 2,
-            p: 1.5,
-            borderRadius: 1,
+            my: 1.5,
+            p: isCustomXs ? 1 : 2,
+            borderRadius: 2,
             position: 'relative',
-            background: `linear-gradient(135deg, ${theme.palette.background.paper}ff, ${theme.palette.primary.main}04)`,
-            boxShadow: `0 4px 20px ${theme.palette.primary.main}22`,
-            textDecoration: 'none',
-            transition: 'boxShadow 0.3s ease',
-            '&:hover': { boxShadow: `inset 0 4px 20px ${theme.palette.primary.main}22`, },
+            background: `linear-gradient(135deg, ${theme.palette.background.paper}ff, ${theme.palette.primary.main}08)`,
+            boxShadow: `0 4px 24px ${theme.palette.primary.main}22`,
+            transition: 'box-shadow 0.3s ease',
+            '&:hover': { boxShadow: `inset 0 4px 24px ${theme.palette.primary.main}22` },
           }}
         >
-          {/* Avatar with glow ring */}
-          <Box
-            sx={{
-              position: 'relative',
-              '&::after': {
-                content: '""',
+          {/* Theme Toggle */}
+          <Tooltip title={themeMode === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}>
+            <IconButton
+              onClick={toggleThemeMode}
+              sx={{
                 position: 'absolute',
-                inset: -3,
-                borderRadius: '50%',
-                background: `linear-gradient(135deg, ${theme.palette.primary.light}, ${theme.palette.secondary.main})`,
-                filter: 'blur(4px)',
-                opacity: 0.6,
-              },
-            }}
+                top: 12,
+                right: 12,
+                width: 30,
+                height: 30,
+                bgcolor: 'background.paper',
+                boxShadow: 2,
+                zIndex: 2,
+              }}
+            >
+              {themeMode === 'light' ? <DarkModeIcon fontSize="small" /> : <LightModeIcon fontSize="small" />}
+            </IconButton>
+          </Tooltip>
+
+          {/* Avatar */}
+          <Box
+            component={Link}
+            to="/pairly/profile/general-info"
+            sx={{ position: 'relative', mx: isCustomXs ? 'auto' : 0, '&::after': { content: '""', position: 'absolute', inset: -4, borderRadius: '50%', background: `linear-gradient(135deg, ${theme.palette.primary.light}, ${theme.palette.secondary.main})`, filter: 'blur(6px)', opacity: 0.5, zIndex: 0 } }}
           >
             <Avatar
               src={profileData?.profileImage || defaultAvatar}
               alt="user"
-              sx={{
-                width: 78,
-                height: 78,
-                border: `2px solid ${theme.palette.background.paper}`,
-              }}
+              sx={{ width: isCustomXs ? 72 : 80, height: isCustomXs ? 72 : 80, border: `2px solid ${theme.palette.background.paper}`, zIndex: 1, position: 'relative' }}
             />
           </Box>
 
           {/* User Info */}
-          <Stack spacing={0.6} zIndex={1}>
-            <Typography
-              variant="subtitle1"
-              fontWeight={600}
-              color="text.primary"
-              sx={{ letterSpacing: 0.4 }}
-            >
+          <Stack spacing={0.8} zIndex={1} sx={{ textAlign: isCustomXs ? 'center' : 'left', width: '100%' }}>
+            <Typography variant="subtitle1" fontWeight={700} color="text.primary" sx={{ letterSpacing: 0.5 }}>
               {toCapitalCase(profileData?.fullName)} ({profileData?.age})
             </Typography>
 
-            <Stack direction="row" alignItems="center" gap={0.7}>
-              <Box
-                sx={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: '50%',
-                  background: 'linear-gradient(90deg, limegreen, #00ff99)',
-                  animation: `${glowDot} 1.5s infinite ease-in-out`,
-                }}
-              />
-              <Typography variant="body2" color="success.main">
-                Online
+            {/* ID + Copy */}
+            <Stack direction="row" alignItems="center" justifyContent={isCustomXs ? 'center' : 'flex-start'} spacing={0.5}>
+              <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', letterSpacing: 0.3 }}>
+                ID: {publicId || 'N/A'}
               </Typography>
+              <Tooltip title={copied ? 'User ID copied!' : 'Copy User ID'} arrow>
+                <IconButton
+                  onClick={handleCopy}
+                  size="small"
+                  sx={{ p: 0.4 }}
+                >
+                  {copied ? <CheckIcon sx={{ fontSize: 16 }} /> : <ContentCopyIcon sx={{ fontSize: 16 }} />}
+                </IconButton>
+              </Tooltip>
             </Stack>
 
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{
-                fontStyle: 'italic',
-                maxWidth: 210,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            >
+            {/* Online Status */}
+            <Stack direction="row" alignItems="center" spacing={0.5} justifyContent={isCustomXs ? 'center' : 'flex-start'}>
+              <Box sx={{ width: 10, height: 10, borderRadius: '50%', background: 'linear-gradient(90deg, limegreen, #00ff99)', animation: `${glowDot} 1.5s infinite ease-in-out` }} />
+              <Typography variant="body2" color="success.main">Online</Typography>
+            </Stack>
+
+            {/* Bio */}
+            <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic', maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {shortBioPreview || 'Add your bio to personalize your profile'}
             </Typography>
 
@@ -376,127 +410,73 @@ const ChatSidebarHeader = ({ children }) => {
             <Stack
               direction="row"
               alignItems="center"
-              gap={0.6}
+              spacing={0.5}
               sx={{
-                mt: 0.4,
-                alignSelf: 'flex-start',
-                px: 1.2,
-                py: 0.4,
+                mt: 0.6,
+                px: 1.4,
+                py: 0.5,
                 borderRadius: 999,
-                background:
-                  plan === 'free'
-                    ? `${theme.palette.grey[800]}55`
-                    : `linear-gradient(90deg, #ffb300, #ff9800)`,
-                boxShadow:
-                  plan !== 'free'
-                    ? `0 0 10px ${theme.palette.warning.main}66`
-                    : `0 0 4px ${theme.palette.divider}`,
+                alignSelf: isCustomXs ? 'center' : 'flex-start',
+                background: plan === 'free' ? `${theme.palette.grey[700]}44` : `linear-gradient(90deg, #ffb300, #ff9800)`,
+                boxShadow: plan !== 'free' ? `0 0 12px ${theme.palette.warning.main}66` : `0 0 4px ${theme.palette.divider}`,
               }}
             >
-              <StarIcon
-                sx={{
-                  fontSize: 18,
-                  color: plan === 'free' ? theme.palette.text.secondary : '#fff',
-                }}
-              />
-              <Typography
-                variant="caption"
-                color={plan === 'free' ? 'text.secondary' : '#fff'}
-                fontWeight={600}
-              >
+              <StarIcon sx={{ fontSize: 18, color: plan === 'free' ? theme.palette.text.secondary : '#fff' }} />
+              <Typography variant="caption" fontWeight={600} color={plan === 'free' ? 'text.secondary' : '#fff'}>
                 {toCapitalCase(plan)} Plan
               </Typography>
             </Stack>
           </Stack>
+
         </Stack>
 
-        {/* Find User by userId */}
+        {/* Search by User ID */}
         <Box component={'section'} mt={1}>
           <TextField
             size="small"
             fullWidth
-            placeholder={'Search userId...'}
+            placeholder="Search by user ID"
             value={''}
             onChange={''}
-            InputProps={{
-              startAdornment: <SearchIcon fontSize="small" sx={{ mr: 1, color: 'text.secondary' }} />,
-            }}
+            InputProps={{ startAdornment: <SearchIcon fontSize="small" sx={{ mr: 1, color: 'text.secondary' }} /> }}
             sx={{
               mb: 2,
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 2,
-                backgroundColor: `${theme.palette.background.paper}aa`,
-                transition: 'all 0.3s ease',
-                '&:hover fieldset': { borderColor: theme.palette.primary.main },
-                '&.Mui-focused fieldset': { borderColor: theme.palette.primary.main },
-              },
+              '& .MuiOutlinedInput-root': { borderRadius: 2, backgroundColor: `${theme.palette.background.paper}aa`, transition: 'all 0.3s ease', '&:hover fieldset': { borderColor: theme.palette.primary.main }, '&.Mui-focused fieldset': { borderColor: theme.palette.primary.main } },
             }}
           />
         </Box>
+
         <Divider sx={{ bgcolor: theme.palette.divider, height: 2 }} />
 
         {/* Menu Items */}
         {[
-          {
-            label: 'Profile',
-            to: '/pairly/profile',
-            icon: <PersonIcon fontSize="small" sx={{ mr: 1, color: theme.palette.info.main }} />
-          },
-          {
-            label: 'Settings',
-            to: '/pairly/settings',
-            icon: (
-              <SettingsIcon fontSize="small" sx={{ mr: 1, color: theme.palette.primary.main }} />
-            )
-          },
-          {
-            label: 'Help | Support',
-            to: '/pairly/settings/help',
-            icon: (
-              <HelpOutlineIcon fontSize="small" sx={{ mr: 1, color: theme.palette.info.dark }} />
-            )
-          },
-          {
-            label: 'Upgrade plan',
-            to: '/pairly/settings/premium',
-            icon: (
-              <StarIcon fontSize="small" sx={{ mr: 1, color: theme.palette.warning.main }} />
-            )
-          },
-          {
-            label: 'Invite a Friend',
-            onClick: handleShareClick,
-            icon: <ShareIcon fontSize="small" sx={{ mr: 1, color: theme.palette.success.main }} />
-          },
+          { label: 'Profile', to: '/pairly/profile', icon: <PersonIcon fontSize="small" sx={{ mr: 1, color: theme.palette.info.main }} /> },
+          { label: 'Settings', to: '/pairly/settings', icon: <SettingsIcon fontSize="small" sx={{ mr: 1, color: theme.palette.primary.main }} /> },
+          { label: 'Help | Support', to: '/pairly/settings/help', icon: <HelpOutlineIcon fontSize="small" sx={{ mr: 1, color: theme.palette.info.dark }} /> },
+          { label: 'Upgrade plan', to: '/pairly/settings/premium', icon: <StarIcon fontSize="small" sx={{ mr: 1, color: theme.palette.warning.main }} /> },
+          { label: 'Invite a Friend', onClick: handleShareClick, icon: <ShareIcon fontSize="small" sx={{ mr: 1, color: theme.palette.success.main }} /> },
         ].map(({ label, to, onClick, icon }) => (
           <MenuItem
             key={label}
             component={NavLink}
             to={to}
-            onClick={() => {
-              if (onClick) onClick();
-              setMenuAnchorEl(null);
-            }}
+            onClick={() => { if (onClick) onClick(); setMenuAnchorEl(null); }}
             sx={{
               borderRadius: 0.5,
               p: '8px 10px',
               mt: 0.5,
               transition: 'all 0.3s ease-out',
               color: 'text.secondary',
-              '&:hover': {
-                transform: `translate(1px, -1px) scale(0.99)`,
-                filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
-              },
+              '&:hover': { transform: `translate(1px, -1px) scale(0.99)`, filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})` },
             }}
           >
-            {icon}
-            {label}
+            {icon}{label}
           </MenuItem>
         ))}
 
         <Divider sx={{ my: 0.5, height: 2 }} />
 
-        {/* Logout Item */}
+        {/* Logout */}
         <MenuItem
           onClick={handleLogout}
           sx={{
@@ -504,28 +484,16 @@ const ChatSidebarHeader = ({ children }) => {
             p: '8px 10px',
             color: 'error.main',
             transition: 'all 0.3s ease-out',
-            '&:hover': {
-              transform: `translate(1px, -1px) scale(0.99)`,
-              filter: `drop-shadow(0 20px 1rem ${theme.palette.error.main})`
-            }
+            '&:hover': { transform: `translate(1px, -1px) scale(0.99)`, filter: `drop-shadow(0 20px 1rem ${theme.palette.error.main})` },
           }}
         >
           <LogoutIcon fontSize="small" sx={{ mr: 1, color: theme.palette.error.main }} />
           Logout
         </MenuItem>
 
-        <Stack
-          sx={{
-            position: 'absolute',
-            bottom: 16,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '90%',
-            maxWidth: 320,
-          }}
-        >
+        {/* Upgrade Button / Premium Info */}
+        <Stack sx={{ position: 'absolute', bottom: 16, left: '50%', transform: 'translateX(-50%)', width: '90%', maxWidth: 320 }}>
           {isFreeUser ? (
-            // --- Shiny Upgrade Button for Free Users ---
             <Button
               component={Link}
               to="/pairly/settings/premium"
@@ -544,60 +512,24 @@ const ChatSidebarHeader = ({ children }) => {
                 boxShadow: '0 0 18px rgba(122, 90, 248, 0.4)',
                 transition: 'all 0.35s ease',
                 backdropFilter: 'blur(10px)',
-                '&:hover': {
-                  transform: 'translateY(-2px)',
-                  boxShadow: '0 0 25px rgba(223, 113, 255, 0.6)',
-                  background: `linear-gradient(135deg, #8b6bff, #e782ff)`,
-                },
-                '&::after': {
-                  content: '""',
-                  position: 'absolute',
-                  top: 0,
-                  left: '-75%',
-                  width: '50%',
-                  height: '100%',
-                  background:
-                    'linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent)',
-                  transform: 'skewX(-20deg)',
-                  animation: 'shine 2.8s infinite ease-in-out',
-                },
-                '@keyframes shine': {
-                  '0%': { left: '-75%' },
-                  '60%': { left: '125%' },
-                  '100%': { left: '125%' },
-                },
+                '&:hover': { transform: 'translateY(-2px)', boxShadow: '0 0 25px rgba(223, 113, 255, 0.6)', background: `linear-gradient(135deg, #8b6bff, #e782ff)` },
+                '&::after': { content: '""', position: 'absolute', top: 0, left: '-75%', width: '50%', height: '100%', background: 'linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent)', transform: 'skewX(-20deg)', animation: 'shine 2.8s infinite ease-in-out' },
+                '@keyframes shine': { '0%': { left: '-75%' }, '60%': { left: '125%' }, '100%': { left: '125%' } },
               }}
             >
               Level Up Your Chat
             </Button>
           ) : (
-            // --- Premium Users: Compact Badge or Info Strip ---
-            <Stack
-              direction="row"
-              alignItems="center"
-              justifyContent="center"
-              gap={1}
-              sx={{
-                py: 1.3,
-                borderRadius: 3,
-                background: `linear-gradient(90deg, #ffb300, #ff9800)`,
-                color: '#fff',
-                boxShadow: '0 0 18px rgba(255, 193, 7, 0.4)',
-              }}
-            >
+            <Stack direction="row" alignItems="center" justifyContent="center" gap={1} sx={{ py: 1.3, borderRadius: 3, background: `linear-gradient(90deg, #ffb300, #ff9800)`, color: '#fff', boxShadow: '0 0 18px rgba(255, 193, 7, 0.4)' }}>
               <StarIcon sx={{ fontSize: 18 }} />
-              <Typography
-                variant="body2"
-                fontWeight={600}
-                sx={{ textShadow: '0 0 5px rgba(0,0,0,0.2)' }}
-              >
+              <Typography variant="body2" fontWeight={600} sx={{ textShadow: '0 0 5px rgba(0,0,0,0.2)' }}>
                 You’re enjoying Premium Features ✨
               </Typography>
             </Stack>
           )}
         </Stack>
-
       </Drawer>
+
     </Box>
   );
 };
