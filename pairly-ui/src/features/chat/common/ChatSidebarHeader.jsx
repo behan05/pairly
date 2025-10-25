@@ -316,6 +316,7 @@ const ChatSidebarHeader = ({ children }) => {
           },
         }}
       >
+
         {/* Profile Card */}
         <Stack
           direction={isCustomXs ? 'column' : 'row'}
@@ -332,6 +333,49 @@ const ChatSidebarHeader = ({ children }) => {
             '&:hover': { boxShadow: `inset 0 4px 24px ${theme.palette.primary.main}22` },
           }}
         >
+          {/* Floating Points in Drawer */}
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              pointerEvents: 'none',
+              overflow: 'hidden',
+              zIndex: 0,
+            }}
+          >
+            {Array.from({ length: 25 }).map((_, i) => (
+              <Box
+                key={i}
+                className="drawer-point"
+                sx={{
+                  position: 'absolute',
+                  bottom: '-10px',
+                  width: 2,
+                  height: 2,
+                  bgcolor: theme.palette.mode === 'dark' ? '#fff' : '#7b0e8aff',
+                  borderRadius: '50%',
+                  left: `${Math.random() * 100}%`,
+                  opacity: Math.random(),
+                  animation: `drawer-floating ${1.5 + Math.random() * 2}s infinite ease-in-out`,
+                  animationDelay: `${Math.random() * 2}s`,
+                }}
+              />
+            ))}
+
+            <style>
+              {`
+              @keyframes drawer-floating {
+                0% { transform: translateY(0); opacity: 1; }
+               85% { opacity: 0; }
+                100% { transform: translateY(-150px); opacity: 0; }
+              }
+            `}
+            </style>
+          </Box>
+
           {/* Theme Toggle */}
           <Tooltip title={themeMode === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}>
             <IconButton
