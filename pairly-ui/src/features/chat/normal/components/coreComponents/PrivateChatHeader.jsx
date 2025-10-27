@@ -24,6 +24,7 @@ import {
   CloseIcon,
   defaultAvatar,
   ArrowBackIcon,
+  MusicNoteIcon
 } from '@/MUI/MuiIcons';
 import SelfImprovementIcon from '@mui/icons-material/SelfImprovement';
 
@@ -37,11 +38,12 @@ import ProposeToPartnerModel from '../supportComponents/ProposeToPartnerModel';
 import ReportUserModal from '../supportComponents/ReportUserModal';
 import BlockUserModal from '../supportComponents/BlockUsermodal'
 import formatMessageTime from '@/utils/formatMessageTime';
+import ActionConfirm from '@/components/private/actionConfirmation/ActionConfirm';
 import SilentFeelModeModel from '../supportComponents/SilentFeelModeModal';
+import HearTogherModel from '../supportComponents/HearTogetherModel';
 
 import { updateSettingsNotification } from '@/redux/slices/settings/settingsAction';
 import { useDispatch, useSelector } from 'react-redux'
-import ActionConfirm from '@/components/private/actionConfirmation/ActionConfirm';
 
 function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat }) {
   const theme = useTheme();
@@ -57,6 +59,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
   const [anchorEl, setAnchorEl] = useState(null);
   const [openProfileModal, setOpenProfileModal] = useState(false);
   const [openSlientFeelModeModal, setOpenSlientFeelModeModal] = useState(false);
+  const [openHearTogetherModal, setOpenHearTogetherModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openClearModal, setOpenClearModal] = useState(false);
 
@@ -143,6 +146,11 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
     setOpenSlientFeelModeModal(true)
   };
 
+  /** Handle handleSilentFeelMode */
+  const handleHearTogether = () => {
+    setOpenHearTogetherModal(true);
+  };
+
   /**
    * Common menu item styling
    */
@@ -188,6 +196,10 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
 
       case 'inviteToSilentFeelMode':
         handleSilentFeelMode();
+        break;
+
+      case 'inviteToHearTogether':
+        handleHearTogether();
         break;
 
       case 'closeChat':
@@ -362,14 +374,19 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
 
             {[
               {
-                icon: <FavoriteIcon fontSize="small" sx={{ mr: 1, color: 'secondary.main' }} />,
+                icon: <FavoriteIcon fontSize='small' sx={{ mr: 1, color: 'error.main' }} />,
                 label: 'Create Proposal',
                 onClick: () => handleAction('proposeToPartner'),
               },
               {
                 label: 'Silent Feel Mode',
-                icon: <SelfImprovementIcon sx={{ mr: 1, color: theme.palette.primary.main }} />,
+                icon: <SelfImprovementIcon fontSize='small' sx={{ mr: 1, color: theme.palette.primary.main }} />,
                 onClick: () => handleAction('inviteToSilentFeelMode'),
+              },
+              {
+                label: 'Hear Together',
+                icon: <MusicNoteIcon fontSize='small' sx={{ mr: 1, color: theme.palette.info.main }} />,
+                onClick: () => handleAction('inviteToHearTogether'),
               }
             ].map((item, index) => (
               <MenuItem key={index} onClick={item.onClick} sx={menuItemStyle}>
@@ -445,6 +462,13 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
       <SilentFeelModeModel
         open={openSlientFeelModeModal}
         onClose={() => setOpenSlientFeelModeModal(false)}
+        partner={partnerProfile}
+        partnerId={userId}
+      />
+
+      <HearTogherModel
+        open={openHearTogetherModal}
+        onClose={() => setOpenHearTogetherModal(false)}
         partner={partnerProfile}
         partnerId={userId}
       />
