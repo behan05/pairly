@@ -39,8 +39,8 @@ import ReportUserModal from '../supportComponents/ReportUserModal';
 import BlockUserModal from '../supportComponents/BlockUsermodal'
 import formatMessageTime from '@/utils/formatMessageTime';
 import ActionConfirm from '@/components/private/actionConfirmation/ActionConfirm';
-import SilentFeelModeModel from '../../../common/SilentFeelModeModal';
-import HearTogherModel from '../../../common/HearTogetherModel';
+import SilentFeelModeModel from '../supportComponents/SilentFeelModeModal';
+import HearTogherModel from '../supportComponents/HearTogetherModel';
 
 import { updateSettingsNotification } from '@/redux/slices/settings/settingsAction';
 import { useDispatch, useSelector } from 'react-redux'

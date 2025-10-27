@@ -32,6 +32,7 @@ import {
 } from '@/MUI/MuiIcons';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import TheaterComedyIcon from '@mui/icons-material/TheaterComedy';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CheckIcon from '@mui/icons-material/Check';
 
@@ -103,6 +104,11 @@ const ChatSidebarHeader = ({ children }) => {
       ),
       label: 'Private Chat'
     },
+    // {
+    //   path: '/pairly/virtual-comedy-hall',
+    //   icon: <TheaterComedyIcon  sx={{ color: theme.palette.secondary.main }} />,
+    //   label: 'Virtual Comedy Hall'
+    // },
     {
       path: '/pairly/friend-requests',
       icon: (
@@ -175,7 +181,7 @@ const ChatSidebarHeader = ({ children }) => {
 
   const handleChange = (e) => {
     console.log(e);
-    
+
     const { value } = e.target.value;
 
     if (value.trim() !== 0) {
@@ -276,7 +282,7 @@ const ChatSidebarHeader = ({ children }) => {
                     sx: {
                       fontSize: 24,
                       transition: 'color 0.3s ease',
-                      color: theme.palette.text.primary,
+                      ...(icon.props.sx || {}),
                       '&:hover': { color: theme.palette.primary.main },
                     },
                   })}

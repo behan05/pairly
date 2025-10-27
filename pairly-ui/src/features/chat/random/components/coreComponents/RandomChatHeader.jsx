@@ -34,8 +34,6 @@ import BlockUserModal from '../supportComponents/BlockUserModal';
 import ReportUserModal from '../supportComponents/ReportUserModal';
 import PrivateChatRequestPopupModal from '../supportComponents/PrivateChatRequestPopupModal';
 import { updateSettingsNotification } from '@/redux/slices/settings/settingsAction';
-import SilentFeelModeModel from '../../../common/SilentFeelModeModal';
-import HearTogherModel from '../../../common/HearTogetherModel';
 
 // Redux
 import { useDispatch, useSelector } from 'react-redux'
@@ -69,8 +67,6 @@ function RandomChatHeader() {
   const [openBlockDialog, setOpenBlockDialog] = useState(false);
   const [openReportDialog, setOpenReportDialog] = useState(false);
   const [openProfileModal, setOpenProfileModal] = useState(false);
-  const [openHearTogetherModal, setOpenHearTogetherModal] = useState(false);
-  const [openSlientFeelModeModal, setOpenSlientFeelModeModal] = useState(false);
   const [isFriendRequestSend, setIsFriendRequestSend] = useState(false);
   const [anchorEl, setAnchorEl] = useState(false);
   const open = Boolean(anchorEl);
@@ -146,17 +142,7 @@ function RandomChatHeader() {
     } catch (_) {
     }
   };
-
-  /** Handle handleSilentFeelMode */
-  const handleSilentFeelMode = () => {
-    setOpenSlientFeelModeModal(true)
-  };
-
-  /** Handle HearTogetherModal */
-  const handleHearTogether = () => {
-    setOpenHearTogetherModal(true);
-  };
-
+  
   /**
    * Handles action selection from menu
    * @param {'block'|'report'|'copy'|'mute'} action
@@ -175,14 +161,6 @@ function RandomChatHeader() {
 
       case 'reportPartner':
         handleReportPartner();
-        break;
-
-      case 'inviteToSilentFeelMode':
-        handleSilentFeelMode();
-        break;
-
-      case 'inviteToHearTogether':
-        handleHearTogether();
         break;
 
       case 'requestForPrivateChat':
@@ -346,25 +324,6 @@ function RandomChatHeader() {
 
             <Divider />
 
-            {/* Connection Features */}
-            <MenuItem onClick={() => handleAction('inviteToSilentFeelMode')} sx={menuItemStyle}>
-              <SelfImprovementIcon
-                fontSize="small"
-                sx={{ mr: 1, color: theme.palette.primary.main }}
-              />
-              Silent Feel Mode
-            </MenuItem>
-
-            <MenuItem onClick={() => handleAction('inviteToHearTogether')} sx={menuItemStyle}>
-              <MusicNoteIcon
-                fontSize="small"
-                sx={{ mr: 1, color: theme.palette.info.main }}
-              />
-              Hear Together
-            </MenuItem>
-
-            <Divider />
-
             {/* Utilities */}
             <MenuItem onClick={() => handleAction('copyPartnerId')} sx={menuItemStyle}>
               <ContentCopyIcon fontSize="small" sx={{ mr: 1, color: 'success.main' }} />
@@ -403,20 +362,6 @@ function RandomChatHeader() {
       <ReportUserModal
         open={openReportDialog}
         onClose={() => setOpenReportDialog(false)}
-        partner={partnerProfile}
-        partnerId={partnerId}
-      />
-
-      <SilentFeelModeModel
-        open={openSlientFeelModeModal}
-        onClose={() => setOpenSlientFeelModeModal(false)}
-        partner={partnerProfile}
-        partnerId={partnerId}
-      />
-
-      <HearTogherModel
-        open={openHearTogetherModal}
-        onClose={() => setOpenHearTogetherModal(false)}
         partner={partnerProfile}
         partnerId={partnerId}
       />

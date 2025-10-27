@@ -1,18 +1,11 @@
 import { useState } from 'react';
 import { Modal, Box, Typography, Button, Stack, useTheme, CircularProgress } from '@/MUI/MuiComponents';
-import { useSelector } from 'react-redux';
-// import PremiumFeatureModel from '@/components/private/premium/PremiumFeatureModal';
 import { socket } from '@/services/socket';
 
 function HearTogherModel({ open, onClose, partner, partnerId }) {
     const theme = useTheme();
     const [isSending, setIsSending] = useState(false);
     const [isSent, setIsSent] = useState(false);
-
-    // const [modalOpen, setModalOpen] = useState(false);
-    // const [premiumFeatureName, setPremiumFeatureName] = useState('');
-    // const { plan, status } = useSelector((state) => state?.auth?.user?.subscription);
-    // const isFreeUser = status === 'active' && plan === 'free';
 
     const handleClose = () => {
         setIsSending(false);
@@ -21,11 +14,6 @@ function HearTogherModel({ open, onClose, partner, partnerId }) {
     };
 
     const handleSendRequest = () => {
-        // if (isFreeUser) {
-        //     setPremiumFeatureName('Hear Togher');
-        //     setModalOpen(true);
-        //     return;
-        // }
         setIsSending(true);
 
         // socket event 
@@ -162,12 +150,6 @@ function HearTogherModel({ open, onClose, partner, partnerId }) {
                     </>
                 )}
             </Box>
-
-            {/* <PremiumFeatureModel
-                open={modalOpen}
-                onClose={() => setModalOpen(false)}
-                featureName={premiumFeatureName}
-            /> */}
         </Modal>
     );
 }

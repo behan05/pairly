@@ -60,6 +60,7 @@ import Premium from '../components/private/premium/Premium';
 import Alerts from '../features/chat/common/Alerts';
 import SubscriptionManager from '../components/private/SubscriptionManager/SubscriptionManager';
 import NextGenerationChat from '../components/common/NextGenerationChat';
+import VirtualComedyHall from '../features/virtual_comedy_hall/VirtualComedyHall';
 
 export const routes = createBrowserRouter([
   // === Public routes ===
@@ -100,6 +101,8 @@ export const routes = createBrowserRouter([
           { index: true, element: <RandomSidebar /> },
           { path: 'friend-requests', element: <FriendRequestList /> },
           { path: 'alerts', element: <Alerts /> },
+          { path: 'virtual-comedy-hall', element: <VirtualComedyHall /> },
+          { path: 'terms-of-use', element: <TermsOfUsePage /> },
 
           // Settings
           {
