@@ -1,4 +1,4 @@
-import { Typography, Container } from '@/MUI/MuiComponents';
+import { Box, Typography, Container } from '@mui/material';
 
 function NextGenerationChat() {
   return (
@@ -23,33 +23,83 @@ function NextGenerationChat() {
         color="text.secondary"
         sx={{ mb: 5 }}
       >
-        A smarter, more meaningful way to connect — powered by AI, designed for real people.
+        The future of connection — emotional, intelligent, and real.
       </Typography>
 
-      <Typography variant="body1" paragraph sx={{ mb: 3, lineHeight: 1.8 }}>
-        The internet has countless chat apps. But most are noisy, impersonal, or focused only on
-        messages — not meaning. <strong>Pairly.chat</strong> redefines what chat can be. It's built
-        around <strong>real connections</strong>, not just random conversations.
+      <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
+        In a world filled with ordinary chat apps, <strong>Pairly.chat</strong> stands for something
+        deeper. We believe conversations should not just connect people — they should
+        <strong> understand</strong> them. Our <strong>Next-Generation Chat</strong> is built on
+        emotional intelligence, privacy, and genuine human warmth.
       </Typography>
 
-      <Typography variant="body1" paragraph sx={{ mb: 3, lineHeight: 1.8 }}>
-        Our <strong>Next-Generation Chat</strong> experience combines AI-powered pairing, private
-        and secure messaging, emotion-aware proposals, and a personalized interaction layer that
-        helps you find exactly the type of connection you want — whether friendship, love, or fun.
+      <Typography variant="h5" fontWeight={600} sx={{ mt: 5, mb: 2 }}>
+        💫 Emotionally Intelligent Random Chat
+      </Typography>
+      <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
+        Forget the old idea of random chat. Pairly.chat introduces an
+        <strong> emotionally intelligent matching experience</strong> that helps you connect with
+        people who share your current mood or vibe.
+      </Typography>
+      <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
+        Choose from spaces like <strong>“Chill Vibe”</strong> for relaxed talks,
+        <strong> “Deep Talk”</strong> for meaningful conversations,
+        <strong> “Just Laugh”</strong> for lighthearted fun — and more. Each space is designed to
+        make you feel safe, heard, and emotionally in sync with your chat partner.
       </Typography>
 
-      <Typography variant="body1" paragraph sx={{ mb: 3, lineHeight: 1.8 }}>
-        Every chat session is backed by <strong>intelligent matchmaking</strong> that adapts to your
-        preferences and mood. You can chat instantly with a random person, or use your unique Pairly
-        ID to connect privately with someone special. Unlike typical apps, Pairly.chat focuses on
-        <strong> emotional context, comfort, and safety</strong>.
+      <Typography variant="h5" fontWeight={600} sx={{ mt: 5, mb: 2 }}>
+        🔒 Private Chat with Real Connections
+      </Typography>
+      <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
+        Sometimes you meet someone special. With Pairly’s <strong>Private Chat</strong>, you can
+        bypass the randomness and connect directly using a unique <strong>User ID</strong>. This
+        lets you keep the intimacy of your connection while enjoying the comfort and privacy you
+        deserve.
       </Typography>
 
-      <Typography variant="body1" paragraph sx={{ mb: 3, lineHeight: 1.8 }}>
-        With features like <strong>AI personality filters</strong>, <strong>proposal modes</strong>,
-        and <strong>smart moderation</strong>, it creates an environment where conversations feel
-        authentic — not forced. It’s more than messaging — it’s about helping people
-        <strong> discover genuine bonds</strong> in a digital world.
+      <Typography variant="h5" fontWeight={600} sx={{ mt: 5, mb: 2 }}>
+        💍 Proposals: Express What You Feel
+      </Typography>
+      <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
+        Love. Fun. Long-distance bonding. Marriage. Friendship. Pairly.chat lets you create and send
+        <strong> personalized proposals</strong> that fit your emotions and intentions. Whether
+        you’re expressing affection, planning a virtual date, or just sending a kind gesture — every
+        proposal becomes a moment of connection.
+      </Typography>
+
+      <Typography variant="h5" fontWeight={600} sx={{ mt: 5, mb: 2 }}>
+        🌙 Silent Feel Mode — Together, Quietly
+      </Typography>
+      <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
+        Not every connection needs constant words. With <strong>Silent Feel Mode</strong>, you can
+        stay connected with your partner even in silence — sharing presence without pressure.
+        Sometimes, the strongest bond is simply <i>being there</i>.
+      </Typography>
+
+      <Typography variant="h5" fontWeight={600} sx={{ mt: 5, mb: 2 }}>
+        🎤 Virtual Stand-Up Comedy Spaces
+      </Typography>
+      <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
+        One of Pairly.chat’s most delightful innovations is the
+        <strong> Virtual Stand-Up Comedy Zone</strong> — a digital stage where real users perform
+        live, but instead of showing their real faces, they appear as animated avatars or cartoon
+        characters.
+      </Typography>
+      <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
+        It’s perfect for people who are shy or anxious about public speaking. Here, laughter brings
+        people together — safely, playfully, and creatively. Real audience, real reactions,
+        <strong> real joy</strong> — just with a touch of virtual magic.
+      </Typography>
+
+      <Typography variant="h5" fontWeight={600} sx={{ mt: 5, mb: 2 }}>
+        💡 Why It Matters
+      </Typography>
+      <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
+        Pairly.chat redefines what online connection feels like. We’re combining
+        <strong> AI intelligence</strong>, <strong> emotional design</strong>, and
+        <strong> human understanding</strong> to create a digital space that feels alive.
+        It’s not just chatting — it’s <strong>feeling connected</strong>.
       </Typography>
 
       <Typography
@@ -57,10 +107,19 @@ function NextGenerationChat() {
         textAlign="center"
         fontWeight={600}
         color="primary"
-        sx={{ mt: 5 }}
+        sx={{ mt: 6, mb: 2 }}
       >
-        Pairly.chat isn’t just another chat app.<br />
-        It’s the next generation of human connection.
+        Pairly.chat is not another chat app —<br />
+        It’s a new chapter in human connection.
+      </Typography>
+
+      <Typography
+        variant="body2"
+        textAlign="center"
+        color="text.secondary"
+        sx={{ fontStyle: 'italic' }}
+      >
+        Built with love. Driven by emotion. Designed for everyone.
       </Typography>
     </Container>
   );
