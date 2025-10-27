@@ -1,11 +1,18 @@
 import { useState } from 'react';
 import { Modal, Box, Typography, Button, Stack, useTheme, CircularProgress } from '@/MUI/MuiComponents';
+import { useSelector } from 'react-redux';
+import PremiumFeatureModel from '@/components/private/premium/PremiumFeatureModal';
 import { socket } from '@/services/socket';
 
 function SilentFeelModeModel({ open, onClose, partner, partnerId }) {
   const theme = useTheme();
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [premiumFeatureName, setPremiumFeatureName] = useState('');
+  const { plan, status } = useSelector((state) => state?.auth?.user?.subscription || {});
+  const isFreeUser = status === 'active' && plan === 'free';
 
   const handleClose = () => {
     setIsSending(false);
@@ -14,6 +21,11 @@ function SilentFeelModeModel({ open, onClose, partner, partnerId }) {
   };
 
   const handleSendRequest = () => {
+    if (isFreeUser) {
+      setPremiumFeatureName('Silent Feel Mode');
+      setModalOpen(true);
+      return;
+    }
     setIsSending(true);
 
     // socket event 
@@ -71,7 +83,7 @@ function SilentFeelModeModel({ open, onClose, partner, partnerId }) {
             >
               In <strong>Silent Feel Mode</strong>, you and{' '}
               <strong>{partner?.fullName || 'your partner'}</strong> can stay
-              connected quietly — no messages, just presence and peace. 🌙  
+              connected quietly — no messages, just presence and peace. 🌙
               <br />
               We’ll send a request to your partner for confirmation.
             </Typography>
@@ -145,6 +157,12 @@ function SilentFeelModeModel({ open, onClose, partner, partnerId }) {
             </Button>
           </>
         )}
+
+        <PremiumFeatureModel
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          featureName={premiumFeatureName}
+        />
       </Box>
     </Modal>
   );

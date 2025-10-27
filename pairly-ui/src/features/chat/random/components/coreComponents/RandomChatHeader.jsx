@@ -19,9 +19,11 @@ import {
   ContentCopyIcon,
   NotificationsOffIcon,
   defaultAvatar,
-  CheckCircleIcon
+  CheckCircleIcon,
+  MusicNoteIcon
 } from '@/MUI/MuiIcons';
 import { blue } from "@mui/material/colors";
+import SelfImprovementIcon from '@mui/icons-material/SelfImprovement';
 
 // Components
 import TypingIndicator from '@/components/private/randomChat/TypingIndicator';
@@ -32,6 +34,8 @@ import BlockUserModal from '../supportComponents/BlockUserModal';
 import ReportUserModal from '../supportComponents/ReportUserModal';
 import PrivateChatRequestPopupModal from '../supportComponents/PrivateChatRequestPopupModal';
 import { updateSettingsNotification } from '@/redux/slices/settings/settingsAction';
+import SilentFeelModeModel from '../../../common/SilentFeelModeModal';
+import HearTogherModel from '../../../common/HearTogetherModel';
 
 // Redux
 import { useDispatch, useSelector } from 'react-redux'
@@ -42,6 +46,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 // socket instance
 import { socket } from '@/services/socket';
+import { Divider } from '@mui/material';
 /**
  * RandomChatHeader component
  *
@@ -64,6 +69,8 @@ function RandomChatHeader() {
   const [openBlockDialog, setOpenBlockDialog] = useState(false);
   const [openReportDialog, setOpenReportDialog] = useState(false);
   const [openProfileModal, setOpenProfileModal] = useState(false);
+  const [openHearTogetherModal, setOpenHearTogetherModal] = useState(false);
+  const [openSlientFeelModeModal, setOpenSlientFeelModeModal] = useState(false);
   const [isFriendRequestSend, setIsFriendRequestSend] = useState(false);
   const [anchorEl, setAnchorEl] = useState(false);
   const open = Boolean(anchorEl);
@@ -140,6 +147,16 @@ function RandomChatHeader() {
     }
   };
 
+  /** Handle handleSilentFeelMode */
+  const handleSilentFeelMode = () => {
+    setOpenSlientFeelModeModal(true)
+  };
+
+  /** Handle HearTogetherModal */
+  const handleHearTogether = () => {
+    setOpenHearTogetherModal(true);
+  };
+
   /**
    * Handles action selection from menu
    * @param {'block'|'report'|'copy'|'mute'} action
@@ -158,6 +175,14 @@ function RandomChatHeader() {
 
       case 'reportPartner':
         handleReportPartner();
+        break;
+
+      case 'inviteToSilentFeelMode':
+        handleSilentFeelMode();
+        break;
+
+      case 'inviteToHearTogether':
+        handleHearTogether();
         break;
 
       case 'requestForPrivateChat':
@@ -286,9 +311,9 @@ function RandomChatHeader() {
             PaperProps={{
               sx: {
                 background: `linear-gradient(130deg,
-             ${theme.palette.primary.dark} 0%, 
-            ${theme.palette.background.paper} 30%,
-             ${theme.palette.background.paper} 100%)`,
+        ${theme.palette.primary.dark} 0%, 
+        ${theme.palette.background.paper} 30%,
+        ${theme.palette.background.paper} 100%)`,
                 boxShadow: theme.shadows[6],
                 borderRadius: 1,
                 minWidth: 200,
@@ -299,27 +324,65 @@ function RandomChatHeader() {
               }
             }}
           >
+            {/* User Management */}
             <MenuItem onClick={() => handleAction('blockPartner')} sx={menuItemStyle}>
               <BlockIcon fontSize="small" sx={{ mr: 1, color: 'error.main' }} />
               Block User
             </MenuItem>
+
             <MenuItem onClick={() => handleAction('reportPartner')} sx={menuItemStyle}>
               <ReportIcon fontSize="small" sx={{ mr: 1, color: 'warning.main' }} />
               Report
             </MenuItem>
-            <MenuItem disabled={isFriendRequestSend} onClick={() => handleAction('requestForPrivateChat')} sx={menuItemStyle}>
+
+            <MenuItem
+              disabled={isFriendRequestSend}
+              onClick={() => handleAction('requestForPrivateChat')}
+              sx={menuItemStyle}
+            >
               <HandshakeIcon fontSize="small" sx={{ mr: 1, color: 'info.main' }} />
               {isFriendRequestSend ? 'Request Sent' : 'Add Friend'}
             </MenuItem>
+
+            <Divider />
+
+            {/* Connection Features */}
+            <MenuItem onClick={() => handleAction('inviteToSilentFeelMode')} sx={menuItemStyle}>
+              <SelfImprovementIcon
+                fontSize="small"
+                sx={{ mr: 1, color: theme.palette.primary.main }}
+              />
+              Silent Feel Mode
+            </MenuItem>
+
+            <MenuItem onClick={() => handleAction('inviteToHearTogether')} sx={menuItemStyle}>
+              <MusicNoteIcon
+                fontSize="small"
+                sx={{ mr: 1, color: theme.palette.info.main }}
+              />
+              Hear Together
+            </MenuItem>
+
+            <Divider />
+
+            {/* Utilities */}
             <MenuItem onClick={() => handleAction('copyPartnerId')} sx={menuItemStyle}>
               <ContentCopyIcon fontSize="small" sx={{ mr: 1, color: 'success.main' }} />
               Copy Partner ID
             </MenuItem>
+
             <MenuItem onClick={() => handleAction('muteNotification')} sx={menuItemStyle}>
-              <NotificationsOffIcon fontSize="small" sx={{ mr: 1, color: notification ? 'warning.main' : 'text.disabled' }} />
+              <NotificationsOffIcon
+                fontSize="small"
+                sx={{
+                  mr: 1,
+                  color: notification ? 'warning.main' : 'text.disabled'
+                }}
+              />
               {notification ? 'Mute Notifications' : 'Notifications Muted'}
             </MenuItem>
           </Menu>
+
         </Stack>
       </Stack>
 
@@ -340,6 +403,20 @@ function RandomChatHeader() {
       <ReportUserModal
         open={openReportDialog}
         onClose={() => setOpenReportDialog(false)}
+        partner={partnerProfile}
+        partnerId={partnerId}
+      />
+
+      <SilentFeelModeModel
+        open={openSlientFeelModeModal}
+        onClose={() => setOpenSlientFeelModeModal(false)}
+        partner={partnerProfile}
+        partnerId={partnerId}
+      />
+
+      <HearTogherModel
+        open={openHearTogetherModal}
+        onClose={() => setOpenHearTogetherModal(false)}
         partner={partnerProfile}
         partnerId={partnerId}
       />
