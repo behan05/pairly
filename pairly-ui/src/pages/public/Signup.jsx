@@ -184,7 +184,7 @@ function Signup() {
         flexDirection: { xs: 'column', md: 'row' },
         flexGrow: 1,
         gap: 2,
-        py: isLg ? theme.spacing(3) : theme.spacing(10)
+        pt: isLg ? theme.spacing(3) : theme.spacing(10)
       }}
     >
       {!isLg && (
@@ -211,7 +211,10 @@ function Signup() {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          flex: 1
+          flex: 1,
+          boxShadow: `inset 0 0 20px ${theme.palette.divider}`,
+          borderRadius: 0.5,
+          py: 1
         }}
       >
         <Box
@@ -321,10 +324,38 @@ function Signup() {
           </Stack>
 
           <FormControlLabel
-            name={'check box'}
-            autoComplete="on"
+            name="check_box"
+            required
             control={<Checkbox />}
-            label="Remember me"
+            sx={{
+              'a': {
+                color: 'info.main'
+              },
+              'a:hover': {
+                textDecoration: 'underline',
+              }
+            }}
+            label={
+              <span style={{ fontSize: '0.785rem' }}>
+                I agree to the{' '}
+                <Link
+                  to="/privacy-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Privacy Policy
+                </Link>
+                {' '}and{' '}
+                <Link
+                  to="/terms-of-use"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  underline="hover"
+                >
+                  Terms & Conditions
+                </Link>
+              </span>
+            }
           />
 
           {/* Submit Button */}

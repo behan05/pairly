@@ -40,7 +40,7 @@ const iconMap = {
 import HowItWorks from '@/components/public/HowItWorks';
 import WhyChooseUs from '@/components/public/WhyChooseUs';
 import FAQ from '@/components/public/FAQ';
-import ReusableVideo from '@/components/public/ReusableVideo';
+import { Link } from 'react-router-dom';
 
 function Home() {
   React.useEffect(() => {
@@ -115,9 +115,26 @@ function Home() {
       title2: 'Global or Nearby'
     }
   ];
+
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.down('md'));
   const isLg = useMediaQuery(theme.breakpoints.down('lg'));
+
+  const coreFeature = [
+    'Emotionally intelligent random chat modes like Chill Vibe, Deep Talk, Just Laugh, and more',
+    'Private chat with partner or known users via unique user ID search (bypass random match)',
+    'Custom proposal system for love, marriage, fun, or long-distance relationship invitations',
+    'Silent Feel Mode — stay connected quietly with your partner, no words needed, just presence',
+    'Virtual Stand-Up Comedy stage with animated avatars for users who are shy to perform live',
+    'Emotion-based AI chat suggestions for deeper, more human-like conversations',
+    'User mood detection and adaptive conversation topics for better emotional syncing',
+    'Seamless match and re-connect system that blends fun with genuine bonding',
+    'Secure, private chat environment with optional anonymity in random modes',
+    'Community-driven event rooms for laughter, romance, and shared experiences',
+    'Modern, minimal design with focus on emotional comfort and authentic connection',
+    'AI-enhanced moderation and context-aware safety tools',
+    'Multi-purpose use — casual chat, dating, friendship, entertainment, and expression'
+  ];
 
   return (
     <React.Fragment>
@@ -125,7 +142,6 @@ function Home() {
       <Box
         sx={{
           display: 'flex',
-          flexDirection: isLg ? 'column' : 'row',
           gap: 4,
           flexGrow: 1,
           py: isMd ? 4 : 8,
@@ -133,7 +149,7 @@ function Home() {
         }}
       >
         {/* Left Side – Text */}
-        <Stack flex={1} justifyContent="center" spacing={3}>
+        <Stack justifyContent="center" spacing={3}>
           {/* Headline */}
           <Typography
             variant={isMd ? 'h3' : 'h2'}
@@ -141,7 +157,63 @@ function Home() {
             sx={{ color: 'text.primary', lineHeight: 1.2 }}
           >
             Say What You Feel.{' '}
-            {<StyledText text={'Pair Instantly.'} />}
+          </Typography>
+
+          {/* Hook line (Tags) */}
+          <Typography
+            variant="subtitle2"
+            sx={{
+              px: 2.5,
+              pt: 1.5,
+              pb: 1,
+              fontSize: isMd ? '0.70rem' : '0.85rem',
+              width: 'fit-content',
+              mt: 1,
+              mx: 'auto',
+              color: theme.palette.text.secondary,
+              borderRadius: '12px',
+              background:
+                theme.palette.mode === 'dark'
+                  ? 'linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.08))'
+                  : 'linear-gradient(90deg, rgba(0,0,0,0.03), rgba(0,0,0,0.05))',
+              boxShadow:
+                theme.palette.mode === 'dark'
+                  ? 'inset 0 0 10px rgba(255,255,255,0.04)'
+                  : 'inset 0 0 8px rgba(0,0,0,0.05)',
+              backdropFilter: 'blur(8px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+              textAlign: 'center',
+              gap: 0.5,
+              transition: 'all 0.3s ease',
+
+              '& a': {
+                color: theme.palette.primary.main,
+                textDecoration: 'none',
+                fontStyle: 'italic',
+                fontWeight: 600,
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  color: theme.palette.primary.dark,
+                  textDecoration: 'underline',
+                },
+              },
+
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow:
+                  theme.palette.mode === 'dark'
+                    ? 'inset 0 0 10px rgba(255,255,255,0.08), 0 2px 6px rgba(0,0,0,0.4)'
+                    : 'inset 0 0 8px rgba(0,0,0,0.05), 0 2px 6px rgba(0,0,0,0.08)',
+              },
+            }}
+          >
+            Welcome to{' '}
+            <Link to="nextGenerationChat">
+              next generation chat
+            </Link>
           </Typography>
 
           {/* Short Description */}
@@ -200,10 +272,6 @@ function Home() {
           <Tagline />
         </Stack>
 
-        {/* Right Side – Video */}
-        <Box flex={1} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <ReusableVideo />
-        </Box>
       </Box>
 
       {/* ===  How It Works Section === */}

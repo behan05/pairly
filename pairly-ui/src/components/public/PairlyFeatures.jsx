@@ -1,106 +1,175 @@
-import { Box, Grid, useTheme } from '@/MUI/MuiComponents';
+import { Box, Grid, Typography, useTheme, useMediaQuery, Stack, Fade } from '@/MUI/MuiComponents';
 import PairlyFeaturesCard from './PairlyFeaturesCard';
 
-// Steps data for How It Works section
 const pairlyFeatures = [
   {
     label: '01',
     title: 'Smart ',
     highlightText: 'Matching',
     description:
-      'Our intelligent algorithm connects you with like-minded individuals based on your interests, preferences, and location.',
+      'Instantly connect with genuine people through intelligent random pairing — powered by AI to match interests, language, and behavior.',
     icon1: 'Psychology',
-    title1: 'Intelligent Algorithm',
+    title1: 'AI Match Engine',
     icon2: 'Tune',
-    title2: 'Personalized Filters'
+    title2: 'Smart Filters',
   },
   {
     label: '02',
-    title: 'Interactive ',
-    highlightText: 'Profiles',
+    title: 'Private ',
+    highlightText: 'Chat System',
     description:
-      'Get to know people before starting a chat. Explore detailed profiles, mutual interests, and compatibility tags.',
-    icon1: 'AccountBox',
-    title1: 'Explore Profiles',
-    icon2: 'Interests',
-    title2: 'Discover Mutual Interests'
+      'After connecting, users can send friend requests, and once accepted, they get access to secure, unlimited one-to-one chats.',
+    icon1: 'Chat',
+    title1: 'Secure Private Messaging',
+    icon2: 'Lock',
+    title2: 'End-to-End Encryption',
   },
   {
     label: '03',
-    title: 'Real-Time ',
-    highlightText: 'Messaging',
+    title: 'Proposal ',
+    highlightText: 'System',
     description:
-      'Send and receive messages while on a video call or offline. Keep the conversation alive beyond the call.',
-    icon1: 'Chat',
-    title1: 'In-Call Chat',
-    icon2: 'Sms',
-    title2: 'Offline Messaging'
+      'Go beyond chatting — send special proposals like friendship, love, marriage, or fun directly within private chat.',
+    icon1: 'Favorite',
+    title1: 'Proposal Types',
+    icon2: 'Diversity2',
+    title2: 'Relationship Modes',
   },
   {
     label: '04',
-    title: 'Privacy & ',
-    highlightText: 'Safety',
+    title: 'Silent ',
+    highlightText: 'Feel Mode',
     description:
-      'Your safety matters. Manage who connects with you, report issues, and enjoy end-to-end encrypted video calls.',
-    icon1: 'Shield',
-    title1: 'End-to-End Encryption',
-    icon2: 'ReportProblem',
-    title2: 'Report & Block'
+      'A deep emotional mode where users can silently express feelings using gestures, emojis, or music without typing or speaking.',
+    icon1: 'SelfImprovement',
+    title1: 'Emotion-Based Chat',
+    icon2: 'MusicNote',
+    title2: 'Mood Sync System',
   },
   {
     label: '05',
-    title: 'Customizable ',
-    highlightText: 'Profiles',
+    title: 'Stand-Up ',
+    highlightText: 'Comedian Mode',
     description:
-      'Make your profile truly yours. Add a bio, interests, and photos to express yourself and attract genuine connections.',
-    icon1: 'Person',
-    title1: 'Add Photos & Bio',
-    icon2: 'Brush',
-    title2: 'Personalize Profile'
+      'A unique entertainment zone where users can perform, join, or enjoy live comic interactions with others in real time.',
+    icon1: 'MicExternalOn',
+    title1: 'Live Comic Shows',
+    icon2: 'TheaterComedy',
+    title2: 'Audience Chat Rooms',
   },
   {
     label: '06',
-    title: 'Filter by ',
-    highlightText: 'Preferences',
+    title: 'Profile ',
+    highlightText: 'Search',
     description:
-      'Easily filter who you want to connect with by age, location, language, gender, and interests for a better experience.',
-    icon1: 'FilterAlt',
-    title1: 'Smart Filters',
-    icon2: 'TravelExplore',
-    title2: 'Global or Nearby'
-  }
+      'Connect directly using a unique Pairly ID — skip the random queue and chat privately with someone you already know.',
+    icon1: 'PersonSearch',
+    title1: 'Unique Pairly ID',
+    icon2: 'QrCode2',
+    title2: 'Direct Connect',
+  },
+  {
+    label: '07',
+    title: 'AI ',
+    highlightText: 'Personalities',
+    description:
+      'Choose or chat with AI companions who adapt to your emotions — from fun and flirty to deep and supportive modes.',
+    icon1: 'SmartToy',
+    title1: 'Dynamic AI Avatars',
+    icon2: 'PsychologyAlt',
+    title2: 'Adaptive Conversations',
+  },
+  {
+    label: '08',
+    title: 'Next-Generation ',
+    highlightText: 'Chat Engine',
+    description:
+      'Built for smooth real-time interactions with adaptive typing indicators, instant media sharing, and mood-based themes.',
+    icon1: 'FlashOn',
+    title1: 'Real-Time Engine',
+    icon2: 'Palette',
+    title2: 'Dynamic UI Themes',
+  },
+  {
+    label: '09',
+    title: 'Privacy & ',
+    highlightText: 'Safety',
+    description:
+      'Pairly ensures user trust with advanced security layers, report tools, and active moderation for a safe environment.',
+    icon1: 'Shield',
+    title1: 'Report & Block',
+    icon2: 'Security',
+    title2: 'Active Moderation',
+  },
+  {
+    label: '10',
+    title: 'Premium ',
+    highlightText: 'Plans',
+    description:
+      'Upgrade to premium or pro plans to enjoy unlimited chats, priority matching, and exclusive AI-driven features.',
+    icon1: 'WorkspacePremium',
+    title1: 'Premium Access',
+    icon2: 'Stars',
+    title2: 'Unlimited Chat Experience',
+  },
 ];
+
 
 function PairlyFeatures() {
   const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Grid container justifyContent="center">
-      <Box
-        display="flex"
-        flexWrap="wrap"
+    <Box
+      sx={{
+        px: { xs: 2, md: 8 },
+        background: 'transparent',
+      }}
+    >
+
+      {/* Features Grid */}
+      <Grid
+        container
+        spacing={4}
         justifyContent="center"
-        gap={4}
-        p={theme.spacing(2)}
-        my={2}
-        sx={{ borderRadius: 1 }}
+        sx={{
+          backdropFilter: 'blur(10px)',
+          transition: 'all 0.3s ease-in-out',
+        }}
       >
         {pairlyFeatures.map((card, i) => (
-          <Box key={i}>
-            <PairlyFeaturesCard
-              label={card.label}
-              title={card.title}
-              highlightText={card.highlightText}
-              description={card.description}
-              icon1={card.icon1}
-              title1={card.title1}
-              icon2={card.icon2}
-              title2={card.title2}
-            />
-          </Box>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={4}
+            key={i}
+          >
+            <Fade in timeout={500 + i * 150}>
+              <Box
+                sx={{
+                  borderRadius: 3,
+                  p: 3,
+                  background: 'rgba(255,255,255,0.05)',
+                  border: `1px solid rgba(255,255,255,0.08)`,
+                  backdropFilter: 'blur(16px)',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+                  transition: 'all 0.35s ease',
+                  '&:hover': {
+                    transform: 'translateY(-8px) scale(1.02)',
+                    boxShadow: '0 8px 25px rgba(0,114,255,0.25)',
+                    background: 'linear-gradient(120deg, rgba(0,114,255,0.15), rgba(0,198,255,0.1))',
+                  },
+                }}
+              >
+                <PairlyFeaturesCard {...card} />
+              </Box>
+            </Fade>
+          </Grid>
         ))}
-      </Box>
-    </Grid>
+      </Grid>
+    </Box>
   );
 }
+
 export default PairlyFeatures;

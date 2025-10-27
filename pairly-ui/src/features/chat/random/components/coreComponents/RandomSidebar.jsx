@@ -21,7 +21,7 @@ import RandomLandingLottie from '../supportComponents/RandomLandingPageLottie';
 import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '@/services/socket';
 import { resetRandomChat, setWaiting } from '@/redux/slices/randomChat/randomChatSlice';
-import { Link, useOutletContext } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 
 function RandomSidebar() {
   const theme = useTheme();
@@ -89,63 +89,6 @@ function RandomSidebar() {
       <Stack sx={{ px: 1.5 }}>
         <ChatSidebarHeader />
       </Stack>
-
-      {/* Hook line (Tags) */}
-      <Typography
-        variant="subtitle2"
-        sx={{
-          px: 2.5,
-          pt: 1.5,
-          pb: 1,
-          fontSize: isSm ? '0.70rem' : '0.85rem',
-          width: 'fit-content',
-          mt: 1,
-          mx: 'auto',
-          color: theme.palette.text.secondary,
-          borderRadius: '12px',
-          background:
-            theme.palette.mode === 'dark'
-              ? 'linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.08))'
-              : 'linear-gradient(90deg, rgba(0,0,0,0.03), rgba(0,0,0,0.05))',
-          boxShadow:
-            theme.palette.mode === 'dark'
-              ? 'inset 0 0 10px rgba(255,255,255,0.04)'
-              : 'inset 0 0 8px rgba(0,0,0,0.05)',
-          backdropFilter: 'blur(8px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexWrap: 'wrap',
-          textAlign: 'center',
-          gap: 0.5,
-          transition: 'all 0.3s ease',
-
-          '& a': {
-            color: theme.palette.primary.main,
-            textDecoration: 'none',
-            fontStyle: 'italic',
-            fontWeight: 600,
-            transition: 'all 0.3s ease',
-            '&:hover': {
-              color: theme.palette.primary.dark,
-              textDecoration: 'underline',
-            },
-          },
-
-          '&:hover': {
-            transform: 'translateY(-2px)',
-            boxShadow:
-              theme.palette.mode === 'dark'
-                ? 'inset 0 0 10px rgba(255,255,255,0.08), 0 2px 6px rgba(0,0,0,0.4)'
-                : 'inset 0 0 8px rgba(0,0,0,0.05), 0 2px 6px rgba(0,0,0,0.08)',
-          },
-        }}
-      >
-        Welcome to{' '}
-        <Link to="nextGenerationChat">
-          next generation chat
-        </Link>
-      </Typography>
 
       {/* Back button (mobile) */}
       {isSm && showChatWindow && (

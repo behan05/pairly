@@ -83,6 +83,18 @@ function Footer() {
               Report Issue
             </MuiLink>
           </Stack>
+
+          <Stack spacing={1}>
+            <Typography variant="subtitle1" fontWeight={600}>
+              {<StyledText text={'Documents'} />}
+            </Typography>
+            <MuiLink component={RouterLink} to="/blog" underline="hover" color="text.secondary">
+              Blog
+            </MuiLink>
+            <MuiLink component={RouterLink} to="/nextgenerationchat" underline="hover" color="text.secondary">
+              Next Gen Chat
+            </MuiLink>
+          </Stack>
         </Stack>
       </Stack>
 

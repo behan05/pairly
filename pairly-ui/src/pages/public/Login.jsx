@@ -146,7 +146,7 @@ function Login() {
         flexDirection: { xs: 'column', md: 'row' },
         flexGrow: 1,
         gap: 2,
-        py: isLg ? theme.spacing(3) : theme.spacing(10)
+        pt: isLg ? theme.spacing(3) : theme.spacing(10)
       }}
     >
       {/* Left side content for larger screens */}
@@ -179,6 +179,9 @@ function Login() {
           justifyContent: 'center',
           alignItems: 'center',
           flex: 1,
+          py: 1,
+          boxShadow: `inset 0 0 20px ${theme.palette.divider}`,
+          borderRadius: 0.5,
           py: 1
         }}
       >
@@ -322,7 +325,7 @@ function Login() {
               <IconButton
                 edge="start"
                 onClick={() => handleSocialLogin('google')}
-                sx={{color: theme.palette.warning.main}}
+                sx={{ color: theme.palette.warning.main }}
               >
                 <GoogleIcon />
               </IconButton>
@@ -335,7 +338,7 @@ function Login() {
                 onClick={() => handleSocialLogin('github')}
                 sx={{ color: '#2F2F2F' }}
               >
-                <GithubIcon sx={{color: theme.palette.text.primary}} />
+                <GithubIcon sx={{ color: theme.palette.text.primary }} />
               </IconButton>
             </Tooltip>
           </Stack>

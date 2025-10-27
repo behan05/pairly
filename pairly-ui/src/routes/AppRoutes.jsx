@@ -83,6 +83,7 @@ export const routes = createBrowserRouter([
       { path: 'report', element: <ReportBug /> },
       { path: 'privacy-policy', element: <PrivacyPolicyPage /> },
       { path: 'terms-of-use', element: <TermsOfUsePage /> },
+      { path: 'nextGenerationChat', element: <NextGenerationChat /> },
       { path: '*', element: <PageNotFound redirectTo={'/'} /> }
     ]
   },
@@ -196,8 +197,6 @@ export const routes = createBrowserRouter([
         element: <PrivateChatLayout />,
         children: [{ index: true, element: <PrivateChatSidebar /> }]
       },
-
-      { path: 'nextGenerationChat', element: <NextGenerationChat /> },
 
       // Fallback for unmatched /pairly/* routes
       { path: '*', element: <PageNotFound redirectTo="/pairly" /> }

@@ -61,6 +61,7 @@ import {
   IconButton, // Button with icon only (e.g., close)
   Tooltip, // Hover popover hints
   Chip, // Small pill-style labels
+  Fade,
 
   // ─── Expand/Collapse ────────────────────────────────────
   Accordion, // Collapsible container
@@ -143,6 +144,7 @@ export {
   IconButton,
   Tooltip,
   Chip,
+  Fade,
 
   // Expandables
   Accordion,

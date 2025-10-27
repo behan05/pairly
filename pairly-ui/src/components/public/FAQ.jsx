@@ -71,58 +71,93 @@ function FAQ() {
   return (
     <Box
       sx={{
-        mt: 6,
-        background: 'transparent',
+        mt: 8,
+        mb: 6,
+        px: { xs: 2, md: 6 },
         display: 'flex',
         flexDirection: 'column',
-        gap: 1
+        gap: 2,
+        alignItems: 'center',
       }}
     >
-      {faqs.map((faq, index) => (
-        <Accordion
-          key={index}
-          expanded={expanded === index}
-          onChange={handleChange(index)}
-          disableGutters
-          sx={{
-            backdropFilter: `blur(14px)`,
-            background: 'transparent'
-          }}
-        >
-          <AccordionSummary
-            expandIcon={
-              <ExpandMoreIcon
-                sx={{
-                  color: expanded === index ? 'success.main' : 'text.secondary',
-                  transition: 'color 0.3s ease',
-                  '&:hover': {
-                    color: 'secondary.main'
-                  },
-                  '&:active': {
-                    color: 'warning.main'
-                  }
-                }}
-              />
-            }
+      <Typography
+        variant="h5"
+        fontWeight={700}
+        textAlign="center"
+        mb={3}
+        letterSpacing={1}
+        sx={{
+          background: 'linear-gradient(90deg, #00C6FF 0%, #0072FF 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+        }}
+      >
+        Frequently Asked Questions
+      </Typography>
+
+      <Box sx={{ width: '100%', maxWidth: 800 }}>
+        {faqs.map((faq, index) => (
+          <Accordion
+            key={index}
+            expanded={expanded === index}
+            onChange={handleChange(index)}
+            disableGutters
+            elevation={0}
+            sx={{
+              mb: 1.5,
+              borderRadius: 3,
+              background: expanded === index
+                ? 'linear-gradient(120deg, rgba(0,114,255,0.12), rgba(0,198,255,0.08))'
+                : 'rgba(255,255,255,0.03)',
+              boxShadow: expanded === index
+                ? '0px 4px 14px rgba(0,114,255,0.15)'
+                : '0px 2px 6px rgba(0,0,0,0.1)',
+              backdropFilter: 'blur(10px)',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                background: 'rgba(0,114,255,0.10)',
+                transform: 'translateY(-2px)',
+              },
+              '&:before': { display: 'none' } // removes the default divider line
+            }}
           >
-            <Typography variant="subtitle1" color={'text.primary'} letterSpacing={2} fontWeight={600}>
-              {faq.question}
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography
-              color="text.secondary"
-              variant="body2"
-              sx={{
-                textAlign: 'left',
-                lineHeight: 1.6
-              }}
+            <AccordionSummary
+              expandIcon={
+                <ExpandMoreIcon
+                  sx={{
+                    color: expanded === index ? 'primary.main' : 'text.secondary',
+                    transition: 'all 0.3s ease',
+                    '&:hover': { color: 'success.main' },
+                  }}
+                />
+              }
             >
-              {faq.answer}
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-      ))}
+              <Typography
+                variant="subtitle1"
+                color="text.primary"
+                fontWeight={600}
+                letterSpacing={0.5}
+              >
+                {faq.question}
+              </Typography>
+            </AccordionSummary>
+
+            <AccordionDetails>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{
+                  lineHeight: 1.7,
+                  px: 1,
+                  pb: 1,
+                }}
+              >
+                {faq.answer}
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+        ))}
+      </Box>
     </Box>
   );
 }
