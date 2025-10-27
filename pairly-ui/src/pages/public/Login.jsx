@@ -146,29 +146,55 @@ function Login() {
         flexDirection: { xs: 'column', md: 'row' },
         flexGrow: 1,
         gap: 2,
-        pt: isLg ? theme.spacing(3) : theme.spacing(10)
+        pt: theme.spacing(2),
       }}
     >
       {/* Left side content for larger screens */}
       {!isLg && (
-        <Box flex={1}>
+        <Box flex={1.2} textAlign="left">
           <Typography
-            variant="h5"
-            fontSize={'3rem'}
-            letterSpacing={1}
-            color={theme.palette.text.primary}
+            variant="h3"
+            fontWeight={700}
+            sx={{
+              color: 'text.primary',
+              mb: 2,
+              textShadow:
+                theme.palette.mode === 'dark'
+                  ? '0 2px 10px rgba(255,255,255,0.05)'
+                  : '0 2px 10px rgba(0,0,0,0.08)',
+            }}
           >
-            <StyledText text={'Pairly'} />
+            <StyledText text="Pairly" /> — Chat that Feels Human
           </Typography>
 
-          <Typography variant="subtitle1" color={theme.palette.text.secondary} mb={3}>
-            Pairly is a real-time random chatting webapp, powered by{' '}
-            <StyledText text={'interest-based'} /> matching. 100% <StyledText text={'India'} />{' '}
-            platform designed for genuine conversations anytime, anywhere.
+          <Typography
+            variant="h6"
+            sx={{
+              color: 'text.secondary',
+              lineHeight: 1.6,
+              maxWidth: 480,
+              mb: 3,
+            }}
+          >
+            Pairly connects real people instantly.
+            With <StyledText text="emotion-aware AI" />,
+            <StyledText text="interest-based pairing" />,
+            and genuine communication, you’ll always meet someone real — never a bot.
           </Typography>
 
           {/* === Reusable Video Component === */}
-          <ReusableVideo />
+          <Box
+            sx={{
+              borderRadius: 3,
+              overflow: 'hidden',
+              boxShadow:
+                theme.palette.mode === 'dark'
+                  ? '0 4px 20px rgba(255,255,255,0.1)'
+                  : '0 4px 20px rgba(0,0,0,0.08)',
+            }}
+          >
+            <ReusableVideo />
+          </Box>
         </Box>
       )}
 
@@ -179,42 +205,34 @@ function Login() {
           justifyContent: 'center',
           alignItems: 'center',
           flex: 1,
-          py: 1,
           boxShadow: `inset 0 0 20px ${theme.palette.divider}`,
           borderRadius: 0.5,
-          py: 1
+          py: 4
         }}
       >
         <Box
           component={'form'}
           onSubmit={handleSubmit}
-          sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+          sx={{ display: 'flex', px: 1, flexDirection: 'column', gap: 2 }}
         >
-          <Typography
-            variant="h3"
-            textTransform={'uppercase'}
-            letterSpacing={1}
-            fontWeight={600}
-            textAlign={'center'}
-            color={theme.palette.text.primary}
-          >
-            Login to <StyledText text={'Pairly'} />!
+          <Typography variant="h4" fontWeight={700} textAlign="center">
+            Welcome Back to <StyledText text="Pairly" />
           </Typography>
 
           <Typography
-            variant="subtitle1"
-            textAlign={'center'}
-            maxWidth={400}
-            color={'text.secondary'}
-            gutterBottom
+            variant="subtitle2"
+            color="text.secondary"
+            textAlign="center"
+            sx={{ maxWidth: 380 }}
           >
-            Sign in to connect with people and make meaningful conversations.
+            Sign in and start meaningful conversations — real connections, no noise.
           </Typography>
 
           {/* Username Input */}
           <TextField
             variant="outlined"
-            label="Username or Email"
+            size='small'
+            label="Email"
             name="email"
             onChange={handleChange}
             value={form.email}
@@ -228,6 +246,7 @@ function Login() {
           <TextField
             type={showPassword ? 'text' : 'password'}
             variant="outlined"
+            size='small'
             label="Password"
             name="password"
             autoComplete="current-password"
@@ -284,24 +303,16 @@ function Login() {
             size="large"
             disabled={loading || disabled}
             sx={{
-              alignSelf: 'flex-end',
-              px: { xs: 2, sm: 3 },
-              py: { xs: 0.5, sm: 1 },
-              background: `transparent`,
-              backdropFilter: 'blur(14px)',
-              borderTopRightRadius: '6px',
-              borderBottomRightRadius: '6px',
-              border: `1px dotted ${theme.palette.success.main}`,
+              borderRadius: 3,
               textTransform: 'none',
-              color: 'text.primary',
-              letterSpacing: 0.2,
-              textDecoration: 'none',
-              transition: 'all 0.3s ease',
+              fontWeight: 600,
+              color: theme.palette.text.primary,
+              borderColor: theme.palette.divider,
               cursor: loading ? 'not-allowed' : 'pointer',
               opacity: loading ? 0.5 : 1,
               '&:hover': {
-                transform: loading ? 'none' : 'translateY(-5px)'
-              }
+                background: theme.palette.action.hover,
+              },
             }}
           >
             {loading ? 'Logging in...' : 'Login'}

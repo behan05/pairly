@@ -1,21 +1,25 @@
-import { Box, Typography, Stack, Divider, Link as MuiLink } from '@mui/material';
+import { Box, Typography, Stack, Divider, Link as MuiLink, useTheme, useMediaQuery } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import logo from '@/assets/logo/logo.png';
 import StyledText from '../common/StyledText';
 
 function Footer() {
+
+  const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <Box
       component="footer"
       sx={{
-        mt: 4,
-        px: { xs: 3, sm: 6, md: 12 },
+        px: { xs: 2, sm: 4, md: 12 },
         py: 4,
         bgcolor: 'transparent',
         backdropFilter: 'blur(6px)',
       }}
     >
       <Divider sx={{ my: 4 }} />
+
       {/* Top section */}
       <Stack
         direction={{ xs: 'column', md: 'row' }}
@@ -28,77 +32,136 @@ function Footer() {
           spacing={2}
           alignItems={{ xs: 'center', md: 'flex-start' }}
           textAlign={{ xs: 'center', md: 'left' }}
+          sx={{ maxWidth: 360 }}
         >
-          <Box component="img" src={logo} alt="Pairly Logo" sx={{ height: 48, userSelect: 'none' }} />
-          <Typography variant="body2" color="text.secondary" maxWidth={320}>
-            {<StyledText text={'Pairly'} />} is a real-time random chat platform built for global
+          <Box
+            component="img"
+            src={logo}
+            alt="Pairly Logo"
+            sx={{
+              height: { xs: 40, md: 52 },
+              userSelect: 'none',
+              filter: 'drop-shadow(0 0 6px rgba(0,0,0,0.1))',
+            }}
+          />
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            lineHeight={1.6}
+            sx={{ fontSize: { xs: '0.85rem', md: '0.9rem' } }}
+          >
+            <StyledText text={'Pairly'} /> is a real-time random chat platform built for global
             connections, meaningful conversations, and privacy-first experiences.
           </Typography>
         </Stack>
 
         {/* Important links */}
-        <Stack direction="row" spacing={6}>
+        <Stack
+          direction="row"
+          columnGap={4}
+          rowGap={2}
+          flexWrap="wrap"
+          justifyContent={isSm ? 'space-evenly' : 'flex-start'}
+        >
+
+          {/* Explore */}
           <Stack spacing={1}>
             <Typography variant="subtitle1" fontWeight={600}>
-              {<StyledText text={'Explore'} />}
+              <StyledText text={'Explore'} />
             </Typography>
-            <MuiLink component={RouterLink} to="/" underline="hover" color="text.secondary">
-              Home
-            </MuiLink>
-            <MuiLink component={RouterLink} to="/about" underline="hover" color="text.secondary">
-              About
-            </MuiLink>
-            <MuiLink component={RouterLink} to="/features" underline="hover" color="text.secondary">
-              Features
-            </MuiLink>
-            <MuiLink component={RouterLink} to="/contact" underline="hover" color="text.secondary">
-              Contact
-            </MuiLink>
+            {[
+              { label: 'Home', to: '/' },
+              { label: 'About', to: '/about' },
+              { label: 'Features', to: '/features' },
+              { label: 'Contact', to: '/contact' },
+            ].map((link) => (
+              <MuiLink
+                key={link.label}
+                component={RouterLink}
+                to={link.to}
+                underline="hover"
+                color="text.secondary"
+                sx={{ fontSize: '0.9rem' }}
+              >
+                {link.label}
+              </MuiLink>
+            ))}
           </Stack>
 
+          {/* Support */}
           <Stack spacing={1}>
             <Typography variant="subtitle1" fontWeight={600}>
-              {<StyledText text={'Support'} />}
+              <StyledText text={'Support'} />
             </Typography>
-            <MuiLink component={RouterLink} to="faq" underline="hover" color="text.secondary">
-              FAQs
-            </MuiLink>
-            <MuiLink
-              component={RouterLink}
-              to="privacy-policy"
-              underline="hover"
-              color="text.secondary"
-            >
-              Privacy Policy
-            </MuiLink>
-            <MuiLink
-              component={RouterLink}
-              to="terms-of-use"
-              underline="hover"
-              color="text.secondary"
-            >
-              Terms of Use
-            </MuiLink>
-            <MuiLink component={RouterLink} to="report" underline="hover" color="text.secondary">
-              Report Issue
-            </MuiLink>
+            {[
+              { label: 'FAQs', to: '/faq' },
+              { label: 'Help Center', to: '/help' },
+              { label: 'Report Issue', to: '/report' },
+              { label: 'Feedback', to: '/feedback' },
+            ].map((link) => (
+              <MuiLink
+                key={link.label}
+                component={RouterLink}
+                to={link.to}
+                underline="hover"
+                color="text.secondary"
+                sx={{ fontSize: '0.9rem' }}
+              >
+                {link.label}
+              </MuiLink>
+            ))}
           </Stack>
 
+          {/* Legal */}
           <Stack spacing={1}>
             <Typography variant="subtitle1" fontWeight={600}>
-              {<StyledText text={'Documents'} />}
+              <StyledText text={'Legal'} />
             </Typography>
-            <MuiLink component={RouterLink} to="/blog" underline="hover" color="text.secondary">
-              Blog
-            </MuiLink>
-            <MuiLink component={RouterLink} to="/nextgenerationchat" underline="hover" color="text.secondary">
-              Next Gen Chat
-            </MuiLink>
+            {[
+              { label: 'Privacy Policy', to: '/privacy-policy' },
+              { label: 'Terms of Use', to: '/terms-of-use' },
+              { label: 'Playbook', to: '/Playbook' },
+              { label: 'Cookies Policy', to: '/cookies-policy' },
+            ].map((link) => (
+              <MuiLink
+                key={link.label}
+                component={RouterLink}
+                to={link.to}
+                underline="hover"
+                color="text.secondary"
+                sx={{ fontSize: '0.9rem' }}
+              >
+                {link.label}
+              </MuiLink>
+            ))}
+          </Stack>
+
+          {/* Community */}
+          <Stack spacing={1}>
+            <Typography variant="subtitle1" fontWeight={600}>
+              <StyledText text={'Community'} />
+            </Typography>
+            {[
+              { label: 'Blog', to: '/blog' },
+              { label: 'Next Gen Chat', to: '/nextgenerationchat' },
+              { label: 'Press', to: '/press' },
+            ].map((link) => (
+              <MuiLink
+                key={link.label}
+                component={RouterLink}
+                to={link.to}
+                underline="hover"
+                color="text.secondary"
+                sx={{ fontSize: '0.9rem' }}
+              >
+                {link.label}
+              </MuiLink>
+            ))}
           </Stack>
         </Stack>
+
       </Stack>
 
-      {/* Divider */}
       <Divider sx={{ my: 4 }} />
 
       {/* Bottom section */}

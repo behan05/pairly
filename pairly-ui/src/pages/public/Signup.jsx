@@ -184,25 +184,49 @@ function Signup() {
         flexDirection: { xs: 'column', md: 'row' },
         flexGrow: 1,
         gap: 2,
-        pt: isLg ? theme.spacing(3) : theme.spacing(10)
+        pt: theme.spacing(2),
       }}
     >
       {!isLg && (
-        <Box flex={1}>
+        <Box flex={1.2} textAlign="left">
           <Typography
-            variant="h5"
-            fontSize={'3rem'}
-            letterSpacing={1}
-            color={theme.palette.text.primary}
+            variant="h3"
+            fontWeight={700}
+            sx={{
+              color: 'text.primary',
+              mb: 2,
+              textShadow:
+                theme.palette.mode === 'dark'
+                  ? '0 2px 10px rgba(255,255,255,0.05)'
+                  : '0 2px 10px rgba(0,0,0,0.08)',
+            }}
           >
-            <StyledText text={'Pairly'} />
+            <StyledText text="Pairly" /> — Chat that Feels Human
           </Typography>
 
-          <Typography variant="subtitle1" color={theme.palette.text.secondary} mb={3}>
-            Join <StyledText text={'Pairly'} /> and experience genuine, interest-based connections.
+          <Typography
+            variant="h6"
+            sx={{
+              color: 'text.secondary',
+              lineHeight: 1.6,
+              maxWidth: 480,
+              mb: 3,
+            }}
+          >
+            Join Pairly and experience genuine, interest-based connections.
           </Typography>
 
-          <ReusableVideo />
+          {/* === Reusable Video Component === */}
+          <Box
+            sx={{
+              borderRadius: 3,
+              overflow: 'hidden',
+              boxShadow:
+                `inset 0 0 0.5rem ${theme.palette.divider}`
+            }}
+          >
+            <ReusableVideo />
+          </Box>
         </Box>
       )}
 
@@ -214,38 +238,31 @@ function Signup() {
           flex: 1,
           boxShadow: `inset 0 0 20px ${theme.palette.divider}`,
           borderRadius: 0.5,
-          py: 1
+          py: 4
         }}
       >
         <Box
           component={'form'}
           onSubmit={handleSubmit}
-          sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+          sx={{ display: 'flex', px: 1, flexDirection: 'column', gap: 2 }}
         >
-          <Typography
-            variant="h3"
-            textTransform={'uppercase'}
-            letterSpacing={1}
-            fontWeight={600}
-            textAlign={'center'}
-            color={theme.palette.text.primary}
-          >
-            Join {' '}<StyledText text={'Pairly'} />!
+          <Typography variant="h4" fontWeight={700} textAlign="center">
+            Create Your <StyledText text="Pairly" /> Account
           </Typography>
 
           <Typography
-            variant="subtitle1"
-            textAlign={'center'}
-            maxWidth={400}
-            color={'text.secondary'}
-            gutterBottom
+            variant="subtitle2"
+            color="text.secondary"
+            textAlign="center"
+            sx={{ maxWidth: 380 }}
           >
-            Sign up and start making meaningful conversations.
+            Join now to meet new people, share real moments, and make meaningful connections — instantly.
           </Typography>
-
+          
           {/* Full Name Input */}
           <TextField
             variant="outlined"
+            size='small'
             label="Full Name"
             name="fullName"
             onChange={handleChange}
@@ -258,7 +275,8 @@ function Signup() {
           {/* Email or Username Input */}
           <TextField
             variant="outlined"
-            label="Username or Email"
+            size='small'
+            label="Email"
             name="email"
             aria-label="user email"
             autoComplete="email"
@@ -273,6 +291,7 @@ function Signup() {
           <TextField
             type={showPassword ? 'text' : 'password'}
             variant="outlined"
+            size='small'
             label="Password"
             name="password"
             onChange={handleChange}
@@ -293,6 +312,7 @@ function Signup() {
           <TextField
             type={showConfirmPassword ? 'text' : 'password'}
             variant="outlined"
+            size='small'
             label="Confirm Password"
             name="confirmPassword"
             onChange={handleChange}
@@ -363,25 +383,16 @@ function Signup() {
             type="submit"
             variant="outlined"
             endIcon={<SendIcon sx={{ color: 'success.main' }} />}
-            size="large"
             disabled={loading || buttonDisabled}
             sx={{
-              alignSelf: 'flex-end',
-              px: { xs: 2, sm: 3 },
-              py: { xs: 0.5, sm: 1 },
-              background: `transparent`,
-              backdropFilter: 'blur(14px)',
-              borderTopRightRadius: '6px',
-              borderBottomRightRadius: '6px',
-              border: `1px dotted ${theme.palette.success.main}`,
+              borderRadius: 3,
               textTransform: 'none',
-              color: 'text.primary',
-              letterSpacing: 0.2,
-              textDecoration: 'none',
-              transition: 'all 0.3s ease',
+              fontWeight: 600,
+              color: theme.palette.text.primary,
+              borderColor: theme.palette.divider,
               '&:hover': {
-                transform: loading ? 'none' : 'translateY(-5px)'
-              }
+                background: theme.palette.action.hover,
+              },
             }}
           >
             {loading || buttonDisabled ? 'Creating Account…' : 'Create Account'}
