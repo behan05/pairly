@@ -29,7 +29,7 @@ function NormalChatLayout() {
 
   // Set page title when component mounts
   React.useEffect(() => {
-    document.title = 'Pairly - Private Chat';
+    document.title = 'Pairly - private worlds';
   }, [dispatch]);
 
   const handleBackToSidebar = () => {

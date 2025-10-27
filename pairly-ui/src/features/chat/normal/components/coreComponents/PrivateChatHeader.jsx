@@ -25,6 +25,7 @@ import {
   defaultAvatar,
   ArrowBackIcon,
 } from '@/MUI/MuiIcons';
+import SelfImprovementIcon from '@mui/icons-material/SelfImprovement';
 
 // Components
 import TypingIndicator from '@/components/private/randomChat/TypingIndicator';
@@ -36,10 +37,11 @@ import ProposeToPartnerModel from '../supportComponents/ProposeToPartnerModel';
 import ReportUserModal from '../supportComponents/ReportUserModal';
 import BlockUserModal from '../supportComponents/BlockUsermodal'
 import formatMessageTime from '@/utils/formatMessageTime';
+import SilentFeelModeModel from '../supportComponents/SilentFeelModeModal';
 
-import { deleteConversationMessage, clearConversationMessage, fetchAllUser } from '@/redux/slices/privateChat/privateChatAction';
 import { updateSettingsNotification } from '@/redux/slices/settings/settingsAction';
 import { useDispatch, useSelector } from 'react-redux'
+import ActionConfirm from '@/components/private/actionConfirmation/ActionConfirm';
 
 function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat }) {
   const theme = useTheme();
@@ -54,6 +56,9 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
   // local state
   const [anchorEl, setAnchorEl] = useState(null);
   const [openProfileModal, setOpenProfileModal] = useState(false);
+  const [openSlientFeelModeModal, setOpenSlientFeelModeModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openClearModal, setOpenClearModal] = useState(false);
 
   const open = Boolean(anchorEl);
 
@@ -109,32 +114,6 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
     setOpenBlockDialog(true);
   };
 
-  /** Handle Clear Message */
-  const handleClearChatLog = async () => {
-    if (!activeChat) return;
-
-    const res = await dispatch(clearConversationMessage(activeChat));
-    if (res?.success) {
-      clearActiveChat(null);
-      onCloseChatWindow(null);
-      dispatch(fetchAllUser())
-    }
-  };
-
-  /** Handle delete Partner */
-  const handleDeleteChat = async () => {
-    if (!activeChat) return;
-
-    const confirmed = window.confirm('Are you sure you want to delete this chat? This action cannot be undone.');
-    if (!confirmed) return;
-
-    const res = await dispatch(deleteConversationMessage(activeChat));
-    if (res?.success) {
-      clearActiveChat(null);
-      onCloseChatWindow(null);
-    }
-  };
-
   /** Handle notification */
   const handleNotification = async () => {
     if (!notificationSettings) return;
@@ -159,6 +138,11 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
     }
   };
 
+  /** Handle handleSilentFeelMode */
+  const handleSilentFeelMode = () => {
+    setOpenSlientFeelModeModal(true)
+  };
+
   /**
    * Common menu item styling
    */
@@ -169,9 +153,24 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
     minHeight: 'unset',
     transition: 'all 0.3s ease-out',
     color: 'text.secondary',
+    fontSize: '0.875rem',
     '&:hover': {
       transform: `translate(1px, -1px) scale(0.99)`,
       filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
+    },
+  };
+
+  const menuItemRedStyle = {
+    borderRadius: 0.5,
+    px: 1,
+    py: 0.7,
+    fontSize: '0.875rem',
+    minHeight: 'unset',
+    transition: 'all 0.3s ease-out',
+    color: 'text.secondary',
+    '&:hover': {
+      transform: `translate(1px, -1px) scale(0.99)`,
+      filter: `drop-shadow(0 20px 1rem ${theme.palette.error.main})`
     },
   };
 
@@ -185,6 +184,10 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
 
       case 'proposeToPartner':
         setProposeModel((prev) => !prev);
+        break;
+
+      case 'inviteToSilentFeelMode':
+        handleSilentFeelMode();
         break;
 
       case 'closeChat':
@@ -205,11 +208,11 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
         break;
 
       case 'clearChat':
-        handleClearChatLog()
+        setOpenClearModal(true);
         break;
 
       case 'deleteChat':
-        handleDeleteChat();
+        setOpenDeleteModal(true);
         break;
 
       default:
@@ -334,11 +337,6 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
                 onClick: () => handleAction('viewProfile'),
               },
               {
-                icon: <FavoriteIcon fontSize="small" sx={{ mr: 1, color: 'secondary.main' }} />,
-                label: 'Create Proposal',
-                onClick: () => handleAction('proposeToPartner'),
-              },
-              {
                 icon: <CloseIcon fontSize="small" sx={{ mr: 1, color: 'error.main' }} />,
                 label: 'Close Chat',
                 onClick: () => handleAction('closeChat'),
@@ -353,6 +351,26 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
                 label: notification ? 'Mute Notifications' : 'Notifications Muted',
                 onClick: () => handleAction('muteNotification'),
               },
+            ].map((item, index) => (
+              <MenuItem key={index} onClick={item.onClick} sx={menuItemStyle}>
+                {item.icon}
+                {item.label}
+              </MenuItem>
+            ))}
+
+            <Divider sx={{ my: 1 }} />
+
+            {[
+              {
+                icon: <FavoriteIcon fontSize="small" sx={{ mr: 1, color: 'secondary.main' }} />,
+                label: 'Create Proposal',
+                onClick: () => handleAction('proposeToPartner'),
+              },
+              {
+                label: 'Silent Feel Mode',
+                icon: <SelfImprovementIcon sx={{ mr: 1, color: theme.palette.primary.main }} />,
+                onClick: () => handleAction('inviteToSilentFeelMode'),
+              }
             ].map((item, index) => (
               <MenuItem key={index} onClick={item.onClick} sx={menuItemStyle}>
                 {item.icon}
@@ -384,7 +402,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
                 onClick: () => handleAction('deleteChat'),
               },
             ].map((item, index) => (
-              <MenuItem key={index} onClick={item.onClick} sx={menuItemStyle}>
+              <MenuItem key={index} onClick={item.onClick} sx={menuItemRedStyle}>
                 {item.icon}
                 {item.label}
               </MenuItem>
@@ -423,6 +441,38 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
         partner={partnerProfile}
         partnerId={userId}
       />
+
+      <SilentFeelModeModel
+        open={openSlientFeelModeModal}
+        onClose={() => setOpenSlientFeelModeModal(false)}
+        partner={partnerProfile}
+        partnerId={userId}
+      />
+
+      {/* Delete Chat Modal */}
+      <ActionConfirm
+        open={openDeleteModal}
+        onClose={() => setOpenDeleteModal(false)}
+        activeChat={activeChat}
+        onCloseChatWindow={onCloseChatWindow}
+        clearActiveChat={clearActiveChat}
+        title="Delete Chat"
+        actionType="delete"
+        description="Are you sure you want to delete this chat? This action cannot be undone."
+      />
+
+      {/* Clear Chat Modal */}
+      <ActionConfirm
+        open={openClearModal}
+        onClose={() => setOpenClearModal(false)}
+        activeChat={activeChat}
+        onCloseChatWindow={onCloseChatWindow}
+        clearActiveChat={clearActiveChat}
+        title="Clear Chat"
+        actionType="clear"
+        description="Are you sure you want to clear this chat history? This action cannot be undone."
+      />
+
     </Box>
   )
 }

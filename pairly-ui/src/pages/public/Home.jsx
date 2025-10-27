@@ -44,7 +44,7 @@ import ReusableVideo from '@/components/public/ReusableVideo';
 
 function Home() {
   React.useEffect(() => {
-    document.title = 'Pairly - The heart of the strangers';
+    document.title = 'Pairly - Mini Social Universe';
   }, []);
 
   const features = [

@@ -75,6 +75,8 @@ const ChatSidebarHeader = ({ children }) => {
   const [menuAnchorEl, setMenuAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(menuAnchorEl);
 
+  const [userId, setUserId] = React.useState('');
+
   // Fetch initial settings | Preferences data
   useEffect(() => {
     dispatch(getProfile());
@@ -161,15 +163,25 @@ const ChatSidebarHeader = ({ children }) => {
   // glow animation
   const glowDot = keyframes`
     0% {
-      box-shadow: 0 0 0px 0px rgba(0, 255, 0, 0.51);
+      box-shadow: 0 0 0px 0px ${theme.palette.success.main}aa;
     }
     50% {
-      box-shadow: 0 0 5px 1px rgba(0, 255, 0, 0.4);
+      box-shadow: 0 0 5px 1px ${theme.palette.success.main}bb;
     }
     100% {
-      box-shadow: 0 0 0px 0px rgba(0, 255, 0, 0.44);
+      box-shadow: 0 0 0px 0px ${theme.palette.success.main}cc;
     }
   `;
+
+  const handleChange = (e) => {
+    console.log(e);
+    
+    const { value } = e.target.value;
+
+    if (value.trim() !== 0) {
+      setUserId(value);
+    }
+  }
 
   // toggle Theme Mode
   const toggleThemeMode = () => {
@@ -296,7 +308,7 @@ const ChatSidebarHeader = ({ children }) => {
           </Tooltip>
         </Stack>
       </Stack>
-
+      <Divider sx={{ mt: 1 }} />
       {/* Search Bar if needed */}
       {children}
 
@@ -471,8 +483,9 @@ const ChatSidebarHeader = ({ children }) => {
             size="small"
             fullWidth
             placeholder="Search by user ID"
-            value={''}
-            onChange={''}
+            value={userId}
+            name={'userId'}
+            onChange={handleChange}
             InputProps={{ startAdornment: <SearchIcon fontSize="small" sx={{ mr: 1, color: 'text.secondary' }} /> }}
             sx={{
               mb: 2,

@@ -180,6 +180,7 @@ function RandomChatHeader() {
     borderRadius: 0.5,
     px: 1,
     py: 0.7,
+    fontSize: '0.875rem',
     minHeight: 'unset',
     transition: 'all 0.3s ease-out',
     color: 'text.secondary',

@@ -59,6 +59,7 @@ import DataDeletionPage from '../pages/private/settings/account/HowToDeleteData/
 import Premium from '../components/private/premium/Premium';
 import Alerts from '../features/chat/common/Alerts';
 import SubscriptionManager from '../components/private/SubscriptionManager/SubscriptionManager';
+import NextGenerationChat from '../components/common/NextGenerationChat';
 
 export const routes = createBrowserRouter([
   // === Public routes ===
@@ -195,6 +196,9 @@ export const routes = createBrowserRouter([
         element: <PrivateChatLayout />,
         children: [{ index: true, element: <PrivateChatSidebar /> }]
       },
+
+      { path: 'nextGenerationChat', element: <NextGenerationChat /> },
+
       // Fallback for unmatched /pairly/* routes
       { path: '*', element: <PageNotFound redirectTo="/pairly" /> }
     ]
