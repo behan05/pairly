@@ -60,7 +60,9 @@ import Premium from '../components/private/premium/Premium';
 import Alerts from '../features/chat/common/Alerts';
 import SubscriptionManager from '../components/private/SubscriptionManager/SubscriptionManager';
 import NextGenerationChat from '../components/common/NextGenerationChat';
-import VirtualComedyHall from '../features/virtual_comedy_hall/VirtualComedyHall';
+import VirtualStandupHallLayout from '../features/virtual_standup_hall/VirtualStandupHallLayout';
+import CreateEvent from '../features/virtual_standup_hall/CreateEvent';
+import MyEarnings from '../features/virtual_standup_hall/MyEarnings';
 
 export const routes = createBrowserRouter([
   // === Public routes ===
@@ -101,7 +103,6 @@ export const routes = createBrowserRouter([
           { index: true, element: <RandomSidebar /> },
           { path: 'friend-requests', element: <FriendRequestList /> },
           { path: 'alerts', element: <Alerts /> },
-          { path: 'virtual-comedy-hall', element: <VirtualComedyHall /> },
           { path: 'terms-of-use', element: <TermsOfUsePage /> },
 
           // Settings
@@ -191,6 +192,16 @@ export const routes = createBrowserRouter([
               { path: 'interests', element: <TagsAndInterests /> }
             ]
           }
+        ]
+      },
+
+      {
+        path: 'virtual-standup-hall',
+        element: <VirtualStandupHallLayout />,
+        children: [
+          { path: 'create-event', element: <CreateEvent /> },
+          { path: 'my-earnings', element: <MyEarnings /> },
+          { path: 'terms-of-use', element: <TermsOfUsePage /> }
         ]
       },
 

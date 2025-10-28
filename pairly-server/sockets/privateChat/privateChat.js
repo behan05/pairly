@@ -231,6 +231,54 @@ function privateChatHandler(io, socket, onlineUsers) {
         }
     });
 
+    // === Silent Feel Mode ===
+    socket.on('privateChat:silentFeelModeRequest', ({ to }) => {
+        const session = privateChatSessions.get(currentUserId);
+        if (!session || session.partnerId !== to) return;
+
+        // Notify partner user sockets
+        const partnerSockets = [...io.sockets.sockets.values()]
+            .filter(s => String(s.userId) === String(to));
+
+        for (const ps of partnerSockets) {
+            io.to(ps.id).emit('privateChat:silentFeelModeActivated', {
+                from: currentUserId,
+                to,
+                message: 'Your partner enabled Silent Feel Mode 🌙'
+            });
+        }
+
+        // Acknowledge sender
+        socket.emit('privateChat:silentFeelModeConfirmed', {
+            to,
+            message: 'Silent Feel Mode activated successfully.'
+        });
+    });
+
+    // === Hear Together Mode ===
+    socket.on('privateChat:hearTogetherRequest', ({ to }) => {
+        const session = privateChatSessions.get(currentUserId);
+        if (!session || session.partnerId !== to) return;
+
+        // Notify partner user sockets
+        const partnerSockets = [...io.sockets.sockets.values()]
+            .filter(s => String(s.userId) === String(to));
+
+        for (const ps of partnerSockets) {
+            io.to(ps.id).emit('privateChat:hearTogetherInvite', {
+                from: currentUserId,
+                to,
+                message: 'Your partner invited you to Hear Together 🎧'
+            });
+        }
+
+        // Acknowledge sender
+        socket.emit('privateChat:hearTogetherSent', {
+            to,
+            message: 'Hear Together request sent.'
+        });
+    });
+
     // when server receives 'privateChat:getOnlineUsers'
     socket.on('privateChat:getOnlineUsers', async () => {
         try {

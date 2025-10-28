@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/authMiddleware');
 const profileController = require('../controllers/profileController');
-const upload = require('../middlewares/multerMiddleware');
+// const upload = require('../middlewares/uploadProfileS3');
 
 /**
  * @route   GET /api/profile/my-profile
@@ -19,7 +19,7 @@ router.get('/my-profile', authMiddleware, profileController.getMyProfileControll
 router.patch(
     '/general-info',
     authMiddleware,
-    upload.single('profileImage'),
+    // upload.single('profileImage'),
     profileController.updateGeneralInfoController
 );
 

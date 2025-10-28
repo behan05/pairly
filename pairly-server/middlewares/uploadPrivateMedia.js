@@ -1,79 +1,50 @@
-const multer = require('multer');
-const cloudinary = require('../utils/cloudinary/cloudinary');
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
+// const multer = require('multer');
+// const multerS3 = require('multer-s3');
+// const s3 = require('../utils/aws/s3Client');
+// const path = require('path');
 
-// Allowed formats (by extension)
-const allowedFormats = [
-    // Images
-    'jpg', 'jpeg', 'png', 'webp', 'gif',
-    // Videos
-    'mp4', 'mov', 'webm', 'avi', 'mkv',
-    // Audios
-    'mp3', 'wav', 'ogg', 'm4a',
-    // Documents
-    'pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'txt',
-];
+// // Allowed MIME types (same as your Cloudinary version)
+// const allowedMimeTypes = [
+//     // Images
+//     'image/jpeg', 'image/png', 'image/webp', 'image/gif',
+//     // Videos
+//     'video/mp4', 'video/quicktime', 'video/webm', 'video/x-msvideo', 'video/x-matroska',
+//     // Audios
+//     'audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/x-m4a',
+//     // Documents
+//     'application/pdf',
+//     'application/msword',
+//     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+//     'application/vnd.ms-powerpoint',
+//     'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+//     'application/vnd.ms-excel',
+//     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+//     'text/plain',
+// ];
 
-// Allowed mime types (for fileFilter)
-const allowedMimeTypes = [
-    // Images
-    'image/jpeg', 'image/png', 'image/webp', 'image/gif',
-    // Videos
-    'video/mp4', 'video/quicktime', 'video/webm', 'video/x-msvideo', 'video/x-matroska',
-    // Audios
-    'audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/x-m4a',
-    // Documents
-    'application/pdf',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/vnd.ms-powerpoint',
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    'application/vnd.ms-excel',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'text/plain',
-];
+// const upload = multer({
+//     storage: multerS3({
+//         s3,
+//         bucket: process.env.S3_BUCKET_NAME,
+//         contentType: multerS3.AUTO_CONTENT_TYPE,
+//         acl: 'private', // files are private (good for private chat)
+//         key: (req, file, cb) => {
+//             const ext = path.extname(file.originalname);
+//             const folder = 'pairly/private-chats';
+//             const fileName = `${folder}/user_${req.user?.id || 'guest'}_${Date.now()}${ext}`;
+//             cb(null, fileName);
+//         },
+//     }),
+//     fileFilter: (req, file, cb) => {
+//         if (allowedMimeTypes.includes(file.mimetype)) {
+//             cb(null, true);
+//         } else {
+//             cb(new Error('Unsupported file type'), false);
+//         }
+//     },
+//     limits: {
+//         fileSize: 500 * 1024 * 1024, // 500 MB
+//     },
+// });
 
-// Cloudinary Storage Engine
-const storage = new CloudinaryStorage({
-    cloudinary,
-    params: async (req, file) => {
-        let resourceType = 'auto';
-
-        if (
-            file.mimetype === 'application/msword' ||
-            file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-            file.mimetype === 'application/vnd.ms-powerpoint' ||
-            file.mimetype === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
-            file.mimetype === 'application/vnd.ms-excel' ||
-            file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-            file.mimetype === 'text/plain'
-        ) {
-            resourceType = 'raw';
-        }
-
-        return {
-            folder: 'pairly/private-chats',
-            allowed_formats: allowedFormats,
-            public_id: `user_${req.user?.id || 'guest'}_${Date.now()}`,
-            resource_type: resourceType,
-        };
-    }
-})
-
-// Multer Upload Middleware
-const upload = multer({
-    storage,
-    fileFilter: (req, file, cb) => {
-        if (allowedMimeTypes.includes(file.mimetype)) {
-            cb(null, true);
-        } else {
-            cb(new Error('Unsupported file type'), false);
-        }
-    },
-    limits: {
-        // 500 MB in bytes
-        fileSize: 500 * 1024 * 1024,
-    },
-});
-
-module.exports = upload;
+// module.exports = upload;

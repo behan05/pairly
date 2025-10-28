@@ -48,7 +48,7 @@ function NormalChatController() {
 
             // new message ringtone 
             const partnerSettings = allUsers.find((u) => u.userId === partnerId)?.settings || {};
-            
+
             if (partnerId !== currentUserId && partnerSettings.newMessage) {
                 new Audio('/messageTone/message-ringtone-magic.ogg').play()
             };
@@ -126,6 +126,33 @@ function NormalChatController() {
             });
         });
 
+        // === Silent Feel Mode ===
+        socket.on('privateChat:silentFeelModeActivated', ({ from, to, message }) => {
+            if (String(to) === String(currentUserId)) {
+                toast.info(message || 'Silent Feel Mode enabled 🌙', { autoClose: 3000 });
+            }
+        });
+
+        socket.on('privateChat:silentFeelModeConfirmed', ({ to, message }) => {
+            if (String(to) === String(activePartnerId)) {
+                toast.success(message || 'Silent Feel Mode activated successfully.');
+            }
+        });
+
+        // === Hear Together Mode ===
+        socket.on('privateChat:hearTogetherInvite', ({ from, to, message }) => {
+            if (String(to) === String(currentUserId)) {
+                toast.info(message || 'Your partner invited you to Hear Together 🎧');
+            }
+        });
+
+        socket.on('privateChat:hearTogetherSent', ({ to, message }) => {
+            if (String(to) === String(activePartnerId)) {
+                toast.success(message || 'Hear Together request sent.');
+            }
+        });
+
+
         // cleanup
         return () => {
             socket.off('privateChat:partner-joined');
@@ -138,6 +165,10 @@ function NormalChatController() {
             socket.off('privateChat:userOnline');
             socket.off('privateChat:userOffline');
             socket.off('privateChat:allUsers');
+            socket.off('privateChat:silentFeelModeActivated');
+            socket.off('privateChat:silentFeelModeConfirmed');
+            socket.off('privateChat:hearTogetherInvite');
+            socket.off('privateChat:hearTogetherSent');
         };
     }, [dispatch, currentUserId, activePartnerId]);
 

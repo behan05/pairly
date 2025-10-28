@@ -1,4 +1,4 @@
-const deleteMediaFromCloudinary = require('../../utils/cloudinary/deleteMedia');
+// const deleteMediaFromCloudinary = require('../../utils/cloudinary/deleteMedia');
 
 /**
  * Handles user disconnection from a random chat match.

@@ -2,12 +2,15 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User.model');
 const generateToken = require('../utils/generateToken');
 const Subscription = require('../models/payment/Subscription.model');
+const { nanoid } = require('nanoid');
 
 // helper email regex (reasonable strictness)
 const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
 // auth Controllers
 const registerController = async (req, res) => {
+  const createUniqueId = nanoid(6);
+
   try {
     const {
       fullName,
@@ -50,13 +53,17 @@ const registerController = async (req, res) => {
       ? await bcrypt.hash(password, await bcrypt.genSalt(10))
       : null;
 
+    // create user public ID
+    publicId = fullName.split(' ')[0].toLowerCase() + '-' + createUniqueId
+
     // Create user
     const user = await User.create({
       fullName: fullNameTrimmed,
       email,
       password: hashedPassword,
+      publicId,
       authProvider,
-      emailVerified: false,
+      emailVerified: false
     });
 
     // Create subscription for the user
@@ -138,13 +145,25 @@ const loginController = async (req, res) => {
       discountAmount: subscription?.discountAmount || 0
     } : { plan: 'free', status: 'active' };
 
+    const createUniqueId = nanoid(6);
+
+    if (!user.publicId) {
+      const updatedUser = await User.findByIdAndUpdate(
+        user._id,
+        { publicId: user.fullName.split(' ')[0].toLowerCase() + '-' + createUniqueId },
+        { new: true }
+      );
+      user.publicId = updatedUser.publicId;
+    }
+
     return res.status(200).json({
       success: true,
       message: 'Login successful!',
       user: {
-        id: user._id,
-        fullName: user.fullName,
-        email: user.email,
+        id: user?._id,
+        fullName: user?.fullName,
+        email: user?.email,
+        publicId: user?.publicId,
         subscription: subscriptionInfo
       },
       token,

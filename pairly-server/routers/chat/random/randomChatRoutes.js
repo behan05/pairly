@@ -1,7 +1,7 @@
 const Routers = require('express').Router();
 const { uploadRandomChatMediaController } = require('../../../controllers/randomChatControllers/randomChatController');
 const authMiddleware = require('../../../middlewares/authMiddleware');
-const upload = require('../../../middlewares/uploadRandomMedia');
+// const upload = require('../../../middlewares/uploadRandomMedia');
 
 /**
  * ================================
@@ -18,7 +18,7 @@ const upload = require('../../../middlewares/uploadRandomMedia');
 Routers.post(
     '/media',
     authMiddleware,
-    upload.single('media'),
+    // upload.single('media'),
     uploadRandomChatMediaController
 );
 

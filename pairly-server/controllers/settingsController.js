@@ -5,7 +5,7 @@ const User = require('../models/User.model');
 const bcrypt = require('bcryptjs');
 const zlib = require('zlib');
 const Profile = require('../models/Profile.model');
-const cloudinary = require('cloudinary').v2;
+// const cloudinary = require('cloudinary').v2;
 
 exports.contactHelp = async (req, res) => {
     const { fullName, email, category, subject, message } = req.body;
@@ -196,9 +196,9 @@ exports.deleteAccount = async (req, res) => {
         const userProfile = await Profile.findOne({ user: userId });
 
         // delete profile image from Cloudinary
-        if (userProfile?.profileImagePublicId) {
-            await cloudinary.uploader.destroy(userProfile.profileImagePublicId);
-        };
+        // if (userProfile?.profileImagePublicId) {
+        //     await cloudinary.uploader.destroy(userProfile.profileImagePublicId);
+        // };
 
         // Delete profile and settings if they exist
         await Profile.findOneAndDelete({ user: userId });

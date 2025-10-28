@@ -9,7 +9,7 @@ const {
 } = require('../../../controllers/privateChatControllers/privateChatController');
 
 // middleware to extract media from port request
-const upload = require('../../../middlewares/uploadPrivateMedia');
+// const upload = require('../../../middlewares/uploadPrivateMedia');
 
 // middleware to identify user
 const authMiddleware = require('../../../middlewares/authMiddleware');
@@ -28,7 +28,7 @@ Routers.delete('/conversations/:conversationId/messages', authMiddleware, clearP
 Routers.post(
     '/media',
     authMiddleware,
-    upload.single('media'),
+    // upload.single('media'),
     uploadPrivateChatMediaController
 );
 

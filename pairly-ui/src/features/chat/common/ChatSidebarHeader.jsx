@@ -105,7 +105,7 @@ const ChatSidebarHeader = ({ children }) => {
       label: 'Private Chat'
     },
     // {
-    //   path: '/pairly/virtual-comedy-hall',
+    //   path: '/pairly/virtual-standup-hall',
     //   icon: <TheaterComedyIcon  sx={{ color: theme.palette.secondary.main }} />,
     //   label: 'Virtual Comedy Hall'
     // },
@@ -180,8 +180,6 @@ const ChatSidebarHeader = ({ children }) => {
   `;
 
   const handleChange = (e) => {
-    console.log(e);
-
     const { value } = e.target.value;
 
     if (value.trim() !== 0) {

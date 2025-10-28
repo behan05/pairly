@@ -19,6 +19,11 @@ const usersSchema = new mongoose.Schema({
         enum: ['local', 'google', 'facebook', 'github'],
         default: 'local',
     },
+    publicId: {
+        type: String,
+        required: true,
+        unique: true
+    },
 
     lastSeen: {
         type: Date,

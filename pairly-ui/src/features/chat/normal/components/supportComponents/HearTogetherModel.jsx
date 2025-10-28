@@ -17,12 +17,12 @@ function HearTogherModel({ open, onClose, partner, partnerId }) {
         setIsSending(true);
 
         // socket event 
-        // socket.emit('hearTogher:request', { to: partnerId }, () => {
-        //   setTimeout(() => {
-        //     setIsSending(false);
-        //     setIsSent(true);
-        //   }, 1000);
-        // });
+        socket.emit('privateChat:hearTogetherRequest', { to: partnerId }, () => {
+            setTimeout(() => {
+                setIsSending(false);
+                setIsSent(true);
+            }, 1000);
+        });
     };
 
     return (

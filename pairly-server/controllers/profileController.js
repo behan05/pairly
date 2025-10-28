@@ -1,6 +1,6 @@
 const Profile = require('../models/Profile.model');
 const User = require('../models/User.model');
-const deleteMediaFromCloudinary = require('../utils/cloudinary/deleteMedia');
+// const deleteMediaFromCloudinary = require('../utils/cloudinary/deleteMedia');
 
 exports.getMyProfileController = async (req, res) => {
     const userId = req.user.id;
@@ -140,9 +140,9 @@ exports.updateGeneralInfoController = async (req, res) => {
 
             // delete previous profile image
             const userProfile = await Profile.findOne({ user: userId });
-            if (userProfile.profileImagePublicId) {
+            // if (userProfile.profileImagePublicId) {
                 await deleteMediaFromCloudinary(userProfile.profileImagePublicId);
-            }
+            // }
 
             // update new profile image
             updateProfile.profileImage = req.file.path;

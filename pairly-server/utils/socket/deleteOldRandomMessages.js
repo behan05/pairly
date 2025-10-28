@@ -1,5 +1,5 @@
 const Message = require('../../models/chat/Message.model');
-const deleteMediaFromCloudinary = require('../cloudinary/deleteMedia');
+// const deleteMediaFromCloudinary = require('../cloudinary/deleteMedia');
 
 /**
  * Deletes all messages from the database where the `deleteAt` date has passed (older than current time).
