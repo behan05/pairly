@@ -23,6 +23,11 @@ const githubRoutes = require('./routers/auth/githubAuth');
 // ==========================
 app.use(passport.initialize());
 
+// ===================================
+// Initialized razorpay payment gateway
+// ===================================
+require('./config/razorpay/razorpay');
+
 // ==========================
 // Database Connection
 // ==========================
@@ -45,6 +50,8 @@ const privateChatRoutes = require('./routers/chat/private/privateChatRoutes');
 const privateBlockRoutes = require('./routers/chat/private/privateBlockRoutes')
 const privateReportRoutes = require('./routers/chat/private/privateReportRoutes')
 const proposalRequestRoutes = require('./routers/chat/private/proposalRequestRoutes')
+
+const paymentRoutes = require('./routers/payment/paymentRoutes');
 
 // ==========================
 // App Configuration
@@ -103,6 +110,9 @@ app.use('/api/private-chat', privateChatRoutes);
 app.use('/api/private-block', privateBlockRoutes);
 app.use('/api/private-report', privateReportRoutes);
 app.use('/api/proposal-request', proposalRequestRoutes);
+
+// ------------- Payment Routes --------------------
+app.use("/api/payments", paymentRoutes);
 
 // ==========================
 // Health Check Route

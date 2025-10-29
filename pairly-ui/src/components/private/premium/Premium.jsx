@@ -5,10 +5,13 @@ import { styled } from '@mui/system';
 import { alpha } from '@mui/material/styles';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate, Outlet } from 'react-router-dom';
 
 function Premium() {
     const theme = useTheme();
-    const { plan, status } = useSelector((state) => state.auth.user.subscription);
+    const navigate = useNavigate();
+    const { subscription, id } = useSelector((state) => state?.auth?.user);
+    const { plan, status } = subscription
     const isFreeUser = plan === 'free' && status === 'active';
 
     useEffect(() => {
@@ -127,6 +130,17 @@ function Premium() {
         }
     }));
 
+    const handleUpgrade = (selectedPlan) => {
+        if (selectedPlan) {
+            selectedPlan.userId = id
+            navigate('checkout', { state: selectedPlan });
+        };
+    };
+
+    if (location.pathname.endsWith('checkout')) {
+        return <Outlet />;
+    };
+
     return (
         <Box px={2}>
             <ChatSidebarHeader />
@@ -212,7 +226,15 @@ function Premium() {
                                     cursor: plan.price === 0 ? 'not-allowed' : 'pointer',
                                     opacity: plan.price === 0 ? 0.5 : 1
                                 }}
-                                onClick={() => plan.price !== 0 && handleUpgrade(plan.title)}
+                                onClick={() => plan.price !== 0 && handleUpgrade(
+                                    {
+                                        planTitle: plan?.title,
+                                        price: plan?.price,
+                                        promoCode: plan?.promoCode,
+                                        discountAmount: plan?.discountAmount,
+                                        features: plan?.featured
+                                    }
+                                )}
                             >
                                 <svg height="16" width="16" viewBox="0 0 24 24">
                                     <path

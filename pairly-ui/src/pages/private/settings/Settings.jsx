@@ -270,7 +270,7 @@ function Settings() {
               <ShareIcon sx={{ mr: 1.1, color: 'success.main' }} />
             </ListItemIcon>
             <ListItemText
-              primary="Invite a Friend"
+              primary="Refer & Earn"
               primaryTypographyProps={{
                 fontSize: '0.9rem',
                 fontWeight: 500,

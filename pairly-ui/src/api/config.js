@@ -49,3 +49,6 @@ export const PRIVATE_REPORT_API = `${BASE_ENDPOINT}/private-report`;
 export const PRIVATE_BLOCK_API = `${BASE_ENDPOINT}/private-block`;
 
 export const PROPOSAL_REQUEST_API = `${BASE_ENDPOINT}/proposal-request`
+
+// Payment
+export const RAZORPAY_PAYMENT_API = `${BASE_ENDPOINT}/payments`

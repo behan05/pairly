@@ -46,7 +46,9 @@ const usersSchema = new mongoose.Schema({
     subscriptionStatus: {
         type: String,
         enum: ['active', 'inactive', 'expired', 'pending'],
-        default: 'active'
+        default: function () {
+            return this.subscriptionPlan === 'free' ? 'active' : 'pending';
+        }
     },
     currentSubscriptionId: {
         type: mongoose.Schema.Types.ObjectId,

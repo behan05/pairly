@@ -519,7 +519,7 @@ const ChatSidebarHeader = ({ children }) => {
           },
           { label: 'Help | Support', to: '/pairly/settings/help', icon: <HelpOutlineIcon fontSize="small" sx={{ mr: 1, color: theme.palette.info.dark }} /> },
           { label: 'Upgrade plan', to: '/pairly/settings/premium', icon: <StarIcon fontSize="small" sx={{ mr: 1, color: theme.palette.warning.main }} /> },
-          { label: 'Invite a Friend', onClick: handleShareClick, icon: <ShareIcon fontSize="small" sx={{ mr: 1, color: theme.palette.success.main }} /> },
+          { label: 'Refer & Earn', onClick: handleShareClick, icon: <ShareIcon fontSize="small" sx={{ mr: 1, color: theme.palette.success.main }} /> },
         ].map(({ label, to, onClick, icon }) => (
           <MenuItem
             key={label}

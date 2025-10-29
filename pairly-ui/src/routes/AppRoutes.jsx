@@ -57,6 +57,7 @@ import PrivateChatSidebar from '@/features/chat/normal/components/coreComponents
 import Verify from '../middleware/Verify';
 import DataDeletionPage from '../pages/private/settings/account/HowToDeleteData/DataDeletionPage';
 import Premium from '../components/private/premium/Premium';
+import CheckoutPage from '@/pages/payment/CheckoutPage';
 import Alerts from '../features/chat/common/Alerts';
 import SubscriptionManager from '../components/private/SubscriptionManager/SubscriptionManager';
 import NextGenerationChat from '../components/common/NextGenerationChat';
@@ -149,6 +150,12 @@ export const routes = createBrowserRouter([
               {
                 path: 'premium',
                 element: <Premium />,
+                children: [
+                  {
+                    path: 'checkout',
+                    element: <CheckoutPage />,
+                  }
+                ]
               },
               {
                 path: 'payments',

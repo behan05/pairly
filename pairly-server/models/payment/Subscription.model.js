@@ -17,29 +17,35 @@ const subscriptionSchema = new mongoose.Schema({
     status: {
         type: String,
         enum: ['active', 'inactive', 'expired', 'pending', 'failed'],
-        default: 'active'
+        default: function () {
+            return this.plan === 'free' ? 'active' : 'pending';
+        }
     },
 
     paymentProvider: {
         type: String,
-        enum: ['razorpay', 'stripe', 'paypal'],
-        required: function () { return this.plan !== 'free'; } // only required if not free
+        enum: ['razorpay'],
+        required: function () {
+            return this.plan !== 'free';
+        }
     },
 
     amount: {
         type: Number,
-        required: function () { return this.plan !== 'free'; }, // only required if not free
+        required: function () {
+            return this.plan !== 'free';
+        },
         default: 0
     },
 
     paymentId: {
         type: String,
-        required: false
+        default: null
     },
 
     orderId: {
         type: String,
-        required: false
+        default: null
     },
 
     currency: {
