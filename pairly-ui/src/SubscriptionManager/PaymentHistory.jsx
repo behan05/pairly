@@ -6,4 +6,4 @@ function PaymentHistory() {
   )
 }
 
-export default PaymentHistory
+export default PaymentHistory;

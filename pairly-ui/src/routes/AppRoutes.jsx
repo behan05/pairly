@@ -59,7 +59,7 @@ import DataDeletionPage from '../pages/private/settings/account/HowToDeleteData/
 import Premium from '../components/private/premium/Premium';
 import CheckoutPage from '@/pages/payment/CheckoutPage';
 import Alerts from '../features/chat/common/Alerts';
-import SubscriptionManager from '../components/private/SubscriptionManager/SubscriptionManager';
+import SubscriptionManager from '@/SubscriptionManager/SubscriptionManager';
 import NextGenerationChat from '../components/common/NextGenerationChat';
 import VirtualStandupHallLayout from '../features/virtual_standup_hall/VirtualStandupHallLayout';
 import CreateEvent from '../features/virtual_standup_hall/CreateEvent';

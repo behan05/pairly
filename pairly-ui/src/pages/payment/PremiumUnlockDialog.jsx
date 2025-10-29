@@ -27,7 +27,7 @@ export default function PremiumUnlockDialog({ open, planTitle, transactionId }) 
             setCounter((prev) => {
                 if (prev === 1) {
                     clearInterval(interval);
-                    navigate("/transactions");
+                    navigate("/pairly/settings/payments");
                 }
                 return prev - 1;
             });
@@ -39,7 +39,7 @@ export default function PremiumUnlockDialog({ open, planTitle, transactionId }) 
     return (
         <Dialog
             open={open}
-            onClose={() => navigate("/transactions")}
+            onClose={() => navigate("/pairly/settings/payments")}
             PaperProps={{
                 sx: {
                     borderRadius: 2,
@@ -165,7 +165,7 @@ export default function PremiumUnlockDialog({ open, planTitle, transactionId }) 
                 }}
             >
                 <Button
-                    onClick={() => navigate("/transactions")}
+                    onClick={() => navigate("/pairly/settings/payments")}
                     fullWidth
                     sx={{
                         borderRadius: 3,
