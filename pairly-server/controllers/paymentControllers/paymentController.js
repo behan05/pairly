@@ -4,12 +4,22 @@ const Subscription = require("../../models/payment/Subscription.model");
 const User = require("../../models/User.model");
 
 //  Create Razorpay order
-exports.createOrder = async (req, res) => {
+exports.createOrderController = async (req, res) => {
+    const currentUserId = req.user.id;
+
+    // Checking user validation
+    if (!currentUserId) {
+        return res.status(401).json({
+            error: "Unauthorized access: user ID is missing.",
+            success: false
+        });
+    }
+
     try {
         const { userId, plan, amount, promoCode, discountAmount } = req.body;
 
         if (!userId || !plan || !amount) {
-            return res.status(400).json({ success: false, message: "Missing fields" });
+            return res.status(400).json({ success: false, error: "Missing fields" });
         }
 
         const options = {
@@ -48,7 +58,17 @@ exports.createOrder = async (req, res) => {
 };
 
 // Verify Razorpay payment
-exports.verifyPayment = async (req, res) => {
+exports.verifyPaymentController = async (req, res) => {
+    const currentUserId = req.user.id;
+
+    // Checking user validation
+    if (!currentUserId) {
+        return res.status(401).json({
+            error: "Unauthorized access: user ID is missing.",
+            success: false
+        });
+    }
+
     try {
         const {
             razorpay_order_id,
@@ -111,3 +131,56 @@ exports.verifyPayment = async (req, res) => {
         res.status(500).json({ success: false, error: "Verification failed" });
     }
 };
+
+// Get invoice
+exports.getPaymentInvoiceController = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        if (!userId) {
+            return res.status(401).json({ success: false, error: "Unauthorized" });
+        }
+
+        // Fetch all non-free subscriptions of this user
+        const invoices = await Subscription.find({
+            userId,
+            plan: { $ne: 'free' } // exclude free plan
+        })
+            .sort({ createdAt: -1 })
+            .lean();
+
+        if (!invoices.length) {
+            return res.status(404).json({
+                success: false,
+                error: "No paid subscription invoices found."
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            count: invoices.length,
+            invoices: invoices.map((inv) => ({
+                id: inv._id,
+                plan: inv.plan,
+                amount: inv.amount,
+                currency: inv.currency,
+                status: inv.status,
+                startDate: inv.startDate,
+                endDate: inv.endDate,
+                paymentId: inv.paymentId,
+                orderId: inv.orderId,
+                invoiceUrl: inv.invoiceUrl,
+                discountAmount: inv.discountAmount,
+                promoCode: inv.promoCode,
+                createdAt: inv.createdAt,
+            })),
+        });
+    } catch (err) {
+        console.error("Error fetching invoices:", err);
+        res.status(500).json({
+            success: false,
+            error: "Server error while fetching invoices."
+        });
+    }
+};
+
