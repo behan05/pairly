@@ -348,9 +348,9 @@ function CheckoutPage() {
                             color: theme.palette.text.secondary,
                         }}
                     >
-                        <span>GST (18%)</span>
+                        <span>Additional discount (18%)</span>
                         <b>
-                            <s>₹{gstAmount}</s>
+                            - ₹{gstAmount}
                         </b>
                     </Typography>
                     <Typography
