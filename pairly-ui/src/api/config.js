@@ -23,6 +23,9 @@ export const PROFILE_API = `${BASE_ENDPOINT}/profile`;
 // Random chat API endpoint
 export const BLOCKED_USERS_API = `${BASE_ENDPOINT}/blocked`;
 
+// Feedback API endpoint
+export const USER_FEEDBACK_API = `${BASE_ENDPOINT}/feedback`;
+
 // ---------------------- RANDOM CHAT API -------------------------
 
 // Random chat API endpoint

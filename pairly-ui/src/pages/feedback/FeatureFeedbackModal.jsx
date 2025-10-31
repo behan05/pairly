@@ -13,8 +13,11 @@ import {
 } from '@/MUI/MuiComponents';
 import { SendIcon } from '@/MUI/MuiIcons';
 import { useState } from 'react';
+import axios from 'axios';
+import { USER_FEEDBACK_API } from '@/api/config';
+import { getAuthHeaders } from '@/utils/authHeaders';
 
-function FeatureFeedbackModal({ open, onClose }) {
+function FeatureFeedbackModal({ open, onClose, featureTitle }) {
   const theme = useTheme();
 
   const [formData, setFormData] = useState({
@@ -22,13 +25,22 @@ function FeatureFeedbackModal({ open, onClose }) {
     textbox: ''
   });
 
+  const [error, setError] = useState({
+    emojiRating: '',
+  });
+
   const handleStarClick = (rating) => {
     setFormData(prev => ({ ...prev, emojiRating: rating }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // TODO: integrate with API
-    console.log(formData);
+    // Backend Needed pros
+    /* 
+    feedbackType: 'feature',
+    rating: formData.emojiRating,
+    message: formData.textbox
+    */
     onClose();
   };
 
@@ -61,7 +73,7 @@ function FeatureFeedbackModal({ open, onClose }) {
           fontWeight={700}
           sx={{ color: theme.palette.text.primary, mt: 1, textAlign: 'center' }}
         >
-          How was your experience with this feature?
+          How was your experience with {featureTitle} feature?
         </Typography>
         <Typography
           variant="body2"

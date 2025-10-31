@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   MenuItem,
@@ -32,6 +32,7 @@ import {
 } from '@/MUI/MuiIcons';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
 import TheaterComedyIcon from '@mui/icons-material/TheaterComedy';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CheckIcon from '@mui/icons-material/Check';
@@ -53,6 +54,7 @@ import { getSettingsPrivacy } from '@/redux/slices/settings/settingsAction';
 import { toggleTheme } from '@/redux/slices/theme/themeSlice';
 
 import { totalNumberOfUnreadMessages } from '@/redux/slices/privateChat/privateChatSlice';
+import UserSuggestionBox from '@/pages/feedback/UserSuggestionBox';
 
 const ChatSidebarHeader = ({ children }) => {
   const navigate = useNavigate();
@@ -66,6 +68,8 @@ const ChatSidebarHeader = ({ children }) => {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const isCustomXs = useMediaQuery('(max-width:411px)');
+
+  const [openUserSuggestionBox, setOpenUserSuggestionBox] = useState(false)
 
   const [themeMode, setThemeMode] = React.useState(
     localStorage.getItem('theme') || 'dark'
@@ -145,6 +149,10 @@ const ChatSidebarHeader = ({ children }) => {
       });
     }
   };
+
+  const handleUserSuggestionClick = () => {
+    setOpenUserSuggestionBox(true);
+  }
 
   const firstWord = profileData?.fullName?.split(' ')[0];
 
@@ -520,12 +528,19 @@ const ChatSidebarHeader = ({ children }) => {
           { label: 'Help | Support', to: '/pairly/settings/help', icon: <HelpOutlineIcon fontSize="small" sx={{ mr: 1, color: theme.palette.info.dark }} /> },
           { label: 'Upgrade plan', to: '/pairly/settings/premium', icon: <StarIcon fontSize="small" sx={{ mr: 1, color: theme.palette.warning.main }} /> },
           { label: 'Refer & Earn', onClick: handleShareClick, icon: <ShareIcon fontSize="small" sx={{ mr: 1, color: theme.palette.success.main }} /> },
+          { label: 'Your Suggestions', onClick: handleUserSuggestionClick, icon: <TipsAndUpdatesIcon fontSize="small" sx={{ mr: 1, color: theme.palette.info.main }} /> },
         ].map(({ label, to, onClick, icon }) => (
           <MenuItem
             key={label}
             component={NavLink}
             to={to}
-            onClick={() => { if (onClick) onClick(); setMenuAnchorEl(null); }}
+            onClick={() => {
+              if (label === "Your Suggestions" && (onClick)) {
+                onClick();
+                return;
+              }
+              else if (onClick) onClick(); setMenuAnchorEl(null);
+            }}
             sx={{
               borderRadius: 0.5,
               p: '8px 10px',
@@ -593,6 +608,11 @@ const ChatSidebarHeader = ({ children }) => {
             </Stack>
           )}
         </Stack>
+
+        <UserSuggestionBox
+          open={openUserSuggestionBox}
+          onClose={() => setOpenUserSuggestionBox(false)}
+        />
       </Drawer>
 
     </Box>

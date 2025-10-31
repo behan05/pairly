@@ -10,8 +10,12 @@ import {
     useTheme,
     TextField
 } from '@/MUI/MuiComponents';
-import { StarIcon , SendIcon} from '@/MUI/MuiIcons';
+import { StarIcon, SendIcon } from '@/MUI/MuiIcons';
 import { useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { USER_FEEDBACK_API } from '@/api/config';
+import { getAuthHeaders } from '@/utils/authHeaders';
 
 function OnboardingFeedback({ open, onClose }) {
     const theme = useTheme();
@@ -21,14 +25,47 @@ function OnboardingFeedback({ open, onClose }) {
         textbox: ''
     });
 
+    const [error, setError] = useState({});
+
     const handleStarClick = (rating) => {
-        setFormData(prev => ({ ...prev, starRating: rating }));
+        setFormData((prev) => ({ ...prev, starRating: rating }));
+        setError((prev) => ({ ...prev, starRating: '' }));
     };
 
-    const handleSubmit = () => {
-        // TODO: integrate with API
-        console.log('Onboarding Feedback:', formData);
+    const handleSkip = () => {
+        localStorage.setItem('onboardingFeedbackSkippedAt', Date.now());
         onClose();
+    };
+
+    const handleSubmit = async () => {
+        if (!formData.starRating) {
+            setError((prev) => ({ ...prev, starRating: 'Please select a rating' }));
+            return;
+        }
+
+        try {
+            const res = await axios.post(
+                USER_FEEDBACK_API,
+                {
+                    feedbackType: 'onboarding',
+                    rating: formData.starRating,
+                    message: formData.textbox
+                },
+                { headers: getAuthHeaders() }
+            );
+
+            if (res.data.success) {
+                toast.success('Thank you for your feedback!');
+                setFormData({ starRating: 0, textbox: '' });
+                onClose();
+                localStorage.setItem('onboardingFeedbackDoneAt', Date.now());
+            } else {
+                toast.error(res.data.error || 'Something went wrong. Please try again.');
+            }
+        } catch (err) {
+            console.error('Feedback error:', err);
+            toast.error(err.response?.data?.error || 'Failed to submit feedback.');
+        }
     };
 
     return (
@@ -45,7 +82,6 @@ function OnboardingFeedback({ open, onClose }) {
                 },
             }}
         >
-            {/* Header */}
             <DialogTitle
                 sx={{
                     display: 'flex',
@@ -70,7 +106,6 @@ function OnboardingFeedback({ open, onClose }) {
                 </Typography>
             </DialogTitle>
 
-            {/* Content */}
             <DialogContent sx={{ textAlign: 'center', mt: 2 }}>
                 <Stack direction="row" spacing={1} justifyContent="center" sx={{ mb: 2 }}>
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -91,6 +126,12 @@ function OnboardingFeedback({ open, onClose }) {
                     ))}
                 </Stack>
 
+                {error.starRating && (
+                    <Typography variant="body2" color="error" sx={{ mb: 1 }}>
+                        {error.starRating}
+                    </Typography>
+                )}
+
                 <TextField
                     fullWidth
                     multiline
@@ -106,7 +147,6 @@ function OnboardingFeedback({ open, onClose }) {
 
             <Divider sx={{ my: 2 }} />
 
-            {/* Actions */}
             <DialogActions
                 sx={{
                     display: 'flex',
@@ -115,7 +155,7 @@ function OnboardingFeedback({ open, onClose }) {
                 }}
             >
                 <Button
-                    onClick={onClose}
+                    onClick={handleSkip}
                     variant="outlined"
                     sx={{
                         borderRadius: 0.2,
@@ -136,15 +176,15 @@ function OnboardingFeedback({ open, onClose }) {
                     endIcon={<SendIcon />}
                     sx={{
                         borderRadius: 0.2,
-                        textTransform: "none",
+                        textTransform: 'none',
                         fontWeight: 700,
                         px: 3,
                         py: 0.8,
-                        fontSize: "1rem",
+                        fontSize: '1rem',
                         background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.info.main}, ${theme.palette.secondary.main})`,
                         color: theme.palette.common.white,
                         boxShadow: `0 5px 15px ${theme.palette.primary.main}66`,
-                        "&:hover": {
+                        '&:hover': {
                             background: `linear-gradient(135deg, ${theme.palette.info.main}, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
                             boxShadow: `0 6px 20px ${theme.palette.secondary.main}66`,
                         },
@@ -158,4 +198,3 @@ function OnboardingFeedback({ open, onClose }) {
 }
 
 export default OnboardingFeedback;
-

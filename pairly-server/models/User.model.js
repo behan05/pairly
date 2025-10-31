@@ -54,7 +54,9 @@ const usersSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Subscription',
         default: null
-    }
+    },
+
+    hasGivenOnboardingFeedback: { type: Boolean, default: false }
 
 }, { timestamps: true });
 

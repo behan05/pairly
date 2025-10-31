@@ -13,6 +13,9 @@ import {
 } from '@/MUI/MuiComponents';
 import { SendIcon } from '@/MUI/MuiIcons';
 import { useState } from 'react';
+import axios from 'axios';
+import { USER_FEEDBACK_API } from '@/api/config';
+import { getAuthHeaders } from '@/utils/authHeaders';
 
 function ChatSessionRating({ open, onClose }) {
   const theme = useTheme();
@@ -22,13 +25,28 @@ function ChatSessionRating({ open, onClose }) {
     textbox: ''
   });
 
+  const [error, setError] = useState({
+    emojiRating: '',
+    textbox: ''
+  });
+
   const handleStarClick = (rating) => {
     setFormData(prev => ({ ...prev, emojiRating: rating }));
   };
 
-  const handleSubmit = () => {
+  const handleSkip = () => {
+    // localStorage.setItem("ChatSessionFeedbackSkippedAt", Date.now());
+    onClose();
+  };
+
+  const handleSubmit = async () => {
     // TODO: integrate with API
-    console.log(formData);
+    // Backend Needed pros
+    /* 
+    feedbackType: 'session',
+    rating: formData.emojiRating,
+    message: formData.textbox
+    */
     onClose();
   };
 
@@ -129,7 +147,7 @@ function ChatSessionRating({ open, onClose }) {
         }}
       >
         <Button
-          onClick={onClose}
+          onClick={handleSkip}
           variant="outlined"
           sx={{
             borderRadius: 0.2,

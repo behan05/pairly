@@ -15,8 +15,8 @@ import { Link } from 'react-router-dom';
 import BgToggle from './BgToggle';
 
 const navListBtn = [
-  { path: '/login', text: 'Login', icon: <LockOpenIcon sx={{ color: 'success.main' }} /> },
-  { path: '/register', text: 'Create Account', icon: <LockIcon sx={{ color: 'success.main' }} /> }
+  { path: '/login', text: 'Login', icon: <LockOpenIcon sx={{ color: 'text.disabled' }} /> },
+  { path: '/register', text: 'Create Account', icon: <LockIcon sx={{ color: 'text.disabled' }} /> }
 ];
 
 function Navbar() {

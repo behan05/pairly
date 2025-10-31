@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Stack,
@@ -28,7 +28,7 @@ import {
   MonetizationOnIcon,
   LanguageIcon
 } from '@/MUI/MuiIcons';
-
+import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
 import { Link, useNavigate } from 'react-router-dom';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import { logout } from '@/redux/slices/auth/authAction';
@@ -37,12 +37,14 @@ import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { alpha } from '@mui/material/styles';
+import UserSuggestionBox from '@/pages/feedback/UserSuggestionBox';
 
 function Settings() {
   const [searchValue, setSearchValue] = React.useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const theme = useTheme();
+  const [openUserSuggestionBox, setOpenUserSuggestionBox] = useState(false)
 
   // Fetch profile and settings data on component mount
   // This will ensure that the profile and settings data are available when the component renders
@@ -131,6 +133,10 @@ function Settings() {
     await dispatch(logout());
     navigate('/login');
   };
+
+  const handleUserSuggestionClick = () => {
+    setOpenUserSuggestionBox(true);
+  }
 
   const handleShareClick = () => {
     const shareData = {
@@ -251,62 +257,94 @@ function Settings() {
 
           <Divider sx={{ bgcolor: theme.palette.divider, mt: 2 }} />
 
-          {/* Invite a Friend */}
-          <ListItemButton
-            onClick={handleShareClick}
-            sx={{
-              borderRadius: 1.5,
-              px: 1.6,
-              py: 0.8,
-              mt: 2,
-              transition: 'all 0.25s ease',
-              '&:hover': {
-                transform: 'translateY(-3px)',
-                backgroundColor: alpha(theme.palette.success.main, 0.05),
-              },
-            }}
-          >
-            <ListItemIcon sx={{ minWidth: '36px' }}>
-              <ShareIcon sx={{ mr: 1.1, color: 'success.main' }} />
-            </ListItemIcon>
-            <ListItemText
-              primary="Refer & Earn"
-              primaryTypographyProps={{
-                fontSize: '0.9rem',
-                fontWeight: 500,
+          <Stack direction='column' mt={1.5}>
+            {/* Invite a Friend */}
+            <ListItemButton
+              onClick={handleShareClick}
+              sx={{
+                borderRadius: 1.5,
+                px: 1.6,
+                py: 0.8,
+                transition: 'all 0.25s ease',
+                '&:hover': {
+                  transform: 'translateY(-3px)',
+                  backgroundColor: alpha(theme.palette.success.main, 0.05),
+                },
               }}
-            />
-          </ListItemButton>
+            >
+              <ListItemIcon sx={{ minWidth: '36px' }}>
+                <ShareIcon sx={{ mr: 1.1, color: 'success.main' }} />
+              </ListItemIcon>
+              <ListItemText
+                primary="Refer & Earn"
+                primaryTypographyProps={{
+                  fontSize: '0.9rem',
+                  fontWeight: 500,
+                }}
+              />
+            </ListItemButton>
 
-          {/* Logout */}
-          <ListItemButton
-            onClick={handleLogout}
-            sx={{
-              borderRadius: 1.5,
-              px: 1.6,
-              py: 0.8,
-              transition: 'all 0.25s ease',
-              '&:hover': {
-                transform: 'translateY(-3px)',
-                backgroundColor: alpha(theme.palette.error.main, 0.05),
-              },
-            }}
-          >
-            <ListItemIcon sx={{ minWidth: '36px' }}>
-              <LogoutIcon sx={{ mr: 1.1, color: 'error.main' }} />
-            </ListItemIcon>
-            <ListItemText
-              primary="Logout"
-              primaryTypographyProps={{
-                fontSize: '0.9rem',
-                fontWeight: 600,
-                color: theme.palette.error.main,
+            {/* User suggestion Feedback */}
+            <ListItemButton
+              onClick={handleUserSuggestionClick}
+              sx={{
+                borderRadius: 1.5,
+                px: 1.6,
+                py: 0.8,
+                transition: 'all 0.25s ease',
+                '&:hover': {
+                  transform: 'translateY(-3px)',
+                  backgroundColor: alpha(theme.palette.success.main, 0.05),
+                },
               }}
-            />
-          </ListItemButton>
+            >
+              <ListItemIcon sx={{ minWidth: '36px' }}>
+                <TipsAndUpdatesIcon sx={{ mr: 1.1, color: 'info.main' }} />
+              </ListItemIcon>
+              <ListItemText
+                primary="Your Suggestions"
+                primaryTypographyProps={{
+                  fontSize: '0.9rem',
+                  fontWeight: 500,
+                }}
+              />
+            </ListItemButton>
+
+            {/* Logout */}
+            <ListItemButton
+              onClick={handleLogout}
+              sx={{
+                borderRadius: 1.5,
+                px: 1.6,
+                py: 0.8,
+                transition: 'all 0.25s ease',
+                '&:hover': {
+                  transform: 'translateY(-3px)',
+                  backgroundColor: alpha(theme.palette.error.main, 0.05),
+                },
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: '36px' }}>
+                <LogoutIcon sx={{ mr: 1.1, color: 'error.main' }} />
+              </ListItemIcon>
+              <ListItemText
+                primary="Logout"
+                primaryTypographyProps={{
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  color: theme.palette.error.main,
+                }}
+              />
+            </ListItemButton>
+          </Stack>
+
         </List>
       )}
 
+      <UserSuggestionBox
+        open={openUserSuggestionBox}
+        onClose={() => setOpenUserSuggestionBox(false)}
+      />
     </Box>
   );
 }

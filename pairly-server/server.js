@@ -51,6 +51,8 @@ const privateBlockRoutes = require('./routers/chat/private/privateBlockRoutes')
 const privateReportRoutes = require('./routers/chat/private/privateReportRoutes')
 const proposalRequestRoutes = require('./routers/chat/private/proposalRequestRoutes')
 
+const feedbackRoutes = require('./routers/feedback/feedbackRoutesRoutes')
+
 const paymentRoutes = require('./routers/payment/paymentRoutes');
 
 // ==========================
@@ -110,6 +112,9 @@ app.use('/api/private-chat', privateChatRoutes);
 app.use('/api/private-block', privateBlockRoutes);
 app.use('/api/private-report', privateReportRoutes);
 app.use('/api/proposal-request', proposalRequestRoutes);
+
+// ------------- Feedback Routes --------------------
+app.use('/api/feedback', feedbackRoutes);
 
 // ------------- Payment Routes --------------------
 app.use("/api/payments", paymentRoutes);

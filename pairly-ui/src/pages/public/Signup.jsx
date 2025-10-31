@@ -258,7 +258,7 @@ function Signup() {
           >
             Join now to meet new people, share real moments, and make meaningful connections — instantly.
           </Typography>
-          
+
           {/* Full Name Input */}
           <TextField
             variant="outlined"
@@ -382,16 +382,23 @@ function Signup() {
           <Button
             type="submit"
             variant="outlined"
-            endIcon={<SendIcon sx={{ color: 'success.main' }} />}
+            endIcon={<SendIcon sx={{ color: '#fff' }} />}
             disabled={loading || buttonDisabled}
             sx={{
-              borderRadius: 3,
-              textTransform: 'none',
-              fontWeight: 600,
-              color: theme.palette.text.primary,
-              borderColor: theme.palette.divider,
-              '&:hover': {
-                background: theme.palette.action.hover,
+              maxWidth: 'fit-content',
+              alignSelf: 'flex-end',
+              borderRadius: 0.8,
+              textTransform: "none",
+              fontWeight: 700,
+              px: 3,
+              py: 0.8,
+              fontSize: "1rem",
+              color: theme.palette.common.white,
+              background: `linear-gradient(135deg, ${theme.palette.info.main}, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+              boxShadow: `0 6px 20px ${theme.palette.secondary.main}66`,
+              "&:hover": {
+                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.info.main}, ${theme.palette.secondary.main})`,
+                boxShadow: `0 5px 15px ${theme.palette.primary.main}66`,
               },
             }}
           >

@@ -164,7 +164,8 @@ const loginController = async (req, res) => {
         fullName: user?.fullName,
         email: user?.email,
         publicId: user?.publicId,
-        subscription: subscriptionInfo
+        subscription: subscriptionInfo,
+        hasGivenOnboardingFeedback: user?.hasGivenOnboardingFeedback
       },
       token,
     });
