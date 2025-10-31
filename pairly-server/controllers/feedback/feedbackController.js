@@ -48,7 +48,7 @@ exports.feedbackController = async (req, res) => {
             await User.findByIdAndUpdate(currentUserId, {
                 hasGivenOnboardingFeedback: true,
             });
-        }
+        } 
 
         return res.status(200).json({
             success: true,

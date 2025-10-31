@@ -19,7 +19,7 @@ export const SETTINGS_API = `${BASE_ENDPOINT}/settings`;
 
 // User profile API endpoint
 export const PROFILE_API = `${BASE_ENDPOINT}/profile`;
-
+ 
 // Random chat API endpoint
 export const BLOCKED_USERS_API = `${BASE_ENDPOINT}/blocked`;
 
