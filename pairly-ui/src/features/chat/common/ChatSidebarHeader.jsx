@@ -28,7 +28,8 @@ import {
   StarIcon,
   MarkunreadIcon,
   DraftsIcon,
-  SearchIcon
+  SearchIcon,
+  CheckCircleIcon
 } from '@/MUI/MuiIcons';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -55,6 +56,10 @@ import { toggleTheme } from '@/redux/slices/theme/themeSlice';
 
 import { totalNumberOfUnreadMessages } from '@/redux/slices/privateChat/privateChatSlice';
 import UserSuggestionBox from '@/pages/feedback/UserSuggestionBox';
+import { USERS_API } from "@/api/config";
+import axios from 'axios';
+import { getAuthHeaders } from '@/utils/authHeaders'
+import { socket } from '@/services/socket';
 
 const ChatSidebarHeader = ({ children }) => {
   const navigate = useNavigate();
@@ -62,7 +67,8 @@ const ChatSidebarHeader = ({ children }) => {
   const { profileData } = useSelector((state) => state?.profile);
   const { publicId } = useSelector((state) => state.auth?.user);
   const { plan, status } = useSelector((state) => state?.auth?.user?.subscription);
-  const isFreeUser = status === 'active' && plan === 'free';
+  const hasPremiumAccess = plan !== 'free' && status === 'active';
+  const isFreeUser = !hasPremiumAccess;
 
   const pendingCount = useSelector(pendingFriendRequestCount);
   const theme = useTheme();
@@ -81,6 +87,8 @@ const ChatSidebarHeader = ({ children }) => {
   const isMenuOpen = Boolean(menuAnchorEl);
 
   const [userId, setUserId] = React.useState('');
+  const [isRequestSent, setIsRequestSent] = React.useState(false);
+  const [searchedUser, setsearchUser] = React.useState('');
 
   // Fetch initial settings | Preferences data
   useEffect(() => {
@@ -188,12 +196,25 @@ const ChatSidebarHeader = ({ children }) => {
   `;
 
   const handleChange = (e) => {
-    const { value } = e.target.value;
+    const value = e.target.value;
+    setUserId(value);
 
-    if (value.trim() !== 0) {
-      setUserId(value);
-    }
-  }
+    // Debounce API call
+    if (handleChange.timeout) clearTimeout(handleChange.timeout);
+
+    handleChange.timeout = setTimeout(async () => {
+      if (!value.trim()) return setsearchUser('');
+      try {
+        const response = await axios.get(`${USERS_API}/publicId/${value}`, { headers: getAuthHeaders() });
+
+        if (response.data.success) {
+          setsearchUser(response.data.user);
+        }
+      } catch (error) {
+        console.error("User not found:", error);
+      }
+    }, 400);
+  };
 
   // toggle Theme Mode
   const toggleThemeMode = () => {
@@ -220,6 +241,11 @@ const ChatSidebarHeader = ({ children }) => {
 
     return () => clearTimeout(resetSetCopied);
   }, [copied]);
+
+  const handleFriendRequest = (partnerUserId) => {
+    socket.emit('friendRequest:directly', partnerUserId);
+    setIsRequestSent(true)
+  };
 
   return (
     <Box
@@ -253,7 +279,7 @@ const ChatSidebarHeader = ({ children }) => {
         <Stack
           direction="row"
           alignItems="center"
-          gap={isSm ? 2 : 3.5}
+          gap={isSm ? 1 : 3.5}
         >
           {navItems.map(({ path, icon, label }) => {
 
@@ -264,36 +290,36 @@ const ChatSidebarHeader = ({ children }) => {
                   to={path}
                   end={path === '/pairly'}
                   sx={{
-                    transition: 'all 0.4s ease',
-                    borderRadius: '50%',
-                    backdropFilter: 'blur(8px)',
-                    background: `${theme.palette.background.paper}44`,
+                    width: 34,
+                    height: 34,
+                    borderRadius: 0.8,
+                    transition: 'background 0.3s ease, box-shadow 0.3s ease',
+                    backdropFilter: 'blur(6px)',
+                    background: `${theme.palette.background.paper}66`,
                     boxShadow: `0 0 4px ${theme.palette.primary.main}22`,
                     '&:hover': {
-                      transform: 'scale(1.15)',
-                      background: `linear-gradient(135deg, 
-        ${theme.palette.primary.light}55, 
-        ${theme.palette.background.paper}99)`,
-                      boxShadow: `0 0 12px ${theme.palette.primary.main}66`,
+                      background: `linear-gradient(135deg,
+          ${theme.palette.primary.light}55,
+          ${theme.palette.background.paper}99)`,
+                      boxShadow: `0 0 8px ${theme.palette.primary.main}55`,
                     },
                     '&.active': {
-                      background: `linear-gradient(135deg, 
-        ${theme.palette.primary.main}88, 
-        ${theme.palette.secondary.main}55)`,
-                      boxShadow: `0 0 12px ${theme.palette.primary.main}99`,
+                      background: `linear-gradient(135deg,
+          ${theme.palette.primary.main}88,
+          ${theme.palette.secondary.main}55)`,
+                      boxShadow: `0 0 10px ${theme.palette.primary.main}99`,
                     },
                   }}
                 >
                   {React.cloneElement(icon, {
                     sx: {
-                      fontSize: 24,
+                      fontSize: 22, // fixed font size
+                      color: theme.palette.text.primary,
                       transition: 'color 0.3s ease',
                       ...(icon.props.sx || {}),
-                      '&:hover': { color: theme.palette.primary.main },
                     },
                   })}
                 </IconButton>
-
               </Tooltip>
             );
           })}
@@ -306,6 +332,7 @@ const ChatSidebarHeader = ({ children }) => {
               sx={{
                 width: 40,
                 height: 40,
+                borderRadius: 0.8,
                 transition: 'all 0.3s linear',
                 cursor: 'pointer',
                 '&:hover': {
@@ -321,6 +348,7 @@ const ChatSidebarHeader = ({ children }) => {
         </Stack>
       </Stack>
       <Divider sx={{ mt: 1 }} />
+
       {/* Search Bar if needed */}
       {children}
 
@@ -340,7 +368,6 @@ const ChatSidebarHeader = ({ children }) => {
           },
         }}
       >
-
         {/* Profile Card */}
         <Stack
           direction={isCustomXs ? 'column' : 'row'}
@@ -428,7 +455,13 @@ const ChatSidebarHeader = ({ children }) => {
             <Avatar
               src={profileData?.profileImage || defaultAvatar}
               alt="user"
-              sx={{ width: isCustomXs ? 72 : 80, height: isCustomXs ? 72 : 80, border: `2px solid ${theme.palette.background.paper}`, zIndex: 1, position: 'relative' }}
+              sx={{
+                width: isCustomXs ? 72 : 80,
+                height: isCustomXs ? 72 : 80,
+                border: `2px solid ${theme.palette.background.paper}`,
+                zIndex: 1,
+                position: 'relative'
+              }}
             />
           </Box>
 
@@ -476,17 +509,25 @@ const ChatSidebarHeader = ({ children }) => {
                 py: 0.5,
                 borderRadius: 999,
                 alignSelf: isCustomXs ? 'center' : 'flex-start',
-                background: plan === 'free' ? `${theme.palette.grey[700]}44` : `linear-gradient(90deg, #ffb300, #ff9800)`,
-                boxShadow: plan !== 'free' ? `0 0 12px ${theme.palette.warning.main}66` : `0 0 4px ${theme.palette.divider}`,
+                background:
+                  plan === 'free'
+                    ? `${theme.palette.grey[700]}44`
+                    : status === 'active'
+                      ? `linear-gradient(90deg, #ffb300, #ff9800)`
+                      : `${theme.palette.grey[700]}44`,
+                boxShadow:
+                  plan !== 'free'
+                    ? `0 0 2px ${status === 'active' ? theme.palette.warning.main : theme.palette.grey[600]
+                    }66`
+                    : `0 0 2px ${theme.palette.divider}`,
               }}
             >
               <StarIcon sx={{ fontSize: 18, color: plan === 'free' ? theme.palette.text.secondary : '#fff' }} />
               <Typography variant="caption" fontWeight={600} color={plan === 'free' ? 'text.secondary' : '#fff'}>
-                {toCapitalCase(plan)} Plan
+                {status === 'active' ? `${toCapitalCase(plan)} Plan` : `${toCapitalCase(plan)} (Pending)`}
               </Typography>
             </Stack>
           </Stack>
-
         </Stack>
 
         {/* Search by User ID */}
@@ -508,113 +549,161 @@ const ChatSidebarHeader = ({ children }) => {
 
         <Divider sx={{ bgcolor: theme.palette.divider, height: 2 }} />
 
-        {/* Menu Items */}
-        {[
-          { label: 'Profile', to: '/pairly/profile', icon: <PersonIcon fontSize="small" sx={{ mr: 1, color: theme.palette.info.main }} /> },
-          { label: 'Settings', to: '/pairly/settings', icon: <SettingsIcon fontSize="small" sx={{ mr: 1, color: theme.palette.primary.main }} /> },
-          {
-            to: '/pairly/alerts',
-            icon: (
-              <Tooltip title={hasNewAlert ? 'You have new alerts' : 'No new alerts'}>
-                {hasNewAlert ? (
-                  <MarkunreadIcon fontSize="small" sx={{ color: theme.palette.warning.main, mr: 1 }} />
-                ) : (
-                  <DraftsIcon fontSize="small" sx={{ color: theme.palette.text.disabled, mr: 1 }} />
-                )}
-              </Tooltip>
-            ),
-            label: 'Alert Messages',
-          },
-          { label: 'Help | Support', to: '/pairly/settings/help', icon: <HelpOutlineIcon fontSize="small" sx={{ mr: 1, color: theme.palette.info.dark }} /> },
-          { label: 'Upgrade plan', to: '/pairly/settings/premium', icon: <StarIcon fontSize="small" sx={{ mr: 1, color: theme.palette.warning.main }} /> },
-          { label: 'Refer & Earn', onClick: handleShareClick, icon: <ShareIcon fontSize="small" sx={{ mr: 1, color: theme.palette.success.main }} /> },
-          { label: 'Your Suggestions', onClick: handleUserSuggestionClick, icon: <TipsAndUpdatesIcon fontSize="small" sx={{ mr: 1, color: theme.palette.info.main }} /> },
-        ].map(({ label, to, onClick, icon }) => (
-          <MenuItem
-            key={label}
-            component={NavLink}
-            to={to}
-            onClick={() => {
-              if (label === "Your Suggestions" && (onClick)) {
-                onClick();
-                return;
-              }
-              else if (onClick) onClick(); setMenuAnchorEl(null);
-            }}
-            sx={{
-              borderRadius: 0.5,
-              p: '8px 10px',
-              mt: 0.5,
-              transition: 'all 0.3s ease-out',
-              color: 'text.secondary',
-              '&:hover': { transform: `translate(1px, -1px) scale(0.99)`, filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})` },
-            }}
-          >
-            {icon}{label}
-          </MenuItem>
-        ))}
-
-        <Divider sx={{ my: 0.5, height: 2 }} />
-
-        {/* Logout */}
-        <MenuItem
-          onClick={handleLogout}
-          sx={{
-            borderRadius: 0.5,
-            p: '8px 10px',
-            color: 'error.main',
-            transition: 'all 0.3s ease-out',
-            '&:hover': { transform: `translate(1px, -1px) scale(0.99)`, filter: `drop-shadow(0 20px 1rem ${theme.palette.error.main})` },
-          }}
-        >
-          <LogoutIcon fontSize="small" sx={{ mr: 1, color: theme.palette.error.main }} />
-          Logout
-        </MenuItem>
-
-        {/* Upgrade Button / Premium Info */}
-        <Stack sx={{ position: 'absolute', bottom: 16, left: '50%', transform: 'translateX(-50%)', width: '90%', maxWidth: 320 }}>
-          {isFreeUser ? (
-            <Button
-              component={Link}
-              to="/pairly/settings/premium"
-              startIcon={<StarIcon sx={{ fontSize: 20 }} />}
+        {searchedUser ? (
+          <Box sx={{ py: 0.5 }}>
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={2}
               sx={{
-                position: 'relative',
-                overflow: 'hidden',
-                height: 52,
-                borderRadius: 3,
-                fontSize: '1rem',
-                fontWeight: 600,
-                letterSpacing: 0.4,
-                color: '#fff',
-                textTransform: 'none',
-                background: `linear-gradient(135deg, #7a5af8, #df71ff)`,
-                boxShadow: '0 0 18px rgba(122, 90, 248, 0.4)',
-                transition: 'all 0.35s ease',
-                backdropFilter: 'blur(10px)',
-                '&:hover': { transform: 'translateY(-2px)', boxShadow: '0 0 25px rgba(223, 113, 255, 0.6)', background: `linear-gradient(135deg, #8b6bff, #e782ff)` },
-                '&::after': { content: '""', position: 'absolute', top: 0, left: '-75%', width: '50%', height: '100%', background: 'linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent)', transform: 'skewX(-20deg)', animation: 'shine 2.8s infinite ease-in-out' },
-                '@keyframes shine': { '0%': { left: '-75%' }, '60%': { left: '125%' }, '100%': { left: '125%' } },
+                p: 0.5,
+                borderRadius: 0.5,
+                background: theme.palette.background.paper,
+                border: `1px solid ${theme.palette.divider}`,
+                boxShadow: `0 2px 10px ${theme.palette.primary.main}22`,
               }}
             >
-              Level Up Your Chat
-            </Button>
-          ) : (
-            <Stack direction="row" alignItems="center" justifyContent="center" gap={1} sx={{ py: 1.3, borderRadius: 3, background: `linear-gradient(90deg, #ffb300, #ff9800)`, color: '#fff', boxShadow: '0 0 18px rgba(255, 193, 7, 0.4)' }}>
-              <StarIcon sx={{ fontSize: 18 }} />
-              <Typography variant="body2" fontWeight={600} sx={{ textShadow: '0 0 5px rgba(0,0,0,0.2)' }}>
-                You’re enjoying Premium Features ✨
-              </Typography>
-            </Stack>
-          )}
-        </Stack>
+              <Stack direction='row' gap={1} alignItems={'center'} flex={1}>
+                <Avatar
+                  src={searchedUser?.profileImage || defaultAvatar}
+                  alt={searchedUser?.fullName}
+                  sx={{ width: 36, height: 36 }}
+                />
+                <Stack >
+                  <Typography variant="subtitle2" fontWeight={600}>
+                    {toCapitalCase(searchedUser?.fullName)}
+                  </Typography>
 
+                  <Typography variant="caption" color="text.secondary">
+                    ID: {searchedUser?.publicId}
+                  </Typography>
+                </Stack>
+              </Stack>
+
+              {/* Actions */}
+              <Stack direction="row" spacing={1}>
+                <Button
+                  variant={isRequestSent ? "contained" : "outlined"}
+                  size="small"
+                  color={isRequestSent ? "success" : "primary"}
+                  disabled={isRequestSent || !searchedUser?.searchUserId}
+                  onClick={() => handleFriendRequest(searchedUser?.searchUserId)}
+                >
+                  {isRequestSent ? "Request Sent" : "Add Friend"}
+                </Button>
+              </Stack>
+
+            </Stack>
+          </Box>
+        ) : (
+          <>
+            {/* Menu Items */}
+            {[
+              { label: 'Profile', to: '/pairly/profile', icon: <PersonIcon fontSize="small" sx={{ mr: 1, color: theme.palette.info.main }} /> },
+              { label: 'Settings', to: '/pairly/settings', icon: <SettingsIcon fontSize="small" sx={{ mr: 1, color: theme.palette.primary.main }} /> },
+              {
+                to: '/pairly/alerts',
+                icon: (
+                  <Tooltip title={hasNewAlert ? 'You have new alerts' : 'No new alerts'}>
+                    {hasNewAlert ? (
+                      <MarkunreadIcon fontSize="small" sx={{ color: theme.palette.warning.main, mr: 1 }} />
+                    ) : (
+                      <DraftsIcon fontSize="small" sx={{ color: theme.palette.text.disabled, mr: 1 }} />
+                    )}
+                  </Tooltip>
+                ),
+                label: 'Alert Messages',
+              },
+              { label: 'Help | Support', to: '/pairly/settings/help', icon: <HelpOutlineIcon fontSize="small" sx={{ mr: 1, color: theme.palette.info.dark }} /> },
+              { label: 'Upgrade plan', to: '/pairly/settings/premium', icon: <StarIcon fontSize="small" sx={{ mr: 1, color: theme.palette.warning.main }} /> },
+              { label: 'Refer & Earn', onClick: handleShareClick, icon: <ShareIcon fontSize="small" sx={{ mr: 1, color: theme.palette.success.main }} /> },
+              { label: 'Your Suggestions', onClick: handleUserSuggestionClick, icon: <TipsAndUpdatesIcon fontSize="small" sx={{ mr: 1, color: theme.palette.info.main }} /> },
+            ].map(({ label, to, onClick, icon }) => (
+              <MenuItem
+                key={label}
+                component={NavLink}
+                to={to}
+                onClick={() => {
+                  if (label === "Your Suggestions" && (onClick)) {
+                    onClick();
+                    return;
+                  }
+                  else if (onClick) onClick(); setMenuAnchorEl(null);
+                }}
+                sx={{
+                  borderRadius: 0.5,
+                  p: '8px 10px',
+                  mt: 0.5,
+                  transition: 'all 0.3s ease-out',
+                  color: 'text.secondary',
+                  '&:hover': { transform: `translate(1px, -1px) scale(0.99)`, filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})` },
+                }}
+              >
+                {icon}{label}
+              </MenuItem>
+            ))}
+
+            <Divider sx={{ my: 0.5, height: 2 }} />
+
+            {/* Logout */}
+            <MenuItem
+              onClick={handleLogout}
+              sx={{
+                borderRadius: 0.5,
+                p: '8px 10px',
+                color: 'error.main',
+                transition: 'all 0.3s ease-out',
+                '&:hover': { transform: `translate(1px, -1px) scale(0.99)`, filter: `drop-shadow(0 20px 1rem ${theme.palette.error.main})` },
+              }}
+            >
+              <LogoutIcon fontSize="small" sx={{ mr: 1, color: theme.palette.error.main }} />
+              Logout
+            </MenuItem>
+
+            {/* Upgrade Button / Premium Info */}
+            <Stack sx={{ position: 'absolute', bottom: 16, left: '50%', transform: 'translateX(-50%)', width: '90%', maxWidth: 320 }}>
+              {isFreeUser ? (
+                <Button
+                  component={Link}
+                  to="/pairly/settings/premium"
+                  startIcon={<StarIcon sx={{ fontSize: 20 }} />}
+                  sx={{
+                    position: 'relative',
+                    overflow: 'hidden',
+                    height: 52,
+                    borderRadius: 3,
+                    fontSize: '1rem',
+                    fontWeight: 600,
+                    letterSpacing: 0.4,
+                    color: '#fff',
+                    textTransform: 'none',
+                    background: `linear-gradient(135deg, #7a5af8, #df71ff)`,
+                    boxShadow: '0 0 18px rgba(122, 90, 248, 0.4)',
+                    transition: 'all 0.35s ease',
+                    backdropFilter: 'blur(10px)',
+                    '&:hover': { transform: 'translateY(-2px)', boxShadow: '0 0 25px rgba(223, 113, 255, 0.6)', background: `linear-gradient(135deg, #8b6bff, #e782ff)` },
+                    '&::after': { content: '""', position: 'absolute', top: 0, left: '-75%', width: '50%', height: '100%', background: 'linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent)', transform: 'skewX(-20deg)', animation: 'shine 2.8s infinite ease-in-out' },
+                    '@keyframes shine': { '0%': { left: '-75%' }, '60%': { left: '125%' }, '100%': { left: '125%' } },
+                  }}
+                >
+                  Level Up Your Chat
+                </Button>
+              ) : (
+                <Stack direction="row" alignItems="center" justifyContent="center" gap={1} sx={{ py: 1.3, borderRadius: 3, background: `linear-gradient(90deg, #ffb300, #ff9800)`, color: '#fff', boxShadow: '0 0 18px rgba(255, 193, 7, 0.4)' }}>
+                  <StarIcon sx={{ fontSize: 18 }} />
+                  <Typography variant="body2" fontWeight={600} sx={{ textShadow: '0 0 5px rgba(0,0,0,0.2)' }}>
+                    You’re enjoying Premium Features ✨
+                  </Typography>
+                </Stack>
+              )}
+            </Stack>
+          </>
+        )}
         <UserSuggestionBox
           open={openUserSuggestionBox}
           onClose={() => setOpenUserSuggestionBox(false)}
         />
       </Drawer>
-
     </Box>
   );
 };

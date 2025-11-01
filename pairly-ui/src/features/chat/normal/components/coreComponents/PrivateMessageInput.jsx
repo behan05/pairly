@@ -52,7 +52,8 @@ function PrivateMessageInput() {
 
   const [limitModalOpen, setLimitModalOpen] = useState(false);
   const [limitType, setLimitType] = useState(null);
-  const isFreeUser = status === 'active' && plan === 'free';
+  const hasPremiumAccess = plan !== 'free' && status === 'active';
+  const isFreeUser = !hasPremiumAccess;
 
   const [isRecording, setIsRecording] = useState(false);
   const [micErrorModalOpen, setMicErrorModalOpen] = useState(false);
@@ -117,7 +118,7 @@ function PrivateMessageInput() {
   // Share location
   const handleLocationClick = () => {
     if (isFreeUser) {
-      setPremiumFeatureName('Location exchange');
+      setPremiumFeatureName('Share Location');
       setModalOpen(true);
       handleCloseMenu();
       return;

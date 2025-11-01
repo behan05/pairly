@@ -52,7 +52,8 @@ function Privacy() {
     const updatedValue = e.target.checked;
 
     const premiumFeatures = ['matchVerifiedOnly', 'allowExportData', 'autoDeleteChats'];
-    const isFreeUser = status === 'active' && plan === 'free';
+    const hasPremiumAccess = plan !== 'free' && status === 'active';
+    const isFreeUser = !hasPremiumAccess;
 
     if (premiumFeatures.includes(key) && isFreeUser) {
       setPremiumFeatureName(key === 'autoDeleteChats'

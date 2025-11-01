@@ -159,7 +159,8 @@ function MatchingPreferences() {
   const handleMatchScopeChange = (e) => {
     const { checked } = e.target;
 
-    const isFreeUser = status === 'active' && plan === 'free';
+    const hasPremiumAccess = plan !== 'free' && status === 'active';
+    const isFreeUser = !hasPremiumAccess;
     if (!checked && isFreeUser) {
       setPremiumFeatureName('Nearby Match');
       setModalOpen(true);
@@ -232,7 +233,7 @@ function MatchingPreferences() {
   };
 
   return (
-    <Box component={'section'} sx={{p:2}}>
+    <Box component={'section'} sx={{ p: 2 }}>
       <ToastContainer position="top-right" autoClose={1000} theme="colored" />
 
       {/* Header */}

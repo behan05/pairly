@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { Modal, Box, Typography, Button, Stack, useTheme, CircularProgress } from '@/MUI/MuiComponents';
 import { socket } from '@/services/socket';
+import { useSelector } from 'react-redux';
 
 function HearTogherModel({ open, onClose, partner, partnerId }) {
     const theme = useTheme();
     const [isSending, setIsSending] = useState(false);
     const [isSent, setIsSent] = useState(false);
+    const { plan, status } = useSelector((state) => state?.auth?.user?.subscription || {});
+    const hasPremiumAccess = plan !== 'free' && status === 'active';
+    const isFreeUser = !hasPremiumAccess;
 
     const handleClose = () => {
         setIsSending(false);

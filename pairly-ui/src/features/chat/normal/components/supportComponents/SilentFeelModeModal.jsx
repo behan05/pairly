@@ -12,7 +12,8 @@ function SilentFeelModeModel({ open, onClose, partner, partnerId }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [premiumFeatureName, setPremiumFeatureName] = useState('');
   const { plan, status } = useSelector((state) => state?.auth?.user?.subscription || {});
-  const isFreeUser = status === 'active' && plan === 'free';
+  const hasPremiumAccess = plan !== 'free' && status === 'active';
+  const isFreeUser = !hasPremiumAccess;
 
   const handleClose = () => {
     setIsSending(false);

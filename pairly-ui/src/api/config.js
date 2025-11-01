@@ -10,6 +10,9 @@ const BASE_ENDPOINT =
 // Authentication API endpoint
 export const AUTH_API = `${BASE_ENDPOINT}/auth`;
 
+// Get user by public ID API endpoint
+export const USERS_API = `${BASE_ENDPOINT}/users`;
+
 // Social auth APIs
 export const GOOGLE_API = `${BASE_ENDPOINT}/auth/google`;
 export const GITHUB_API = `${BASE_ENDPOINT}/auth/github`;
@@ -19,7 +22,7 @@ export const SETTINGS_API = `${BASE_ENDPOINT}/settings`;
 
 // User profile API endpoint
 export const PROFILE_API = `${BASE_ENDPOINT}/profile`;
- 
+
 // Random chat API endpoint
 export const BLOCKED_USERS_API = `${BASE_ENDPOINT}/blocked`;
 

@@ -58,7 +58,8 @@ function Notifications() {
     async (key) => {
 
       const premiumFeatures = ['warningAlerts', 'blockNotification'];
-      const isFreeUser = status === 'active' && plan === 'free';
+      const hasPremiumAccess = plan !== 'free' && status === 'active';
+      const isFreeUser = !hasPremiumAccess;
 
       if (premiumFeatures.includes(key) && isFreeUser) {
         const featureNames = {

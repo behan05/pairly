@@ -65,7 +65,8 @@ function RandomMessageInput() {
   const { plan, status } = useSelector((state) => state?.auth?.user?.subscription);
   const [limitModalOpen, setLimitModalOpen] = useState(false);
   const [limitType, setLimitType] = useState(null);
-  const isFreeUser = status === 'active' && plan === 'free';
+  const hasPremiumAccess = plan !== 'free' && status === 'active';
+  const isFreeUser = !hasPremiumAccess;
 
   // Local state for message, media previews, emoji picker, and file menu
   const [message, setMessage] = useState('');

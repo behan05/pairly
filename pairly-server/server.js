@@ -53,6 +53,8 @@ const proposalRequestRoutes = require('./routers/chat/private/proposalRequestRou
 
 const feedbackRoutes = require('./routers/feedback/feedbackRoutesRoutes')
 
+const UserRoutes = require('./routers/searchUsers/UserRoutes')
+
 const paymentRoutes = require('./routers/payment/paymentRoutes');
 
 // ==========================
@@ -115,6 +117,10 @@ app.use('/api/proposal-request', proposalRequestRoutes);
 
 // ------------- Feedback Routes --------------------
 app.use('/api/feedback', feedbackRoutes);
+app.use('/api/feedback', feedbackRoutes);
+
+// ------------- Get user using public Id --------------------
+app.use('/api/users', UserRoutes);
 
 // ------------- Payment Routes --------------------
 app.use("/api/payments", paymentRoutes);

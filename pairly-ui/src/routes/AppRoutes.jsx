@@ -202,6 +202,7 @@ export const routes = createBrowserRouter([
         ]
       },
 
+      // virtual-standup-hall
       {
         path: 'virtual-standup-hall',
         element: <VirtualStandupHallLayout />,

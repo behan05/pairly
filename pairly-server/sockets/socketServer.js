@@ -8,6 +8,8 @@ const User = require('../models/User.model');
 let onlineUsersCount = new Set();
 let onlineUsers = new Map();
 
+// Track all users by userId → socketId
+const userSocketMap = new Map();
 /**
  * Initializes and configures the Socket.IO server.
 *
@@ -57,6 +59,7 @@ function setupSocket(server) {
 
     // === Main connection listener ===
     io.on('connection', (socket) => {
+        userSocketMap.set(socket.userId, socket.id);
 
         // count active
         onlineUsersCount.add(socket.id);
@@ -78,7 +81,7 @@ function setupSocket(server) {
         socket.broadcast.emit('privateChat:userOnline', { userId: socket.userId });
 
         // Register random chat events
-        randomChatHandler(io, socket);
+        randomChatHandler(io, socket, userSocketMap);
 
         // Register private chat events
         privateChatHandler(io, socket, onlineUsers);
@@ -86,6 +89,8 @@ function setupSocket(server) {
         // Handle disconnection
         socket.on('disconnect', async () => {
             onlineUsersCount.delete(socket.id);
+            userSocketMap.delete(socket.id);
+
             io.emit('onlineCount', onlineUsersCount.size);
 
             // Update DB

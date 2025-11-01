@@ -109,7 +109,8 @@ function TagsAndInterests() {
 
   // Toggle Strict match
   const handleStrictMatch = (e) => {
-    const isFreeUser = status === 'active' && plan === 'free';
+    const hasPremiumAccess = plan !== 'free' && status === 'active';
+    const isFreeUser = !hasPremiumAccess;
     if (e.target.checked && isFreeUser) {
       setPremiumFeatureName('Strict Interest Match');
       setModalOpen(true);
@@ -166,7 +167,7 @@ function TagsAndInterests() {
   };
 
   return (
-    <Box component="section" sx={{p:2}}>
+    <Box component="section" sx={{ p: 2 }}>
       <ToastContainer position="top-right" autoClose={1000} theme="colored" />
 
       {/* Page Header with back button */}

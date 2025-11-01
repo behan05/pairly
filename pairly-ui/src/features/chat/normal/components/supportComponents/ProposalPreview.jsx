@@ -12,7 +12,10 @@ function ProposalPreview({ partnerProfile, showProfilePic, myProfile }) {
   const { proposalData, proposalSelectedMusic } = useSelector((state) => state.privateChat);
   const myProfileImage = useRef(null);
   const partnerProfileImage = useRef(null);
-
+  const { plan, status } = useSelector((state) => state?.auth?.user?.subscription || {});
+  const hasPremiumAccess = plan !== 'free' && status === 'active';
+  const isFreeUser = !hasPremiumAccess;
+  
   const {
     proposalType,
     proposalMessage,

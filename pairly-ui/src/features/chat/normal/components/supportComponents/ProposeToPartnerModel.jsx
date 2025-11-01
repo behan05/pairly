@@ -44,7 +44,10 @@ function ProposeToPartnerModel({ open, onClose, partnerId }) {
     const dispatch = useDispatch();
     const { allUsers, proposalMusic } = useSelector(state => state.privateChat);
     const { profileData } = useSelector(state => state.profile);
-
+    const { plan, status } = useSelector((state) => state?.auth?.user?.subscription || {});
+    const hasPremiumAccess = plan !== 'free' && status === 'active';
+    const isFreeUser = !hasPremiumAccess;
+    
     const myProfile = {
         profileImage: profileData?.profileImage,
         fullName: profileData?.fullName?.split(' ')[0],

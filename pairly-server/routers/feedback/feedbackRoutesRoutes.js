@@ -1,6 +1,6 @@
 const routers = require('express').Router();
 
-const { feedbackController } = require('../../controllers/feedback/feedbackController');
+const { feedbackController } = require('../../controllers/feedbackControllers/feedbackController');
 const authMiddleware = require('../../middlewares/authMiddleware');
 
 routers.post('/', authMiddleware, feedbackController);

@@ -36,11 +36,12 @@ const activeMatches = new Map();
  * @param {import('socket.io').Socket} socket - The connected client socket
  */
 
-function randomChatHandler(io, socket) {
+function randomChatHandler(io, socket, userSocketMap) {
 
     // === Join random chat ===
     socket.on('join-random', async () => {
-        await matchRandomUser(socket, waitingQueue, activeMatches, Profile, Block, User, Settings);
+        socket.userId = String(socket.userId);
+        await matchRandomUser(socket, waitingQueue, activeMatches, Profile, Block, User, Settings, userSocketMap);
     });
 
     // === Handle sending messages ===

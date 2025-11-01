@@ -22,7 +22,9 @@ function RequestAccountInfo() {
   const handleRequest = async (e) => {
     e.preventDefault();
 
-    const isFreeUser = status === 'active' && plan === 'free';
+    const hasPremiumAccess = plan !== 'free' && status === 'active';
+    const isFreeUser = !hasPremiumAccess;
+
     if (isFreeUser) {
       setPremiumFeatureName('Account Info');
       setModalOpen(true);
