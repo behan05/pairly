@@ -1,45 +1,40 @@
 import { Button, useTheme } from '@/MUI/MuiComponents';
+import { Link } from 'react-router-dom';
 
-// StyledActionButton component for consistent action button styling
-const StyledActionButton = ({
-  children, // Button label/content
-  endIcon, // Optional icon at the end
-  onClick, // Click handler
-  type = 'button', // Button type
-  disabled = false, // Disabled state
-  sx = {} // Custom styles
-}) => {
+// StyledButton component for navigation and consistent styling
+function StyledActionButton({ icon, variant = 'outlined', type, text, redirectUrl, sx = {}, ...props }) {
   const theme = useTheme();
 
   return (
     <Button
-      variant="outlined" // Outlined button style
+      component={Link} // Use react-router Link for navigation
+      to={redirectUrl} // Destination URL
+      startIcon={icon} // Optional icon at the start
       type={type} // Button type (submit, button, etc.)
-      endIcon={endIcon} // Icon at the end of button
-      disabled={disabled} // Disable button if true
-      onClick={onClick} // Click event handler
+      variant={variant} // Button variant (outlined by default)
       sx={{
-        mt: 2, // Margin top
-        alignSelf: 'center', // Center align
-        border: 'none', // Remove border
-        borderTopRightRadius: '6px', // Rounded top right corner
-        borderBottomRightRadius: '6px', // Rounded bottom right corner
-        borderBottom: `1px dotted ${theme.palette.success.main}`, // Dotted bottom border
-        backdropFilter: 'blur(14px)', // Blur effect
-        bgcolor: theme.palette.background.paper,
-        color: 'text.primary',
-        textTransform: 'none', // No uppercase transformation
-        letterSpacing: 2, // Letter spacing
-        transition: 'all 0.3s ease', // Smooth transition
-        '&:hover': {
-          transform: 'translateY(-5px)' // Move up on hover
+        // maxWidth: 'fit-content',
+        borderRadius: 0.4,
+        textTransform: "none",
+        fontWeight: 700,
+        px: 3,
+        py: 0.8,
+        fontSize: "1rem",
+        color: theme.palette.common.white,
+        background: `linear-gradient(135deg, ${theme.palette.info.main}, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+        boxShadow: `0 6px 20px ${theme.palette.secondary.main}99`,
+        "&:hover": {
+          background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.info.main}, ${theme.palette.secondary.main})`,
+          boxShadow: `0 5px 15px ${theme.palette.primary.main}90`,
         },
-        ...sx // Allow custom styles to override
+        ...sx
       }}
+      {...props}
     >
-      {children}
+      {text}
     </Button>
   );
-};
+}
 
 export default StyledActionButton;
+

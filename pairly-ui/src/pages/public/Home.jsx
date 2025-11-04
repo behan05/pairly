@@ -1,140 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Stack, Typography, useTheme, useMediaQuery } from '@/MUI/MuiComponents';
 import StyledButton from '@/components/common/StyledButton';
+import StyledActionButton from '@/components/common/StyledActionButton';
 import StyledText from '@/components/common/StyledText';
-import Tagline from '@/components/public/Tagline';
 import {
-  BoltOutlinedIcon,
   HelpOutlineIcon,
-  PersonIcon,
-  PsychologyIcon,
-  TuneIcon,
-  AccountBoxIcon,
-  InterestsIcon,
-  ChatIcon,
-  SmsIcon,
-  ShieldIcon,
-  ReportProblemIcon,
-  BrushIcon,
-  FilterAltIcon,
-  TravelExploreIcon
 } from '@/MUI/MuiIcons';
-import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
-import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 
-const iconMap = {
-  Psychology: <PsychologyIcon sx={{ fontSize: 36, color: 'primary.main' }} />,
-  Tune: <TuneIcon sx={{ fontSize: 36, color: 'secondary.main' }} />,
-  AccountBox: <AccountBoxIcon sx={{ fontSize: 36, color: 'primary.main' }} />,
-  Interests: <InterestsIcon sx={{ fontSize: 36, color: 'secondary.main' }} />,
-  Chat: <ChatIcon sx={{ fontSize: 36, color: 'primary.main' }} />,
-  Sms: <SmsIcon sx={{ fontSize: 36, color: 'secondary.main' }} />,
-  Shield: <ShieldIcon sx={{ fontSize: 36, color: 'primary.main' }} />,
-  ReportProblem: <ReportProblemIcon sx={{ fontSize: 36, color: 'secondary.main' }} />,
-  Person: <PersonIcon sx={{ fontSize: 36, color: 'primary.main' }} />,
-  Brush: <BrushIcon sx={{ fontSize: 36, color: 'secondary.main' }} />,
-  FilterAlt: <FilterAltIcon sx={{ fontSize: 36, color: 'primary.main' }} />,
-  TravelExplore: <TravelExploreIcon sx={{ fontSize: 36, color: 'secondary.main' }} />
-};
+import ForumIcon from '@mui/icons-material/Forum';
+import LockIcon from '@mui/icons-material/Lock';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+
+import gsap from "gsap";
+import { MotionPathPlugin } from "gsap/MotionPathPlugin";
+gsap.registerPlugin(MotionPathPlugin);
 
 import HowItWorks from '@/components/public/HowItWorks';
-import WhyChooseUs from '@/components/public/WhyChooseUs';
 import FAQ from '@/components/public/FAQ';
 import { Link } from 'react-router-dom';
+import HomeFeatures from '../../components/public/HomeFeatures';
+import python from '@/assets/svg/python.svg';
+import react from '@/assets/svg/react.svg';
+import tensorflow from '@/assets/svg/tensorflow.svg';
 
 function Home() {
+  const [selectedFeature, setSelectedFeature] = useState(0);
+
   React.useEffect(() => {
     document.title = 'Pairly - Mini Social Universe';
   }, []);
 
-  const features = [
-    {
-      label: '01',
-      title: 'Smart ',
-      highlightText: 'Matching',
-      description:
-        'Our intelligent algorithm connects you with like-minded individuals based on your interests, preferences, and location.',
-      icon1: 'Psychology',
-      title1: 'Intelligent Algorithm',
-      icon2: 'Tune',
-      title2: 'Personalized Filters'
-    },
-    {
-      label: '02',
-      title: 'Instant ',
-      highlightText: 'Connection',
-      description:
-        'Connect face-to-face in real-time without delays. Just click and start a conversation instantly.',
-      icon1: 'AccountBox',
-      title1: 'One-Click Start',
-      icon2: 'Interests',
-      title2: 'Shared Topics'
-    },
-    {
-      label: '03',
-      title: 'Real-Time ',
-      highlightText: 'Messaging',
-      description:
-        'Send and receive messages while on a video call or offline. Keep the conversation alive beyond the call.',
-      icon1: 'Chat',
-      title1: 'In-Call Chat',
-      icon2: 'Sms',
-      title2: 'Offline Messaging'
-    },
-    {
-      label: '04',
-      title: 'Privacy & ',
-      highlightText: 'Safety',
-      description:
-        'Your safety matters. Manage who connects with you, report issues, and enjoy end-to-end encrypted calls.',
-      icon1: 'Shield',
-      title1: 'End-to-End Encryption',
-      icon2: 'ReportProblem',
-      title2: 'Report & Block'
-    },
-    {
-      label: '05',
-      title: 'Customizable ',
-      highlightText: 'Profiles',
-      description:
-        'Make your profile truly yours. Add a bio, interests, and photos to express yourself and attract genuine connections.',
-      icon1: 'Person',
-      title1: 'Add Photos & Bio',
-      icon2: 'Brush',
-      title2: 'Personalize Profile'
-    },
-    {
-      label: '06',
-      title: 'Filter by ',
-      highlightText: 'Preferences',
-      description:
-        'Easily filter who you want to connect with by age, location, language, gender, and interests for a better experience.',
-      icon1: 'FilterAlt',
-      title1: 'Smart Filters',
-      icon2: 'TravelExplore',
-      title2: 'Global or Nearby'
-    }
-  ];
+  React.useEffect(() => {
+    const featInterval = setInterval(() => {
+      setSelectedFeature((prev) => (prev >= 4 ? 0 : prev + 1));
+    }, 5000);
+
+    return () => clearInterval(featInterval);
+  }, []);
 
   const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const isMd = useMediaQuery(theme.breakpoints.down('md'));
   const isLg = useMediaQuery(theme.breakpoints.down('lg'));
-
-  const coreFeature = [
-    'Emotionally intelligent random chat modes like Chill Vibe, Deep Talk, Just Laugh, and more',
-    'Private chat with partner or known users via unique user ID search (bypass random match)',
-    'Custom proposal system for love, marriage, fun, or long-distance relationship invitations',
-    'Silent Feel Mode — stay connected quietly with your partner, no words needed, just presence',
-    'Virtual Stand-Up Comedy stage with animated avatars for users who are shy to perform live',
-    'Emotion-based AI chat suggestions for deeper, more human-like conversations',
-    'User mood detection and adaptive conversation topics for better emotional syncing',
-    'Seamless match and re-connect system that blends fun with genuine bonding',
-    'Secure, private chat environment with optional anonymity in random modes',
-    'Community-driven event rooms for laughter, romance, and shared experiences',
-    'Modern, minimal design with focus on emotional comfort and authentic connection',
-    'AI-enhanced moderation and context-aware safety tools',
-    'Multi-purpose use — casual chat, dating, friendship, entertainment, and expression'
-  ];
+  const isXl = useMediaQuery(theme.breakpoints.down('xl'));
+  const custome = useMediaQuery('(max-width:430px)');
 
   return (
     <React.Fragment>
@@ -142,282 +53,1052 @@ function Home() {
       <Box
         sx={{
           display: 'flex',
+          mt: isSm ? '18dvh' : isMd ? '20dvh' : '18dvh',
+          px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '20%',
           gap: 4,
-          flexGrow: 1,
-          py: isMd ? 4 : 8,
+          pb: isMd ? 15 : 8,
           alignItems: 'center',
         }}
       >
-        {/* Left Side – Text */}
-        <Stack justifyContent="center" spacing={3}>
-          {/* Headline */}
+        {/* Headline & Description */}
+        <Stack spacing={4}>
           <Typography
-            variant={isMd ? 'h3' : 'h2'}
-            fontWeight={700}
-            sx={{ color: 'text.primary', lineHeight: 1.2 }}
-          >
-            Say What You Feel.{' '}
-          </Typography>
-
-          {/* Hook line (Tags) */}
-          <Typography
-            variant="subtitle2"
+            variant={isSm ? 'h3' : isMd ? 'h3' : 'h2'}
             sx={{
-              px: 2.5,
-              pt: 1.5,
-              pb: 1,
-              fontSize: isMd ? '0.70rem' : '0.85rem',
-              width: 'fit-content',
-              mt: 1,
-              mx: 'auto',
-              color: theme.palette.text.secondary,
-              borderRadius: '12px',
-              background:
-                theme.palette.mode === 'dark'
-                  ? 'linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.08))'
-                  : 'linear-gradient(90deg, rgba(0,0,0,0.03), rgba(0,0,0,0.05))',
-              boxShadow:
-                theme.palette.mode === 'dark'
-                  ? 'inset 0 0 10px rgba(255,255,255,0.04)'
-                  : 'inset 0 0 8px rgba(0,0,0,0.05)',
-              backdropFilter: 'blur(8px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexWrap: 'wrap',
-              textAlign: 'center',
-              gap: 0.5,
-              transition: 'all 0.3s ease',
-
-              '& a': {
-                color: theme.palette.primary.main,
-                textDecoration: 'none',
-                fontStyle: 'italic',
-                fontWeight: 600,
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  color: theme.palette.primary.dark,
-                  textDecoration: 'underline',
-                },
-              },
-
-              '&:hover': {
-                transform: 'translateY(-2px)',
-                boxShadow:
-                  theme.palette.mode === 'dark'
-                    ? 'inset 0 0 10px rgba(255,255,255,0.08), 0 2px 6px rgba(0,0,0,0.4)'
-                    : 'inset 0 0 8px rgba(0,0,0,0.05), 0 2px 6px rgba(0,0,0,0.08)',
-              },
+              color: 'text.primary',
+              lineHeight: 1.0,
+              fontWeight: 700,
+              fontSize: isMd ? '1.8em' : '4em',
+              lineHeight: isSm ? 1.2 : 1,
             }}
           >
-            Welcome to{' '}
-            <Link to="nextGenerationChat">
-              next generation chat
-            </Link>
+            Pairly a mini social universe. <br /> Your space to connect, truly.
           </Typography>
 
           {/* Short Description */}
-          <Typography
-            variant="h6"
-            color="text.secondary"
-            sx={{ maxWidth: 640, lineHeight: 1.6, mt: 2 }}
-          >
-            Pairly pairs you with real users worldwide in seconds, prioritizing matches based on your interests.
-            Even with few users online, you'll always chat with a genuine person—never a bot. Designed to protect
-            human emotions, Pairly helps you connect meaningfully.
-          </Typography>
-
-          {/* Core Feature Flow */}
-          <Stack spacing={2} sx={{ mt: 3 }}>
-            <Typography variant={isMd ? 'h5' : 'h4'} fontWeight={700} sx={{ color: 'text.primary' }}>
-              Core{' '} <StyledText text='Feature Flow' />
+          {isSm ? (
+            <Typography
+              variant="h6"
+              color="text.secondary"
+              sx={{ maxWidth: 800, lineHeight: 1.4, fontSize: isSm ? '20px' : '24px' }}
+            >
+              Pairly connects real people with genuine conversations.
             </Typography>
 
-            <Stack component="ul" spacing={1} sx={{ listStyle: 'none', p: 0, m: 0 }}>
-              {['Random Chats', 'Friend Requests', 'Private Chats', 'Propose to partner', 'Couple Features Activated'].map(
-                (step, index) => (
-                  <Stack
-                    key={step}
-                    direction="row"
-                    alignItems="center"
-                    spacing={1}
-                    sx={{ pl: 1 }}
-                  >
-                    {index < 4 && <KeyboardDoubleArrowDownIcon sx={{ color: 'primary.main', fontSize: 28 }} />}
-                    {index === 4 && <VolunteerActivismIcon sx={{ color: 'error.main', fontSize: 28 }} />}
-                    <Typography variant="subtitle1" sx={{ fontWeight: 500, color: 'text.primary' }}>
-                      {step}
-                    </Typography>
-                  </Stack>
-                )
-              )}
-            </Stack>
-          </Stack>
-
-          {/* Emotion Protection */}
-          <Typography
-            variant="body1"
-            sx={{ mt: 3, color: 'text.secondary', fontStyle: 'italic', maxWidth: 600 }}
-          >
-            <StyledText text={'“'} />We protect your emotions until couple mode. Pairly helps you know each other clearly before taking the next step.<StyledText text={'”'} />
-          </Typography>
+          ) : (
+            <Typography
+              variant="h6"
+              color="text.secondary"
+              sx={{ maxWidth: 800, lineHeight: 1.6, fontSize: '24px' }}
+            >
+              Pairly is a{' '}
+              <Link to="nextGenerationChat">
+                next generation chat platform
+              </Link>{' '}
+              that connects real people worldwide in seconds. No bots just genuine conversations that protect emotions and create meaningful bonds.
+            </Typography>
+          )}
 
           {/* CTA Buttons */}
           <Stack direction="row" gap={2} sx={{ mt: 3, flexWrap: 'wrap' }}>
-            <StyledButton text={'Connect Instantly'} redirectUrl={'/register'} />
-            <StyledButton text={'How It Works'} redirectUrl={'/about'} />
+            <StyledActionButton
+              text={'Begin Your Journey'}
+              redirectUrl={'/register'}
+              sx={{ fontSize: '1em', fontWeight: 600, py: 1.2, textShadow: '0 0 2px #000' }}
+            />
+            {!custome && <StyledButton text={'Why Pairly?'} redirectUrl={'/about'} />}
           </Stack>
-
-          {/* Tagline / animation below CTA */}
-          <Tagline />
         </Stack>
-
       </Box>
 
-      {/* ===  How It Works Section === */}
-      <HowItWorks />
-
-      {/* ===  Pairly Features Section === */}
-      <Box mx={'auto'} maxWidth={1200} position="relative">
-        {/* Section Heading */}
-        <Stack alignItems="center" justifyContent="center" my={6}>
-          <Typography
-            variant="h5"
-            fontWeight={600}
-            display="flex"
-            alignItems="center"
-            gap={1}
-            color="text.primary"
-            textTransform="uppercase"
-            flexWrap="wrap"
-          >
-            <BoltOutlinedIcon fontSize="large" sx={{ color: 'error.main' }} />
-            Pairly <StyledText text="Features" />
-          </Typography>
-
-          <Typography
-            variant="body2"
-            maxWidth="800px"
-            color="text.secondary"
-            textAlign="center"
-            fontSize={{ xs: 14, md: 16 }}
-          >
-            Discover how we bring people together. Our platform features smart matching,
-            personalized profiles, real-time messaging, and privacy-first controls all designed to
-            create safe and meaningful conversations.
-          </Typography>
-        </Stack>
-
-        {/* Features Grid */}
-        <Box
+      {/* === Features Section === */}
+      <Stack
+        direction={'column'}
+        mt={4}
+        sx={{
+          px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '20%',
+        }}
+      >
+        {/* Headers */}
+        <Stack
+          direction="row"
+          overflow="auto"
+          gap={1}
           sx={{
-            display: 'grid',
-            gridTemplateColumns: isMd ? '1fr' : isLg ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
-            gap: 1,
-            rowGap: 2,
-            mx: 'auto'
+            display: 'flex',
+            whiteSpace: 'nowrap',
+            overflowX: 'auto',
+            overflowY: 'hidden',
+            scrollbarWidth: 'none',
+            '&::-webkit-scrollbar': { display: 'none' },
           }}
         >
-          {features.map((item, i) => (
-            <Box
-              key={i}
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                bgcolor: theme.palette.background.paper,
-                backdropFilter: 'blur(6px)',
-                borderRadius: 1,
-                cursor: 'pointer',
-                p: 2,
-                gap: 3,
-                boxShadow: '0 0 12px rgba(0,0,0,0.05)',
-                transition: '0.3s',
-                borderBottom: `1px dotted ${theme.palette.text.secondary}`,
-                '&:hover': {
-                  transform: 'translateY(-6px)',
-                  boxShadow: '0 6px 24px rgba(0,0,0,0.15)'
-                }
-              }}
-            >
-              {/* Header */}
-              <Stack direction="row" alignItems="center" gap={2}>
-                <Box
+          {[
+            { label: 'Random Chat', icon: <ForumIcon /> },
+            { label: 'Private Chat', icon: <LockIcon /> },
+            { label: 'Love Proposal', icon: <FavoriteIcon /> },
+            { label: 'Standup Hall', icon: <CampaignIcon /> },
+            { label: 'Silent Mode', icon: <VolumeOffIcon /> },
+          ].map((feat, i) => {
+            const isActive = selectedFeature === i;
+            const accent = theme.palette.info.main;
+
+            return (
+              <Stack
+                key={i}
+                onClick={() => setSelectedFeature(i)}
+                gap={1}
+                flex={1}
+                direction="row"
+                alignItems="center"
+                justifyContent="center"
+                sx={{
+                  position: 'relative',
+                  p: 1,
+                  flexShrink: 0,
+                  cursor: 'pointer',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: '50%',
+                    width: isActive ? '100%' : '0%',
+                    height: '3px',
+                    borderRadius: '2px',
+                    background: `linear-gradient(90deg, ${accent}, ${theme.palette.info.light},${theme.palette.error.light})`,
+                    transform: 'translateX(-50%)',
+                    transition: 'width 0.3s ease-in-out',
+                  },
+                  '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: '50%',
+                    width: isActive ? '100%' : '0%',
+                    height: '3px',
+                    borderRadius: '2px',
+                    background: `linear-gradient(90deg, ${theme.palette.info.light}, ${accent})`,
+                    opacity: 0.3,
+                    transform: 'translateX(-50%)',
+                    transition: 'width 0.3s ease-in-out',
+                  },
+                  '&:hover::before': {
+                    width: '100%',
+                  },
+                }}
+              >
+                {React.cloneElement(feat.icon, {
+                  sx: {
+                    fontSize: '1rem',
+                    color: isActive ? accent : `${theme.palette.text.primary}80`,
+                    transition: 'color 0.25s ease',
+                  },
+                })}
+                <Typography
+                  variant="subtitle2"
                   sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 1,
-                    borderRight: `4px solid ${theme.palette.text.secondary}`,
-                    bgcolor: `transparent`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: 'bold',
-                    transition: 'all 0.1s ease',
-                    '&:hover': {
-                      borderRight: 0
-                    }
+                    fontSize: '0.9em',
+                    fontWeight: isActive ? 600 : 400,
+                    color: isActive ? accent : `${theme.palette.text.primary}90`,
+                    transition: 'color 0.25s ease',
                   }}
                 >
-                  {item.label}
-                </Box>
-                <Typography variant="h6" letterSpacing={1} fontWeight={600}>
-                  {item.title}
-                  <StyledText text={item.highlightText} />
+                  {feat.label}
                 </Typography>
               </Stack>
+            );
+          })}
+        </Stack>
 
-              {/* Icons & Steps */}
-              <Stack spacing={3}>
-                {/* Step 1 */}
-                <Box
-                  sx={{
-                    p: 2,
-                    borderRadius: 2,
-                    bgcolor: 'rgba(10, 86, 109, 0.09)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 2,
-                    boxShadow: 1
-                  }}
-                >
-                  {iconMap[item.icon1]}
-                  <Typography fontWeight={500}>{item.title1}</Typography>
-                </Box>
+        {/* Headers Content */}
+        {selectedFeature === 0
+          ? (
+            <HomeFeatures
+              selectedFeature={selectedFeature}
+            />
+          )
+          : selectedFeature === 1
+            ? (
+              <HomeFeatures
+                selectedFeature={selectedFeature}
+              />
+            )
+            : selectedFeature === 2
+              ? (
+                <HomeFeatures
+                  selectedFeature={selectedFeature}
+                />
+              )
+              : selectedFeature === 3
+                ? (
+                  <HomeFeatures
+                    selectedFeature={selectedFeature}
+                  />
+                )
+                : (
+                  <HomeFeatures
+                    selectedFeature={selectedFeature}
+                  />
+                )
+        }
+      </Stack>
 
-                {/* Connector */}
-                <Box display="flex" justifyContent="center">
-                  <Typography color="primary">⚡</Typography>
-                </Box>
+      {/* Why Pairly and what problem it solves */}
+      <Stack sx={{
+        px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '8%',
+      }}>
+        <Stack
+          sx={{
+            position: 'relative',
+            height: isSm ? '80dvh' : '90dvh',
+            display: 'flex',
+            flexDirection: 'row',
+            overflow: 'hidden',
+            mt: 8,
+          }}
+        >
+          {/* Left track */}
+          {!isSm && (
+            <Box
+              sx={{
+                position: 'absolute',
+                left: '10%',
+                top: 0,
+                bottom: 0,
+                width: '2px',
+                '&::before, &::after': {
+                  content: '""',
+                  position: 'absolute',
+                  width: '5px',
+                  top: 0,
+                  bottom: 0,
+                  background: `linear-gradient(180deg, 
+                ${theme.palette.error.main}80, 
+                ${theme.palette.background.default}, 
+                ${theme.palette.warning.dark}50)`,
+                  borderRadius: '2px',
+                },
+                '&::after': {
+                  left: '10px',
+                },
+              }}
+            />
+          )}
 
-                {/* Step 2 */}
-                <Box
-                  sx={{
-                    p: 2,
-                    borderRadius: 2,
-                    bgcolor: 'rgba(10, 86, 109, 0.09)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 2,
-                    boxShadow: 1
-                  }}
-                >
-                  {iconMap[item.icon2]}
-                  <Typography fontWeight={500}>{item.title2}</Typography>
-                </Box>
-              </Stack>
+          {/* Responsive Content */}
+          {isSm ? (
+            <Box
+              sx={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+                px: 2,
+              }}
+            >
+              {/* Star Background Animation */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  inset: 0,
+                  overflow: 'hidden',
+                  zIndex: 0,
+                  '@keyframes sparkle': {
+                    '0%': { opacity: 0.5, transform: 'scale(0.5)' },
+                    '50%': { opacity: 0.7, transform: 'scale(1.2)' },
+                    '100%': { opacity: 0, transform: 'scale(0.5)' },
+                  },
+                }}
+              >
+                {Array.from({ length: 25 }).map((_, i) => {
+                  const left = Math.random() * 100;
+                  const top = Math.random() * 100;
+                  const size = 3 + Math.random() * 2;
+                  const duration = 2 + Math.random() * 3;
+                  const delay = Math.random() * 3;
 
-              {/* Description */}
-              <Typography variant="body2" color="text.secondary" mt={2}>
-                {item.description}
+                  return (
+                    <Box
+                      key={i}
+                      sx={{
+                        position: 'absolute',
+                        left: `${left}%`,
+                        top: `${top}%`,
+                        width: size,
+                        height: size,
+                        borderRadius: '50%',
+                        background: `${theme.palette.text.primary}70`,
+                        boxShadow: `inset 0 2px 8px ${theme.palette.text.primary}70`,
+                        animation: `sparkle ${duration}s ${delay}s infinite ease-in-out`,
+                        opacity: 0.4,
+                      }}
+                    />
+                  );
+                })}
+              </Box>
+
+              {/* Content */}
+              <Box
+                sx={{
+                  zIndex: 1,
+                  color: 'text.primary',
+                }}
+              >
+                <Typography variant="h3" sx={{ fontWeight: 700, mb: 1, color: `${theme.palette.error.main}90` }}>
+                  Why Pairly?
+                </Typography>
+                <Typography variant="body1" sx={{ color: 'text.secondary', mb: 1 }}>
+                  Pairly isn’t just another chat app — it’s a space where real connections
+                  are built. Whether you’re here to meet new people, create meaningful
+                  bonds, or simply enjoy authentic conversations, Pairly ensures every
+                  interaction feels genuine and personal.
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  We built Pairly to solve the problem of shallow, fast-paced social
+                  interactions. Our focus is on helping users form deeper connections in a
+                  calm, respectful, and fun environment — powered by unique features like
+                  Random Chat, Private Rooms, and Love Proposals.
+                </Typography>
+              </Box>
+            </Box>
+          ) : (
+            // Large screen
+            <Box
+              sx={{
+                flexGrow: 1,
+                ml: isSm ? 0 : '20%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                p: isSm ? 0 : 6,
+                gap: 2,
+              }}
+            >
+              <Typography
+                variant="h1"
+                sx={{
+                  fontWeight: 700,
+                  color: `${theme.palette.error.main}90`
+                }}
+              >
+                Why Pairly?
+              </Typography>
+
+              <Typography
+                variant="h4"
+                sx={{
+                  color: 'text.secondary',
+                  maxWidth: '600px',
+                }}
+              >
+                Craft a complete full-stack application with a powerful visual canvas
+              </Typography>
+
+              <Typography
+                variant="h5"
+                sx={{
+                  color: 'text.secondary',
+                  maxWidth: '600px',
+                }}
+              >
+                We built Pairly to solve the problem of shallow, fast-paced social
+                interactions. Our focus is on helping users form deeper connections in a
+                calm, respectful, and fun environment — powered by unique features like
+                Random Chat, Private Rooms, and Love Proposals.
               </Typography>
             </Box>
-          ))}
-        </Box>
-      </Box>
+          )}
+        </Stack>
+      </Stack>
 
-      {/* === Why Choose Us? Section === */}
-      <WhyChooseUs />
+      {/* Pairly Growth & Feedback Section */}
+      <Stack sx={{
+        px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '8%',
+      }}>
+        <Stack
+          sx={{
+            position: 'relative',
+            height: isSm ? '80dvh' : '90dvh',
+            display: 'flex',
+            flexDirection: 'row',
+            overflow: 'hidden',
+            background: theme.palette.background.default,
+            mt: 8,
+            borderRadius: 0.5,
+            boxShadow: `0 0 2px inherit`
+          }}
+        >
+          {/* Left track */}
+          {!isSm && (
+            <Box
+              sx={{
+                position: 'absolute',
+                right: '10%',
+                top: 0,
+                bottom: 0,
+                width: '2px',
+                '&::before, &::after': {
+                  content: '""',
+                  position: 'absolute',
+                  width: '5px',
+                  top: 0,
+                  bottom: 0,
+                  background: `linear-gradient(180deg, 
+            ${theme.palette.error.main}80, 
+            ${theme.palette.background.default}, 
+            ${theme.palette.warning.dark}50)`,
+                  borderRadius: '2px',
+                },
+                '&::after': {
+                  left: '10px',
+                },
+              }}
+            />
+          )}
+
+          {/* Responsive Content */}
+          {isSm ? (
+            <Box
+              sx={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+                px: 2,
+              }}
+            >
+              {/* star Background */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  inset: 0,
+                  overflow: 'hidden',
+                  zIndex: 0,
+                  '@keyframes fly': {
+                    '0%': {
+                      transform: 'translateY(0) translateX(0) rotate(0deg)',
+                      opacity: 0.7,
+                    },
+                    '50%': {
+                      transform: 'translateY(-50vh) translateX(30px) rotate(15deg)',
+                      opacity: 0.5,
+                    },
+                    '100%': {
+                      transform: 'translateY(-100vh) translateX(-30px) rotate(-10deg)',
+                      opacity: 0.5,
+                    },
+                  },
+                }}
+              >
+                {Array.from({ length: 20 }).map((_, i) => {
+                  const left = Math.random() * 100;
+                  const size = 2 + Math.random() * 2;
+                  const duration = 4 + Math.random() * 6;
+                  const delay = Math.random() * 5;
+
+                  return (
+                    <Box
+                      key={i}
+                      sx={{
+                        position: 'absolute',
+                        left: `${left}%`,
+                        bottom: '-10%',
+                        width: size,
+                        height: size,
+                        borderRadius: '50%',
+                        background: `radial-gradient(circle, ${theme.palette.primary.light} 0%, ${theme.palette.primary.dark} 60%, transparent 100%)`,
+                        boxShadow: `0 0 ${size * 4}px ${theme.palette.primary.main}`,
+                        opacity: 0.9,
+                        animation: `fly ${duration}s ${delay}s linear infinite`,
+                      }}
+                    />
+                  );
+                })}
+              </Box>
+
+              {/* Content */}
+              <Box
+                sx={{
+                  zIndex: 1,
+                  color: 'text.primary',
+                  textAlign: 'center',
+                }}
+              >
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 1, color: `${theme.palette.error.main}90` }}>
+                  A World Where Every Connection Feels Natural
+                </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    color: 'text.secondary',
+                    maxWidth: '600px',
+                    mx: 'auto',
+                    lineHeight: 1.4,
+                  }}
+                >
+                  Experience Pairly — a social space designed for comfort, authenticity, and real emotion.
+                </Typography>
+                <Typography variant="subtitle2" sx={{ color: 'text.secondary', mt: 1 }}>
+                  We make it simple to connect, chat, and grow meaningful bonds — powered by human warmth, not algorithms.
+                </Typography>
+
+                {/* Stats Section */}
+                <Stack
+                  direction="row"
+                  justifyContent="center"
+                  alignItems="center"
+                  spacing={3}
+                  mt={4}
+                  sx={{
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  {[
+                    { value: '10K+', label: 'Active Members' },
+                    { value: '98%', label: 'Positive Feedback' },
+                    { value: '500+', label: 'New Matches Daily' },
+                  ].map((item, i) => (
+                    <Stack key={i} alignItems="center" spacing={0.5}>
+                      <Typography variant="h4" sx={{ fontWeight: 700, color: theme.palette.primary.main }}>
+                        {item.value}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                        {item.label}
+                      </Typography>
+                    </Stack>
+                  ))}
+                </Stack>
+              </Box>
+            </Box>
+          ) : (
+            // Large screen
+            <Box
+              sx={{
+                flexGrow: 1,
+                ml: isSm ? 0 : '20%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                p: isSm ? 0 : 6,
+                gap: 2,
+              }}
+            >
+              <Typography
+                variant="h4"
+                sx={{ fontWeight: 700, mb: 1, color: `${theme.palette.error.main}90` }}>
+                A World Where Every Connection Feels Natural
+              </Typography>
+
+              <Typography
+                variant="h2"
+                sx={{
+                  color: 'text.secondary',
+                  maxWidth: '600px',
+                }}
+              >
+                Experience Pairly — a calm, human-first social universe built for real conversations.
+              </Typography>
+
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  color: 'text.secondary',
+                  maxWidth: '600px',
+                }}
+              >
+                Pairly empowers you to connect deeply, chat freely, and express genuinely — without the noise of typical social platforms.
+              </Typography>
+
+              {/* Stats */}
+              <Stack direction="row" spacing={6} mt={4}>
+                {[
+                  { value: '10K+', label: 'Active Members' },
+                  { value: '98%', label: 'Positive Feedback' },
+                  { value: '500+', label: 'New Matches Daily' },
+                ].map((item, i) => (
+                  <Stack key={i} spacing={0.5}>
+                    <Typography variant="h3" sx={{ fontWeight: 700, color: theme.palette.primary.main }}>
+                      {item.value}
+                    </Typography>
+                    <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                      {item.label}
+                    </Typography>
+                  </Stack>
+                ))}
+              </Stack>
+            </Box>
+          )}
+        </Stack>
+      </Stack>
+
+      {/* What Makes Pairly Different */}
+      <Stack sx={{
+        px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '8%',
+      }}>
+        <Stack
+          sx={{
+            position: 'relative',
+            height: isSm ? '80dvh' : '90dvh',
+            display: 'flex',
+            flexDirection: 'row',
+            overflow: 'hidden',
+            mt: 8,
+          }}
+        >
+          {/* Left track */}
+          {!isSm && (
+            <Box
+              sx={{
+                position: 'absolute',
+                left: '10%',
+                top: 0,
+                bottom: 0,
+                width: '2px',
+                '&::before, &::after': {
+                  content: '""',
+                  position: 'absolute',
+                  width: '5px',
+                  top: 0,
+                  bottom: 0,
+                  background: `linear-gradient(180deg, 
+          ${theme.palette.error.main}80, 
+          ${theme.palette.background.default}, 
+          ${theme.palette.warning.dark}50)`,
+                  borderRadius: '2px',
+                },
+                '&::after': {
+                  left: '10px',
+                },
+              }}
+            />
+          )}
+
+          {/* Responsive Content */}
+          {isSm ? (
+            <Box
+              sx={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+                px: 2,
+              }}
+            >
+              {/* Star Background Animation */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  inset: 0,
+                  overflow: 'hidden',
+                  zIndex: 0,
+                  '@keyframes sparkle': {
+                    '0%': { opacity: 0, transform: 'scale(0.5)' },
+                    '50%': { opacity: 1, transform: 'scale(1.2)' },
+                    '100%': { opacity: 0, transform: 'scale(0.5)' },
+                  },
+                }}
+              >
+                {Array.from({ length: 25 }).map((_, i) => {
+                  const left = Math.random() * 100;
+                  const top = Math.random() * 100;
+                  const size = 3 + Math.random() * 2;
+                  const duration = 2 + Math.random() * 3;
+                  const delay = Math.random() * 3;
+
+                  return (
+                    <Box
+                      key={i}
+                      sx={{
+                        position: 'absolute',
+                        left: `${left}%`,
+                        top: `${top}%`,
+                        width: size,
+                        height: size,
+                        borderRadius: '50%',
+                        background: `${theme.palette.text.primary}70`,
+                        boxShadow: `inset 0 0 1rem ${theme.palette.divider}`,
+                        animation: `sparkle ${duration}s ${delay}s infinite ease-in-out`,
+                        opacity: 0.4,
+                      }}
+                    />
+                  );
+                })}
+              </Box>
+
+              {/* Content */}
+              <Box
+                sx={{
+                  zIndex: 1,
+                  color: 'text.primary',
+                }}
+              >
+                <Typography variant="h3" sx={{ fontWeight: 700, mb: 1, color: `${theme.palette.error.main}90` }}>
+                  What Makes Pairly Different?
+                </Typography>
+
+                <Typography variant="body1" sx={{ color: 'text.secondary', mb: 1 }}>
+                  Pairly stands out by putting **genuine human connection** first. We’ve built
+                  a space where conversations feel natural, not forced — and where every
+                  feature encourages real interaction instead of endless swiping or small talk.
+                </Typography>
+
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  From **AI-powered matchmaking** that understands your vibe, to private chat
+                  rooms and thoughtful proposal options — Pairly redefines how people meet,
+                  bond, and build trust online. It’s not just chatting, it’s connecting.
+                </Typography>
+              </Box>
+            </Box>
+          ) : (
+            // Large screen
+            <Box
+              sx={{
+                flexGrow: 1,
+                ml: isSm ? 0 : '20%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                p: isSm ? 0 : 6,
+                gap: 2,
+              }}
+            >
+              <Typography
+                variant="h1"
+                sx={{
+                  fontWeight: 700,
+                  color: `${theme.palette.error.main}90`
+                }}
+              >
+                What Makes Pairly Different?
+              </Typography>
+
+              <Typography
+                variant="h6"
+                sx={{
+                  color: 'text.secondary',
+                  maxWidth: '600px',
+                }}
+              >
+                Where technology meets genuine connection — not just another chat app.
+              </Typography>
+
+              <Typography
+                variant="body1"
+                sx={{
+                  color: 'text.secondary',
+                  maxWidth: '600px',
+                }}
+              >
+                Pairly brings a refreshing twist to online interaction — built for real people
+                who crave authenticity. With features like **Random Match**, **Private Chat Rooms**,
+                and **Proposals**, we make it easy to find your kind of connection —
+                whether it’s friendship, love, or just meaningful conversation.
+              </Typography>
+            </Box>
+          )}
+        </Stack>
+      </Stack>
+
+      {/* ===  How It Works Section === */}
+      <Stack sx={{
+        px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '8%',
+      }}>
+        <HowItWorks />
+      </Stack>
+
+      {/* ===  The AI Behind Pairly Section === */}
+      <Stack sx={{
+        px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '8%',
+      }}>
+        <Stack
+          sx={{
+            position: 'relative',
+            height: isSm ? '80dvh' : '90dvh',
+            display: 'flex',
+            flexDirection: 'row',
+            overflow: 'hidden',
+            mt: 8,
+            background: theme.palette.background.default,
+            borderRadius: 0.5,
+            boxShadow: `0 0 2px inherit`
+          }}
+        >
+          {/* === Gradient Tracks (Desktop Only) === */}
+          {!isSm && (
+            <>
+              {/* Left Track */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  left: '10%',
+                  top: 0,
+                  bottom: 0,
+                  width: '2px',
+                  '&::before, &::after': {
+                    content: '""',
+                    position: 'absolute',
+                    width: '6px',
+                    top: 0,
+                    bottom: 0,
+                    background: `linear-gradient(180deg, 
+              ${theme.palette.error.main}80, 
+              ${theme.palette.background.default}, 
+              ${theme.palette.success.dark}60
+            )`,
+                    borderRadius: '3px',
+                  },
+                  '&::after': { left: '10px' },
+                }}
+              />
+
+              {/* Right Track */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  right: '10%',
+                  top: 0,
+                  bottom: 0,
+                  width: '2px',
+                  '&::before, &::after': {
+                    content: '""',
+                    position: 'absolute',
+                    width: '6px',
+                    top: 0,
+                    bottom: 0,
+                    background: `linear-gradient(180deg, 
+              ${theme.palette.error.main}80, 
+              ${theme.palette.background.default}, 
+              ${theme.palette.success.dark}60
+            )`,
+                    borderRadius: '3px',
+                  },
+                  '&::after': { right: '6px' },
+                }}
+              />
+            </>
+          )}
+
+          {/* === Responsive Content === */}
+          {isSm ? (
+            <Box
+              sx={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+                px: 2,
+              }}
+            >
+              {/* Floating Stars Background */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  inset: 0,
+                  overflow: 'hidden',
+                  zIndex: 0,
+                  '@keyframes fly': {
+                    '0%': { transform: 'translateY(0)', opacity: 0.7 },
+                    '50%': { transform: 'translateY(-50vh)', opacity: 0.5 },
+                    '100%': { transform: 'translateY(-100vh)', opacity: 0.5 },
+                  },
+                }}
+              >
+                {Array.from({ length: 20 }).map((_, i) => {
+                  const left = Math.random() * 100;
+                  const size = 2 + Math.random() * 2;
+                  const duration = 4 + Math.random() * 6;
+                  const delay = Math.random() * 5;
+
+                  return (
+                    <Box
+                      key={i}
+                      sx={{
+                        position: 'absolute',
+                        left: `${left}%`,
+                        bottom: '-10%',
+                        width: size,
+                        height: size,
+                        borderRadius: '50%',
+                        background: `radial-gradient(circle, ${theme.palette.primary.light} 0%, ${theme.palette.primary.dark} 60%, transparent 100%)`,
+                        boxShadow: `0 0 ${size * 4}px ${theme.palette.primary.main}`,
+                        opacity: 0.4,
+                        animation: `fly ${duration}s ${delay}s linear infinite`,
+                      }}
+                    />
+                  );
+                })}
+              </Box>
+
+              {/* Mobile Content */}
+              <Box sx={{ zIndex: 1, color: 'text.primary', textAlign: 'center' }}>
+                <Typography
+                  variant="h3"
+                  sx={{ fontWeight: 700, mb: 1, color: `${theme.palette.success.main}90` }}
+                >
+                  The AI Behind Pairly
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    textAlign: 'center',
+                    color: 'text.secondary',
+                    maxWidth: 500,
+                    mb: 3,
+                  }}
+                >
+                  Pairly’s smart matching system understands how people connect — learning from
+                  real interactions to make every conversation feel easy, natural, and fun.
+                </Typography>
+
+                {/* Technology Icons */}
+                <Stack
+                  direction="row"
+                  spacing={3}
+                  justifyContent="center"
+                  alignItems="center"
+                  flexWrap="wrap"
+                  sx={{ mb: 2 }}
+                >
+                  <Box component="img" src={tensorflow} alt="TensorFlow" sx={{ width: 40, height: 40 }} />
+                  <Box
+                    component="img"
+                    src="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg"
+                    alt="AWS"
+                    sx={{ width: 50, height: 40 }}
+                  />
+                  <Box component="img" src={react} alt="react" sx={{ width: 50, height: 40 }} />
+                  <Box component="img" src={python} alt="python" sx={{ width: 50, height: 40 }} />
+                </Stack>
+
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: 'text.secondary',
+                    fontSize: 13,
+                    maxWidth: 420,
+                    mx: 'auto',
+                  }}
+                >
+                  Built with modern frameworks like <b>TensorFlow</b>, <b>React</b>, and <b>AWS</b>,
+                  Pairly’s intelligent system keeps learning and improving — helping you meet
+                  people who truly click with your energy and interests.
+                </Typography>
+              </Box>
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                flexGrow: 1,
+                ml: '20%',
+                mr: '20%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                p: 6,
+                gap: 3,
+                textAlign: 'center',
+              }}
+            >
+              <Typography variant="h2" sx={{ fontWeight: 700, color: `${theme.palette.success.main}` }}>
+                The AI Behind Pairly
+              </Typography>
+
+              <Typography
+                variant="h6"
+                sx={{
+                  color: 'text.secondary',
+                  maxWidth: '700px',
+                  mx: 'auto',
+                }}
+              >
+                Intelligent. Intuitive. Always learning to connect better.
+              </Typography>
+
+              {/* AI Illustration */}
+              <Box
+                component="img"
+                src="/assets/ai-visual.svg"
+                alt="AI technology visualization"
+                sx={{
+                  width: '300px',
+                  height: 'auto',
+                  mx: 'auto',
+                  mt: 2,
+                  filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.2))',
+                }}
+              />
+
+              <Typography
+                variant="body1"
+                sx={{
+                  color: 'text.secondary',
+                  maxWidth: '700px',
+                  mx: 'auto',
+                }}
+              >
+                Pairly combines <b>Machine Learning</b> and <b>Conversation Understanding</b> to
+                make connections feel authentic. It adapts to your vibe, mood, and energy —
+                matching you with people who share a similar rhythm and communication style.
+              </Typography>
+
+              {/* Modern Tech Stack Logos */}
+              <Stack
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                flexWrap="wrap"
+                spacing={3}
+                mt={3}
+              >
+                <Box component="img" src={tensorflow} alt="TensorFlow" sx={{ width: 40, height: 40, opacity: 0.8 }} />
+                <Box component="img" src={python} alt="Python" sx={{ width: 40, height: 40, opacity: 0.8 }} />
+                <Box component="img" src={react} alt="React" sx={{ width: 40, height: 40, opacity: 0.8 }} />
+                <Box
+                  component="img"
+                  src="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg"
+                  alt="AWS"
+                  sx={{ width: 40, height: 40, opacity: 0.8 }}
+                />
+              </Stack>
+
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'text.secondary',
+                  maxWidth: '650px',
+                  mx: 'auto',
+                  mt: 2,
+                  opacity: 0.8,
+                }}
+              >
+                Pairly is constantly improving behind the scenes — using secure, anonymous
+                feedback from real chats to create smoother and more genuine matches every day.
+                It’s technology built to understand people, not just data.
+              </Typography>
+            </Box>
+          )}
+        </Stack>
+      </Stack>
+
+      {/* ===  Moments That Matter Section === */}
+      <Stack sx={{
+        px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '8%',
+      }}>
+
+      </Stack>
 
       {/* === Frequently Asked Questions FAQ Section === */}
       <Box
@@ -455,6 +1136,13 @@ function Home() {
 
         <FAQ />
       </Box>
+
+      {/* ===  Pairly in Action Section === */}
+      <Stack sx={{
+        px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '8%',
+      }}>
+
+      </Stack>
     </React.Fragment>
   );
 }

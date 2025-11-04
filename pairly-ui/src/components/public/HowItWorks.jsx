@@ -1,125 +1,193 @@
-import { Box, Stack, Typography, useTheme } from '@/MUI/MuiComponents';
-import { PsychologyOutlinedIcon } from '@/MUI/MuiIcons';
-import StyledText from '@/components/common/StyledText';
-
+import { Box, Stack, Typography, useTheme, useMediaQuery } from '@/MUI/MuiComponents';
 import {
   LoginOutlinedIcon,
   PeopleAltOutlinedIcon,
   ChatOutlinedIcon,
   SwipeRightAltOutlinedIcon,
-  SecurityOutlinedIcon
+  SecurityOutlinedIcon,
 } from '@/MUI/MuiIcons';
+import StyledText from '@/components/common/StyledText';
 
 function HowItWorks() {
   const theme = useTheme();
+  const isMd = useMediaQuery(theme.breakpoints.down('md'));
 
-  const howItWorksSteps = [
+  const steps = [
     {
       title: 'Enter the Platform',
       description:
-        "No complex forms or lengthy signups. Just open the app, click 'Start Connecting', and you’re ready to dive into the world of conversations. It's fast, easy, and friction-free.",
-      icon: 'LoginOutlinedIcon'
+        "Getting started on Pairly takes seconds — no lengthy forms or endless clicks. Simply open the app, tap 'Start Connecting', and you're instantly part of a vibrant community. Whether you're here to find friendship, love, or genuine conversation, Pairly welcomes you with simplicity and ease.",
+      icon: <LoginOutlinedIcon sx={{ fontSize: 34, color: theme.palette.primary.main }} />,
     },
     {
       title: 'Smart Matchmaking',
       description:
-        'Our intelligent matching algorithm pairs you with people based on preferences and behavior patterns, ensuring every chat is fresh, interesting, and aligned with your vibe.',
-      icon: 'PeopleAltOutlinedIcon'
+        "Behind every connection is Pairly’s smart matchmaking engine — quietly learning from your preferences, chat style, and mood. It connects you with people who truly fit your vibe, so every chat feels natural, relevant, and emotionally in sync. It’s not random — it’s meaningful discovery.",
+      icon: <PeopleAltOutlinedIcon sx={{ fontSize: 34, color: theme.palette.info.main }} />,
     },
     {
       title: 'Start Chatting',
       description:
-        'Once connected, you can instantly begin a seamless video or text conversation in real-time. No delays, no confusion — just smooth and spontaneous communication.',
-      icon: 'ChatOutlinedIcon'
+        "Once matched, dive straight into a real-time conversation — text or video, your choice. There’s no waiting room, no lag, no pressure — just authentic talk that flows. Share stories, laughter, or quiet thoughts — Pairly’s fluid experience makes every chat feel like you’re right there.",
+      icon: <ChatOutlinedIcon sx={{ fontSize: 34, color: theme.palette.success.main }} />,
     },
     {
       title: 'Keep or Skip',
       description:
-        "Not vibing with the current chat? Simply hit 'Next' to meet someone new — instantly. You're always in control, and every new match brings a fresh connection.",
-      icon: 'SwipeRightAltOutlinedIcon'
+        "Every interaction is your choice. If the vibe isn’t right, hit ‘Next’ and instantly meet someone new — no awkward exits, no judgment. It’s freedom to explore and connect at your own pace, with each new chat bringing a fresh opportunity to discover someone amazing.",
+      icon: <SwipeRightAltOutlinedIcon sx={{ fontSize: 34, color: theme.palette.warning.main }} />,
     },
     {
       title: 'Safe & Anonymous',
       description:
-        'Your identity remains private, and chats are not stored unless reported. We prioritize your safety with moderation tools and respectful community guidelines.',
-      icon: 'SecurityOutlinedIcon'
-    }
+        "Pairly puts privacy first. Your identity is never revealed unless you choose to share it, and no chat is saved without reason. Advanced moderation tools and respectful community guidelines ensure that every conversation remains kind, safe, and genuine — always.",
+      icon: <SecurityOutlinedIcon sx={{ fontSize: 34, color: theme.palette.error.main }} />,
+    },
   ];
 
-  const iconsMap = {
-    LoginOutlinedIcon: <LoginOutlinedIcon sx={{ color: 'primary.main' }} />,
-    PeopleAltOutlinedIcon: <PeopleAltOutlinedIcon sx={{ color: 'info.main' }} />,
-    ChatOutlinedIcon: <ChatOutlinedIcon sx={{ color: 'success.main' }} />,
-    SwipeRightAltOutlinedIcon: <SwipeRightAltOutlinedIcon sx={{ color: 'warning.main' }} />,
-    SecurityOutlinedIcon: <SecurityOutlinedIcon sx={{ color: 'error.main' }} />
-  };
   return (
-    <Box display="flex" flexDirection="column" my={6} mx={'auto'} maxWidth={1200}>
-      <Typography
-        variant="h5"
-        fontWeight={600}
-        textTransform="uppercase"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        gap={1}
-        gutterBottom
-      >
-        <PsychologyOutlinedIcon fontSize="medium" sx={{ color: 'primary.main' }} />
-        How it <StyledText text="works" />
-      </Typography>
+    <Box sx={{ position: 'relative', my: 12, px: { xs: 2, md: 6 } }}>
 
-      <Typography
-        variant="body2"
-        color="text.secondary"
-        textAlign="center"
-        maxWidth={700}
-        mx="auto"
-        mb={4}
-        fontSize={{ xs: 14, md: 16 }}
-      >
-        Understand the simple steps to start connecting. From setting up your profile to jumping
-        into real-time conversations, we make it effortless.
-      </Typography>
-
+      {/* === Background dots === */}
       <Box
         sx={{
+          position: 'absolute',
+          inset: 0,
           display: 'flex',
-          gap: 2,
           flexWrap: 'wrap',
+          gap: 4,
+          opacity: 0.1,
+          mt: 1,
           justifyContent: 'center',
-          mt: 3
+          alignContent: 'center',
+          pointerEvents: 'none',
+          overflow: 'hidden'
         }}
       >
-        {howItWorksSteps.map((step, index) => (
-          <Stack
-            key={index}
-            flexBasis={350}
-            p={3}
+        {Array.from({ length: isMd ? 800 : 1900 }).map((_, i) => (
+          <Box
+            key={i}
             sx={{
-              bgcolor: theme.palette.background.paper,
-              backdropFilter: 'blur(14px)',
-              borderRadius: theme.spacing(1),
-              borderBottom: `1px dotted ${theme.palette.text.secondary}`,
-              cursor: 'pointer',
-              transition: 'transform 0.3s',
-              '&:hover': {
-                transform: 'translateY(-10px)'
-              }
+              width: 2,
+              height: 2,
+              borderRadius: 0.2,
+              background: `${theme.palette.text.primary}`,
+            }}
+          />
+        ))}
+      </Box>
+
+      {/* Timeline Path (SVG curved line) */}
+      <Box
+        component="svg"
+        viewBox="0 0 100 1000"
+        preserveAspectRatio="none"
+        sx={{
+          position: 'absolute',
+          left: '50%',
+          top: 0,
+          transform: 'translateX(-50%)',
+          width: '3px',
+          height: '100%',
+          zIndex: 0,
+        }}
+      >
+        <defs>
+          <linearGradient id="lineGradient" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor={theme.palette.error.main} stopOpacity="0.8" />
+            <stop offset="50%" stopColor={theme.palette.warning.main} stopOpacity="0.7" />
+            <stop offset="100%" stopColor={theme.palette.background.default} stopOpacity="0.3" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M50 0 Q60 100, 50 200 T50 400 T50 600 T50 800 T50 1000"
+          stroke="url(#lineGradient)"
+          strokeWidth="2.5"
+          fill="none"
+          style={{
+            filter: `drop-shadow(0 0 6px ${theme.palette.warning.main})`,
+            strokeDasharray: '10 6',
+            animation: 'flow 4s linear infinite',
+          }}
+        />
+        <style>
+          {`
+            @keyframes flow {
+              to { stroke-dashoffset: -100; }
+            }
+          `}
+        </style>
+      </Box>
+
+      {/* Steps (alternating sides) */}
+      <Stack spacing={10} sx={{ position: 'relative', zIndex: 1 }}>
+        {/* Section Title */}
+        <Stack>
+          <Typography
+            variant="h4"
+            fontWeight={700}
+            sx={{
+              color: `${theme.palette.warning.main}90`
             }}
           >
-            <Stack mb={5}>{iconsMap[step.icon]}</Stack>
-            <Box>
-              <Typography gutterBottom variant="h6" fontWeight="600" letterSpacing={1}>
+            How It Works
+          </Typography>
+
+          <Typography
+            variant="body1"
+            color="text.secondary"
+            maxWidth={600}
+          >
+            Follow the flow from joining to connecting. Pairly keeps everything simple,
+            intuitive, and genuinely fun.
+          </Typography>
+        </Stack>
+
+        {steps.map((step, i) => (
+          <Stack
+            key={i}
+            direction={i % 2 === 0 ? 'row' : 'row-reverse'}
+            alignItems="center"
+            spacing={4}
+            sx={{
+              position: 'relative',
+              justifyContent: 'space-between',
+            }}
+          >
+            {/* Content box */}
+            <Box
+              sx={{
+                width: { xs: '100%', md: '45%' },
+                bgcolor: theme.palette.background.paper,
+                borderRadius: 2,
+                p: 3,
+                boxShadow: `0 4px 2px ${theme.palette.warning.main}`,
+                border: `1px solid ${theme.palette.divider}`,
+                textAlign: 'left',
+              }}
+            >
+              {step.icon}
+              <Typography variant="h6" fontWeight={700} mt={1} mb={1}>
                 {step.title}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 {step.description}
               </Typography>
             </Box>
+
+            {/* Connector dot */}
+            <Box
+              sx={{
+                width: 16,
+                height: 16,
+                borderRadius: '50%',
+                background: theme.palette.error.main,
+                boxShadow: '0 0 12px rgba(255,0,0,0.5)',
+              }}
+            />
           </Stack>
         ))}
-      </Box>
+      </Stack>
     </Box>
   );
 }

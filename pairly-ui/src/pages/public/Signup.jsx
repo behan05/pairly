@@ -38,6 +38,9 @@ import { GOOGLE_API, GITHUB_API, } from '@/api/config';
 
 function Signup() {
   const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMd = useMediaQuery(theme.breakpoints.down('md'));
+  const isXl = useMediaQuery(theme.breakpoints.down('xl'));
   const isLg = useMediaQuery(theme.breakpoints.down('lg'));
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.auth.loading)
@@ -184,7 +187,9 @@ function Signup() {
         flexDirection: { xs: 'column', md: 'row' },
         flexGrow: 1,
         gap: 2,
-        pt: theme.spacing(2),
+        pt: theme.spacing(1),
+        mt: isSm ? '12dvh' : isMd ? '10dvh' : '12dvh',
+        px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '20%',
       }}
     >
       {!isLg && (

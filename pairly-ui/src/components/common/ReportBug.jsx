@@ -131,7 +131,7 @@ function ReportBug() {
 
   // Render bug report form UI
   return (
-    <Box flexDirection="column">
+    <Box flexDirection="column" mt={8} maxWidth={600}  mx={'auto'}>
       {/* Toast notifications container */}
       <ToastContainer position="top-right" autoClose={2000} theme="colored" />
 
@@ -271,13 +271,22 @@ function ReportBug() {
           </Button>
 
           {/* Submit button */}
+
           <StyledActionButton
-            type="submit"
+            onClick={handleSubmit}
+            variant="outlined"
+            endIcon={<SendIcon sx={{ color: 'text.primary' }} />}
+            size="large"
             disabled={isDisabled}
-            endIcon={<SendIcon sx={{ color: 'success.main' }} />}
-          >
-            {isDisabled ? 'Sending...' : 'Report Issue'}
-          </StyledActionButton>
+            text={isDisabled ? 'Sending...' : 'Report Issue'}
+            sx={{
+              fontSize: '1em',
+              fontWeight: 600,
+              py: 1.2,
+              textShadow: '0 0 2px #000',
+              alignSelf: 'end'
+            }}
+          />
         </Stack>
       </BlurWrapper>
     </Box>

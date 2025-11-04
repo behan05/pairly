@@ -1,4 +1,3 @@
-import React from "react";
 import { IconButton, Tooltip, useTheme } from "@/MUI/MuiComponents";
 import { LightModeIcon, DarkModeIcon } from "@/MUI/MuiIcons";
 import { useSelector, useDispatch } from "react-redux";
@@ -37,9 +36,9 @@ function BgToggle() {
     >
       <IconButton onClick={handleToggle}>
         {themeMode === "dark" ? (
-          <DarkModeIcon sx={{ color: "text.secondary" }} />
+          <DarkModeIcon fontSize='small' sx={{ color: "text.secondary" }} />
         ) : (
-          <LightModeIcon sx={{ color: "text.primary" }} />
+          <LightModeIcon fontSize='small' sx={{ color: "text.primary" }} />
         )}
       </IconButton>
     </Tooltip>

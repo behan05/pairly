@@ -71,9 +71,9 @@ function Footer() {
             </Typography>
             {[
               { label: 'Home', to: '/' },
-              { label: 'About', to: '/about' },
               { label: 'Features', to: '/features' },
-              { label: 'Contact', to: '/contact' },
+              { label: 'About Us', to: '/about' },
+              { label: 'Contact Us', to: '/contact' },
             ].map((link) => (
               <MuiLink
                 key={link.label}
@@ -120,7 +120,7 @@ function Footer() {
             {[
               { label: 'Privacy Policy', to: '/privacy-policy' },
               { label: 'Terms of Use', to: '/terms-of-use' },
-              { label: 'Playbook', to: '/Playbook' },
+              { label: 'Playbook', to: '/playbook' },
               { label: 'Cookies Policy', to: '/cookies-policy' },
             ].map((link) => (
               <MuiLink

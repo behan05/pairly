@@ -34,7 +34,8 @@ const PageNotFound = ({ redirectTo }) => {
   return (
     <Box
       sx={{
-        height: '70vh', // Set height of the container
+        mt:10,
+        height: '80vh', // Set height of the container
         display: 'flex', // Use flexbox for layout
         flexDirection: 'column', // Stack children vertically
         alignItems: 'center', // Center children horizontally
@@ -85,7 +86,7 @@ const PageNotFound = ({ redirectTo }) => {
               }
             }}
           >
-            Go Back Home
+            Go Back To Home
           </Button>
         </Link>
       </Container>

@@ -1,317 +1,893 @@
-import React from 'react';
-import { Box, Typography, Stack, useTheme } from '@/MUI/MuiComponents';
-import VerifiedIcon from '@mui/icons-material/Verified';
-
-// Assets
-import about1 from '@/assets/images/about1.jpg';
-import about2 from '@/assets/images/about2.jpg';
-import about3 from '@/assets/images/about3.jpg';
-import chatBrand1 from '@/assets/images/trustedStartup1.png';
-import chatBrand2 from '@/assets/images/trustedStartup2.png';
-import chatBrand3 from '@/assets/images/trustedStartup3.png';
-import chattingVideo from '@/assets/videos/chattingVideo.mp4';
-
-// Components
+import React, { useState } from 'react';
+import { Box, Stack, Typography, useTheme, useMediaQuery } from '@/MUI/MuiComponents';
+import StyledActionButton from '@/components/common/StyledActionButton';
 import StyledText from '@/components/common/StyledText';
-import Contact from './Contact';
-import { InfoOutlinedIcon } from '@/MUI/MuiIcons';
+import {
+  HelpOutlineIcon,
+  StarIcon
+} from '@/MUI/MuiIcons';
+
+import FAQ from '@/components/public/FAQ';
 
 function About() {
-  const theme = useTheme();
 
   React.useEffect(() => {
     document.title = 'Pairly - About';
   }, []);
 
-  // Partner logos with descriptions
-  const brandCard = [
-    {
-      brandLogo: chatBrand1,
-      brandName: 'Chatly',
-      content: `Partnered with us to test real-time algorithms in real-world environments.`
-    },
-    {
-      brandLogo: chatBrand2,
-      brandName: 'StreamConnect',
-      content: `Integrated our secure video and chat SDKs for ultra-low latency connections.`
-    },
-    {
-      brandLogo: chatBrand3,
-      brandName: 'SocialLink',
-      content: `Collaborated to explore AI-based interest matching and safety filters.`
-    }
-  ];
+  const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMd = useMediaQuery(theme.breakpoints.down('md'));
+  const isLg = useMediaQuery(theme.breakpoints.down('lg'));
+  const isXl = useMediaQuery(theme.breakpoints.down('xl'));
 
-  // Reusable styles
-  const labelNumStyle = {
-    width: 50,
-    height: 50,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    bgcolor: theme.palette.background.paper,
-    borderRadius: 3,
-    borderRight: 5,
-    transition: `all 0.2s`,
-    '&:hover': {
-      borderRight: 0
-    }
-  };
+  const BotSVG = ({ sx = {} }) => (
+    <svg viewBox="0 0 120 120" style={{ width: 160, height: 160, ...sx }}>
+      <defs>
+        <linearGradient id="g1" x1="0" x2="1">
+          <stop offset="0" stopColor="#6EE7B7" />
+          <stop offset="1" stopColor="#60A5FA" />
+        </linearGradient>
+      </defs>
+      <rect x="12" y="18" rx="18" ry="18" width="96" height="72" fill="url(#g1)" opacity="0.95" />
+      <circle cx="40" cy="50" r="6" fill="#fff" />
+      <circle cx="80" cy="50" r="6" fill="#fff" />
+      <rect x="46" y="70" rx="4" width="28" height="6" fill="#fff" opacity="0.9" />
+    </svg>
+  );
 
-  const imgSx = {
-    width: '100%',
-    maxWidth: 500,
-    borderRadius: 1,
-    objectFit: 'cover',
-    filter: 'brightness(90%)',
-    transition: '0.3s',
-    p: 0.09,
-    borderBottom: `1px dotted ${theme.palette.text.secondary}`,
-    '&:hover': { filter: 'saturate(120%)' }
-  };
+  // simple animated star
+  const Star = ({ left, top, size, delay }) => (
+    <Box
+      component="span"
+      sx={{
+        position: 'absolute',
+        left: `${left}%`,
+        top: `${top}%`,
+        width: size,
+        height: size,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.15) 60%)',
+        boxShadow: (theme) => `0 0 ${size * 3}px ${theme.palette.primary.main}40`,
+        opacity: 0.85,
+        animation: `aboutStarFloat ${6 + (delay % 3)}s ${delay}s infinite linear`,
+        '@keyframes aboutStarFloat': {
+          '0%': { transform: 'translateY(0) scale(1)', opacity: 0.85 },
+          '50%': { transform: 'translateY(-18px) scale(1.12)', opacity: 1 },
+          '100%': { transform: 'translateY(0) scale(1)', opacity: 0.85 },
+        },
+      }}
+    />
+  );
+
+  const StarField = () => (
+    <Box
+      className="about-stars"
+      sx={{
+        position: 'absolute',
+        inset: 0,
+        zIndex: 0,
+        pointerEvents: 'none',
+        opacity: 0.55,
+      }}
+    >
+      {Array.from({ length: 22 }).map((_, i) => {
+        const left = Math.random() * 100;
+        const top = Math.random() * 100;
+        const size = Math.random() * 3 + 2;
+        const delay = Math.random() * 4;
+        return <Star key={i} left={left} top={top} size={size} delay={delay} />;
+      })}
+    </Box>
+  );
 
   return (
-    <Box sx={{ px: { xs: 2, sm: 4, md: 8 } }}>
-      {/* SECTION: Intro Heading - Top Left */}
-      <Stack>
-        <Typography
-          variant="h5"
-          fontWeight={600}
-          display="flex"
-          justifyContent="flex-start"
-          alignItems="center"
-          gap={1}
-          gutterBottom
-        >
-          <InfoOutlinedIcon size="medium" sx={{ color: theme.palette.success.main }} />
-          WHAT IS <StyledText text="Pairly" />?
-        </Typography>
-
-        <Typography variant="body2" color="text.secondary" maxWidth={700}>
-          Pairly is a modern real-time video and text chat platform designed for meaningful and
-          instant human interactions. Whether you're looking to meet new people, learn languages, or
-          simply enjoy a conversation, we make it simple and secure.
-        </Typography>
-      </Stack>
-
-      {/* SECTION: Video and Tagline */}
+    <React.Fragment>
+      {/* === Hero / Slogan Section === */}
       <Box
         sx={{
           display: 'flex',
-          flexDirection: { xs: 'column', md: 'column', lg: 'row' },
-          flexWrap: 'wrap',
+          mt: isSm ? '18dvh' : isMd ? '20dvh' : '18dvh',
+          px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '20%',
+          gap: 4,
+          py: isMd ? 4 : 8,
           alignItems: 'center',
-          justifyContent: 'center',
-          gap: { xs: 4, md: 8 },
-          px: { xs: 2, sm: 4 },
-          py: { xs: 4, sm: 6 },
-          width: '100%',
-          minHeight: { xs: 'auto', md: '60vh' }
         }}
       >
-        {/* Left Video */}
-        <Box
-          component="video"
-          src={chattingVideo}
-          loading="lazy"
-          autoPlay
-          muted
-          loop
-          aria-label="about section video"
-          sx={{
-            width: '100%',
-            maxWidth: { xs: '100%', sm: 500, md: 600 },
-            borderRadius: 2,
-            objectFit: 'cover',
-            borderBottom: `1px dotted ${theme.palette.text.secondary}`,
-            transition: 'all 0.3s ease',
-            '&:hover': {
-              filter: 'brightness(120%) saturate(120%)'
-            }
-          }}
-        />
-
-        {/* Right Content */}
-        <Stack
-          flex={1}
-          justifyContent="center"
-          spacing={2}
-          sx={{
-            width: '100%',
-            maxWidth: { xs: '100%', sm: 500 },
-            textAlign: { xs: 'center', lg: 'left' }
-          }}
-        >
+        {/* Headline & Description */}
+        <Stack spacing={4}>
           <Typography
-            variant="h5"
-            fontWeight={600}
-            color="text.primary"
-            lineHeight={1.4}
-            letterSpacing={0.8}
+            variant={isSm ? 'h3' : isMd ? 'h3' : 'h2'}
+            sx={{
+              fontWeight: 700,
+              fontSize: isMd ? '1.8em' : '4em',
+              lineHeight: isSm ? 1.2 : 1,
+              color: `${theme.palette.primary.main}`
+            }}
           >
-            Real <StyledText text="People" />.<br />
-            Real <StyledText text="Conversations" />.<br />
-            In Just <StyledText text="One Click" />.
+            About Pairly <br /> A calmer, kinder social universe.
           </Typography>
 
-          <Typography variant="subtitle1" color="text.primary" sx={{ letterSpacing: 0.5 }}>
-            <b>Pairly</b> lets you instantly start random video chats with people around the world
-            — no sign-up, no waiting, just genuine human connection.
-          </Typography>
+          {/* Short Description */}
+          {isSm ? (
+            <Typography
+              variant="h6"
+              color="text.secondary"
+              sx={{ maxWidth: 800, lineHeight: 1.4, fontSize: isSm ? '16px' : '18px' }}
+            >
+              Pairly was built from the belief that online connection should be real, respectful, and emotionally thoughtful. We design features that encourage people to talk, listen, and form meaningful bonds not just collect likes.
+            </Typography>
 
-          <Typography variant="subtitle2" color="text.secondary" sx={{ letterSpacing: 0.5 }}>
-            <StyledText text="❝" /> With Pairly, I made friends globally and had conversations that
-            truly mattered. It’s fast, fun, and feels safe. <StyledText text="❝" />
-          </Typography>
+          ) : (
+            <Typography
+              variant="h6"
+              color="text.secondary"
+              sx={{ maxWidth: 800, lineHeight: 1.6, fontSize: '18px' }}
+            >
+              Pairly was built from the belief that online connection should be real, respectful, and emotionally thoughtful. We design features that encourage people to talk, listen, and form meaningful bonds — not just collect likes.
+            </Typography>
+          )}
+
+          {/* CTA Buttons */}
+          <Stack direction="row" gap={2} sx={{ mt: 3, flexWrap: 'wrap' }}>
+            <StyledActionButton
+              text={'Begin Your Journey'}
+              redirectUrl={'/register'}
+              sx={{ fontSize: '1em', fontWeight: 600, py: 1.2, textShadow: '0 0 2px #000' }}
+            />
+          </Stack>
         </Stack>
       </Box>
 
-      {/* SECTION: Why Choose Us - Centered Text */}
-      <Stack spacing={3} alignItems="center" textAlign="center" mt={6}>
+      {/* Mission */}
+      <Stack sx={{
+        px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '8%',
+      }}>
+        <Stack
+          sx={{
+            position: 'relative',
+            minHeight: isSm ? '60dvh' : '80dvh',
+            display: 'flex',
+            flexDirection: 'row',
+            overflow: 'hidden',
+            mt: 8,
+          }}
+        >
+          {/* Left track */}
+          {!isSm && (
+            <Box
+              sx={{
+                position: 'absolute',
+                left: '10%',
+                top: 0,
+                bottom: 0,
+                width: '2px',
+                '&::before, &::after': {
+                  content: '""',
+                  position: 'absolute',
+                  width: '5px',
+                  top: 0,
+                  bottom: 0,
+                  background: `linear-gradient(180deg, 
+                ${theme.palette.error.main}80, 
+                ${theme.palette.background.default}, 
+                ${theme.palette.warning.dark}50)`,
+                  borderRadius: '2px',
+                },
+                '&::after': {
+                  left: '10px',
+                },
+              }}
+            />
+          )}
+
+          {/* Responsive Content */}
+          {isSm ? (
+            <Box
+              sx={{
+                position: 'relative',
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+                px: 2,
+              }}
+            >
+              {/* Star Background Animation */}
+              <StarField />
+
+              {/* Content */}
+              <Box
+                sx={{
+                  zIndex: 1,
+                  color: 'text.primary',
+                }}
+              >
+                <Typography variant="h3" sx={{ fontWeight: 700, mb: 1, color: `${theme.palette.error.main}90` }}>
+                  Our Mission
+                </Typography>
+                <Typography variant="body1" sx={{ color: 'text.secondary', mb: 1 }}>
+                  Emotion-aware, human-first
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  To empower meaningful relationships by balancing digital innovation with emotional intelligence. We design features that protect emotional space and encourage honest conversation.
+                </Typography>
+              </Box>
+            </Box>
+          ) : (
+            // Large screen
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: 'flex',
+                flexDirection: isMd ? 'column' : 'row',
+                p: isMd ? 0 : 4,
+                justifyContent: isMd ? 'center' : 'flex-start',
+                alignItems: 'center',
+                gap: 2,
+              }}
+            >
+              <StarField />
+              <Stack sx={{
+                ml: isSm ? 0 : '20%',
+                display: 'flex',
+                flexDirection: 'column',
+                p: isSm ? 0 : 6,
+                gap: 2,
+              }}>
+                <Typography
+                  variant="h1"
+                  sx={{
+                    fontWeight: 700,
+                    color: `${theme.palette.error.main}90`
+                  }}
+                >
+                  Our Mission
+                </Typography>
+
+                <Typography
+                  variant="h4"
+                  sx={{
+                    color: 'text.secondary',
+                    maxWidth: '600px',
+                  }}
+                >
+                  Emotion-aware, human-first
+                </Typography>
+
+                <Typography
+                  variant="h5"
+                  sx={{
+                    color: 'text.secondary',
+                    maxWidth: '600px',
+                  }}
+                >
+                  To empower meaningful relationships by balancing digital innovation with emotional intelligence. We design features that protect emotional space and encourage honest conversation.
+                </Typography>
+              </Stack>
+
+              {/* Bot */}
+              <Box sx={{ position: 'absolute', inset: 0 }}>
+                {Array.from({ length: 7 }).map((_, i) => {
+                  const left = 10 + Math.random() * 80;
+                  const top = 6 + Math.random() * 80;
+                  const size = 2 + Math.random() * 6;
+                  const delay = Math.random() * 4;
+                  return <Star key={i} left={left} top={top} size={size} delay={delay} />;
+                })}
+              </Box>
+              <Box className="about-bot" sx={{ position: 'relative', zIndex: 2, display: 'flex', justifyContent: 'center' }}>
+                <BotSVG />
+              </Box>
+
+            </Box>
+          )}
+        </Stack>
+      </Stack>
+
+      {/* Vision */}
+      <Stack sx={{
+        px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '8%',
+      }}>
+        <Stack
+          sx={{
+            position: 'relative',
+            minHeight: isSm ? '60dvh' : '80dvh',
+            display: 'flex',
+            flexDirection: 'row',
+            overflow: 'hidden',
+            mt: 8,
+          }}
+        >
+          {/* Left track */}
+          {!isSm && (
+            <Box
+              sx={{
+                position: 'absolute',
+                left: '10%',
+                top: 0,
+                bottom: 0,
+                width: '2px',
+                '&::before, &::after': {
+                  content: '""',
+                  position: 'absolute',
+                  width: '5px',
+                  top: 0,
+                  bottom: 0,
+                  background: `linear-gradient(180deg, 
+                ${theme.palette.error.main}80, 
+                ${theme.palette.background.default}, 
+                ${theme.palette.warning.dark}50)`,
+                  borderRadius: '2px',
+                },
+                '&::after': {
+                  left: '10px',
+                },
+              }}
+            />
+          )}
+
+          {/* Responsive Content */}
+          {isSm ? (
+            <Box
+              sx={{
+                position: 'relative',
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+                px: 2,
+              }}
+            >
+              {/* Star Background Animation */}
+              <StarField />
+
+              {/* Content */}
+              <Box
+                sx={{
+                  zIndex: 1,
+                  color: 'text.primary',
+                }}
+              >
+                <Typography variant="h3" sx={{ fontWeight: 700, mb: 1, color: `${theme.palette.error.main}90` }}>
+                  Our Vision
+                </Typography>
+                <Typography variant="body1" sx={{ color: 'text.secondary', mb: 1 }}>
+                  Technology that unites hearts
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  We imagine a future where tech brings people closer to real emotion — friendships, partnerships, and communities formed by genuine dialogue and mindful design.
+                </Typography>
+              </Box>
+            </Box>
+          ) : (
+            // Large screen
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: 'flex',
+                flexDirection: isMd ? 'column' : 'row',
+                p: isMd ? 0 : 4,
+                justifyContent: isMd ? 'center' : 'flex-start',
+                alignItems: 'center',
+                gap: 2,
+              }}
+            >
+              <StarField />
+              <Stack sx={{
+                ml: isSm ? 0 : '20%',
+                display: 'flex',
+                flexDirection: 'column',
+                p: isSm ? 0 : 6,
+                gap: 2,
+              }}>
+                <Typography
+                  variant="h1"
+                  sx={{
+                    fontWeight: 700,
+                    color: `${theme.palette.error.main}90`
+                  }}
+                >
+                  Our Vision
+                </Typography>
+
+                <Typography
+                  variant="h4"
+                  sx={{
+                    color: 'text.secondary',
+                    maxWidth: '600px',
+                  }}
+                >
+                  Technology that unites hearts
+                </Typography>
+
+                <Typography
+                  variant="h5"
+                  sx={{
+                    color: 'text.secondary',
+                    maxWidth: '600px',
+                  }}
+                >
+                  We imagine a future where tech brings people closer to real emotion — friendships, partnerships, and communities formed by genuine dialogue and mindful design.
+                </Typography>
+              </Stack>
+
+              {/* Bot */}
+              <Box sx={{ position: 'absolute', inset: 0 }}>
+                {Array.from({ length: 7 }).map((_, i) => {
+                  const left = 10 + Math.random() * 80;
+                  const top = 6 + Math.random() * 80;
+                  const size = 2 + Math.random() * 6;
+                  const delay = Math.random() * 4;
+                  return <Star key={i} left={left} top={top} size={size} delay={delay} />;
+                })}
+              </Box>
+              <Box className="about-bot" sx={{ position: 'relative', zIndex: 2, display: 'flex', justifyContent: 'center' }}>
+                <BotSVG />
+              </Box>
+
+            </Box>
+          )}
+        </Stack>
+      </Stack>
+
+      {/* Pairly Growth & Feedback Section */}
+      <Stack
+        sx={{
+          px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '8%',
+        }}
+      >
+        <Stack
+          sx={{
+            position: 'relative',
+            minHeight: isSm ? '60dvh' : '80dvh',
+            display: 'flex',
+            flexDirection: 'row',
+            overflow: 'hidden',
+            background: theme.palette.background.default,
+            mt: 8,
+            py: 2
+          }}
+        >
+          {/* Left track */}
+          {!isSm && (
+            <Box
+              sx={{
+                position: 'absolute',
+                right: '10%',
+                top: 0,
+                bottom: 0,
+                width: '2px',
+                '&::before, &::after': {
+                  content: '""',
+                  position: 'absolute',
+                  width: '5px',
+                  top: 0,
+                  bottom: 0,
+                  background: `linear-gradient(180deg, 
+              ${theme.palette.error.main}80, 
+              ${theme.palette.background.default}, 
+              ${theme.palette.warning.dark}50)`,
+                  borderRadius: '2px',
+                },
+                '&::after': {
+                  left: '10px',
+                },
+              }}
+            />
+          )}
+
+          {/* Responsive Content */}
+          {isSm ? (
+            <Box
+              sx={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+                px: 2,
+              }}
+            >
+              {/* Content */}
+              <Box
+                sx={{
+                  zIndex: 1,
+                  color: 'text.primary',
+                  textAlign: 'center',
+                }}
+              >
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 1, color: `${theme.palette.error.main}90` }}>
+                  Growing Through Every Connection
+                </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    color: 'text.secondary',
+                    maxWidth: '600px',
+                    mx: 'auto',
+                    lineHeight: 1.4,
+                  }}
+                >
+                  Pairly is more than a chat platform it’s a movement toward mindful
+                  connection, kindness, and emotional awareness in the digital age.
+                </Typography>
+                <Typography variant="subtitle2" sx={{ color: 'text.secondary', mt: 1 }}>
+                  Every interaction helps us grow guided by your trust, feedback, and the
+                  genuine bonds formed within our community.
+                </Typography>
+
+                {/* Stats Section */}
+                <Stack
+                  direction="row"
+                  justifyContent="center"
+                  alignItems="center"
+                  spacing={3}
+                  mt={4}
+                  sx={{
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  {[
+                    { value: '10K+', label: 'Active Members' },
+                    { value: '98%', label: 'Positive Experiences' },
+                    { value: '500+', label: 'Connections Formed Daily' },
+                  ].map((item, i) => (
+                    <Stack key={i} alignItems="center" spacing={0.5}>
+                      <Typography variant="h4" sx={{ fontWeight: 700, color: theme.palette.primary.main }}>
+                        {item.value}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                        {item.label}
+                      </Typography>
+                    </Stack>
+                  ))}
+                </Stack>
+              </Box>
+            </Box>
+          ) : (
+            // Large screen
+            <Box
+              sx={{
+                flexGrow: 1,
+                ml: isSm ? 0 : isLg ? '5%' : '20%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                p: isSm ? 0 : 6,
+                gap: 2,
+              }}
+            >
+              <Typography
+                variant="h4"
+                sx={{ fontWeight: 700, mb: 1, color: `${theme.palette.error.main}90` }}
+              >
+                Growing Through Every Connection
+              </Typography>
+
+              <Typography
+                variant="h2"
+                sx={{
+                  color: 'text.secondary',
+                  maxWidth: '600px',
+                }}
+              >
+                Pairly is redefining how people connect blending empathy and innovation to
+                build relationships that truly matter.
+              </Typography>
+
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  color: 'text.secondary',
+                  maxWidth: '600px',
+                }}
+              >
+                From friendships to love, from chats to proposals Pairly grows through
+                your shared moments, evolving with every heartbeat in our community.
+              </Typography>
+
+              {/* Stats */}
+              <Stack direction="row" spacing={6} mt={4}>
+                {[
+                  { value: '10K+', label: 'Active Members' },
+                  { value: '98%', label: 'Positive Experiences' },
+                  { value: '500+', label: 'Connections Formed Daily' },
+                ].map((item, i) => (
+                  <Stack key={i} spacing={0.5}>
+                    <Typography variant="h3" sx={{ fontWeight: 700, color: theme.palette.primary.main }}>
+                      {item.value}
+                    </Typography>
+                    <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                      {item.label}
+                    </Typography>
+                  </Stack>
+                ))}
+              </Stack>
+            </Box>
+          )}
+        </Stack>
+      </Stack>
+
+      {/* ===  Meet Behind Pairly Section === */}
+      <Stack
+        sx={{
+          px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '8%',
+        }}
+      >
+        <Stack
+          sx={{
+            position: 'relative',
+            minHeight: isSm ? '80dvh' : '90dvh',
+            display: 'flex',
+            flexDirection: 'row',
+            overflow: 'hidden',
+            py: 2,
+            background: theme.palette.background.default,
+            mt: 8,
+          }}
+        >
+          {/* Left track */}
+          {!isSm && (
+            <Box
+              sx={{
+                position: 'absolute',
+                right: '10%',
+                top: 0,
+                bottom: 0,
+                width: '2px',
+                '&::before, &::after': {
+                  content: '""',
+                  position: 'absolute',
+                  width: '5px',
+                  top: 0,
+                  bottom: 0,
+                  background: `linear-gradient(180deg, 
+              ${theme.palette.error.main}80, 
+              ${theme.palette.background.default}, 
+              ${theme.palette.warning.dark}50)`,
+                  borderRadius: '2px',
+                },
+                '&::after': {
+                  left: '10px',
+                },
+              }}
+            />
+          )}
+
+          {/* Responsive Content */}
+          {isSm ? (
+            <Box
+              sx={{
+                position: 'relative',
+                width: '100%',
+                height: 'auto',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+                px: 2,
+              }}
+            >
+              {/* Content */}
+              <Box
+                sx={{
+                  zIndex: 1,
+                  color: 'text.primary',
+                  textAlign: 'center',
+                }}
+              >
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 1, color: `${theme.palette.error.main}90` }}>
+                  Meet behind pairly
+                </Typography>
+                <Typography
+                  variant={isSm ? 'h5' : 'h2'}
+                  sx={{
+                    color: 'text.secondary',
+                    maxWidth: '700px',
+                    mx: 'auto',
+                    lineHeight: 1.4,
+                    mb: 4,
+                  }}
+                >
+                  A small, passionate team that believes real connection still matters building Pairly with love, code, and purpose.
+                </Typography>
+
+                {/* Team Grid */}
+                <Stack
+                  direction="row"
+                  justifyContent="center"
+                  flexWrap="wrap"
+                  gap={isSm ? 3 : 6}
+                  sx={{ mt: 4 }}
+                >
+                  {[
+                    {
+                      name: 'Behan Kumar',
+                      position: 'Founder & Application Developer',
+                      image: 'https://avatars.githubusercontent.com/u/83676505?s=400&u=caa79332e167370eca386917210d81c0077ffbff&v=4',
+                    },
+                    {
+                      name: 'Kashyap Sitesh Singh',
+                      position: 'Digital Marketer',
+                      image: '/assets/team/kashyap.jpg',
+                    },
+                  ].map((member, i) => (
+                    <Stack
+                      key={i}
+                      alignItems="center"
+                      gap={1}
+                      sx={{
+                        p: 2,
+                        mb: 2,
+                        borderRadius: 2,
+                        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                        '&:hover': {
+                          transform: 'translateY(-8px)',
+                          boxShadow: `0 0 20px ${theme.palette.primary.main}40`,
+                        },
+                      }}
+                    >
+                      <Box
+                        component="img"
+                        src={member.image}
+                        alt={member.name}
+                        sx={{
+                          width: 150,
+                          height: 150,
+                          borderRadius: 2,
+                          objectFit: 'cover',
+                          border: `2px solid ${theme.palette.primary.main}`,
+                        }}
+                      />
+                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        {member.name}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                        {member.position}
+                      </Typography>
+                    </Stack>
+                  ))}
+                </Stack>
+              </Box>
+            </Box>
+          ) : (
+            // Large screen
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: 'flex',
+                ml: isSm ? 0 : isLg ? '5%' : '20%',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                p: isSm ? 0 : 6,
+                gap: 2,
+              }}
+            >
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 700,
+                  mb: 1,
+                  // ml: isSm ? 0 : '20%',
+                  color: `${theme.palette.error.main}90`
+                }}
+              >
+                Meet the People Behind Pairly
+              </Typography>
+
+              <Typography
+                variant="h2"
+                sx={{
+                  color: 'text.secondary',
+                  maxWidth: '600px',
+                }}
+              >
+                A small, passionate team that believes real connection still matters building Pairly with love, code, and purpose.
+              </Typography>
+
+              {/* Team Grid */}
+              <Stack
+                direction="row"
+                justifyContent={isLg ? 'center' : 'start'}
+                flexWrap="wrap"
+                gap={isSm ? 3 : 6}
+                sx={{ mt: 4 }}
+              >
+                {[
+                  {
+                    name: 'Behan Kumar',
+                    position: 'Founder & Application Developer',
+                    image: 'https://avatars.githubusercontent.com/u/83676505?s=400&u=caa79332e167370eca386917210d81c0077ffbff&v=4',
+                  },
+                  {
+                    name: 'Kashyap Sitesh Singh',
+                    position: 'Digital Marketer',
+                    image: '/assets/team/kashyap.jpg',
+                  },
+                ].map((member, i) => (
+                  <Stack
+                    key={i}
+                    alignItems="center"
+                    gap={1}
+                    borderRadius={1}
+                    justifyContent={'center'}
+                    sx={{
+                      p: 1.5,
+                      transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                      '&:hover': {
+                        transform: 'translateY(-8px)',
+                        boxShadow: `0 0 20px ${theme.palette.primary.main}40`,
+                      },
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      src={member.image}
+                      alt={member.name}
+                      sx={{
+                        width: 180,
+                        height: 180,
+                        borderRadius: 1,
+                        objectFit: 'cover',
+                        border: `2px solid ${theme.palette.primary.main}`,
+                      }}
+                    />
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      {member.name}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      {member.position}
+                    </Typography>
+                  </Stack>
+                ))}
+              </Stack>
+            </Box>
+          )}
+        </Stack>
+      </Stack>
+
+      {/* === Frequently Asked Questions FAQ Section === */}
+      <Box
+        mt={6}
+        sx={{
+          maxWidth: 1000,
+          mx: 'auto'
+        }}
+      >
         <Typography
           variant="h5"
           fontWeight={600}
+          textTransform={'uppercase'}
           display="flex"
-          justifyContent="center"
           alignItems="center"
+          justifyContent={'center'}
           gap={1}
+          gutterBottom
         >
-          <InfoOutlinedIcon size="medium" sx={{ color: theme.palette.info.main }} />
-          WHY CHOOSE <StyledText text="Pairly" />?
+          <HelpOutlineIcon fontSize="medium" sx={{ color: 'success.main' }} />
+          {<StyledText text={'FAQ'} />}
         </Typography>
-
-        <Typography variant="subtitle1" color="text.secondary" maxWidth={700}>
-          We’re more than just a chat app. With instant pairing, secure conversations, and a growing
-          global community — Pairly is where real conversations begin and boundaries disappear.
-        </Typography>
-      </Stack>
-
-      {/* SECTION: Features - Instant Matchmaking, Video, Privacy */}
-      <Box component="section" maxWidth={1100} mx="auto">
-        {/* Feature 1: Matchmaking */}
-        <Stack my={8} direction={{ xs: 'column', lg: 'row' }} spacing={5} alignItems="center">
-          <Box component="img" src={about1} alt="instant matching" sx={imgSx} />
-          <Stack spacing={2}>
-            <Typography
-              variant="h6"
-              fontWeight={800}
-              letterSpacing={2}
-              color="text.secondary"
-              sx={labelNumStyle}
-            >
-              01
-            </Typography>
-            <Typography variant="h5" fontWeight={600}>
-              Instant <StyledText text="Matchmaking" />
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Our algorithm pairs users within seconds based on interest, language, and location
-              preferences, ensuring relevant and exciting conversations every time.
-            </Typography>
-          </Stack>
-        </Stack>
-
-        {/* Feature 2: Real-time Messaging */}
-        <Stack
-          my={8}
-          direction={{ xs: 'column-reverse', lg: 'row' }}
-          spacing={5}
-          alignItems="center"
+        <Typography
+          variant="body2"
+          maxWidth="800px"
+          color="text.secondary"
+          mx="auto"
+          textAlign={'center'}
+          fontSize={{ xs: 14, md: 16 }}
+          mb={3}
         >
-          <Stack spacing={2}>
-            <Typography
-              variant="h6"
-              fontWeight={800}
-              letterSpacing={2}
-              color="text.secondary"
-              sx={labelNumStyle}
-            >
-              02
-            </Typography>
-            <Typography variant="h5" fontWeight={600}>
-              <StyledText text="Real-Time Video" /> & Messaging
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              From smooth video calls to real-time chats, enjoy a seamless, high-quality
-              communication experience. Our infrastructure supports thousands of users
-              simultaneously.
-            </Typography>
-          </Stack>
-          <Box component="img" src={about2} alt="real-time chat" sx={imgSx} />
-        </Stack>
-
-        {/* Feature 3: Safety */}
-        <Stack my={8} direction={{ xs: 'column', lg: 'row' }} spacing={5} alignItems="center">
-          <Box component="img" src={about3} alt="safe connection" sx={imgSx} />
-          <Stack spacing={2}>
-            <Typography
-              variant="h6"
-              fontWeight={800}
-              letterSpacing={2}
-              color="text.secondary"
-              sx={labelNumStyle}
-            >
-              03
-            </Typography>
-            <Typography variant="h5" fontWeight={600}>
-              Privacy & <StyledText text="Safety First" />
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              We use end-to-end encryption, moderation tools, and user reporting to ensure a
-              respectful and secure environment for everyone. Your data is always protected.
-            </Typography>
-          </Stack>
-        </Stack>
-      </Box>
-
-      {/* SECTION: Trusted by Startups */}
-      <Stack mt={6} spacing={2} textAlign="center">
-        <Stack direction="row" justifyContent="center" gap={1} alignItems="center">
-          <VerifiedIcon color="primary" />
-          <Typography variant="h5" fontWeight={600} color="text.secondary">
-            TRUSTED <StyledText text="BY TEAMS" />
-          </Typography>
-        </Stack>
-        <Typography variant="body2" gutterBottom fontWeight={500}>
-          Our technology is trusted by social platforms, startups, and learning communities.
+          Got questions? We've answered the most common things you might wonder about from how
+          Pairly works to how we keep your experience safe and smooth.
         </Typography>
 
-        <Stack direction="row" flexWrap="wrap" justifyContent="center" gap={3} mt={4}>
-          {brandCard.map((card, i) => (
-            <Box
-              key={i}
-              p={3}
-              maxWidth={300}
-              borderRadius={1}
-              boxShadow={2}
-              sx={{
-                bgcolor: theme.palette.background.paper,
-                backdropFilter: 'blur(14px)',
-                transition: 'all 0.3s ease',
-                borderBottom: `1px dotted ${theme.palette.text.secondary}`,
-                '&:hover': { transform: 'translateY(-10px)' }
-              }}
-            >
-              <Box component="img" src={card.brandLogo} alt={card.brandName} width={110} mb={2} />
-              <Typography variant="subtitle1" fontWeight={600} color='text.primary'>
-                {card.brandName}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {card.content}
-              </Typography>
-            </Box>
-          ))}
-        </Stack>
-      </Stack>
-
-      {/* SECTION: Contact Form */}
-      <Box mt={10}>
-        <Typography variant="h5" fontWeight={600} textAlign="center" mb={3}>
-          GOT QUESTIONS? <StyledText text="WE’RE HERE TO HELP" />.
-        </Typography>
-        <Contact />
+        <FAQ />
       </Box>
-    </Box>
+    </React.Fragment>
   );
 }
 

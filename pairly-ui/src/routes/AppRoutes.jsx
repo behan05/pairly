@@ -13,6 +13,9 @@ import PrivacyPolicyPage from '@/components/common/PrivacyPolicyPage';
 import TermsOfUsePage from '@/components/common/TermsOfUsePage';
 import PageNotFound from '@/components/common/PageNotFound';
 import ReportBug from '@/components/common/ReportBug';
+import Pricing from '../components/public/Pricing';
+import CookiesPolicyPage from '../components/common/CookiesPolicyPage';
+import PlaybookPage from '../components/common/PlaybookPage';
 
 import PrivateRoute from '@/middleware/PrivateRoute';
 
@@ -88,6 +91,9 @@ export const routes = createBrowserRouter([
       { path: 'privacy-policy', element: <PrivacyPolicyPage /> },
       { path: 'terms-of-use', element: <TermsOfUsePage /> },
       { path: 'nextGenerationChat', element: <NextGenerationChat /> },
+      { path: 'pricing', element: <Pricing /> },
+      { path: 'cookies-policy', element: <CookiesPolicyPage /> },
+      { path: 'playbook', element: <PlaybookPage /> },
       { path: '*', element: <PageNotFound redirectTo={'/'} /> }
     ]
   },

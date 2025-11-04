@@ -3,7 +3,7 @@ import { Typography, Container } from '@mui/material';
 function NextGenerationChat() {
   return (
     <>
-      <Container maxWidth="md" sx={{ pt: 4 }}>
+      <Container maxWidth="md" sx={{ pt: 10 }}>
         <Typography
           variant="h3"
           fontWeight={700}

@@ -16,6 +16,7 @@ import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 import MarkunreadIcon from '@mui/icons-material/Markunread';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 // ==================== Authentication ====================
 import LockIcon from '@mui/icons-material/Lock';
@@ -185,6 +186,7 @@ export {
   MarkunreadIcon,
   DraftsIcon,
   NotificationsNoneIcon,
+  KeyboardArrowDownIcon,
 
   // Authentication
   LockIcon,

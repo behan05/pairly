@@ -103,12 +103,9 @@ function RandomSidebar() {
       flexDirection="column"
       minWidth={isSm ? '100%' : 380}
       height="100vh"
-      bgcolor="background.default"
       position="relative"
       sx={{
-        background: `linear-gradient(135deg,
-        ${theme.palette.primary.light}15,
-        ${theme.palette.background.default} 70%)`,
+        background: theme.palette.background.paper,
         overflow: 'hidden',
       }}
     >

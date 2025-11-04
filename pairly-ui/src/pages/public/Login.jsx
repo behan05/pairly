@@ -38,6 +38,9 @@ import { GOOGLE_API, GITHUB_API } from '@/api/config';
 
 function Login() {
   const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMd = useMediaQuery(theme.breakpoints.down('md'));
+  const isXl = useMediaQuery(theme.breakpoints.down('xl'));
   const isLg = useMediaQuery(theme.breakpoints.down('lg'));
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -147,6 +150,8 @@ function Login() {
         flexGrow: 1,
         gap: 2,
         pt: theme.spacing(2),
+        mt: isSm ? '18dvh' : isMd ? '20dvh' : '18dvh',
+        px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '20%',
       }}
     >
       {/* Left side content for larger screens */}
