@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Box, Stack, Typography, useTheme, useMediaQuery } from '@/MUI/MuiComponents';
 import StyledButton from '@/components/common/StyledButton';
 import StyledActionButton from '@/components/common/StyledActionButton';
@@ -47,6 +47,38 @@ function Home() {
   const isXl = useMediaQuery(theme.breakpoints.down('xl'));
   const custome = useMediaQuery('(max-width:430px)');
 
+  // useRef props here
+  const refHero = useRef(null);
+  const refFeatures = useRef(null);
+  const refWhyPairly = useRef(null);
+  const refPairlyGrowth = useRef(null);
+  const refPairlyDifferent = useRef(null);
+  const refHowItWorks = useRef(null);
+  const refAIBehindPairly = useRef(null);
+  const refFAQ = useRef(null);
+
+  // Animation Start here
+  useEffect(() => {
+    const heroElements = refHero.current.children;
+    const FeaturesElements = refFeatures.current.children;
+
+    const tl = gsap.timeline({ defaults: { duration: 0.8, ease: 'power3.out' } });
+
+    tl.from(heroElements, {
+      y: 50,
+      opacity: 0,
+      stagger: 0.25,
+    });
+
+    tl.from(FeaturesElements, {
+      y: 50,
+      opacity: 0,
+      stagger: 0.25,
+    });
+
+    return () => tl.kill(); // cleanup
+  }, []);
+
   return (
     <React.Fragment>
       {/* === Hero / Slogan Section === */}
@@ -61,7 +93,7 @@ function Home() {
         }}
       >
         {/* Headline & Description */}
-        <Stack spacing={4}>
+        <Stack spacing={4} ref={refHero}>
           <Typography
             variant={isSm ? 'h3' : isMd ? 'h3' : 'h2'}
             sx={{
@@ -113,6 +145,7 @@ function Home() {
 
       {/* === Features Section === */}
       <Stack
+        ref={refFeatures}
         direction={'column'}
         mt={4}
         sx={{
@@ -250,7 +283,7 @@ function Home() {
         <Stack
           sx={{
             position: 'relative',
-            height: isSm ? '80dvh' : '90dvh',
+            height: isSm ? '70dvh' : '85dvh',
             display: 'flex',
             flexDirection: 'row',
             overflow: 'hidden',
