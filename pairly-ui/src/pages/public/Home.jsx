@@ -98,7 +98,6 @@ function Home() {
             variant={isSm ? 'h3' : isMd ? 'h3' : 'h2'}
             sx={{
               color: 'text.primary',
-              lineHeight: 1.0,
               fontWeight: 700,
               fontSize: isMd ? '1.8em' : '4em',
               lineHeight: isSm ? 1.2 : 1,
