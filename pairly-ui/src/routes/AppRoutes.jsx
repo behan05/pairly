@@ -16,6 +16,9 @@ import ReportBug from '@/components/common/ReportBug';
 import Pricing from '../components/public/Pricing';
 import CookiesPolicyPage from '../components/common/CookiesPolicyPage';
 import PlaybookPage from '../components/common/PlaybookPage';
+import BlogList from '../components/blog/BlogList';
+import Blog from '../components/blog/Blog';
+import Press from '../components/press/Press';
 
 import PrivateRoute from '@/middleware/PrivateRoute';
 
@@ -94,6 +97,15 @@ export const routes = createBrowserRouter([
       { path: 'pricing', element: <Pricing /> },
       { path: 'cookies-policy', element: <CookiesPolicyPage /> },
       { path: 'playbook', element: <PlaybookPage /> },
+
+      // Blog routes
+      { path: 'blog', element: <BlogList /> }, // default blog list
+      { path: 'blog/:slug', element: <Blog /> }, // dynamic article
+
+      // Press page
+      { path: 'press', element: <Press /> },
+
+      // 404 fallback
       { path: '*', element: <PageNotFound redirectTo={'/'} /> }
     ]
   },

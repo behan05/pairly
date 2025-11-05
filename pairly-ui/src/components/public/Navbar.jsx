@@ -35,7 +35,7 @@ gsap.registerPlugin(ScrollTrigger);
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import ForumIcon from '@mui/icons-material/Forum';
+import FacebookIcon from '@mui/icons-material/Facebook';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 const navListBtn = [
@@ -47,7 +47,7 @@ const centerNav = [
   { path: '/about', text: 'About Us' },
   { path: '/features', text: 'Features' },
   { path: '/pricing', text: 'Pricing' },
-  { path: '/community', text: 'Community', hasDropdown: true },
+  { text: 'Community', hasDropdown: true },
   { path: '/contact', text: 'Support' },
 ];
 
@@ -143,8 +143,8 @@ function Navbar() {
                 className="nav-link"
                 key={index}
                 component={Link}
-                onMouseEnter={item.hasDropdown ? (e) => handleSubMenu(e) : null}
-                to={item.path}
+                onMouseEnter={item?.hasDropdown ? (e) => handleSubMenu(e) : null}
+                to={item?.path}
                 direction={'row'}
                 alignItems={'center'}
                 gap={0.5}
@@ -190,7 +190,7 @@ function Navbar() {
               <Typography
                 className="nav-action"
                 component={Link}
-                to={cta.path}
+                to={cta?.path}
                 key={i}
                 sx={{
                   display: 'flex',
@@ -207,7 +207,7 @@ function Navbar() {
                   },
                 }}
               >
-                {cta.text}
+                {cta?.text}
               </Typography>
             ))}
           </Box>
@@ -259,9 +259,9 @@ function Navbar() {
               <ListItemButton
                 key={index}
                 component={Link}
-                to={item.path}
+                to={item?.path}
                 onClick={toggleDrawer(false)}
-                onMouseEnter={item.hasDropdown ? (e) => handleSubMenu(e) : null}
+                onMouseEnter={item?.hasDropdown ? (e) => handleSubMenu(e) : null}
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
@@ -277,8 +277,8 @@ function Navbar() {
                   },
                 }}
               >
-                <ListItemText primary={item.text} />
-                {item.hasDropdown
+                <ListItemText primary={item?.text} />
+                {item?.hasDropdown
                   ? open ? <KeyboardArrowUpIcon fontSize="small" /> : <KeyboardArrowDownIcon fontSize="small" sx={{ color: theme.palette.divider }} />
                   : null}
               </ListItemButton>
@@ -416,12 +416,12 @@ function Navbar() {
               { label: 'Instagram', icon: <InstagramIcon />, href: '' },
               { label: 'Twitter', icon: <TwitterIcon />, href: '' },
               { label: 'LinkedIn', icon: <LinkedInIcon />, href: '' },
-              { label: 'Forum', icon: <ForumIcon />, href: '' },
+              { label: 'Forum', icon: <FacebookIcon />, href: '' },
             ].map((item, i) => (
               <Tooltip key={i} title={item.label}>
                 <IconButton
                   component="a"
-                  href={item.href}
+                  href={item?.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   sx={{
@@ -433,7 +433,7 @@ function Navbar() {
                     },
                   }}
                 >
-                  {item.icon}
+                  {item?.icon}
                 </IconButton>
               </Tooltip>
             ))}

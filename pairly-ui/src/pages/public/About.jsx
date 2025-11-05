@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, Stack, Typography, useTheme, useMediaQuery } from '@/MUI/MuiComponents';
 import StyledActionButton from '@/components/common/StyledActionButton';
 import StyledText from '@/components/common/StyledText';
 import {
   HelpOutlineIcon,
-  StarIcon
 } from '@/MUI/MuiIcons';
 
 import FAQ from '@/components/public/FAQ';
+import kashyapSiteshSingh from '../../assets/team/kashyapSiteshSingh.jpeg';
 
 function About() {
 
@@ -714,7 +714,7 @@ function About() {
                     {
                       name: 'Kashyap Sitesh Singh',
                       position: 'Digital Marketer',
-                      image: '/assets/team/kashyap.jpg',
+                      image: kashyapSiteshSingh,
                     },
                   ].map((member, i) => (
                     <Stack
@@ -737,8 +737,10 @@ function About() {
                         src={member.image}
                         alt={member.name}
                         sx={{
-                          width: 150,
-                          height: 150,
+                          maxWidth: 200,
+                          maxHeight: 200,
+                          width: '100%',
+                          height: '100%',
                           borderRadius: 2,
                           objectFit: 'cover',
                           border: `2px solid ${theme.palette.primary.main}`,
@@ -773,7 +775,6 @@ function About() {
                 sx={{
                   fontWeight: 700,
                   mb: 1,
-                  // ml: isSm ? 0 : '20%',
                   color: `${theme.palette.error.main}90`
                 }}
               >
@@ -807,7 +808,7 @@ function About() {
                   {
                     name: 'Kashyap Sitesh Singh',
                     position: 'Digital Marketer',
-                    image: '/assets/team/kashyap.jpg',
+                    image: kashyapSiteshSingh,
                   },
                 ].map((member, i) => (
                   <Stack
@@ -830,8 +831,10 @@ function About() {
                       src={member.image}
                       alt={member.name}
                       sx={{
-                        width: 180,
-                        height: 180,
+                        maxWidth: 230,
+                        maxHeight: 230,
+                        width: '100%',
+                        height: '100%',
                         borderRadius: 1,
                         objectFit: 'cover',
                         border: `2px solid ${theme.palette.primary.main}`,
