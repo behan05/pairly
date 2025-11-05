@@ -8,11 +8,12 @@ import {
   IconButton,
   Tooltip,
   Drawer,
-  List,
+  Menu,
+  MenuItem,
   ListItemButton,
   ListItemText,
   Typography,
-  Divider
+  Divider,
 } from '../../MUI/MuiComponents';
 import {
   MenuIcon,
@@ -23,9 +24,19 @@ import {
 } from '@/MUI/MuiIcons';
 import { Link } from 'react-router-dom';
 import BgToggle from './BgToggle';
-import { useState } from 'react';
+import { useState, useLayoutEffect, useRef } from 'react';
 import StyledActionButton from '@/components/common/StyledActionButton';
 import StyledButton from '@/components/common/StyledButton';
+
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
+
+import TwitterIcon from '@mui/icons-material/Twitter';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import ForumIcon from '@mui/icons-material/Forum';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 const navListBtn = [
   { path: '/login', text: 'Login', icon: <LockOpenIcon sx={{ color: 'text.disabled' }} /> },
@@ -34,10 +45,10 @@ const navListBtn = [
 
 const centerNav = [
   { path: '/about', text: 'About Us' },
-  { path: '/features', text: 'Features', hasDropdown: true },
-  { path: '/pricing', text: 'Pricing', hasDropdown: true },
+  { path: '/features', text: 'Features' },
+  { path: '/pricing', text: 'Pricing' },
   { path: '/community', text: 'Community', hasDropdown: true },
-  { path: '/contact', text: 'Support', hasDropdown: true },
+  { path: '/contact', text: 'Support' },
 ];
 
 function Navbar() {
@@ -47,11 +58,52 @@ function Navbar() {
   const isXl = useMediaQuery(theme.breakpoints.down('xl'));
   const custome = useMediaQuery('(max-width:1019px)');
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
 
   const toggleDrawer = (open) => () => setDrawerOpen(open);
 
+  const handleSubMenu = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+
+  const navRef = useRef(null);
+  const subMenuRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Navbar entrance animation
+      const tl = gsap.timeline({ defaults: { ease: "power3.out", duration: 0.8 } });
+
+      tl.from(".nav-logo", { y: -40, opacity: 0 })
+        .from(".nav-link", { y: -30, opacity: 0, stagger: 0.1 }, "-=0.3")
+        .from(".nav-action", { y: -30, opacity: 0, stagger: 0.15 }, "-=0.4");
+
+      // Submenu animation (whenever it opens)
+      gsap.fromTo(
+        subMenuRef.current?.querySelectorAll(".submenu-item"),
+        { y: 20, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.15,
+          duration: 0.6,
+          ease: "power2.out",
+          delay: 0.1,
+          scrollTrigger: {
+            trigger: subMenuRef.current,
+            start: "top 90%",
+          },
+        }
+      );
+    }, navRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <AppBar
+      ref={navRef}
       position="fixed"
       elevation={0}
       sx={{
@@ -73,7 +125,7 @@ function Navbar() {
         }}
       >
         {/* === Left: Logo === */}
-        <Stack component={Link} to="/" sx={{ textDecoration: 'none' }}>
+        <Stack className="nav-logo" component={Link} to="/" sx={{ textDecoration: 'none' }}>
           <Box
             component="img"
             src="/logo.png"
@@ -88,8 +140,10 @@ function Navbar() {
           <Stack direction="row" spacing={1} alignItems="center">
             {centerNav.map((item, index) => (
               <Stack
+                className="nav-link"
                 key={index}
                 component={Link}
+                onMouseEnter={item.hasDropdown ? (e) => handleSubMenu(e) : null}
                 to={item.path}
                 direction={'row'}
                 alignItems={'center'}
@@ -102,11 +156,16 @@ function Navbar() {
                   },
                 }}
               >
-                <Typography sx={{
-                  fontSize: '0.9rem',
-                  color: theme.palette.text.primary,
-                }}>{item.text}</Typography>
-                {/* {item.hasDropdown ? <KeyboardArrowDownIcon fontSize="small" sx={{ color: theme.palette.divider }} /> : null} */}
+                <Typography
+                  sx={{
+                    fontSize: '0.9rem',
+                    color: theme.palette.text.primary,
+                  }}>
+                  {item.text}
+                </Typography>
+                {item.hasDropdown
+                  ? open ? <KeyboardArrowUpIcon fontSize="small" /> : <KeyboardArrowDownIcon fontSize="small" sx={{ color: theme.palette.divider }} />
+                  : null}
               </Stack>
             ))}
           </Stack>
@@ -124,9 +183,12 @@ function Navbar() {
           </Stack>
         ) : (
           <Box sx={{ display: 'flex', gap: 1 }}>
-            <BgToggle />
+            <Stack component={'span'} className="nav-action">
+              <BgToggle />
+            </Stack>
             {navListBtn.map((cta, i) => (
               <Typography
+                className="nav-action"
                 component={Link}
                 to={cta.path}
                 key={i}
@@ -199,6 +261,7 @@ function Navbar() {
                 component={Link}
                 to={item.path}
                 onClick={toggleDrawer(false)}
+                onMouseEnter={item.hasDropdown ? (e) => handleSubMenu(e) : null}
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
@@ -215,7 +278,9 @@ function Navbar() {
                 }}
               >
                 <ListItemText primary={item.text} />
-                {/* {item.hasDropdown && <KeyboardArrowDownIcon fontSize="small" />} */}
+                {item.hasDropdown
+                  ? open ? <KeyboardArrowUpIcon fontSize="small" /> : <KeyboardArrowDownIcon fontSize="small" sx={{ color: theme.palette.divider }} />
+                  : null}
               </ListItemButton>
             ))}
           </Stack>
@@ -258,6 +323,123 @@ function Navbar() {
         </Box>
       </Drawer>
 
+      {/* === Sub Menu (Community Dropdown) === */}
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        ref={subMenuRef}
+        onClose={() => setAnchorEl(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        PaperProps={{
+          sx: {
+            background: `${theme.palette.background.default}`,
+            borderRadius: 1,
+            border: `1px dashed ${theme.palette.divider}`,
+            minWidth: 260,
+            mt: 1.5,
+            p: 2,
+            overflow: 'hidden',
+            backdropFilter: 'blur(8px)',
+          },
+        }}
+      >
+        <Stack
+          className="submenu-item"
+          direction="column"
+          spacing={2}
+          sx={{
+            px: 1,
+          }}
+        >
+          {/* Info Section */}
+          <Stack spacing={1}>
+            <Typography
+              variant="subtitle1"
+              sx={{
+                fontWeight: 700,
+                color: theme.palette.text.primary,
+                mb: 0.5,
+              }}
+            >
+              Stay Connected
+            </Typography>
+
+            <Typography
+              variant="body2"
+              sx={{
+                color: theme.palette.text.secondary,
+                fontSize: '0.9rem',
+                mb: 1,
+              }}
+            >
+              Read the latest Pairly updates and stories.
+            </Typography>
+
+            <Stack direction="row" spacing={1}>
+              <StyledButton
+                className="submenu-item"
+                text="Press"
+                redirectUrl="/press"
+                sx={{
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                  px: 2,
+                  py: 0.75,
+                }}
+              />
+              <StyledActionButton
+                className="submenu-item"
+                text="Blog"
+                redirectUrl="/blog"
+                sx={{
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                  px: 2,
+                  py: 0.75,
+                }}
+              />
+            </Stack>
+          </Stack>
+
+          <Divider sx={{ my: 1 }} className="submenu-item" />
+
+          {/* Social Icons Section */}
+          <Stack
+            className="submenu-item"
+            direction="row"
+            spacing={1.5}
+            justifyContent="center"
+            alignItems="center"
+          >
+            {[
+              { label: 'Instagram', icon: <InstagramIcon />, href: '' },
+              { label: 'Twitter', icon: <TwitterIcon />, href: '' },
+              { label: 'LinkedIn', icon: <LinkedInIcon />, href: '' },
+              { label: 'Forum', icon: <ForumIcon />, href: '' },
+            ].map((item, i) => (
+              <Tooltip key={i} title={item.label}>
+                <IconButton
+                  component="a"
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
+                    color: theme.palette.text.secondary,
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      color: theme.palette.primary.main,
+                      transform: 'scale(1.1)',
+                    },
+                  }}
+                >
+                  {item.icon}
+                </IconButton>
+              </Tooltip>
+            ))}
+          </Stack>
+        </Stack>
+      </Menu>
     </AppBar>
   );
 }

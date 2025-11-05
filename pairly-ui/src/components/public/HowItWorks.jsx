@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef } from "react";
 import { Box, Stack, Typography, useTheme, useMediaQuery } from '@/MUI/MuiComponents';
 import {
   LoginOutlinedIcon,
@@ -6,7 +7,9 @@ import {
   SwipeRightAltOutlinedIcon,
   SecurityOutlinedIcon,
 } from '@/MUI/MuiIcons';
-import StyledText from '@/components/common/StyledText';
+import gsap from "gsap";
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+gsap.registerPlugin(ScrollTrigger);
 
 function HowItWorks() {
   const theme = useTheme();
@@ -45,8 +48,74 @@ function HowItWorks() {
     },
   ];
 
+  const sectionRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        defaults: { duration: 1, ease: "power3.out" },
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 85%",
+          end: "bottom 10%",
+          scrub: true,
+        },
+      });
+
+      // Animate section title
+      tl.from("h4", {
+        y: 80,
+        opacity: 0,
+      })
+        .from("p", {
+          y: 50,
+          opacity: 0,
+          stagger: 0.2,
+        }, "-=0.6");
+
+      // Animate each step card (staggered)
+      gsap.utils.toArray(sectionRef.current.querySelectorAll("div[role='group']")).forEach((step, i) => {
+        gsap.from(step, {
+          opacity: 0,
+          y: 120,
+          duration: 1.2,
+          delay: i * 0.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: step,
+            start: "top 90%",
+            end: "top 50%",
+            scrub: true,
+          },
+        });
+      });
+
+      // Subtle floating animation for the SVG timeline line
+      gsap.to("path", {
+        y: 15,
+        repeat: -1,
+        yoyo: true,
+        duration: 3,
+        ease: "sine.inOut",
+      });
+
+      // Pulse effect for connector dots
+      gsap.utils.toArray(sectionRef.current.querySelectorAll("div[style*='border-radius: 50%']")).forEach((dot) => {
+        gsap.to(dot, {
+          scale: 1.3,
+          duration: 1.5,
+          repeat: -1,
+          yoyo: true,
+          ease: "power1.inOut",
+        });
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <Box sx={{ position: 'relative', my: 12, px: { xs: 2, md: 6 } }}>
+    <Box ref={sectionRef} sx={{ position: 'relative', my: 12, px: { xs: 2, md: 6 } }}>
 
       {/* === Background dots === */}
       <Box
@@ -152,6 +221,7 @@ function HowItWorks() {
             sx={{
               position: 'relative',
               justifyContent: 'space-between',
+              overflow: 'hidden'
             }}
           >
             {/* Content box */}

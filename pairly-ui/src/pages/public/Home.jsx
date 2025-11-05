@@ -15,7 +15,8 @@ import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 
 import gsap from "gsap";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
-gsap.registerPlugin(MotionPathPlugin);
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+gsap.registerPlugin(MotionPathPlugin, ScrollTrigger);
 
 import HowItWorks from '@/components/public/HowItWorks';
 import FAQ from '@/components/public/FAQ';
@@ -53,16 +54,34 @@ function Home() {
   const refWhyPairly = useRef(null);
   const refPairlyGrowth = useRef(null);
   const refPairlyDifferent = useRef(null);
-  const refHowItWorks = useRef(null);
   const refAIBehindPairly = useRef(null);
-  const refFAQ = useRef(null);
 
   // Animation Start here
   useEffect(() => {
-    const heroElements = refHero.current.children;
-    const FeaturesElements = refFeatures.current.children;
+
+    const hero = refHero.current;
+    const features = refFeatures.current;
+    const whyPairly = refWhyPairly.current;
+    const pairlyGrowth = refPairlyGrowth.current;
+    const pairlyDifferent = refPairlyDifferent.current;
+    const aiBehind = refAIBehindPairly.current;
+
+    //  Make sure all refs exist before animating
+    if (!hero
+      || !features
+      || !whyPairly
+      || !pairlyGrowth
+      || !pairlyDifferent
+      || !aiBehind
+    ) return;
 
     const tl = gsap.timeline({ defaults: { duration: 0.8, ease: 'power3.out' } });
+    const heroElements = refHero.current.children;
+    const FeaturesElements = refFeatures.current.children;
+    const WhyPairlyElements = refWhyPairly.current.children;
+    const pairlyGrowthElement = refPairlyGrowth.current.children;
+    const pairlyDifferentElement = refPairlyDifferent.current.children;
+    const aiBehindElement = refAIBehindPairly.current.children;
 
     tl.from(heroElements, {
       y: 50,
@@ -76,7 +95,60 @@ function Home() {
       stagger: 0.25,
     });
 
-    return () => tl.kill(); // cleanup
+    tl.from(WhyPairlyElements, {
+      x: 160,
+      opacity: 0,
+      stagger: 0.25,
+      scrollTrigger: {
+        trigger: whyPairly,
+        start: 'top 90%',
+        end: 'bottom 40%',
+        scrub: 2,
+        markers: false,
+      },
+    });
+
+    tl.from(pairlyGrowthElement, {
+      x: -160,
+      opacity: 0,
+      stagger: 0.25,
+      scrollTrigger: {
+        trigger: pairlyGrowth,
+        start: 'top 100%',
+        end: 'bottom 60%',
+        scrub: 2,
+        markers: false,
+      },
+    });
+
+    tl.from(pairlyDifferentElement, {
+      x: 160,
+      opacity: 0,
+      stagger: 0.25,
+      scrollTrigger: {
+        trigger: pairlyDifferent,
+        start: 'top 90%',
+        end: 'bottom 40%',
+        scrub: 2,
+        markers: false,
+      },
+    });
+
+    tl.from(aiBehindElement, {
+      x: -160,
+      opacity: 0,
+      stagger: 0.25,
+      scrollTrigger: {
+        trigger: aiBehind,
+        start: 'bottom 100%',
+        end: 'top 60%',
+        scrub: 4,
+        // pin: true,
+        markers: false,
+      },
+    });
+
+    return () => tl.kill();
   }, []);
 
   return (
@@ -374,6 +446,7 @@ function Home() {
 
               {/* Content */}
               <Box
+                ref={refWhyPairly}
                 sx={{
                   zIndex: 1,
                   color: 'text.primary',
@@ -399,6 +472,7 @@ function Home() {
           ) : (
             // Large screen
             <Box
+              ref={refWhyPairly}
               sx={{
                 flexGrow: 1,
                 ml: isSm ? 0 : '20%',
@@ -556,6 +630,7 @@ function Home() {
 
               {/* Content */}
               <Box
+                ref={refPairlyGrowth}
                 sx={{
                   zIndex: 1,
                   color: 'text.primary',
@@ -611,6 +686,7 @@ function Home() {
           ) : (
             // Large screen
             <Box
+              ref={refPairlyGrowth}
               sx={{
                 flexGrow: 1,
                 ml: isSm ? 0 : '20%',
@@ -768,6 +844,7 @@ function Home() {
 
               {/* Content */}
               <Box
+                ref={refPairlyDifferent}
                 sx={{
                   zIndex: 1,
                   color: 'text.primary',
@@ -793,6 +870,7 @@ function Home() {
           ) : (
             // Large screen
             <Box
+              ref={refPairlyDifferent}
               sx={{
                 flexGrow: 1,
                 ml: isSm ? 0 : '20%',
@@ -974,7 +1052,9 @@ function Home() {
               </Box>
 
               {/* Mobile Content */}
-              <Box sx={{ zIndex: 1, color: 'text.primary', textAlign: 'center' }}>
+              <Box
+                ref={refAIBehindPairly}
+                sx={{ zIndex: 1, color: 'text.primary', textAlign: 'center' }}>
                 <Typography
                   variant="h3"
                   sx={{ fontWeight: 700, mb: 1, color: `${theme.palette.success.main}90` }}
@@ -1031,6 +1111,7 @@ function Home() {
             </Box>
           ) : (
             <Box
+              ref={refAIBehindPairly}
               sx={{
                 flexGrow: 1,
                 ml: '20%',
