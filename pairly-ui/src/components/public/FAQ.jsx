@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from 'react';
+import React from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
@@ -67,67 +67,14 @@ const faqs = [
 
 function FAQ() {
   const [expanded, setExpanded] = React.useState(null);
-  const faqRef = useRef(null);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : null);
   };
 
-  useLayoutEffect(() => {
-    // defensive: make sure the DOM is ready
-    const root = faqRef.current;
-    if (!root) return;
-
-    // collect faq items (ensure your Accordion has className="faq-item")
-    const items = Array.from(root.querySelectorAll('.faq-item'));
-    if (!items.length) return;
-
-    // small timeline per item is nicer and easier to control
-    const controllers = [];
-
-    items.forEach((item, i) => {
-      // hide initially (use gsap.set to avoid layout flash)
-      gsap.set(item, { opacity: 0, y: 40 });
-
-      // create ScrollTrigger that plays once when item comes into view
-      const st = ScrollTrigger.create({
-        trigger: item,
-        start: 'top 85%',
-        onEnter: () => {
-          gsap.to(item, {
-            opacity: 1,
-            y: 0,
-            duration: 0.7,
-            ease: 'power2.out',
-            overwrite: true,
-          });
-          gsap.fromTo(item, { scale: 0.995 }, { scale: 1, duration: 0.6, ease: 'power2.out' });
-
-          // once played, we don't need this trigger anymore — kill to avoid reverse/hide
-          st.kill();
-        },
-        // ensure it doesn't reverse or toggle back
-        onLeaveBack: null,
-        onLeave: null,
-      });
-
-      controllers.push(st);
-    });
-
-    // cleanup on unmount / rerender
-    return () => {
-      controllers.forEach((c) => c && c.kill && c.kill());
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-      gsap.killTweensOf(items);
-    };
-  }, []); // run once
-
   return (
     <Box
-      ref={faqRef}
       sx={{
-        mt: 8,
-        mb: 6,
         px: { xs: 2, md: 6 },
         display: 'flex',
         flexDirection: 'column',
@@ -135,21 +82,6 @@ function FAQ() {
         alignItems: 'center',
       }}
     >
-      <Typography
-        variant="h5"
-        fontWeight={700}
-        textAlign="center"
-        mb={3}
-        letterSpacing={1}
-        sx={{
-          background: 'linear-gradient(90deg, #00C6FF 0%, #0072FF 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-        }}
-      >
-        Frequently Asked Questions
-      </Typography>
-
       <Box sx={{ width: '100%', maxWidth: 800 }}>
         {faqs.map((faq, index) => (
           <Accordion
@@ -174,7 +106,7 @@ function FAQ() {
                 background: 'rgba(0,114,255,0.10)',
                 transform: 'translateY(-2px)',
               },
-              '&:before': { display: 'none' } // removes the default divider line
+              '&:before': { display: 'none' }
             }}
           >
             <AccordionSummary

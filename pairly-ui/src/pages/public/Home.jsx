@@ -25,6 +25,7 @@ import HomeFeatures from '../../components/public/HomeFeatures';
 import python from '@/assets/svg/python.svg';
 import react from '@/assets/svg/react.svg';
 import tensorflow from '@/assets/svg/tensorflow.svg';
+import homeAi from '@/assets/images/homePageAiImage.jpg';
 
 function Home() {
   const [selectedFeature, setSelectedFeature] = useState(0);
@@ -1142,13 +1143,14 @@ function Home() {
               {/* AI Illustration */}
               <Box
                 component="img"
-                src="/assets/ai-visual.svg"
+                src={homeAi}
                 alt="AI technology visualization"
                 sx={{
                   width: '300px',
                   height: 'auto',
                   mx: 'auto',
                   mt: 2,
+                  borderRadius:1,
                   filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.2))',
                 }}
               />
@@ -1162,7 +1164,7 @@ function Home() {
                 }}
               >
                 Pairly combines <b>Machine Learning</b> and <b>Conversation Understanding</b> to
-                make connections feel authentic. It adapts to your vibe, mood, and energy —
+                make connections feel authentic. It adapts to your vibe, mood, and energy
                 matching you with people who share a similar rhythm and communication style.
               </Typography>
 

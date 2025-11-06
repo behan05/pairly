@@ -36,11 +36,11 @@ function CheckoutPage() {
     const [error, setError] = useState('');
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
     const [transactionId, setTransactionId] = useState('');
-    const GST_RATE = 0.18;
+    const GST_RATE = 0.10;
 
     const gstAmount = +(price * GST_RATE).toFixed(2);
     const totalDiscount = appliedDiscount || 0;
-    const totalPayable = +(price - totalDiscount).toFixed(2);
+    const totalPayable = +(price - (totalDiscount + gstAmount)).toFixed(2);
 
     useEffect(() => {
         document.title = 'Pairly - Checkout';
@@ -348,7 +348,7 @@ function CheckoutPage() {
                             color: theme.palette.text.secondary,
                         }}
                     >
-                        <span>Additional discount (18%)</span>
+                        <span>Additional discount (10%)</span>
                         <b>
                             - ₹{gstAmount}
                         </b>

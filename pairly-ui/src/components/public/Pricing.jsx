@@ -132,18 +132,6 @@ function Pricing() {
         pointerEvents: 'none',
     }));
 
-    // === Helper ===
-    const allFeatures = [
-        'Basic AI personality',
-        'Unlimited messages',
-        'Send media & location',
-        'Propose to partner',
-        'Priority support',
-        'No ads',
-        'Multi-device sync',
-        'Extra personalization',
-    ];
-
     return (
         <Box
             sx={{
@@ -185,7 +173,13 @@ function Pricing() {
                 sx={{ flexWrap: 'wrap', gap: 2 }}
             >
                 {plans.map((plan, i) => (
-                    <Card key={i} featured={plan.featured} sx={{ flex: '1 1 280px', maxWidth: 340 }}>
+                    <Card
+                        key={i}
+                        featured={plan.featured}
+                        sx={{
+                            flex: '1 1 280px',
+                            maxWidth: 340,
+                        }}>
                         <Shine className="shine" />
                         <Glow className="glow" />
 
@@ -240,7 +234,7 @@ function Pricing() {
             </Stack>
 
             {/* === Comparison Table === */}
-            <Box
+            {/* <Box
                 mt={8}
                 width="100%"
                 maxWidth={800}
@@ -279,7 +273,7 @@ function Pricing() {
                         </TableBody>
                     </Table>
                 </TableContainer>
-            </Box>
+            </Box> */}
         </Box>
     );
 }
