@@ -143,7 +143,6 @@ function Home() {
         start: 'bottom 100%',
         end: 'top 60%',
         scrub: 4,
-        // pin: true,
         markers: false,
       },
     });
@@ -1210,7 +1209,6 @@ function Home() {
       <Stack sx={{
         px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '8%',
       }}>
-
       </Stack>
 
       {/* === Frequently Asked Questions FAQ Section === */}

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container, Grid, Card, CardMedia, CardContent, Typography, Button, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 

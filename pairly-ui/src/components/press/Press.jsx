@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Box,
   Container,
@@ -11,6 +10,7 @@ import {
   useTheme,
 } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { Link } from 'react-router-dom';
 
 const pressArticles = [
   {
@@ -113,10 +113,11 @@ const Press = () => {
               {pressArticles[0].description}
             </Typography>
             <Button
+              component={Link}
+              to={pressArticles[0].link}
               variant="contained"
               color="primary"
               endIcon={<ArrowForwardIcon />}
-              href={pressArticles[0].link}
               sx={{ alignSelf: "flex-start", borderRadius: 2, mt: 1 }}
             >
               Read More

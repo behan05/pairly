@@ -1,4 +1,21 @@
-import { Box, Typography, Stack, Divider, Link as MuiLink, useTheme, useMediaQuery } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Stack,
+  Divider,
+  Link as MuiLink,
+  useTheme,
+  useMediaQuery,
+  IconButton,
+  Toolbar
+} from '@mui/material';
+
+import {
+  TwitterIcon,
+  InstagramIcon,
+  LinkedInIcon,
+  FacebookIcon,
+} from '../../MUI/MuiIcons';
 import { Link as RouterLink } from 'react-router-dom';
 import logo from '@/assets/logo/logo.png';
 import StyledText from '../common/StyledText';
@@ -7,6 +24,13 @@ function Footer() {
 
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const socialLinks = [
+    { icon: <FacebookIcon fontSize="small" />, color: '#1877F2', to: '#' },
+    { icon: <InstagramIcon fontSize="small" />, color: '#E4405F', to: '#' },
+    { icon: <TwitterIcon fontSize="small" />, color: '#1DA1F2', to: '#' },
+    { icon: <LinkedInIcon fontSize="small" />, color: '#0077B5', to: '#' },
+  ];
 
   return (
     <Box
@@ -67,13 +91,12 @@ function Footer() {
           {/* Explore */}
           <Stack spacing={1}>
             <Typography variant="subtitle1" fontWeight={600}>
-              <StyledText text={'Explore'} />
+              Explore
             </Typography>
             {[
               { label: 'Home', to: '/' },
               { label: 'Features', to: '/features' },
               { label: 'About Us', to: '/about' },
-              { label: 'Contact Us', to: '/contact' },
             ].map((link) => (
               <MuiLink
                 key={link.label}
@@ -81,7 +104,7 @@ function Footer() {
                 to={link.to}
                 underline="hover"
                 color="text.secondary"
-                sx={{ fontSize: '0.9rem' }}
+                sx={{ fontSize: '0.8rem' }}
               >
                 {link.label}
               </MuiLink>
@@ -91,13 +114,12 @@ function Footer() {
           {/* Support */}
           <Stack spacing={1}>
             <Typography variant="subtitle1" fontWeight={600}>
-              <StyledText text={'Support'} />
+              Support
             </Typography>
             {[
               { label: 'FAQs', to: '/faq' },
-              { label: 'Help Center', to: '/help' },
               { label: 'Report Issue', to: '/report' },
-              { label: 'Feedback', to: '/feedback' },
+              { label: 'Contact Us', to: '/contact' },
             ].map((link) => (
               <MuiLink
                 key={link.label}
@@ -105,7 +127,30 @@ function Footer() {
                 to={link.to}
                 underline="hover"
                 color="text.secondary"
-                sx={{ fontSize: '0.9rem' }}
+                sx={{ fontSize: '0.8rem' }}
+              >
+                {link.label}
+              </MuiLink>
+            ))}
+          </Stack>
+
+          {/* Community */}
+          <Stack spacing={1}>
+            <Typography variant="subtitle1" fontWeight={600}>
+              Community
+            </Typography>
+            {[
+              { label: 'Blog', to: '/blog' },
+              { label: 'Press', to: '/press' },
+              { label: 'Next Gen Chat', to: '/nextgenerationchat' },
+            ].map((link) => (
+              <MuiLink
+                key={link.label}
+                component={RouterLink}
+                to={link.to}
+                underline="hover"
+                color="text.secondary"
+                sx={{ fontSize: '0.8rem' }}
               >
                 {link.label}
               </MuiLink>
@@ -115,7 +160,7 @@ function Footer() {
           {/* Legal */}
           <Stack spacing={1}>
             <Typography variant="subtitle1" fontWeight={600}>
-              <StyledText text={'Legal'} />
+              Legal
             </Typography>
             {[
               { label: 'Privacy Policy', to: '/privacy-policy' },
@@ -129,30 +174,7 @@ function Footer() {
                 to={link.to}
                 underline="hover"
                 color="text.secondary"
-                sx={{ fontSize: '0.9rem' }}
-              >
-                {link.label}
-              </MuiLink>
-            ))}
-          </Stack>
-
-          {/* Community */}
-          <Stack spacing={1}>
-            <Typography variant="subtitle1" fontWeight={600}>
-              <StyledText text={'Community'} />
-            </Typography>
-            {[
-              { label: 'Blog', to: '/blog' },
-              { label: 'Next Gen Chat', to: '/nextgenerationchat' },
-              { label: 'Press', to: '/press' },
-            ].map((link) => (
-              <MuiLink
-                key={link.label}
-                component={RouterLink}
-                to={link.to}
-                underline="hover"
-                color="text.secondary"
-                sx={{ fontSize: '0.9rem' }}
+                sx={{ fontSize: '0.8rem' }}
               >
                 {link.label}
               </MuiLink>
@@ -176,18 +198,31 @@ function Footer() {
           © {new Date().getFullYear()} Pairly. All rights reserved.
         </Typography>
 
-        <Typography variant="caption" color="text.secondary">
-          Built with ❤️ by{' '}
-          <MuiLink
-            href="https://behan-portfolio.vercel.app"
-            target="_blank"
-            rel="noopener"
-            underline="none"
-            sx={{ fontWeight: 600 }}
-          >
-            <StyledText text="Behan" />
-          </MuiLink>
-        </Typography>
+        <Stack direction="row" gap={1}>
+          {socialLinks.map((link, i) => (
+            <MuiLink
+              key={i}
+              href={link.to}
+              target="_blank"
+              rel="noopener noreferrer"
+              underline="none"
+            >
+              <IconButton
+                sx={{
+                  color: link.color,
+                  transition: 'transform 0.2s, opacity 0.2s',
+                  '&:hover': {
+                    transform: 'scale(1.2)',
+                    opacity: 0.8,
+                  },
+                }}
+              >
+                {link.icon}
+              </IconButton>
+            </MuiLink>
+          ))}
+        </Stack>
+
       </Stack>
     </Box>
   );

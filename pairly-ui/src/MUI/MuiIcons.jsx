@@ -90,6 +90,10 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import AppleIcon from '@mui/icons-material/Apple';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import GoogleIcon from '@mui/icons-material/Google';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 // ==================== Settings Icons ====================
 import AddIcon from '@mui/icons-material/Add';
@@ -284,6 +288,10 @@ export {
   AppleIcon,
   FacebookIcon,
   GoogleIcon,
+  TwitterIcon,
+  InstagramIcon,
+  LinkedInIcon,
+  KeyboardArrowUpIcon,
 
   // Settings Icons
   AddIcon,

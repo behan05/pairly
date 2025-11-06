@@ -20,7 +20,12 @@ import {
   LockOpenIcon,
   LockIcon,
   CloseIcon,
-  KeyboardArrowDownIcon
+  KeyboardArrowDownIcon,
+  TwitterIcon,
+  InstagramIcon,
+  LinkedInIcon,
+  FacebookIcon,
+  KeyboardArrowUpIcon,
 } from '@/MUI/MuiIcons';
 import { Link } from 'react-router-dom';
 import BgToggle from './BgToggle';
@@ -31,12 +36,6 @@ import StyledButton from '@/components/common/StyledButton';
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
-
-import TwitterIcon from '@mui/icons-material/Twitter';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 const navListBtn = [
   { path: '/login', text: 'Login', icon: <LockOpenIcon sx={{ color: 'text.disabled' }} /> },
@@ -413,10 +412,10 @@ function Navbar() {
             alignItems="center"
           >
             {[
-              { label: 'Instagram', icon: <InstagramIcon />, href: '' },
-              { label: 'Twitter', icon: <TwitterIcon />, href: '' },
-              { label: 'LinkedIn', icon: <LinkedInIcon />, href: '' },
-              { label: 'Forum', icon: <FacebookIcon />, href: '' },
+              { label: 'Instagram', icon: <InstagramIcon />, href: '#' },
+              { label: 'Twitter', icon: <TwitterIcon />, href: '#' },
+              { label: 'LinkedIn', icon: <LinkedInIcon />, href: '#' },
+              { label: 'Facebook', icon: <FacebookIcon />, href: '#' },
             ].map((item, i) => (
               <Tooltip key={i} title={item.label}>
                 <IconButton
