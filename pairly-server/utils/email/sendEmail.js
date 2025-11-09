@@ -1,32 +1,20 @@
+require('dotenv').config();
 const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-let transporter;
+let sendEmail;
 
-// If running locally, use Gmail
 if (process.env.NODE_ENV !== 'production') {
-  transporter = nodemailer.createTransport({
+  // Local: Gmail SMTP
+  const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_APP_PASS,
     },
   });
-}
-// If on Render, use Resend
-else {
-  transporter = nodemailer.createTransport({
-    host: 'smtp.resend.com',
-    port: 587,
-    secure: false,
-    auth: {
-      user: 'resend',
-      pass: process.env.RESEND_API_KEY,
-    },
-  });
-}
 
-module.exports = async (to, subject, { text, html }) => {
-  try {
+  sendEmail = async (to, subject, { text, html }) => {
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to,
@@ -34,7 +22,20 @@ module.exports = async (to, subject, { text, html }) => {
       text,
       html,
     });
-  } catch (error) {
-    console.error('Email send failed:', error);
-  }
-};
+  };
+} else {
+  // Production: Resend HTTPS API
+  const resend = new Resend(process.env.RESEND_API_KEY);
+
+  sendEmail = async (to, subject, { text, html }) => {
+    await resend.emails.send({
+      from: process.env.EMAIL_USER,
+      to,
+      subject,
+      text,
+      html,
+    });
+  };
+}
+
+module.exports = sendEmail;
