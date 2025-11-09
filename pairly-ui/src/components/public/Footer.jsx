@@ -7,15 +7,14 @@ import {
   useTheme,
   useMediaQuery,
   IconButton,
-  Toolbar
 } from '@mui/material';
 
 import {
-  TwitterIcon,
+  XIcon,
   InstagramIcon,
   LinkedInIcon,
   FacebookIcon,
-} from '../../MUI/MuiIcons';
+} from '@/MUI/MuiIcons';
 import { Link as RouterLink } from 'react-router-dom';
 import logo from '@/assets/logo/logo.png';
 import StyledText from '../common/StyledText';
@@ -26,10 +25,10 @@ function Footer() {
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
   const socialLinks = [
-    { icon: <FacebookIcon fontSize="small" />, color: '#1877F2', to: '#' },
-    { icon: <InstagramIcon fontSize="small" />, color: '#E4405F', to: '#' },
-    { icon: <TwitterIcon fontSize="small" />, color: '#1DA1F2', to: '#' },
-    { icon: <LinkedInIcon fontSize="small" />, color: '#0077B5', to: '#' },
+    { icon: <FacebookIcon fontSize="small" />, color: theme.palette.text.primary, to: '#' },
+    { icon: <InstagramIcon fontSize="small" />, color: theme.palette.text.primary, to: '#' },
+    { icon: <XIcon fontSize="small" />, color: theme.palette.text.primary, to: '#' },
+    { icon: <LinkedInIcon fontSize="small" />, color: theme.palette.text.primary, to: '#' },
   ];
 
   return (

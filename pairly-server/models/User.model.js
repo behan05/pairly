@@ -36,6 +36,7 @@ const usersSchema = new mongoose.Schema({
         default: false
     },
     emailToken: { type: String },
+    emailTokenExpires: { type: Date },
 
     // Subscription Plan
     subscriptionPlan: {

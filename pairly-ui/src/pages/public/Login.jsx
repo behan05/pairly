@@ -46,6 +46,7 @@ function Login() {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.auth.loading)
   const [disabled, setDisabled] = React.useState(false);
+  const [serverRes, setServerRes] = React.useState('');
 
   React.useEffect(() => {
     document.title = 'Pairly - Login';
@@ -94,27 +95,19 @@ function Login() {
     setError(newError);
     if (!isValid) return;
     setDisabled(true);
+
     const response = await dispatch(login(form));
 
-    // Toaster notifications
-    if (response.success) {
-      toast.success('Login successfully!', {
-        style: {
-          backdropFilter: 'blur(14px)',
-          background: theme.palette.background.paper,
-          color: theme.palette.text.primary,
-        }
-      });
-      setTimeout(() => navigate('/pairly/'), 500);
+    if (response.success && response.redirectToVerify) {
+      toast.info('Your account is not verified yet. Please verify your email.');
+      navigate('/verify-email');
+    } else if (response.success) {
+      toast.success('Login successful!');
+      navigate('/pairly/');
     } else {
-      toast.error(response.message, {
-        style: {
-          backdropFilter: 'blur(14px)',
-          background: theme.palette.warning.main,
-          color: theme.palette.text.primary,
-        }
-      });
-      setDisabled(false)
+      setServerRes(response?.error)
+      // toast.error(response?.error);
+      setDisabled(false);
     }
   };
 
@@ -299,6 +292,32 @@ function Login() {
               Forgot your password?
             </MuiLink>
           </Stack>
+
+          {/* Error display */}
+          {serverRes && (
+            <Typography
+              variant="subtitle2"
+              sx={{
+                alignSelf: 'flex-end',
+                mr: 2,
+                mt: 1,
+                px: 1.5,
+                py: 0.5,
+                fontSize: '0.95em',
+                fontWeight: 600,
+                color: '#b00020',
+                backgroundColor: (theme) =>
+                  theme.palette.mode === 'dark' ? 'rgba(255, 82, 82, 0.1)' : 'rgba(255, 0, 0, 0.08)',
+                border: '1px solid rgba(255, 0, 0, 0.2)',
+                borderRadius: '8px',
+                backdropFilter: 'blur(6px)',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                transition: 'all 0.3s ease',
+              }}
+            >
+              ⚠️ {serverRes}
+            </Typography>
+          )}
 
           {/* Login button */}
           <Button

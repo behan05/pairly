@@ -9,7 +9,6 @@ import {
   Tooltip,
   Drawer,
   Menu,
-  MenuItem,
   ListItemButton,
   ListItemText,
   Typography,
@@ -21,7 +20,7 @@ import {
   LockIcon,
   CloseIcon,
   KeyboardArrowDownIcon,
-  TwitterIcon,
+  XIcon,
   InstagramIcon,
   LinkedInIcon,
   FacebookIcon,
@@ -413,7 +412,7 @@ function Navbar() {
           >
             {[
               { label: 'Instagram', icon: <InstagramIcon />, href: '#' },
-              { label: 'Twitter', icon: <TwitterIcon />, href: '#' },
+              { label: 'X (formerly Twitter)', icon: <XIcon />, href: '#' },
               { label: 'LinkedIn', icon: <LinkedInIcon />, href: '#' },
               { label: 'Facebook', icon: <FacebookIcon />, href: '#' },
             ].map((item, i) => (

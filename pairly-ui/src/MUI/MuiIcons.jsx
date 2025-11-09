@@ -90,7 +90,7 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import AppleIcon from '@mui/icons-material/Apple';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import GoogleIcon from '@mui/icons-material/Google';
-import TwitterIcon from '@mui/icons-material/Twitter';
+import XIcon from '@mui/icons-material/X';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -288,7 +288,7 @@ export {
   AppleIcon,
   FacebookIcon,
   GoogleIcon,
-  TwitterIcon,
+  XIcon,
   InstagramIcon,
   LinkedInIcon,
   KeyboardArrowUpIcon,

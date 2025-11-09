@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function Verify() {
+function VerifyForgotOtp() {
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const [otp, setOtp] = useState('');
@@ -26,7 +26,7 @@ function Verify() {
     const [message, setMessage] = useState('');
     const [cooldown, setCooldown] = useState(0);
     const navigate = useNavigate();
-    const pendingEmail = localStorage.getItem('pendingEmail');
+    const verificationEmail = localStorage.getItem('pendingResetEmail');
 
     const handleVerify = async () => {
         if (!otp) return setMessage('Please enter the OTP');
@@ -34,9 +34,9 @@ function Verify() {
         setMessage('');
 
         try {
-            const res = await axios.post(`${AUTH_API}/verify-email-otp`, {
+            const res = await axios.post(`${AUTH_API}/verify-forgot-otp`, {
                 otp,
-                email: pendingEmail
+                email: localStorage.getItem('pendingResetEmail')
             });
 
             if (res?.data?.success) {
@@ -48,8 +48,8 @@ function Verify() {
                     }
                 });
 
-                localStorage.removeItem('pendingEmail');
-                navigate('/login', { replace: true });
+                localStorage.removeItem('pendingResetEmail');
+                navigate('/reset-password', { replace: true });
             } else {
                 setMessage(res?.data?.error || 'Invalid or expired OTP');
             }
@@ -67,7 +67,7 @@ function Verify() {
 
         try {
             const res = await axios.post(`${AUTH_API}/resend-email-otp`, {
-                email: localStorage.getItem('pendingEmail'),
+                email: localStorage.getItem('pendingResetEmail'),
             });
 
             if (res?.data?.success) {
@@ -140,8 +140,17 @@ function Verify() {
                             mt: 0.5,
                         }}
                     >
-                        {pendingEmail}
+                        {verificationEmail}
                     </Typography>
+                </Typography>
+
+                <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    textAlign="center"
+                    sx={{ mb: 3 }}
+                >
+                    Please enter the code below to verify your identity.
                 </Typography>
 
                 <TextField
@@ -208,4 +217,4 @@ function Verify() {
     );
 }
 
-export default Verify;
+export default VerifyForgotOtp;

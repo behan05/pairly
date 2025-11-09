@@ -45,6 +45,7 @@ function Signup() {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.auth.loading)
   const [buttonDisabled, setButtonDisabled] = React.useState(false);
+  const [serverRes, setServerRes] = React.useState('');
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -107,8 +108,8 @@ function Signup() {
     if (!form.password) {
       newErrors.password = 'Password is required';
       isValid = false;
-    } else if (form.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+    } else if (form.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters';
       isValid = false;
     }
 
@@ -134,23 +135,10 @@ function Signup() {
     );
 
     // Toaster notifications
-    if (response.success) {
-      toast.success('Account created successfully!', {
-        style: {
-          backdropFilter: 'blur(14px)',
-          background: theme.palette.background.paper,
-          color: theme.palette.text.primary,
-        }
-      });
-      setTimeout(() => navigate('/login'), 500);
+    if (response?.success) {
+      navigate('/verify-email', { replace: true })
     } else {
-      toast.error(response.message || 'Signup failed!', {
-        style: {
-          backdropFilter: 'blur(14px)',
-          background: theme.palette.warning.main,
-          color: theme.palette.text.primary,
-        }
-      });
+      setServerRes(response?.error || 'Signup failed!')
       setButtonDisabled(false);
     }
   };
@@ -206,7 +194,7 @@ function Signup() {
                   : '0 2px 10px rgba(0,0,0,0.08)',
             }}
           >
-            <StyledText text="Pairly" /> — Chat that Feels Human
+            <StyledText text="Pairly" />{' '} Chat that Feels Human
           </Typography>
 
           <Typography
@@ -303,7 +291,7 @@ function Signup() {
             value={form.password}
             fullWidth
             error={Boolean(error.password)}
-            helperText={error.password || 'Minimum 6 characters required'}
+            helperText={error.password || 'Minimum 8 characters required'}
             InputProps={{
               endAdornment: (
                 <IconButton position="end" onClick={handleClickShowPassword}>
@@ -382,6 +370,32 @@ function Signup() {
               </span>
             }
           />
+
+          {/* Error display */}
+          {serverRes && (
+            <Typography
+              variant="subtitle2"
+              sx={{
+                alignSelf: 'flex-end',
+                mr: 2,
+                mt: 1,
+                px: 1.5,
+                py: 0.5,
+                fontSize: '0.95em',
+                fontWeight: 600,
+                color: '#b00020',
+                backgroundColor: (theme) =>
+                  theme.palette.mode === 'dark' ? 'rgba(255, 82, 82, 0.1)' : 'rgba(255, 0, 0, 0.08)',
+                border: '1px solid rgba(255, 0, 0, 0.2)',
+                borderRadius: '8px',
+                backdropFilter: 'blur(6px)',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                transition: 'all 0.3s ease',
+              }}
+            >
+              ⚠️ {serverRes}
+            </Typography>
+          )}
 
           {/* Submit Button */}
           <Button

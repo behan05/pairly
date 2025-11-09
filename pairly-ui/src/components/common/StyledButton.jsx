@@ -7,11 +7,11 @@ function StyledButton({ icon, variant = 'outlined', sx = {}, type, text, redirec
 
   return (
     <Button
-      component={Link} // Use react-router Link for navigation
-      to={redirectUrl} // Destination URL
-      startIcon={icon} // Optional icon at the start
-      type={type} // Button type (submit, button, etc.)
-      variant={variant} // Button variant (outlined by default)
+      component={Link}
+      to={redirectUrl}
+      startIcon={icon}
+      type={type}
+      variant={variant}
       sx={{
         borderRadius: 0.4,
         px: 3,
@@ -24,7 +24,7 @@ function StyledButton({ icon, variant = 'outlined', sx = {}, type, text, redirec
         '&:hover': { background: theme.palette.action.hover },
         ...sx
       }}
-      {...props} // Spread any additional props
+      {...props}
     >
       {text}
     </Button>

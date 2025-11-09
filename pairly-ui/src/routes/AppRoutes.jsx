@@ -6,6 +6,7 @@ import Features from '@/pages/public/Features';
 import Contact from '@/pages/public/Contact';
 import Login from '@/pages/public/Login';
 import ForgotPassword from '@/pages/public/ForgotPassword';
+import ResetPassword from '@/pages/public/ResetPassword';
 import Register from '@/pages/public/Signup';
 import FAQs from '@/pages/public/FAQs';
 import { SidebarProvider } from '@/context/SidebarContext';
@@ -19,6 +20,8 @@ import PlaybookPage from '../components/common/PlaybookPage';
 import BlogList from '../components/blog/BlogList';
 import Blog from '../components/blog/Blog';
 import Press from '../components/press/Press';
+import Verify from '../middleware/Verify';
+import VerifyForgotOtp from '../middleware/VerifyForgotOtp';
 
 import PrivateRoute from '@/middleware/PrivateRoute';
 
@@ -60,7 +63,6 @@ import FriendRequestList from '@/features/chat/random/components/supportComponen
 // Chat History
 import PrivateChatLayout from '@/features/chat/normal/PrivateChatLayout';
 import PrivateChatSidebar from '@/features/chat/normal/components/coreComponents/PrivateChatSidebar';
-import Verify from '../middleware/Verify';
 import DataDeletionPage from '../pages/private/settings/account/HowToDeleteData/DataDeletionPage';
 import Premium from '../components/private/premium/Premium';
 import CheckoutPage from '@/pages/payment/CheckoutPage';
@@ -86,8 +88,10 @@ export const routes = createBrowserRouter([
       { path: 'features', element: <Features /> },
       { path: 'contact', element: <Contact /> },
       { path: 'login', element: <Login /> },
-      { path: 'verify', element: <Verify /> },
+      { path: 'verify-email', element: <Verify /> },
+      { path: 'verify-forgot-otp', element: <VerifyForgotOtp /> },
       { path: 'forgot-password', element: <ForgotPassword /> },
+      { path: 'reset-password', element: <ResetPassword /> },
       { path: 'register', element: <Register /> },
       { path: 'faq', element: <FAQs /> },
       { path: 'report', element: <ReportBug /> },
