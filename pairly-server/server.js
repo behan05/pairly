@@ -88,8 +88,8 @@ app.use(cors({
 app.use(express.json({ limit: '500mb' }));
 app.use(express.urlencoded({ limit: '500mb', extended: true }));
 
-// Schedule daily cleanup of expired messages and media
-require('./cron/deleteRandomExpiredMessages.cron');
+// Schedule daily cleanup of unverified users
+require('./cron/cleanupUnverifiedUsers.cron');
 
 // ==========================
 // Register API Routes
