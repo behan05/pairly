@@ -8,8 +8,8 @@ function ReusableVideo() {
   const isMd = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
   // Set max size relative to viewport to prevent scrollbar
-  const maxSize = isXs ? '80vw' : isMd ? '60vw' : '50vw';
-  const maxHeight = isXs ? '50vh' : isMd ? '55vh' : '60vh';
+  const maxSize = isXs ? '80vw' : isMd ? '60vw' : '40vw';
+  const maxHeight = isXs ? '50vh' : isMd ? '55vh' : '40vh';
 
   return (
     <Box

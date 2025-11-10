@@ -40,7 +40,6 @@ function ResetPassword() {
 
     const [showPassword, setShowPassword] = React.useState(false);
     const [form, setForm] = React.useState({
-        fullName: '',
         email: '',
         password: '',
         confirmPassword: ''
@@ -68,11 +67,6 @@ function ResetPassword() {
     const validate = () => {
         let newError = {};
         let isValid = true;
-
-        if (!form.fullName.trim()) {
-            newError.fullName = 'Full name is required';
-            isValid = false;
-        }
 
         if (!form.email.trim()) {
             newError.email = 'Email is required';
@@ -194,7 +188,11 @@ function ResetPassword() {
                     justifyContent: 'center',
                     alignItems: 'center',
                     flex: 1,
-                    boxShadow: `inset 0 0 20px ${theme.palette.divider}`,
+                    background: 'inherit',
+                    boxShadow:
+                        theme.palette.mode === 'dark'
+                            ? '0 4px 24px rgba(255,255,255,0.05)'
+                            : '0 4px 24px rgba(0,0,0,0.08)',
                     borderRadius: 0.5,
                     py: 4
                 }}
@@ -216,19 +214,6 @@ function ResetPassword() {
                     >
                         Enter your details to reset your account password and get back to your conversations.
                     </Typography>
-
-                    {/* Full Name */}
-                    <TextField
-                        variant="outlined"
-                        size="small"
-                        label="Full Name"
-                        name="fullName"
-                        onChange={handleChange}
-                        value={form.fullName}
-                        fullWidth
-                        error={Boolean(error.fullName)}
-                        helperText={error.fullName}
-                    />
 
                     {/* Email */}
                     <TextField

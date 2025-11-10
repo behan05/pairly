@@ -168,7 +168,7 @@ function VerifyForgotOtp() {
                 {message && (
                     <Typography
                         variant="body2"
-                        sx={{ mt: 2, color: message.startsWith('✅') ? 'green' : 'error.main' }}
+                        sx={{ mt: 2, color: message.startsWith(' ') ? 'green' : 'error.main' }}
                     >
                         {message}
                     </Typography>

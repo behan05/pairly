@@ -295,7 +295,6 @@ const verifyEmailOtpController = async (req, res) => {
 };
 
 // ==================== RESET OTP ==================
-// TODO add limit 3 max
 const resendOtpController = async (req, res) => {
   try {
     const { email } = req.body;
@@ -308,18 +307,39 @@ const resendOtpController = async (req, res) => {
     }
 
     const user = await User.findOne({ email });
-
     if (!user) {
       return res.status(404).json({ success: false, error: 'User not found!' });
     }
-    
+
+    // Track daily OTP requests
+    const today = new Date().toDateString();
+    const lastRequest = user.otpLastRequestDate ? user.otpLastRequestDate.toDateString() : null;
+
+    if (lastRequest === today) {
+      // Same day → increase count
+      user.otpRequestCount += 1;
+    } else {
+      // New day → reset counter
+      user.otpRequestCount = 1;
+      user.otpLastRequestDate = new Date();
+    }
+
+    // Check limit
+    if (user.otpRequestCount > 3) {
+      return res.status(429).json({
+        success: false,
+        error: 'You’ve reached the OTP request limit for today.'
+      });
+    }
+
     // Generate new OTP
     const { otp, otpExpires } = generateOTP();
     user.emailToken = otp;
     user.emailTokenExpires = otpExpires;
+
     await user.save();
 
-    // Email content
+    // Send Email
     const html = `
 <!DOCTYPE html>
 <html>
@@ -378,6 +398,10 @@ const forgotPasswordController = async (req, res) => {
     const { otp, otpExpires } = generateOTP();
     user.emailToken = otp;
     user.emailTokenExpires = otpExpires;
+
+    // clear previous reset tokens expires
+    user.otpVerified = false;
+    user.resetTokenExpires = undefined;
     await user.save();
 
     const html = `
@@ -439,8 +463,10 @@ const verifyForgotOtpController = async (req, res) => {
       return res.status(400).json({ success: false, error: 'Invalid or expired OTP.' });
     }
 
-    // OTP verified temporarily
+    // OTP verified temporarily & add resetTokenExpires with otp verified flag to track
     user.emailVerified = true;
+    user.otpVerified = true;
+    user.resetTokenExpires = Date.now() + 20 * 60 * 1000; // 20 minutes;
     await user.save();
 
     return res.status(200).json({ success: true, message: 'OTP verified successfully.' });
@@ -471,7 +497,7 @@ const resetPasswordController = async (req, res) => {
       });
     }
 
-    // Optional: Password strength check
+    // Password strength check
     if (password.length < 8) {
       return res.status(400).json({
         success: false,
@@ -486,6 +512,18 @@ const resetPasswordController = async (req, res) => {
         success: false,
         error: 'User does not exist.',
       });
+    }
+
+    if (!getUser.otpVerified || !getUser.resetTokenExpires || Date.now() > getUser.resetTokenExpires) {
+      // clear token fields
+      getUser.resetTokenExpires = undefined;
+      getUser.otpVerified = false;
+      await getUser.save();
+      return res.status(400)
+        .json({
+          success: false,
+          error: 'Reset token expired. Request a new OTP.'
+        });
     }
 
     // Ensure it's a local account
@@ -504,6 +542,10 @@ const resetPasswordController = async (req, res) => {
       });
     }
 
+    // Verify & clear token
+    getUser.emailToken = null;
+    getUser.emailTokenExpires = null;
+    await getUser.save();
     // Hash and update password
     const hashedPassword = await bcrypt.hash(password, 10);
     await User.findByIdAndUpdate(getUser._id, { password: hashedPassword });

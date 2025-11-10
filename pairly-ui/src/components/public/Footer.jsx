@@ -25,12 +25,11 @@ function Footer() {
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
   const socialLinks = [
-    { icon: <FacebookIcon fontSize="small" />, color: theme.palette.text.primary, to: '#' },
-    { icon: <InstagramIcon fontSize="small" />, color: theme.palette.text.primary, to: '#' },
-    { icon: <XIcon fontSize="small" />, color: theme.palette.text.primary, to: '#' },
-    { icon: <LinkedInIcon fontSize="small" />, color: theme.palette.text.primary, to: '#' },
+    { label: 'Instagram', icon: <InstagramIcon />, to: 'https://www.instagram.com/pairlychat/' },
+    { label: 'X (formerly Twitter)', icon: <XIcon />, to: 'https://x.com/Pairlychat' },
+    { label: 'LinkedIn', icon: <LinkedInIcon />, to: 'https://www.linkedin.com/company/pairlychat' },
+    { label: 'Facebook', icon: <FacebookIcon />, to: 'https://www.facebook.com/profile.php?id=61583490932857' },
   ];
-
   return (
     <Box
       component="footer"

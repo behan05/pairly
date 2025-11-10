@@ -411,10 +411,10 @@ function Navbar() {
             alignItems="center"
           >
             {[
-              { label: 'Instagram', icon: <InstagramIcon />, href: '#' },
-              { label: 'X (formerly Twitter)', icon: <XIcon />, href: '#' },
-              { label: 'LinkedIn', icon: <LinkedInIcon />, href: '#' },
-              { label: 'Facebook', icon: <FacebookIcon />, href: '#' },
+              { label: 'Instagram', icon: <InstagramIcon />, href: 'https://www.instagram.com/pairlychat/' },
+              { label: 'X (formerly Twitter)', icon: <XIcon />, href: 'https://x.com/Pairlychat' },
+              { label: 'LinkedIn', icon: <LinkedInIcon />, href: 'https://www.linkedin.com/company/pairlychat' },
+              { label: 'Facebook', icon: <FacebookIcon />, href: 'https://www.facebook.com/profile.php?id=61583490932857' },
             ].map((item, i) => (
               <Tooltip key={i} title={item.label}>
                 <IconButton

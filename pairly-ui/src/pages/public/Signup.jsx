@@ -229,7 +229,11 @@ function Signup() {
           justifyContent: 'center',
           alignItems: 'center',
           flex: 1,
-          boxShadow: `inset 0 0 20px ${theme.palette.divider}`,
+          background: 'inherit',
+          boxShadow:
+            theme.palette.mode === 'dark'
+              ? '0 4px 24px rgba(255,255,255,0.05)'
+              : '0 4px 24px rgba(0,0,0,0.08)',
           borderRadius: 0.5,
           py: 4
         }}

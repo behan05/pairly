@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { Box, Stack, Typography, TextField, InputAdornment, IconButton } from '@/MUI/MuiComponents';
+import { Box, Stack,Button,useTheme, Typography, TextField, InputAdornment, IconButton } from '@/MUI/MuiComponents';
 
 import { SendIcon, VisibilityIcon, VisibilityOffIcon } from '@/MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import StyledText from '@/components/common/StyledText';
-import StyledActionButton from '@/components/common/StyledActionButton';
 import BlurWrapper from '@/components/common/BlurWrapper';
 import { SETTINGS_API } from '@/api/config';
 import axios from 'axios';
@@ -14,6 +13,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function ChangeCredentials() {
+  const theme = useTheme();
   const [isDisabled, setIsDisabled] = React.useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = React.useState(false);
   const [showNewPassword, setShowNewPassword] = React.useState(false);
@@ -206,13 +206,30 @@ function ChangeCredentials() {
             }}
           />
 
-          <StyledActionButton
+          <Button
             type="submit"
-            endIcon={<SendIcon sx={{ color: 'success.main' }} />}
+            endIcon={<SendIcon sx={{ color: 'text.primary' }} />}
             disabled={isDisabled}
+            sx={{
+              maxWidth: 'fit-content',
+              alignSelf: 'flex-end',
+              borderRadius: 0.8,
+              textTransform: "none",
+              fontWeight: 700,
+              px: 3,
+              py: 0.8,
+              fontSize: "1rem",
+              color: theme.palette.common.white,
+              background: `linear-gradient(135deg, ${theme.palette.info.main}, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+              boxShadow: `0 6px 20px ${theme.palette.secondary.main}66`,
+              "&:hover": {
+                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.info.main}, ${theme.palette.secondary.main})`,
+                boxShadow: `0 5px 15px ${theme.palette.primary.main}66`,
+              },
+            }}
           >
             {isDisabled ? 'Updating...' : 'Update Credentials'}
-          </StyledActionButton>
+          </Button>
         </Stack>
       </BlurWrapper>
     </Box>
