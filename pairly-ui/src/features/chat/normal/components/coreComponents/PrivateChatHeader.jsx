@@ -33,14 +33,14 @@ import TypingIndicator from '@/components/private/randomChat/TypingIndicator';
 import WaitingIndicator from '@/components/private/randomChat/WaitingIndicator';
 import StyledText from '@/components/common/StyledText';
 import textFormater from '@/utils/textFormatting';
-import PrivatePartnerProfileModel from '../supportComponents/PrivatePartnerProfileModel';
-import ProposeToPartnerModel from '../supportComponents/ProposeToPartnerModel';
-import ReportUserModal from '../supportComponents/ReportUserModal';
-import BlockUserModal from '../supportComponents/BlockUsermodal'
 import formatMessageTime from '@/utils/formatMessageTime';
 import ActionConfirm from '@/components/private/actionConfirmation/ActionConfirm';
-import SilentFeelModeModel from '../supportComponents/SilentFeelModeModal';
-import HearTogherModel from '../supportComponents/HearTogetherModel';
+import PrivatePartnerProfileModel from '../supportComponents/PrivatePartnerProfileModel';
+import ReportUserModal from '../supportComponents/ReportUserModal';
+import BlockUserModal from '../supportComponents/BlockUsermodal'
+import ProposeToPartnerModel from '../createProposal/ProposeToPartnerModel';
+import SilentFeelModeModel from '../silentFeelMode/SilentFeelModeModal';
+import HearTogherModel from '../hearTogetherMode/HearTogetherModel';
 
 import { updateSettingsNotification } from '@/redux/slices/settings/settingsAction';
 import { useDispatch, useSelector } from 'react-redux'

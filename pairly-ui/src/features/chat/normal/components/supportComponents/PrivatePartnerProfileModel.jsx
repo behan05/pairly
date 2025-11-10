@@ -32,7 +32,7 @@ import { blue } from "@mui/material/colors";
 import { deleteConversationMessage, clearConversationMessage, fetchAllUser } from '@/redux/slices/privateChat/privateChatAction';
 import { useDispatch, useSelector } from 'react-redux'
 import { Country, State } from "country-state-city";
-import ProposeToPartnerModel from '../supportComponents/ProposeToPartnerModel';
+import ProposeToPartnerModel from '../createProposal/ProposeToPartnerModel';
 import ReportUserModal from '../supportComponents/ReportUserModal';
 import BlockUserModal from '../supportComponents/BlockUsermodal'
 

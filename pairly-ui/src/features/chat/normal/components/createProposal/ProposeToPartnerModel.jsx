@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
     Box,
     Modal,
@@ -15,7 +15,6 @@ import {
     Pagination,
     PaginationItem,
     Button,
-    FormControlLabel,
     Checkbox
 } from '../../../../../MUI/MuiComponents';
 import {
@@ -33,11 +32,11 @@ import {
     giftTokens,
     proposalAudioOptions
 } from '@/utils/proposeMessages';
-import ProposalPreview from './ProposalPreview';
-import ProposalLottie from './ProposalLottieAnimation';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMusicBySelectType } from '@/redux/slices/privateChat/privateChatAction';
 import { setProposalSelectedMusic, setProposalData } from '@/redux/slices/privateChat/privateChatSlice';
+import ProposalPreview from './ProposalPreview';
+import ProposalLottie from './ProposalLottieAnimation';
 
 function ProposeToPartnerModel({ open, onClose, partnerId }) {
     const theme = useTheme();
