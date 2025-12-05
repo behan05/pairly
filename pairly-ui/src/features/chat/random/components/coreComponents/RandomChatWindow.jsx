@@ -18,8 +18,6 @@ import NextButton from '../supportComponents/NextButton';
 import DisconnectButton from '../supportComponents/DisconnectButton';
 import CountdownTimer from '../supportComponents/CountdownTimer';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
-import chatWindowBackgroundDarkImage from '@/assets/images/chatWindowBackgroundDarkImage.png';
-import chatWindowBackgroundLightImage from '@/assets/images/chatWindowBackgroundLightImage.png';
 
 // Socket and Redux actions
 import { socket } from '@/services/socket';
@@ -41,15 +39,70 @@ import randomChatWindowImage2 from '@/assets/images/chatWindowImage.png'
 function RandomChatWindow({ setShowChatWindow }) {
   const theme = useTheme();
   const isSm = useMediaQuery('(max-width:936px)');
+  const isTabletOrBelow = useMediaQuery('(max-width:775px)');
   const isLg = useMediaQuery(theme.breakpoints.down('lg'));
   const dispatch = useDispatch();
   const { plan, status } = useSelector((state) => state?.auth?.user?.subscription);
   const isFreeUser = status === 'active' && plan === 'free';
 
+  const chatBgStyle = (currentTheme) => {
+    const emojis = [
+      "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇", "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "😚",
+      "😋", "😛", "😝", "😜", "🤪", "🧐", "🤓", "😎", "🤩", "🥳", "😏", "😒", "😞", "😔", "😟", "😕", "🙁", "☹️", "😣", "😖",
+      "😫", "😩", "🥺", "😢", "😭", "😤", "😠", "😡", "🤬", "😳", "🫣", "🫢", "🤯", "😱", "😨", "😰", "😥", "😓", "🤗",
+      "🤭", "🤫", "🤥", "😶", "😐", "😑", "😬", "🙄", "😮‍💨", "😴", "🤤", "😪", "😵", "😵‍💫", "🤢", "🤮", "🤧", "😷", "🤒", "🤕",
+      "🤑", "🤠", "😈", "👿", "👻", "💀", "☠️", "👽", "🤖", "🎃", "😺", "😸", "😹", "😻", "😼", "😽", "🙀", "😿", "😾",
+      "🦊", "🐶", "🐱", "🐹", "🐰",
+      "❤️", "💛", "💚", "💙", "💜", "💯", "✨", "⭐", "⚡", "🔥",
+    ];
+
+    // generate 120 random emojis
+    const emojiElements = Array.from({ length: isTabletOrBelow ? 200 : 400 }, () => {
+      const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+
+      return (
+        <Stack
+          component='span'
+          style={{
+            position: "absolute",
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+
+            // random sizes: small OR medium OR large
+            fontSize: `${Math.floor(Math.random() * 20) + 12}px`,
+
+            // very light opacity to look like background
+            opacity: Math.random() * 0.1 + 0.02,
+
+            transform: `rotate(${Math.random() * 30 - 15}deg)`,
+            pointerEvents: "none",
+          }}
+        >
+          {emoji}
+        </Stack>
+      );
+    });
+
+    return (
+      <Box
+        sx={{
+          position: "absolute",
+          inset: 0,
+          overflow: "hidden",
+          background: currentTheme === "dark"
+            ? `${theme.palette.background.paper}` : `${theme.palette.background.default}`,
+        }}
+      >
+        {emojiElements}
+      </Box>
+    );
+  };
+
+  // Select background image based on theme
   let bgChatImg =
     localStorage.getItem('theme') === 'dark'
-      ? chatWindowBackgroundDarkImage
-      : chatWindowBackgroundLightImage;
+      ? chatBgStyle('dark')
+      : chatBgStyle('light');
 
   // Redux state
   const userId = useSelector((state) => state.profile.profileData?._id);
@@ -236,19 +289,14 @@ function RandomChatWindow({ setShowChatWindow }) {
   }, [isFreeUser]);
 
   return (
-    <Stack
-      height="100dvh"
-      justifyContent="space-between"
-      sx={{
-        borderLeft: `2px solid ${theme.palette.divider}`,
-        position: 'relative',
-        backgroundImage: isConnected && `url(${bgChatImg})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
-      }}
-      id={"chat-window"}
-    >
+    <Stack sx={{
+      position: "relative",
+      overflow: "hidden",
+      width: "100%",
+      height: '100%',
+      borderLeft: `1px solid ${theme.palette.divider}`
+    }}>
+      {isConnected && bgChatImg}
       {/* === Mobile Only: Floating menu for Next/Disconnect === */}
       {isSm && isConnected && (
         <>
@@ -329,69 +377,79 @@ function RandomChatWindow({ setShowChatWindow }) {
                     alignSelf={isOwnMessage ? 'flex-end' : 'flex-start'}
                     sx={{
                       background: isOwnMessage
-                        ? `linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.primary.main} 100%)`
-                        : `linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.action.hover} 100%)`,
-                      color: isOwnMessage
-                        ? theme.palette.text.primary
-                        : theme.palette.text.primary,
-                      px: 1.5,
-                      py: 1,
-                      maxWidth: '70%',
+                        ? theme.palette.mode === "dark"
+                          ? "#075E54"
+                          : "#DCF8C6"
+                        : theme.palette.background.paper,
+
+                      color: theme.palette.text.primary,
+                      px: 1.6,
+                      py: 1.2,
+                      maxWidth: "72%",
                       borderRadius: isOwnMessage
-                        ? '1.2rem 0 1.2rem 1.2rem'
-                        : '0 1.2rem 1.2rem 1.2rem',
-                      position: 'relative',
-                      wordBreak: 'break-word',
-                      overflowWrap: 'break-word',
-                      boxShadow: `0 2px 6px ${theme.palette.action.disabledBackground}`,
-                      transition: 'background 0.3s ease, transform 0.2s ease',
-                      '&:hover': {
-                        transform: 'scale(1.01)',
-                        background: isOwnMessage
-                          ? `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 100%)`
-                          : `linear-gradient(135deg, ${theme.palette.action.hover} 0%, ${theme.palette.background.default} 100%)`,
-                      },
+                        ? "1rem 1rem 0.2rem 1rem"
+                        : "1rem 1rem 1rem 0.2rem",
+
+                      boxShadow: "0 2px 4px rgba(0,0,0,0.08)",
+
+                      fontSize: "0.95rem",
+                      lineHeight: 1.4,
+
+                      wordBreak: "break-word",
+                      position: "relative",
                     }}
                   >
 
                     {/* Text Message */}
-                    {msg.type === 'text' && (
-                      <>
-                        {isValidURL(msg.message) ? (
+                    {msg.type === 'text' && (() => {
+                      const isShort = msg.message?.length < (isSm ? 10 : 35);
+                      return (
+                        <Stack
+                          sx={{
+                            display: 'flex',
+                            flexDirection: isShort ? 'row' : 'column',
+                            alignItems: isShort ? 'center' : 'flex-end',
+                            gap: isShort ? 1 : 0,
+                            fontSize: fontSizeMap[chatFontSize] || '0.875rem',
+                            textAlign: 'start'
+                          }}
+                        >
+                          {isValidURL(msg.message) ? (
+                            <Typography
+                              variant="body1"
+                              component="a"
+                              href={msg.message}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              sx={{
+                                wordBreak: 'break-word',
+                                color: 'success.main',
+                                textDecoration: 'underline',
+                                fontSize: '0.775rem'
+                              }}
+                            >
+                              {msg.message}
+                            </Typography>
+                          ) : (
+                            <Typography variant="body1" sx={{ wordBreak: 'break-word', fontSize: fontSizeMap[chatFontSize] || '0.875rem' }}>
+                              {msg.message}
+                            </Typography>
+                          )}
                           <Typography
-                            variant="body1"
-                            component="a"
-                            href={msg.message}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            variant="caption"
+                            color="text.secondary"
                             sx={{
-                              wordBreak: 'break-word',
-                              color: 'success.main',
-                              textDecoration: 'underline',
+                              display: 'block',
+                              textAlign: 'right',
+                              mt: 0.5,
                               fontSize: '0.775rem'
                             }}
                           >
-                            {msg.message}
+                            {msg.timestamp}
                           </Typography>
-                        ) : (
-                          <Typography variant="body1" sx={{ wordBreak: 'break-word', fontSize: fontSizeMap[chatFontSize] || '0.875rem' }}>
-                            {msg.message}
-                          </Typography>
-                        )}
-                        <Typography
-                          variant="caption"
-                          color="text.secondary"
-                          sx={{
-                            display: 'block',
-                            textAlign: 'right',
-                            mt: 0.5,
-                            fontSize: '0.775rem'
-                          }}
-                        >
-                          {msg.timestamp}
-                        </Typography>
-                      </>
-                    )}
+                        </Stack>
+                      )
+                    })()}
 
                     {/* Image Message */}
                     {msg.type === 'image' && (

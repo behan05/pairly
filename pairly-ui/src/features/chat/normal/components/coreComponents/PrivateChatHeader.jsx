@@ -26,7 +26,7 @@ import {
   ArrowBackIcon,
   MusicNoteIcon,
 } from '@/MUI/MuiIcons';
-import SelfImprovementIcon from '@mui/icons-material/SelfImprovement';
+import NightsStayIcon from '@mui/icons-material/NightsStay';
 
 // Components
 import TypingIndicator from '@/components/private/randomChat/TypingIndicator';
@@ -39,7 +39,7 @@ import PrivatePartnerProfileModel from '../supportComponents/PrivatePartnerProfi
 import ReportUserModal from '../supportComponents/ReportUserModal';
 import BlockUserModal from '../supportComponents/BlockUsermodal'
 import ProposeToPartnerModel from '../createProposal/ProposeToPartnerModel';
-import SilentFeelModeModel from '../silentFeelMode/SilentFeelModeModal';
+import SleepSpaceModel from '../sleepSpace/SleepSpaceModal';
 import HearTogherModel from '../hearTogetherMode/HearTogetherModel';
 
 import { updateSettingsNotification } from '@/redux/slices/settings/settingsAction';
@@ -58,7 +58,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
   // local state
   const [anchorEl, setAnchorEl] = useState(null);
   const [openProfileModal, setOpenProfileModal] = useState(false);
-  const [openSlientFeelModeModal, setOpenSlientFeelModeModal] = useState(false);
+  const [openSleepSpaceModal, setOpenSleepSpaceModal] = useState(false);
   const [openHearTogetherModal, setOpenHearTogetherModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openClearModal, setOpenClearModal] = useState(false);
@@ -143,7 +143,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
 
   /** Handle handleSilentFeelMode */
   const handleSilentFeelMode = () => {
-    setOpenSlientFeelModeModal(true)
+    setOpenSleepSpaceModal(true)
   };
 
   /** Handle HearTogetherModal */
@@ -370,17 +370,17 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
               </MenuItem>
             ))}
 
-            <Divider sx={{ my: 1 }} />
-
-            {[
+            {/* LOUNCH ONE BY ONE */}
+            {/* <Divider sx={{ my: 1 }} /> */}
+            {/* {[
               {
                 icon: <FavoriteIcon fontSize='small' sx={{ mr: 1, color: 'error.main' }} />,
                 label: 'Create Proposal',
                 onClick: () => handleAction('proposeToPartner'),
               },
               {
-                label: 'Silent Feel Mode',
-                icon: <SelfImprovementIcon fontSize='small' sx={{ mr: 1, color: theme.palette.primary.main }} />,
+                label: 'Sleep Space',
+                icon: <NightsStayIcon fontSize='small' sx={{ mr: 1, color: theme.palette.primary.main }} />,
                 onClick: () => handleAction('inviteToSilentFeelMode'),
               },
               {
@@ -393,7 +393,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
                 {item.icon}
                 {item.label}
               </MenuItem>
-            ))}
+            ))} */}
 
             <Divider sx={{ my: 1 }} />
 
@@ -459,9 +459,9 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
         partnerId={userId}
       />
 
-      <SilentFeelModeModel
-        open={openSlientFeelModeModal}
-        onClose={() => setOpenSlientFeelModeModal(false)}
+      <SleepSpaceModel
+        open={openSleepSpaceModal}
+        onClose={() => setOpenSleepSpaceModal(false)}
         partner={partnerProfile}
         partnerId={userId}
       />

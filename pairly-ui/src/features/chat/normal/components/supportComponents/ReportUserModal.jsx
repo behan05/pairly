@@ -38,12 +38,12 @@ import {
     TextField,
     useTheme,
     useMediaQuery,
-    FormHelperText
+    FormHelperText,
+    Box
 } from '@/MUI/MuiComponents';
 import { ReportIcon } from '@/MUI/MuiIcons';
 
 // components
-import BlurWrapper from '@/components/common/BlurWrapper';
 import StyledText from '@/components/common/StyledText';
 
 // redux
@@ -144,19 +144,27 @@ function ReportUserModal({ open, onClose, partner, partnerId }) {
             onClose={handleCancel}
             aria-labelledby="report-user-modal"
             aria-describedby="reason-error"
-            sx={{ mt: 10, px: isSm ? 2 : 4 }}
+            sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                p: isSm ? 1 : ''
+            }}
         >
-            <BlurWrapper sx={{
+            <Box sx={{
+                maxWidth: 600,
+                mx: 'auto',
                 width: '100%',
-                backgroundColor: theme.palette.background.paper
+                backgroundColor: theme.palette.background.paper,
+                p: isSm ? 1.2 : 2
             }}>
                 {/* Title */}
-                <Typography variant="body1">
+                <Typography variant="body1" >
                     Report <StyledText text={partner?.fullName} />
                 </Typography>
 
                 {/* Confirmation text */}
-                <Typography variant="body2" sx={{ mt: 1, mb: 2 }}>
+                <Typography variant="body2" sx={{ mt: 1, mb: 2 }} >
                     Are you sure you want to report <strong>{partner?.fullName}</strong>?.
                 </Typography>
 
@@ -200,7 +208,18 @@ function ReportUserModal({ open, onClose, partner, partnerId }) {
 
                 {/* Action buttons */}
                 <Stack direction="row" spacing={1} mt={3} flexWrap={isXs ? 'wrap' : 'nowrap'}>
-                    <Button variant="outlined" color="primary" fullWidth onClick={handleCancel}>
+                    <Button
+                        variant="outlined"
+                        fullWidth
+                        onClick={handleCancel}
+                        sx={{
+                            textTransform: 'none',
+                            fontWeight: 600,
+                            color: theme.palette.text.primary,
+                            borderColor: theme.palette.divider,
+                            '&:hover': { background: theme.palette.action.hover },
+                        }}
+                    >
                         Cancel
                     </Button>
                     <Button
@@ -213,7 +232,7 @@ function ReportUserModal({ open, onClose, partner, partnerId }) {
                         {setIsReporting ? 'Reporting....' : 'Report'}
                     </Button>
                 </Stack>
-            </BlurWrapper>
+            </Box>
         </Modal>
     );
 }

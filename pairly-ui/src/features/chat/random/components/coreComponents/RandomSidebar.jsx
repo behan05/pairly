@@ -37,6 +37,9 @@ function RandomSidebar() {
 
   const [openOnboardingFeedback, setOpenOnboardingFeedback] = useState(false);
 
+  // if user less then 25,display random number above 2
+  const predefinedRandomNumberOfActiveUser = Math.floor(Math.random() * 23) + 2;
+
   useEffect(() => {
     if (!isConnected && isSm) setShowChatWindow(false);
   }, [isConnected, isSm, setShowChatWindow]);
@@ -142,66 +145,28 @@ function RandomSidebar() {
         justifyContent="center"
         p={isSm ? 3 : 4}
       >
-        <Paper
-          elevation={4}
+        <Stack
           sx={{
-            borderRadius: 4,
-            p: isSm ? 3 : 4,
-            width: '100%',
-            maxWidth: 360,
-            backdropFilter: 'blur(10px)',
-            background:
-              theme.palette.mode === 'dark'
-                ? theme.palette.background.paper + '99'
-                : theme.palette.background.default + '99',
-            border: `1px solid ${theme.palette.divider}`,
-            textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 3,
-            transition: 'all 0.5s ease',
-            position: 'relative',
-            overflow: 'hidden',
+            position: "relative",
+            overflow: "hidden",
+            borderRadius: 1,
+            p: 2,
+            transition: "0.3s",
+            boxShadow: `4px 4px 0.2em ${theme.palette.success.main}20`,
 
-            ':before': {
-              content: '""',
-              position: 'absolute',
-              top: '-50%',
-              left: 0,
-              width: '100%',
-              height: '100%',
-              background: `linear-gradient(
-                to bottom, 
-                ${theme.palette.mode === 'dark'
-                  ? theme.palette.primary.light + '33'
-                  : theme.palette.primary.main + '55'},
-                transparent 60%)`,
-              opacity: 0,
-              transition: 'opacity 0.5s ease, transform 0.5s ease',
-              pointerEvents: 'none',
-              zIndex: 1,
-              transform: 'translateY(0%)',
-            },
-            ':hover:before': {
-              opacity: 1,
-              transform: 'translateY(50%)',
-              boxShadow: `inset 0 -4px 1px ${theme.palette.divider}`,
-            },
-
-            '& > *': {
-              position: 'relative',
-              zIndex: 2,
+            "&:hover": {
+              boxShadow: `none`,
+              border: `1px solid ${theme.palette.success.dark}`
             },
           }}
         >
 
-          <StyledText text="Random Chat" sx={{ fontSize: isSm ? '1.5rem' : '2rem' }} />
+          <StyledText text="Random Chat" sx={{ fontSize: isSm ? '1.5rem' : '2rem', textAlign: 'center' }} />
 
           <Typography
             variant="subtitle1"
             color="text.secondary"
-            sx={{ mb: 1, fontWeight: 500 }}
+            sx={{ mb: 1, fontWeight: 500, textAlign: 'center' }}
           >
             Meet someone new instantly
           </Typography>
@@ -209,7 +174,7 @@ function RandomSidebar() {
           {isWaiting ? (
             <CountdownTimer startFrom={10} autoRestart />
           ) : (
-            <Box sx={{ width: '80%', maxWidth: 200 }}>
+            <Box sx={{ width: '80%', maxWidth: 200, mx: 'auto' }}>
               <RandomLandingLottie />
             </Box>
           )}
@@ -243,18 +208,24 @@ function RandomSidebar() {
             variant="body2"
             sx={{
               mt: 2,
-              color: 'text.secondary',
+              color: theme.palette.text.secondary,
               display: 'flex',
-              alignItems: 'center',
               gap: 0.6,
+              border: ` 1px solid ${theme.palette.divider}`,
+              boxShadow: `0 0 0.2em ${theme.palette.divider}`,
+              borderRadius: 0.5,
+              p: 1,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItem: 'center'
             }}
           >
             <GroupIcon sx={{ fontSize: 18, color: 'info.main' }} />
-            {numberOfActiveUsers <= 1
-              ? `${numberOfActiveUsers} person online`
+            {numberOfActiveUsers <= 25
+              ? `${predefinedRandomNumberOfActiveUser} people online`
               : `${numberOfActiveUsers} people online`}
           </Typography>
-        </Paper>
+        </Stack>
       </Box>
 
       {/* Ads for Free User */}

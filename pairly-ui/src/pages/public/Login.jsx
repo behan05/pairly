@@ -143,7 +143,7 @@ function Login() {
         flexGrow: 1,
         gap: 2,
         pt: theme.spacing(2),
-        mt: isSm ? '18dvh' : isMd ? '20dvh' : '18dvh',
+        mt: '10dvh',
         px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '20%',
       }}
     >

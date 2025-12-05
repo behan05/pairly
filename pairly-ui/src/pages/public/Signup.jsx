@@ -176,7 +176,7 @@ function Signup() {
         flexGrow: 1,
         gap: 2,
         pt: theme.spacing(1),
-        mt: isSm ? '12dvh' : isMd ? '10dvh' : '12dvh',
+        mt: '10dvh',
         px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '20%',
       }}
     >

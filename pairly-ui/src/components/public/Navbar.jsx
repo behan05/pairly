@@ -102,7 +102,7 @@ function Navbar() {
   return (
     <AppBar
       ref={navRef}
-      position="fixed"
+      position="sticky"
       elevation={0}
       sx={{
         backgroundColor: 'transparent',

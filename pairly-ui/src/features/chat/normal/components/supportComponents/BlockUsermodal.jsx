@@ -39,12 +39,12 @@ import {
     TextField,
     useTheme,
     useMediaQuery,
-    FormHelperText
+    FormHelperText,
+    Box
 } from '@/MUI/MuiComponents';
 import { BlockIcon } from '@/MUI/MuiIcons';
 
 // components
-import BlurWrapper from '@/components/common/BlurWrapper';
 import StyledText from '@/components/common/StyledText';
 
 // redux
@@ -151,11 +151,19 @@ function BlockUserModal({ open, onClose, partner, partnerId, clearActiveChat, on
             onClose={handleCancel}
             aria-labelledby="block-user-modal"
             aria-describedby="reason-error"
-            sx={{ mt: 10, px: isSm ? 2 : 4 }}
+            sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                p: isSm ? 1 : ''
+            }}
         >
-            <BlurWrapper sx={{
+            <Box sx={{
+                maxWidth: 600,
+                mx: 'auto',
                 width: '100%',
-                backgroundColor: theme.palette.background.paper
+                backgroundColor: theme.palette.background.paper,
+                p: isSm ? 1.2 : 2
             }}>
                 {/* Title */}
                 <Typography variant="body1">
@@ -213,7 +221,18 @@ function BlockUserModal({ open, onClose, partner, partnerId, clearActiveChat, on
 
                 {/* Action buttons */}
                 <Stack direction="row" spacing={1} mt={3} flexWrap={isXs ? 'wrap' : 'nowrap'}>
-                    <Button variant="outlined" color="primary" fullWidth onClick={handleCancel}>
+                    <Button
+                        variant="outlined"
+                        fullWidth
+                        onClick={handleCancel}
+                        sx={{
+                            textTransform: 'none',
+                            fontWeight: 600,
+                            color: theme.palette.text.primary,
+                            borderColor: theme.palette.divider,
+                            '&:hover': { background: theme.palette.action.hover },
+                        }}
+                    >
                         Cancel
                     </Button>
                     <Button
@@ -226,7 +245,7 @@ function BlockUserModal({ open, onClose, partner, partnerId, clearActiveChat, on
                         {isBlocking ? 'Blocking....' : 'Block'}
                     </Button>
                 </Stack>
-            </BlurWrapper>
+            </Box>
         </Modal>
     );
 }

@@ -18,7 +18,7 @@ function Features() {
   return (
     <Box
       sx={{
-        mt: isSm ? '12dvh' : isMd ? '12dvh' : '15dvh',
+        my: '6dvh',
         px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '20%',
       }}
     >

@@ -76,7 +76,7 @@ function ForgotPassword() {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                minHeight: '90vh',
+                minHeight: '70vh',
                 px: isSm ? 2 : 4,
                 background: 'inherit'
             }}

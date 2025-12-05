@@ -173,6 +173,7 @@ function Home() {
               fontWeight: 700,
               fontSize: isMd ? '1.8em' : '4em',
               lineHeight: isSm ? 1.2 : 1,
+              filter: `drop-shadow(0 0 5rem ${theme.palette.secondary.main})`
             }}
           >
             Pairly a mini social universe. <br /> Your space to connect, truly.
@@ -1150,7 +1151,7 @@ function Home() {
                   height: 'auto',
                   mx: 'auto',
                   mt: 2,
-                  borderRadius:1,
+                  borderRadius: 1,
                   filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.2))',
                 }}
               />

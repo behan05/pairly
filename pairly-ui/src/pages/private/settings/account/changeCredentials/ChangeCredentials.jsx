@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Stack,Button,useTheme, Typography, TextField, InputAdornment, IconButton } from '@/MUI/MuiComponents';
+import { Box, Stack, Button, useTheme, Typography, TextField, InputAdornment, IconButton } from '@/MUI/MuiComponents';
 
 import { SendIcon, VisibilityIcon, VisibilityOffIcon } from '@/MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
@@ -7,6 +7,7 @@ import StyledText from '@/components/common/StyledText';
 import BlurWrapper from '@/components/common/BlurWrapper';
 import { SETTINGS_API } from '@/api/config';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 // toast prompt
 import { toast, ToastContainer } from 'react-toastify';
@@ -18,10 +19,11 @@ function ChangeCredentials() {
   const [showCurrentPassword, setShowCurrentPassword] = React.useState(false);
   const [showNewPassword, setShowNewPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const { email } = useSelector((state) => state?.auth?.user);
 
   const [formData, setFormData] = React.useState({
     currentPassword: '',
-    newEmail: '',
+    newEmail: email,
     newPassword: '',
     confirmPassword: ''
   });

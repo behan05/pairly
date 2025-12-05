@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, Stack, useTheme } from '@/MUI/MuiComponents';
+import { Box, TextField, Typography, Stack, useTheme } from '@/MUI/MuiComponents';
 import { SendIcon } from '@/MUI/MuiIcons';
 import StyledText from '@/components/common/StyledText';
 import StyledActionButton from '@/components/common/StyledActionButton';
@@ -71,14 +71,13 @@ function Contact() {
 
   return (
     <Stack sx={{
-      mt: 8,
-      height: '90dvh',
       borderRadius: 1,
       maxWidth: 600,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
-      mx: 'auto'
+      my: '6dvh',
+      mx: 'auto',
     }}>
       <BlurWrapper
         sx={{

@@ -20,10 +20,9 @@ import {
   NotificationsOffIcon,
   defaultAvatar,
   CheckCircleIcon,
-  MusicNoteIcon
-} from '@/MUI/MuiIcons';
+  StarIcon
+} from '../../../../../MUI/MuiIcons';
 import { blue } from "@mui/material/colors";
-import SelfImprovementIcon from '@mui/icons-material/SelfImprovement';
 
 // Components
 import TypingIndicator from '@/components/private/randomChat/TypingIndicator';
@@ -75,6 +74,9 @@ function RandomChatHeader() {
   const { partnerProfile, partnerId, partnerTyping } = useSelector((state) => state.randomChat);
   const { notificationSettings } = useSelector((state) => state.settings);
   const [notification, setNotification] = useState(notificationSettings?.newMessage ?? false);
+
+  const { plan, status } = useSelector((state) => state?.auth?.user?.subscription);
+  const isFreeUser = status === 'active' && plan === 'free';
 
   useEffect(() => {
     setNotification(notificationSettings?.newMessage ?? false);
@@ -142,7 +144,7 @@ function RandomChatHeader() {
     } catch (_) {
     }
   };
-  
+
   /**
    * Handles action selection from menu
    * @param {'block'|'report'|'copy'|'mute'} action
@@ -252,9 +254,27 @@ function RandomChatHeader() {
                 </Typography>
               </Tooltip>
               {partnerProfile.isUserVerifiedByEmail && (
-                <Tooltip title="Verified">
-                  <CheckCircleIcon sx={{ color: blue[500], fontSize: 22, ml: 0.5 }} />
-                </Tooltip>
+                <>
+                  {isFreeUser ? (
+                    <Tooltip title="Verified">
+                      <CheckCircleIcon sx={{
+                        color: 'gray',
+                        fontSize: 20,
+                        ml: 0.5,
+                        filter: `drop-shadow(0 0 1rem)`
+                      }} />
+                    </Tooltip>
+                  ) : (
+                    <Tooltip title="Premium User">
+                      <StarIcon sx={{
+                        color: theme.palette.warning.dark,
+                        fontSize:20,
+                        ml: 0.5,
+                        filter: `drop-shadow(0 0 1rem)`
+                      }} />
+                    </Tooltip>
+                  )}
+                </>
               )}
             </Stack>
 

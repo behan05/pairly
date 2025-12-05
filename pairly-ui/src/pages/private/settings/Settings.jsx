@@ -101,24 +101,24 @@ function Settings() {
       title: 'Payments',
       subTitle: 'Manage subscriptions, invoices, transactions'
     },
-    {
-      path: 'achievements',
-      icon: <EmojiEventsIcon sx={{ mr: 1.1, color: 'secondary.main' }} />,
-      title: 'Achievements',
-      subTitle: 'View badges and milestones you earned'
-    },
-    {
-      path: 'rewards',
-      icon: <MonetizationOnIcon sx={{ mr: 1.1, color: 'warning.main' }} />,
-      title: 'Rewards',
-      subTitle: 'Coins, referral bonuses, in-app perks'
-    },
-    {
-      path: 'language',
-      icon: <LanguageIcon sx={{ mr: 1.1, color: 'info.main' }} />,
-      title: 'Language / Region',
-      subTitle: 'Change app language and regional settings'
-    },
+    // {
+    //   path: 'achievements',
+    //   icon: <EmojiEventsIcon sx={{ mr: 1.1, color: 'secondary.main' }} />,
+    //   title: 'Achievements',
+    //   subTitle: 'View badges and milestones you earned'
+    // },
+    // {
+    //   path: 'rewards',
+    //   icon: <MonetizationOnIcon sx={{ mr: 1.1, color: 'warning.main' }} />,
+    //   title: 'Rewards',
+    //   subTitle: 'Coins, referral bonuses, in-app perks'
+    // },
+    // {
+    //   path: 'language',
+    //   icon: <LanguageIcon sx={{ mr: 1.1, color: 'info.main' }} />,
+    //   title: 'Language / Region',
+    //   subTitle: 'Change app language and regional settings'
+    // },
     {
       path: 'help',
       icon: <SosIcon sx={{ mr: 1.1, color: 'error.main' }} />,

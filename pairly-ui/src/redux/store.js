@@ -9,9 +9,10 @@ import randomChatReducer from './slices/randomChat/randomChatSlice';
 import friendRequestReducer from './slices/randomChat/friendRequestSlice';
 import moderationReducer from './slices/moderation/moderationSlice';
 import privateChatReducer from './slices/privateChat/privateChatSlice';
+import sleepSpaceReducer from './slices/sleepSpace/sleepSpaceRequest';
 import themeReducer from "./slices/theme/themeSlice";
 
-// ✅ persist only the auth slice
+// persist only the auth slice
 const persistConfig = {
   key: 'root',
   storage,
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   friendRequest: friendRequestReducer,
   moderation: moderationReducer,
   privateChat: privateChatReducer,
+  sleepSpace: sleepSpaceReducer,
   theme: themeReducer,
 });
 

@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Modal, Box, Typography, Button, Stack, useTheme, CircularProgress } from '@/MUI/MuiComponents';
 import { useSelector } from 'react-redux';
-import PremiumFeatureModel from '@/components/private/premium/PremiumFeatureModal';
 import { socket } from '@/services/socket';
+import PremiumFeatureModel from '@/components/private/premium/PremiumFeatureModal';
+import SleepSpacePopupModal from './SleepSpaceRequestModal';
 
-function SilentFeelModeModel({ open, onClose, partner, partnerId }) {
+function SleepSpaceModel({ open, onClose, partner, partnerId }) {
   const theme = useTheme();
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
@@ -23,14 +24,14 @@ function SilentFeelModeModel({ open, onClose, partner, partnerId }) {
 
   const handleSendRequest = () => {
     if (isFreeUser) {
-      setPremiumFeatureName('Silent Feel Mode');
+      setPremiumFeatureName('Sleep Space');
       setModalOpen(true);
       return;
     }
     setIsSending(true);
 
     // socket event 
-    socket.emit('privateChat:silentFeelModeRequest', { to: partnerId }, () => {
+    socket.emit('privateChat:sleepSpaceRequest', { to: partnerId }, () => {
       setTimeout(() => {
         setIsSending(false);
         setIsSent(true);
@@ -42,7 +43,7 @@ function SilentFeelModeModel({ open, onClose, partner, partnerId }) {
     <Modal
       open={open}
       onClose={handleClose}
-      aria-labelledby="silent-mode-modal"
+      aria-labelledby="sleep-space-modal"
       sx={{
         display: 'flex',
         alignItems: 'center',
@@ -74,7 +75,7 @@ function SilentFeelModeModel({ open, onClose, partner, partnerId }) {
                 letterSpacing: 0.3,
               }}
             >
-              Activate Silent Feel Mode?
+              Activate Sleep Space?
             </Typography>
 
             <Typography
@@ -82,7 +83,7 @@ function SilentFeelModeModel({ open, onClose, partner, partnerId }) {
               color="text.secondary"
               sx={{ mb: 3, lineHeight: 1.6 }}
             >
-              In <strong>Silent Feel Mode</strong>, you and{' '}
+              In <strong>Sleep Space</strong>, you and{' '}
               <strong>{partner?.fullName || 'your partner'}</strong> can stay
               connected quietly — no messages, just presence and peace. 🌙
               <br />
@@ -164,9 +165,11 @@ function SilentFeelModeModel({ open, onClose, partner, partnerId }) {
           onClose={() => setModalOpen(false)}
           featureName={premiumFeatureName}
         />
+
+        <SleepSpacePopupModal />
       </Box>
     </Modal>
   );
 }
 
-export default SilentFeelModeModel;
+export default SleepSpaceModel;

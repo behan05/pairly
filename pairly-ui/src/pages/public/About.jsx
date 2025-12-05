@@ -87,7 +87,7 @@ function About() {
       <Box
         sx={{
           display: 'flex',
-          mt: isSm ? '18dvh' : isMd ? '20dvh' : '18dvh',
+          mt: '6dvh',
           px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '20%',
           gap: 4,
           py: isMd ? 4 : 8,

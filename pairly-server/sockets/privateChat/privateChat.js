@@ -231,31 +231,38 @@ function privateChatHandler(io, socket, onlineUsers) {
         }
     });
 
-    // === Silent Feel Mode ===
-    socket.on('privateChat:silentFeelModeRequest', ({ to }) => {
+    // === Silent Feel Mode ****** PENDING ******** ===
+    socket.on('privateChat:sleepSpaceRequest', ({ to }) => {
         const session = privateChatSessions.get(currentUserId);
-        if (!session || session.partnerId !== to) return;
+
+        if (!session || session.partnerId !== to) {
+            socket.emit('privateChat:sleepSpaceError', { error: `Your partner is not currently active in the chat with you, so the sleep request could not be sent.` });
+            return;
+        };
+
+        const { partnerId, roomId, conversationId } = session;
 
         // Notify partner user sockets
         const partnerSockets = [...io.sockets.sockets.values()]
             .filter(s => String(s.userId) === String(to));
 
         for (const ps of partnerSockets) {
-            io.to(ps.id).emit('privateChat:silentFeelModeActivated', {
+            io.to(ps.id).emit('privateChat:sleepSpaceRequestReceived', {
                 from: currentUserId,
                 to,
-                message: 'Your partner enabled Silent Feel Mode 🌙'
+                status: 'request received',
+                message: 'Your partner want to share sleep space.'
             });
-        }
+        };
 
-        // Acknowledge sender
-        socket.emit('privateChat:silentFeelModeConfirmed', {
-            to,
-            message: 'Silent Feel Mode activated successfully.'
-        });
+        // // Acknowledge sender
+        // socket.emit('privateChat:sleepSpaceRequestAccepted', {
+        //     to,
+        //     message: 'Your partner activated sleep space successfully.'
+        // });
     });
 
-    // === Hear Together Mode ===
+    // === Hear Together Mode ****** PENDING ******** ===
     socket.on('privateChat:hearTogetherRequest', ({ to }) => {
         const session = privateChatSessions.get(currentUserId);
         if (!session || session.partnerId !== to) return;

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { socket } from '@/services/socket';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -10,6 +10,15 @@ import {
     setPartnerTyping,
     setUnreadCount
 } from '@/redux/slices/privateChat/privateChatSlice';
+import {
+    setIncomingRequest,
+    clearIncomingRequest,
+    setOutgoingRequest,
+    clearOutgoingRequest,
+    setSleepSpaceError,
+    setSleepSpaceLoading,
+    resetState,
+} from '@/redux/slices/sleepSpace/sleepSpaceRequest';
 
 // toast prompt
 import { toast } from 'react-toastify';
@@ -126,32 +135,49 @@ function NormalChatController() {
             });
         });
 
-        // === Silent Feel Mode ===
-        socket.on('privateChat:silentFeelModeActivated', ({ from, to, message }) => {
-            if (String(to) === String(currentUserId)) {
-                toast.info(message || 'Silent Feel Mode enabled 🌙', { autoClose: 3000 });
-            }
-        });
+        // === Sleep Space Mode ===
+        // socket.on('privateChat:sleepSpaceRequestReceived', (data) => {
+        //     console.log("privateChat:sleepSpaceRequestReceived:", data);
 
-        socket.on('privateChat:silentFeelModeConfirmed', ({ to, message }) => {
-            if (String(to) === String(activePartnerId)) {
-                toast.success(message || 'Silent Feel Mode activated successfully.');
-            }
-        });
+        //     dispatch(setIncomingRequest({
+        //         requestId: data?.to,
+        //         from: data?.from,
+        //         status: data?.status,
+        //         message: data?.message,
+        //     }));
+        // });
+
+        // socket.on('privateChat:sleepSpaceError', ({ error }) => {
+        //     console.log("privateChat:sleepSpaceError:", error);
+
+        //     dispatch(setSleepSpaceError(error));
+        // });
+
+        // socket.on('privateChat:sleepSpaceRequestAccepted', (data) => {
+        //     dispatch(setOutgoingRequest({
+        //         requestId: data._id,
+        //         from: data.from,
+        //         to: data.to,
+        //         status: data.status,
+        //     }));
+        // });
+
+        // socket.on('privateChat:sleepSpaceRequestReject', () => {
+        //     dispatch(clearOutgoingRequest());
+        // });
 
         // === Hear Together Mode ===
-        socket.on('privateChat:hearTogetherInvite', ({ from, to, message }) => {
-            if (String(to) === String(currentUserId)) {
-                toast.info(message || 'Your partner invited you to Hear Together 🎧');
-            }
-        });
+        // socket.on('privateChat:hearTogetherInvite', ({ from, to, message }) => {
+        //     if (String(to) === String(currentUserId)) {
+        //         toast.info(message || 'Your partner invited you to Hear Together 🎧');
+        //     }
+        // });
 
-        socket.on('privateChat:hearTogetherSent', ({ to, message }) => {
-            if (String(to) === String(activePartnerId)) {
-                toast.success(message || 'Hear Together request sent.');
-            }
-        });
-
+        // socket.on('privateChat:hearTogetherSent', ({ to, message }) => {
+        //     if (String(to) === String(activePartnerId)) {
+        //         toast.success(message || 'Hear Together request sent.');
+        //     }
+        // });
 
         // cleanup
         return () => {
@@ -165,10 +191,12 @@ function NormalChatController() {
             socket.off('privateChat:userOnline');
             socket.off('privateChat:userOffline');
             socket.off('privateChat:allUsers');
-            socket.off('privateChat:silentFeelModeActivated');
-            socket.off('privateChat:silentFeelModeConfirmed');
-            socket.off('privateChat:hearTogetherInvite');
-            socket.off('privateChat:hearTogetherSent');
+            // socket.off('privateChat:sleepSpaceRequestReceived');
+            // socket.off('privateChat:sleepSpaceError');
+            // socket.off('privateChat:sleepSpaceRequestAccepted');
+            // socket.off('privateChat:sleepSpaceRequestReject');
+            // socket.off('privateChat:hearTogetherInvite');
+            // socket.off('privateChat:hearTogetherSent');
         };
     }, [dispatch, currentUserId, activePartnerId]);
 

@@ -7,8 +7,6 @@ import NormalChatController from './NormalChatController'
 import PrivateChatWindow from './components/coreComponents/PrivateChatWindow';
 import privateChatWindowImage from '@/assets/images/chatWindowImage1.png'
 import privateChatWindowImage2 from '@/assets/images/chatWindowImage.png'
-import chatWindowBackgroundDarkImage from '@/assets/images/chatWindowBackgroundDarkImage.png';
-import chatWindowBackgroundLightImage from '@/assets/images/chatWindowBackgroundLightImage.png';
 
 /**
  * NormalChatLayout component
@@ -20,12 +18,12 @@ import chatWindowBackgroundLightImage from '@/assets/images/chatWindowBackground
 
 function NormalChatLayout() {
   const theme = useTheme();
-  const isTabletOrBelow = useMediaQuery('(max-width:775px)'); // small screen check
-  const isLg = useMediaQuery(theme.breakpoints.down('lg')); // medium screen check
+  const isTabletOrBelow = useMediaQuery('(max-width:775px)');
+  const isLg = useMediaQuery(theme.breakpoints.down('lg'));
   const dispatch = useDispatch();
 
-  const [selectedUserId, setSelectedUserId] = useState(null); // currently open chat user
-  const [activeUserId, setActiveUserId] = useState(null); // tracks active chat
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [activeUserId, setActiveUserId] = useState(null);
 
   // Set page title when component mounts
   React.useEffect(() => {
@@ -33,14 +31,68 @@ function NormalChatLayout() {
   }, [dispatch]);
 
   const handleBackToSidebar = () => {
-    setSelectedUserId(null); // go back to sidebar on small screen
+    // go back to sidebar on small screen
+    setSelectedUserId(null);
+  };
+
+  const chatBgStyle = (currentTheme) => {
+    const emojis = [
+      "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇", "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "😚",
+      "😋", "😛", "😝", "😜", "🤪", "🧐", "🤓", "😎", "🤩", "🥳", "😏", "😒", "😞", "😔", "😟", "😕", "🙁", "☹️", "😣", "😖",
+      "😫", "😩", "🥺", "😢", "😭", "😤", "😠", "😡", "🤬", "😳", "🫣", "🫢", "🤯", "😱", "😨", "😰", "😥", "😓", "🤗",
+      "🤭", "🤫", "🤥", "😶", "😐", "😑", "😬", "🙄", "😮‍💨", "😴", "🤤", "😪", "😵", "😵‍💫", "🤢", "🤮", "🤧", "😷", "🤒", "🤕",
+      "🤑", "🤠", "😈", "👿", "👻", "💀", "☠️", "👽", "🤖", "🎃", "😺", "😸", "😹", "😻", "😼", "😽", "🙀", "😿", "😾",
+      "🦊", "🐶", "🐱", "🐹", "🐰",
+      "❤️", "💛", "💚", "💙", "💜", "💯", "✨", "⭐", "⚡", "🔥",
+    ];
+
+    // generate 120 random emojis
+    const emojiElements = Array.from({ length: isTabletOrBelow ? 200 :  400 }, () => {
+      const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+
+      return (
+        <Stack
+          component='span'
+          style={{
+            position: "absolute",
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+
+            // random sizes: small OR medium OR large
+            fontSize: `${Math.floor(Math.random() * 20) + 12}px`,
+
+            // very light opacity to look like background
+            opacity: Math.random() * 0.1 + 0.02,
+
+            transform: `rotate(${Math.random() * 30 - 15}deg)`,
+            pointerEvents: "none",
+          }}
+        >
+          {emoji}
+        </Stack>
+      );
+    });
+
+    return (
+      <Box
+        sx={{
+          position: "absolute",
+          inset: 0,
+          overflow: "hidden",
+          background: currentTheme === "dark"
+            ? `${theme.palette.background.paper}` : `${theme.palette.background.default}`,
+        }}
+      >
+        {emojiElements}
+      </Box>
+    );
   };
 
   // Select background image based on theme
   let bgChatImg =
     localStorage.getItem('theme') === 'dark'
-      ? chatWindowBackgroundDarkImage
-      : chatWindowBackgroundLightImage;
+      ? chatBgStyle('dark')
+      : chatBgStyle('light');
 
   return (
     <Box
@@ -56,12 +108,11 @@ function NormalChatLayout() {
         selectedUserId ? (
           // Show chat window if a user is selected
           <Stack sx={{
-            backgroundImage: `url(${bgChatImg})`,
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-            width: '100%',
+            position: "relative",
+            overflow: "hidden",
+            width: "100%",
           }}>
+            {bgChatImg}
             <PrivateChatWindow
               selectedUserId={selectedUserId}
               onBack={handleBackToSidebar} // back button on mobile
@@ -99,12 +150,12 @@ function NormalChatLayout() {
             {selectedUserId ? (
               // Show chat if a user is selected
               <Stack sx={{
-                backgroundImage: `url(${bgChatImg})`,
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-                backgroundSize: 'cover',
-                width: '100%',
+                position: "relative",
+                overflow: "hidden",
+                width: "100%",
               }}>
+                {bgChatImg}
+
                 <PrivateChatWindow
                   selectedUserId={selectedUserId}
                   onCloseChatWindow={setSelectedUserId}

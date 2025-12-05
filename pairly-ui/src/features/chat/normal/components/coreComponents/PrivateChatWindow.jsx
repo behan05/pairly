@@ -158,28 +158,26 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                     alignSelf={isOwnMessage ? 'flex-end' : 'flex-start'}
                     sx={{
                       background: isOwnMessage
-                        ? `linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.primary.main} 100%)`
-                        : `linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.action.hover} 100%)`,
-                      color: isOwnMessage
-                        ? theme.palette.text.primary
-                        : theme.palette.text.primary,
-                      px: 1.5,
-                      py: 1,
-                      maxWidth: '70%',
+                        ? theme.palette.mode === "dark"
+                          ? "#075E54"
+                          : "#DCF8C6"
+                        : theme.palette.background.paper,
+
+                      color: theme.palette.text.primary,
+                      px: 1.6,
+                      py: 1.2,
+                      maxWidth: "72%",
                       borderRadius: isOwnMessage
-                        ? '1.2rem 0 1.2rem 1.2rem'
-                        : '0 1.2rem 1.2rem 1.2rem',
-                      position: 'relative',
-                      wordBreak: 'break-word',
-                      overflowWrap: 'break-word',
-                      boxShadow: `0 2px 6px ${theme.palette.action.disabledBackground}`,
-                      transition: 'background 0.3s ease, transform 0.2s ease',
-                      '&:hover': {
-                        transform: 'scale(1.01)',
-                        background: isOwnMessage
-                          ? `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 100%)`
-                          : `linear-gradient(135deg, ${theme.palette.action.hover} 0%, ${theme.palette.background.default} 100%)`,
-                      },
+                        ? "1rem 1rem 0.2rem 1rem"
+                        : "1rem 1rem 1rem 0.2rem",
+
+                      boxShadow: "0 2px 4px rgba(0,0,0,0.08)",
+
+                      fontSize: "0.95rem",
+                      lineHeight: 1.4,
+
+                      wordBreak: "break-word",
+                      position: "relative",
                     }}
                   >
 
