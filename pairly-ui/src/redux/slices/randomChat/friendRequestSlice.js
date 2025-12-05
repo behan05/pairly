@@ -12,6 +12,7 @@ const initialState = {
     incomingRequest: null,
     outgoingRequest: null,
 
+    friendRequestAcceptedMessage: '',
     requests: [],
     loading: false,
     error: null
@@ -41,6 +42,9 @@ const friendRequestSlice = createSlice({
         },
         clearOutgoingRequest: (state) => {
             state.outgoingRequest = null;
+        },
+        setFriendRequestAcceptedMessage: (state, action) => {
+            state.friendRequestAcceptedMessage = action.payload;
         },
 
         // Friend request list from REST API
@@ -76,6 +80,7 @@ export const {
     clearIncomingRequest,
     setOutgoingRequest,
     clearOutgoingRequest,
+    setFriendRequestAcceptedMessage,
     setFriendRequests,
     setFriendRequestError,
     setFriendRequestLoading,

@@ -97,6 +97,7 @@ async function matchRandomUser(
 
         // Helper to emit match info
         const emitMatch = (toSocket, partnerData) => {
+
             toSocket.emit('random:matched', {
                 partnerId: partnerData.id,
                 partnerProfile: {
@@ -115,7 +116,8 @@ async function matchRandomUser(
                         country: partnerData.country,
                         state: partnerData.state,
                     },
-                    isUserVerifiedByEmail: partnerData.isUserVerifiedByEmail
+                    isUserVerifiedByEmail: partnerData.isUserVerifiedByEmail,
+                    partnerPublicId: partnerData?.partnerPublicId ?? '',
                 }
             });
         };
@@ -136,7 +138,8 @@ async function matchRandomUser(
             lookingFor: currentUserProfile.lookingFor,
             preferredLanguage: currentUserProfile.preferredLanguage,
             preferredChatStyle: currentUserProfile.chatStyles,
-            isUserVerifiedByEmail: currentUser?.emailVerified || false
+            isUserVerifiedByEmail: currentUser?.emailVerified || false,
+            partnerPublicId: currentUser?.publicId ?? '',
         });
 
         emitMatch(socket, {
@@ -155,6 +158,7 @@ async function matchRandomUser(
             preferredLanguage: partnerProfile.preferredLanguage,
             preferredChatStyle: partnerProfile.chatStyles,
             isUserVerifiedByEmail: partnerUser?.emailVerified || false,
+            partnerPublicId: partnerUser?.publicId ?? '',
         });
 
         // Remove partner from queue

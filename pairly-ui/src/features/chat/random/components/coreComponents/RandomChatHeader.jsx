@@ -74,7 +74,7 @@ function RandomChatHeader() {
   const { partnerProfile, partnerId, partnerTyping } = useSelector((state) => state.randomChat);
   const { notificationSettings } = useSelector((state) => state.settings);
   const [notification, setNotification] = useState(notificationSettings?.newMessage ?? false);
-
+  
   const { plan, status } = useSelector((state) => state?.auth?.user?.subscription);
   const isFreeUser = status === 'active' && plan === 'free';
 
@@ -93,7 +93,7 @@ function RandomChatHeader() {
 
   /** Copy Partner Id */
   const copyPartnerId = () => {
-    navigator.clipboard.writeText(partnerId);
+    navigator.clipboard.writeText(partnerProfile.partnerPublicId);
     toast.success('Partner ID copied!', {
       style: {
         backdropFilter: 'blur(14px)',

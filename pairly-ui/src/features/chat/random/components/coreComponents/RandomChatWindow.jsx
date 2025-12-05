@@ -7,9 +7,8 @@ import {
   useTheme,
   useMediaQuery,
   IconButton,
-  Menu,
 } from '@/MUI/MuiComponents';
-import { ArrowDropDownIcon, ForumRoundedIcon, DownloadIcon, LocationOnIcon } from '@/MUI/MuiIcons';
+import { ForumRoundedIcon, DownloadIcon, LocationOnIcon } from '@/MUI/MuiIcons';
 
 // Custom Components
 import RandomChatHeader from './RandomChatHeader';
@@ -297,60 +296,6 @@ function RandomChatWindow({ setShowChatWindow }) {
       borderLeft: `1px solid ${theme.palette.divider}`
     }}>
       {isConnected && bgChatImg}
-      {/* === Mobile Only: Floating menu for Next/Disconnect === */}
-      {isSm && isConnected && (
-        <>
-          <Tooltip title={'Chat actions'}>
-            <ArrowDropDownIcon
-              onClick={handleMenuOpen}
-              sx={{
-                fontSize: '2.8rem',
-                color: 'success.main',
-                boxShadow: `inset 0 0 1rem ${theme.palette.info.dark}`,
-                borderRadius: 2,
-                position: 'absolute', top: 45, right: 15, zIndex: 10
-              }}
-            />
-          </Tooltip>
-          <Menu
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleMenuClose}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            PaperProps={{
-              sx: {
-                background: `linear-gradient(130deg,
-             ${theme.palette.primary.dark} 0%, 
-            ${theme.palette.background.paper} 30%,
-             ${theme.palette.background.paper} 100%)`,
-                boxShadow: theme.shadows[6],
-                borderRadius: 1,
-                p: '0px 15px',
-                py: 0.75,
-                overflow: 'hidden'
-              }
-            }}
-          >
-            <Stack mb={1}>
-              <NextButton
-                onClick={() => {
-                  handleMenuClose();
-                  handleNext();
-                }}
-              />
-            </Stack>
-            <Stack>
-              <DisconnectButton
-                onClick={() => {
-                  handleMenuClose();
-                  handleDisconnect();
-                }}
-              />
-            </Stack>
-          </Menu>
-        </>
-      )}
 
       {/* === Connected State: Chat Window === */}
       {isConnected ? (
@@ -712,6 +657,18 @@ function RandomChatWindow({ setShowChatWindow }) {
             <RandomMessageInput
               onFocus={() => setIsTyping(true)}
               onBlur={() => setIsTyping(false)}
+              NextButton={isSm && <NextButton
+                onClick={() => {
+                  handleMenuClose();
+                  handleNext();
+                }}
+              />}
+              DisconnectButton={isSm && <DisconnectButton
+                onClick={() => {
+                  handleMenuClose();
+                  handleDisconnect();
+                }}
+              />}
             />
           </Stack>
 

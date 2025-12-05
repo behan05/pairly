@@ -21,6 +21,7 @@ import {
   setIncomingRequest,
   clearIncomingRequest,
   setOutgoingRequest,
+  setFriendRequestAcceptedMessage,
   clearOutgoingRequest,
 } from '@/redux/slices/randomChat/friendRequestSlice';
 
@@ -118,12 +119,18 @@ const RandomChatController = () => {
     });
 
     socket.on('privateChat:requestAccepted', (data) => {
+
       dispatch(setOutgoingRequest({
         requestId: data._id,
         from: data.from,
         to: data.to,
         status: data.status,
-        updatedAt: data.updatedAt
+        updatedAt: data.updatedAt,
+        message: 'Friend request accepted'
+      }));
+      dispatch(setFriendRequestAcceptedMessage({
+        from: data.from,
+        message: 'Friend request accepted'
       }));
     });
 

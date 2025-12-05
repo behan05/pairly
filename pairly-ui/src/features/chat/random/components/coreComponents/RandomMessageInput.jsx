@@ -56,7 +56,7 @@ import AudioErrorModal from '../../../common/AudioErrorModal';
  * @returns {JSX.Element} The rendered component.
  */
 
-function RandomMessageInput() {
+function RandomMessageInput({ NextButton, DisconnectButton }) {
   const theme = useTheme();
   const dispatch = useDispatch();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -675,7 +675,7 @@ function RandomMessageInput() {
 
       {/* Main input area */}
       <Paper
-        elevation={3}
+        elevation={0}
         sx={{
           display: 'flex',
           alignItems: 'center',
@@ -683,13 +683,13 @@ function RandomMessageInput() {
           mx: 1,
           mb: 1,
           borderRadius: 2,
-          backgroundColor: theme.palette.background.paper
+          backgroundColor: theme.palette.background.default
         }}
       >
         {/* Attach Button */}
         <Tooltip title="Attach">
           <IconButton onClick={handleAttachClick}>
-            <AttachFileIcon />
+            <AttachFileIcon sx={{ fontSize: '0.8em' }} />
           </IconButton>
         </Tooltip>
 
@@ -769,9 +769,10 @@ function RandomMessageInput() {
         {/* Emoji Button */}
         <Tooltip title="Emoji">
           <IconButton onClick={() => setShowEmojiPicker((prev) => !prev)}>
-            <InsertEmoticonIcon />
+            <InsertEmoticonIcon sx={{ fontSize: '0.8em' }} />
           </IconButton>
         </Tooltip>
+
         {/* Hidden Input for file selection */}
         <input
           type="file"
@@ -815,7 +816,7 @@ function RandomMessageInput() {
                 },
               }}
             >
-              <SendIcon fontSize="medium" />
+              <SendIcon sx={{ fontSize: '0.8em' }} />
             </IconButton>
           </Tooltip>
         ) : (
@@ -831,9 +832,21 @@ function RandomMessageInput() {
                 '&:hover': { bgcolor: theme.palette.success.main },
               }}
             >
-              <MicIcon />
+              <MicIcon sx={{ fontSize: '0.8em' }} />
             </IconButton>
           </Tooltip>
+        )}
+
+        {!message.trim() && (
+          <Stack
+            direction='row'
+            ml={1}
+            border={`0.5px solid ${theme.palette.divider}`}
+            borderRadius={1}
+          >
+            {NextButton}
+            {DisconnectButton}
+          </Stack>
         )}
       </Paper>
 

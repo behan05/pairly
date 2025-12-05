@@ -10,6 +10,7 @@ import {
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { toast } from 'react-toastify';
 
 // components
 import BlurWrapper from '@/components/common/BlurWrapper';
@@ -21,7 +22,7 @@ import defaultAvatar from '@/assets/placeholders/defaultAvatar.png'
 // Redux
 import { fetchFriendRequests } from '@/redux/slices/randomChat/friendRequestAction';
 import { useSelector, useDispatch } from 'react-redux';
-import { setIncomingRequest } from '@/redux/slices/randomChat/friendRequestSlice';;
+import { setIncomingRequest, setFriendRequestAcceptedMessage } from '@/redux/slices/randomChat/friendRequestSlice';;
 import { socket } from '@/services/socket';
 
 // utils
@@ -34,7 +35,22 @@ function PrivateChatRequestPopupModal() {
 
     // Get incoming request from Redux
     const { partnerProfile, partnerId } = useSelector((state) => state.randomChat);
-    const { incomingRequest } = useSelector((state) => state.friendRequest);
+    const myId = useSelector((state) => state.auth?.user?.id);
+
+    const { incomingRequest, friendRequestAcceptedMessage } = useSelector((state) => state.friendRequest);
+
+    if (friendRequestAcceptedMessage.from === myId) {
+        toast.success(`${partnerProfile?.fullName} accepted your friend request`, {
+            style: {
+                backdropFilter: 'blur(14px)',
+                background: theme.palette.background.paper,
+                color: theme.palette.text.primary,
+            }
+        });
+
+        // Refresh friend Request Accepted Message
+        dispatch(setFriendRequestAcceptedMessage(''));
+    }
 
     const handleClose = () => {
         dispatch(setIncomingRequest(null));
@@ -83,6 +99,7 @@ function PrivateChatRequestPopupModal() {
             aria-describedby="private-chat-request"
             sx={{ mt: 10, px: isSm ? 2 : 4 }}
         >
+
             <BlurWrapper sx={{
                 maxWidth: isSm ? '90%' : 400,
                 width: '100%',

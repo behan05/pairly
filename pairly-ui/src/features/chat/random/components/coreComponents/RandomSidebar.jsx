@@ -7,7 +7,6 @@ import {
   useMediaQuery,
   IconButton,
   Tooltip,
-  Paper
 } from '@/MUI/MuiComponents';
 import { ArrowBackIcon, GroupIcon } from '@/MUI/MuiIcons';
 import ChatSidebarHeader from '../../../common/ChatSidebarHeader';
@@ -37,8 +36,25 @@ function RandomSidebar() {
 
   const [openOnboardingFeedback, setOpenOnboardingFeedback] = useState(false);
 
-  // if user less then 25,display random number above 2
-  const predefinedRandomNumberOfActiveUser = Math.floor(Math.random() * 23) + 2;
+  // NOTE ==> Temporary if user less then 25,display random number above 2
+  const [fakeNumberOfActiveUsers, setFakeNumberOfActiveUsers] = useState(localStorage.getItem('fakeActiveUserOfUser') || 3);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = Date.now();
+      const lastUpdate = Number(localStorage.getItem('fakeActiveUserTime')) || 0;
+
+      // if more than 5 minutes passed
+      if (now - lastUpdate > 5 * 60 * 1000) {
+        setFakeNumberOfActiveUsers(localStorage.getItem('fakeActiveUserOfUser'));
+
+        localStorage.setItem('fakeActiveUserOfUser', Math.floor(Math.random() * 23) + 2);
+        localStorage.setItem('fakeActiveUserTime', now.toString());
+      }
+    }, 1000); // check every 1 minute (more efficient)
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (!isConnected && isSm) setShowChatWindow(false);
@@ -209,7 +225,6 @@ function RandomSidebar() {
             sx={{
               mt: 2,
               color: theme.palette.text.secondary,
-              display: 'flex',
               gap: 0.6,
               border: ` 1px solid ${theme.palette.divider}`,
               boxShadow: `0 0 0.2em ${theme.palette.divider}`,
@@ -222,7 +237,7 @@ function RandomSidebar() {
           >
             <GroupIcon sx={{ fontSize: 18, color: 'info.main' }} />
             {numberOfActiveUsers <= 25
-              ? `${predefinedRandomNumberOfActiveUser} people online`
+              ? `${fakeNumberOfActiveUsers} people online`
               : `${numberOfActiveUsers} people online`}
           </Typography>
         </Stack>
