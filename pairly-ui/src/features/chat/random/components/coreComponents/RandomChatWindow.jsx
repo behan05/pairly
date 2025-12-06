@@ -688,10 +688,13 @@ function RandomChatWindow({ setShowChatWindow }) {
           {isSm && isWaiting ? (
             <Stack
               sx={{
-                minWidth: '100%',
-                maxHeight: '100%',
+                position: "relative",
+                overflow: "hidden",
+                borderRadius: 1,
                 width: '100%',
-                gap: 2
+                maxWidth: 300,
+                p: 2,
+                border: `1px solid ${theme.palette.success.light}`
               }}
             >
               <CountdownTimer startFrom={10} autoRestart={true} />

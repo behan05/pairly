@@ -566,7 +566,7 @@ function PrivateMessageInput() {
 
       {/* Main input area */}
       <Paper
-        elevation={3}
+        elevation={0}
         sx={{
           display: 'flex',
           alignItems: 'center',
@@ -574,6 +574,7 @@ function PrivateMessageInput() {
           mx: 1,
           mb: 1,
           borderRadius: 2,
+          background: theme.palette.background.default
         }}
       >
         {/* Attach Button */}

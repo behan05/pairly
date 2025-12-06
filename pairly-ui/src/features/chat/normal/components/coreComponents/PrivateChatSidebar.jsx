@@ -414,9 +414,9 @@ function PrivateChatSidebar() {
                                             flexDirection: 'row',
                                             justifyContent: 'space-between',
                                             alignItems: 'center',
-                                            border: `0.1px solid ${theme.palette.divider}`,
-                                            borderRadius: 0.4,
-                                            p: 1,
+                                            border: `1px dashed ${theme.palette.divider}`,
+                                            borderRadius: 0.5,
+                                            p: 0.5,
                                             my: 0.5,
                                             bgcolor: isActive ? theme.palette.action.selected : 'transparent',
                                             transition: 'background-color 0.3s ease',
@@ -456,7 +456,7 @@ function PrivateChatSidebar() {
                                                     <Avatar
                                                         src={userSettings?.showProfilePic ? (user?.profile?.profileImage || defaultAvatar) : defaultAvatar}
                                                         alt={user?.profile?.fullName + ' profile Image'}
-                                                        sx={{ width: 40, height: 40, objectFit: 'cover' }}
+                                                        sx={{ width: 35, height: 35, objectFit: 'cover' }}
                                                     />
                                                 </Badge>
                                             </Tooltip>
