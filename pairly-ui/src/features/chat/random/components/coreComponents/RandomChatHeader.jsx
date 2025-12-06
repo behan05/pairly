@@ -74,10 +74,14 @@ function RandomChatHeader() {
   const { partnerProfile, partnerId, partnerTyping } = useSelector((state) => state.randomChat);
   const { notificationSettings } = useSelector((state) => state.settings);
   const [notification, setNotification] = useState(notificationSettings?.newMessage ?? false);
-  
-  const { plan, status } = useSelector((state) => state?.auth?.user?.subscription);
-  const isFreeUser = status === 'active' && plan === 'free';
 
+  // Partner Plan
+  const partnerPlan = partnerProfile?.subscription?.plan;
+  const partnerStatus = partnerProfile?.subscription?.status;
+
+  const isPartnerPremium =
+    partnerStatus === 'active' && partnerPlan !== 'free';
+  
   useEffect(() => {
     setNotification(notificationSettings?.newMessage ?? false);
   }, [notificationSettings]);
@@ -255,23 +259,27 @@ function RandomChatHeader() {
               </Tooltip>
               {partnerProfile.isUserVerifiedByEmail && (
                 <>
-                  {isFreeUser ? (
-                    <Tooltip title="Verified">
-                      <CheckCircleIcon sx={{
-                        color: 'gray',
-                        fontSize: 20,
-                        ml: 0.5,
-                        filter: `drop-shadow(0 0 1rem)`
-                      }} />
+                  {isPartnerPremium ? (
+                    <Tooltip title="Premium User">
+                      <StarIcon
+                        sx={{
+                          color: theme.palette.warning.dark,
+                          fontSize: 20,
+                          ml: 0.5,
+                          filter: `drop-shadow(0 0 1rem)`
+                        }}
+                      />
                     </Tooltip>
                   ) : (
-                    <Tooltip title="Premium User">
-                      <StarIcon sx={{
-                        color: theme.palette.warning.dark,
-                        fontSize:20,
-                        ml: 0.5,
-                        filter: `drop-shadow(0 0 1rem)`
-                      }} />
+                    <Tooltip title="Verified User">
+                      <CheckCircleIcon
+                        sx={{
+                          color: 'gray',
+                          fontSize: 20,
+                          ml: 0.5,
+                          filter: `drop-shadow(0 0 1rem)`
+                        }}
+                      />
                     </Tooltip>
                   )}
                 </>

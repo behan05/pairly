@@ -29,12 +29,13 @@ import {
   ForumOutlinedIcon,
   Diversity3OutlinedIcon,
   TranslateOutlinedIcon,
-  CheckCircleIcon
+  CheckCircleIcon,
+  StarIcon
 } from '@/MUI/MuiIcons';
-import { blue } from "@mui/material/colors";
 
 // components
 import BlurWrapper from '@/components/common/BlurWrapper';
+import StyledButton from '../../../../../components/common/StyledButton';
 
 // Country and State utilities
 import { Country, State } from 'country-state-city';
@@ -47,7 +48,7 @@ import { socket } from '@/services/socket'
 function PartnerProfileModal({ open, onClose, partner }) {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.between('xs', 'sm'));
-  
+
   const [activeSection, setActiveSection] = useState('general');
   const [requestingPrivateChat, setRequestingPrivateChat] = useState(false);
 
@@ -72,6 +73,13 @@ function PartnerProfileModal({ open, onClose, partner }) {
       ? Country.getCountryByCode(partner.location.country)?.name
       : '';
   }, [partner]);
+
+  // Partner Plan
+  const partnerPlan = partner?.subscription?.plan;
+  const partnerStatus = partner?.subscription?.status;
+
+  const isPartnerPremium =
+    partnerStatus === 'active' && partnerPlan !== 'free';
 
   const generalInfo = [
     {
@@ -138,6 +146,19 @@ function PartnerProfileModal({ open, onClose, partner }) {
     socket.emit('privateChat:request');
   }
 
+  const getNavButtonStyles = (isActive) => ({
+    background: isActive ? theme.palette.primary.dark : theme.palette.background.default,
+    color: isActive ? '#fff' : theme.palette.text.secondary,
+    borderRadius: 2,
+    p: 1,
+    boxShadow: isActive ? `0 0 8px ${theme.palette.primary.main}55` : 'none',
+    transition: 'all 0.25s ease',
+    '&:hover': {
+      background: isActive ? 'none' : theme.palette.action.hover,
+      boxShadow: isActive ? `0 0 20px ${theme.palette.primary.main}77` : 'none',
+    },
+  });
+
   return (
     <Modal open={open} onClose={onClose} sx={{ px: isSm ? 1 : 3, mt: 4 }}>
       <BlurWrapper
@@ -148,7 +169,7 @@ function PartnerProfileModal({ open, onClose, partner }) {
           mx: 'auto',
           borderRadius: 1,
           p: 0,
-          background: theme.palette.background.paper
+          background: theme.palette.background.default
         }}
       >
         {/* Header */}
@@ -196,13 +217,35 @@ function PartnerProfileModal({ open, onClose, partner }) {
             display="flex"
             alignItems="center"
             justifyContent="center"
-            gap={0.5}
+            gap={0.2}
           >
-            {splitPartnerFullName[0]} {splitPartnerFullName[1] || ''}
+            {splitPartnerFullName[0]?.toUpperCase()} {splitPartnerFullName[1]?.toUpperCase() || ''}
             {partner.isUserVerifiedByEmail && (
-              <Tooltip title="Verified by email">
-                <CheckCircleIcon sx={{ color: blue[500], fontSize: 22, ml: 0.5 }} />
-              </Tooltip>
+              <>
+                {isPartnerPremium ? (
+                  <Tooltip title="Premium User">
+                    <StarIcon
+                      sx={{
+                        color: theme.palette.warning.dark,
+                        fontSize: 20,
+                        ml: 0.5,
+                        filter: `drop-shadow(0 0 1rem)`
+                      }}
+                    />
+                  </Tooltip>
+                ) : (
+                  <Tooltip title="Verified User">
+                    <CheckCircleIcon
+                      sx={{
+                        color: 'gray',
+                        fontSize: 20,
+                        ml: 0.5,
+                        filter: `drop-shadow(0 0 1rem)`
+                      }}
+                    />
+                  </Tooltip>
+                )}
+              </>
             )}
           </Typography>
           <Typography
@@ -221,30 +264,21 @@ function PartnerProfileModal({ open, onClose, partner }) {
         <Stack
           direction="row"
           justifyContent="space-around"
-          py={1.5}
+          py={1.2}
           sx={{
-            background: `linear-gradient(130deg,
-             ${theme.palette.primary.dark} 0%, 
-            ${theme.palette.background.paper} 30%,
-             ${theme.palette.background.paper} 80%)`,
+            backdropFilter: 'blur(8px)',
+            background: theme.palette.background.paper,
             borderRadius: 1,
             mx: 2,
             px: 1,
+            border: `1px solid ${theme.palette.divider}`,
+            boxShadow: `0 2px 6px ${theme.palette.action.hover}`,
           }}
         >
           <Tooltip title="General Info">
             <IconButton
               onClick={() => handleClick('general')}
-              sx={{
-                background: activeSection === 'general' ? theme.palette.primary.main : 'transparent',
-                color: activeSection === 'general' ? '#fff' : theme.palette.text.secondary,
-                '&:hover': {
-                  background: activeSection === 'general' ? theme.palette.primary.dark : theme.palette.action.hover,
-                },
-                borderRadius: 2,
-                p: 1.5,
-                transition: 'all 0.3s ease',
-              }}
+              sx={getNavButtonStyles(activeSection === 'general')}
             >
               <InfoOutlinedIcon />
             </IconButton>
@@ -253,16 +287,7 @@ function PartnerProfileModal({ open, onClose, partner }) {
           <Tooltip title="Interests">
             <IconButton
               onClick={() => handleClick('interests')}
-              sx={{
-                background: activeSection === 'interests' ? theme.palette.primary.main : 'transparent',
-                color: activeSection === 'interests' ? '#fff' : theme.palette.text.secondary,
-                '&:hover': {
-                  background: activeSection === 'interests' ? theme.palette.primary.dark : theme.palette.action.hover,
-                },
-                borderRadius: 2,
-                p: 1.5,
-                transition: 'all 0.3s ease',
-              }}
+              sx={getNavButtonStyles(activeSection === 'interests')}
             >
               <LocalOfferOutlinedIcon />
             </IconButton>
@@ -271,20 +296,12 @@ function PartnerProfileModal({ open, onClose, partner }) {
           <Tooltip title="Private Chat">
             <IconButton
               onClick={() => handleClick('privateChat')}
-              sx={{
-                background: activeSection === 'privateChat' ? theme.palette.primary.main : 'transparent',
-                color: activeSection === 'privateChat' ? '#fff' : theme.palette.text.secondary,
-                '&:hover': {
-                  background: activeSection === 'privateChat' ? theme.palette.primary.dark : theme.palette.action.hover,
-                },
-                borderRadius: 2,
-                p: 1.5,
-                transition: 'all 0.3s ease',
-              }}
+              sx={getNavButtonStyles(activeSection === 'privateChat')}
             >
               <LockPersonOutlinedIcon />
             </IconButton>
           </Tooltip>
+
         </Stack>
 
         {/* General Info */}
@@ -293,7 +310,8 @@ function PartnerProfileModal({ open, onClose, partner }) {
             <Typography variant="subtitle2" fontWeight={600} gutterBottom color={'text.primary'}>
               General Info
             </Typography>
-            <Stack spacing={1}>
+
+            <Stack spacing={1.2}>
               {generalInfo.map((info, i) => (
                 <Stack
                   key={i}
@@ -301,24 +319,31 @@ function PartnerProfileModal({ open, onClose, partner }) {
                   alignItems="center"
                   justifyContent="space-between"
                   sx={{
-                    p: 1.5,
-                    borderRadius: 1,
-                    background: theme.palette.background.default,
-                    boxShadow: 'inset 0 0 0.2rem',
-                    transition: 'all 0.3s ease-out',
+                    p: 1.3,
+                    borderRadius: 0.5,
+                    background: theme.palette.background.paper,
+                    border: `1px solid ${theme.palette.divider}`,
+                    transition: 'all 0.25s ease',
 
                     '&:hover': {
-                      transform: `translate(1px, -2px) scale(0.99)`,
+                      boxShadow: `0 2px 8px ${theme.palette.action.hover}`,
+                      transform: 'translateY(-2px)',
                     },
                   }}
                 >
-                  <Stack direction="row" alignItems="center" spacing={1.5}>
+                  <Stack direction="row" alignItems="center" spacing={1.4}>
                     {info.icon}
-                    <Typography variant="body2" fontWeight={600}>
+                    <Typography variant="body2" fontWeight={600} color="text.primary">
                       {info.label}:
                     </Typography>
                   </Stack>
-                  <Typography variant="body2" color="text.secondary" textAlign="right">
+
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    textAlign="right"
+                    sx={{ maxWidth: '60%' }}
+                  >
                     {info.value}
                   </Typography>
                 </Stack>
@@ -341,14 +366,15 @@ function PartnerProfileModal({ open, onClose, partner }) {
                   alignItems="center"
                   justifyContent="space-between"
                   sx={{
-                    p: 1.5,
-                    borderRadius: 1,
-                    background: theme.palette.background.default,
-                    boxShadow: 'inset 0 0 0.2rem',
-                    transition: 'all 0.3s ease-out',
+                    p: 1.3,
+                    borderRadius: 0.5,
+                    background: theme.palette.background.paper,
+                    border: `1px solid ${theme.palette.divider}`,
+                    transition: 'all 0.25s ease',
 
                     '&:hover': {
-                      transform: `translate(1px, -2px) scale(0.99)`,
+                      boxShadow: `0 2px 8px ${theme.palette.action.hover}`,
+                      transform: 'translateY(-2px)',
                     },
                   }}
                 >
@@ -369,42 +395,32 @@ function PartnerProfileModal({ open, onClose, partner }) {
 
         {/* Private Chat */}
         {activeSection === 'privateChat' && (
-          <Box px={2} pb={2} display="flex" flexDirection="column" gap={1}>
+          <Box px={2} pb={2} display="flex" flexDirection="column" gap={1.5}>
+
+            {/* Title */}
             <Typography variant="subtitle2" fontWeight={600} gutterBottom color={'text.primary'}>
               Private Chat
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+
+            {/* Description */}
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ lineHeight: 1.5 }}
+            >
               {requestingPrivateChat
-                ? 'Requested for a private chat.'
-                : 'Click below to send a request for a private chat with your partner.'}
+                ? 'You have already requested a private chat.'
+                : 'Send a private chat request to your partner to start a direct conversation.'}
             </Typography>
-            <Button
-              variant="contained"
+
+            {/* CTA Button */}
+            <StyledButton
               fullWidth
               endIcon={<SendIcon />}
               onClick={handleFriendRequest}
               disabled={requestingPrivateChat}
-              sx={{
-                p: 1.5,
-                borderRadius: 1,
-                background: `linear-gradient(130deg,
-                ${theme.palette.background.paper} 30%,
-                ${theme.palette.background.default} 0%,
-                ${theme.palette.primary.dark} 80%)`,
-                boxShadow: 'inset 0 0 0.2rem',
-                color: 'text.primary',
-                transition: 'all 0.3s ease-out',
-                '&:hover': {
-                  transform: `translate(1px, -2px) scale(0.99)`,
-                  background: `linear-gradient(130deg,
-             ${theme.palette.primary.dark} 0%, 
-            ${theme.palette.background.paper} 30%,
-             ${theme.palette.background.paper} 80%)`,
-                },
-              }}
-            >
-              {requestingPrivateChat ? 'You’ve Already Requested' : 'Send Private Chat Request'}
-            </Button>
+              text={requestingPrivateChat ? 'Request Sent' : 'Send Private Chat Request'}
+            />
           </Box>
         )}
 

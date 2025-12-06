@@ -363,6 +363,7 @@ const ChatSidebarHeader = ({ children }) => {
             background: `linear-gradient(180deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default} 100%)`,
             boxShadow: theme.shadows[6],
             minWidth: 260,
+            maxWidth: 300,
             p: '0px 10px',
             overflow: 'auto',
           },

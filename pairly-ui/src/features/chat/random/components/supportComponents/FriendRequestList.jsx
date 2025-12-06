@@ -73,17 +73,18 @@ function FriendRequestList() {
                                 alignItems="center"
                                 justifyContent="space-between"
                                 sx={{
-                                    p: 1.5,
-                                    mb: 1,
-                                    borderRadius: 0.5,
-                                    backgroundColor: theme.palette.background.paper,
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
                                     border: `1px solid ${theme.palette.divider}`,
-                                    boxShadow: `inset 0 2px 6px ${theme.palette.divider}`,
-                                    transition: 'all 0.2s ease',
-                                    '&:hover': {
-                                        transform: 'scale(1.01)',
-                                        boxShadow: `0 4px 10px ${theme.palette.divider}`,
-                                    },
+                                    borderRadius: 0.5,
+                                    p: 0.5,
+                                    my: 0.5,
+                                    bgcolor: 'transparent',
+                                    transition: 'background-color 0.3s ease',
+                                    ':hover': {
+                                        backgroundColor: theme.palette.action.hover
+                                    }
                                 }}
                             >
                                 {/* Left: Avatar + Info */}
@@ -91,7 +92,7 @@ function FriendRequestList() {
                                     <Avatar
                                         src={request?.profileImage || defaultAvatar}
                                         alt={request?.fullName}
-                                        sx={{ width: 44, height: 44 }}
+                                        sx={{ width: 40, height: 40 }}
                                     />
                                     <Stack>
                                         <Typography

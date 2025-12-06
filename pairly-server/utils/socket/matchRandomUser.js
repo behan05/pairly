@@ -118,6 +118,10 @@ async function matchRandomUser(
                     },
                     isUserVerifiedByEmail: partnerData.isUserVerifiedByEmail,
                     partnerPublicId: partnerData?.partnerPublicId ?? '',
+                    subscription: {
+                        plan: partnerData?.subscription?.plan ?? 'free',
+                        status: partnerData?.subscription?.status ?? 'inactive'
+                    }
                 }
             });
         };
@@ -140,6 +144,10 @@ async function matchRandomUser(
             preferredChatStyle: currentUserProfile.chatStyles,
             isUserVerifiedByEmail: currentUser?.emailVerified || false,
             partnerPublicId: currentUser?.publicId ?? '',
+            subscription: {
+                plan: currentUser?.subscriptionPlan,
+                status: currentUser?.subscriptionStatus,
+            }
         });
 
         emitMatch(socket, {
@@ -159,6 +167,10 @@ async function matchRandomUser(
             preferredChatStyle: partnerProfile.chatStyles,
             isUserVerifiedByEmail: partnerUser?.emailVerified || false,
             partnerPublicId: partnerUser?.publicId ?? '',
+            subscription: {
+                plan: partnerUser?.subscriptionPlan,
+                status: partnerUser?.subscriptionStatus,
+            }
         });
 
         // Remove partner from queue
