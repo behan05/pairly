@@ -52,12 +52,10 @@ export function updateGeneralInfo(formData) {
     }
 
     dispatch(setLoading());
-    const token = localStorage.getItem('token');
+
     try {
       const response = await axios.patch(`${PROFILE_API}/general-info`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers
       });
 
       if (response.status === 200) {

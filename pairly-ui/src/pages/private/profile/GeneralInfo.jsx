@@ -1,5 +1,14 @@
 import * as React from 'react';
-import { Avatar, Box, Stack, TextField, Tooltip, Typography, useTheme, IconButton } from '@/MUI/MuiComponents';
+import {
+  Avatar,
+  Box,
+  Stack,
+  TextField,
+  Tooltip,
+  Typography,
+  useTheme,
+  IconButton,
+} from '@/MUI/MuiComponents';
 import { SendIcon, EditIcon, RefreshIcon } from '@/MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import BlurWrapper from '@/components/common/BlurWrapper';
@@ -253,7 +262,6 @@ function GeneralInfo() {
     }
 
     setIsDisabled(true);
-    setOpenOnboardingFeedback(true);
 
     try {
       const response = await dispatch(updateGeneralInfo(payload));
@@ -349,9 +357,17 @@ function GeneralInfo() {
         </Stack>
 
         {/* Submit Button */}
-        <StyledActionButton endIcon={<SendIcon />} type="submit" disabled={isDisabled}>
-          {isDisabled ? 'Saving...' : 'Save Changes'}
-        </StyledActionButton>
+        <StyledActionButton
+          onClick={handleSubmit}
+          endIcon={<SendIcon />}
+          type="submit"
+          disabled={isDisabled}
+          text={isDisabled ? 'Saving...' : 'Save Changes'}
+          sx={{
+            maxWidth: 300,
+            alignSelf: 'flex-start'
+          }}
+        />
       </BlurWrapper>
     </Box>
   );

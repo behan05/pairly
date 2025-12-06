@@ -262,12 +262,20 @@ function TagsAndInterests() {
           </FormControl>
 
           {/* Submit Button */}
-          <StyledActionButton endIcon={<SendIcon />} type="submit" disabled={loading}>
-            {loading ? 'Saving...' : 'Save Preferences'}
-          </StyledActionButton>
+          <StyledActionButton
+            onClick={handleSubmit}
+            endIcon={<SendIcon />}
+            type="submit"
+            disabled={loading}
+            text={loading ? 'Saving...' : 'Save Preferences'}
+            sx={{
+              maxWidth: 300,
+              alignSelf: 'flex-start'
+            }}
+          />
+
         </Stack>
       </BlurWrapper>
-
 
       <PremiumFeatureModel
         open={modalOpen}

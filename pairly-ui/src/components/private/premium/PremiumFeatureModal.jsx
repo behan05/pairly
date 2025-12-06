@@ -10,7 +10,6 @@ import {
     useTheme,
 } from '@/MUI/MuiComponents';
 import { StarIcon } from '@/MUI/MuiIcons';
-import { alpha } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 
 const PremiumFeatureModal = ({
@@ -33,21 +32,10 @@ const PremiumFeatureModal = ({
             onClose={onClose}
             PaperProps={{
                 sx: {
-                    borderRadius: 4,
-                    p: 3,
-                    maxWidth: 400,
-                    boxShadow:
-                        '0 20px 30px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.05)',
-                    borderColor: alpha(theme.palette.warning.main, 0.4),
-                    background: `radial-gradient(circle at 30% 0%, ${alpha(
-                        theme.palette.warning.main,
-                        0.9
-                    )} 0%, ${theme.palette.background.paper} 70%)`,
-                    transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-
-                    '&:hover': {
-                        transform: 'translateX(5px) scale(1.01)',
-                    }
+                    borderRadius: 2,
+                    p: 1,
+                    maxWidth: 350,
+                    background: theme.palette.background.default,
                 },
             }}
         >
@@ -63,10 +51,10 @@ const PremiumFeatureModal = ({
             >
                 <Box
                     sx={{
-                        width: 70,
-                        height: 70,
+                        width: 50,
+                        height: 50,
                         borderRadius: '50%',
-                        background: 'linear-gradient(135deg, #FFD700, #FFB300)',
+                        background: 'linear-gradient(135deg, #046069ff, #ffb300ff)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -104,7 +92,10 @@ const PremiumFeatureModal = ({
             <DialogActions
                 sx={{
                     display: 'flex',
-                    justifyContent: 'space-between',
+                    justifyContent: 'center',
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    gap: 1,
                     px: 3,
                     pb: 2,
                 }}

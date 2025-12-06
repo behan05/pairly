@@ -17,6 +17,7 @@ import {
   Divider, // Section separator
   Pagination,
   PaginationItem,
+  Card,
 
   // ─── Typography & Text ──────────────────────────────────
   Typography, // Headings, paragraphs, and text
@@ -127,6 +128,7 @@ export {
   Snackbar,
   Pagination,
   PaginationItem,
+  Card,
 
   // Lists & Menus
   List,

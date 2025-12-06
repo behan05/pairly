@@ -5,15 +5,18 @@ import {
     Typography,
     useTheme,
     useMediaQuery,
-    Tooltip
+    Tooltip,
+    Divider,
+    Card,
+    Box,
+    IconButton
 } from '@/MUI/MuiComponents';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import { toast } from 'react-toastify';
 
 // components
-import BlurWrapper from '@/components/common/BlurWrapper';
 import StyledText from '@/components/common/StyledText';
 
 // Default Profile Image
@@ -74,108 +77,153 @@ function PrivateChatRequestPopupModal() {
         dispatch(fetchFriendRequests());
     };
 
-    const commonBtnStyle = {
-        width: 'fit-content',
-        alignSelf: 'flex-start',
-        transition: 'all 0.3s ease-in-out',
-        color: theme.palette.text.primary,
-        borderColor: theme.palette.divider,
-        '&:focus': {
-            outline: 'none',
-            boxShadow: `0 0 0 2px ${theme.palette.primary.main}`
-        },
-        '&:hover': {
-            transform: 'translateY(-5px)',
-            backgroundColor: theme.palette.action.hover,
-            color: theme.palette.text.primary
-        }
-    }
-
     return (
         <Modal
             open={Boolean(incomingRequest)}
             onClose={handleClose}
             aria-labelledby="private-chat-request-modal"
             aria-describedby="private-chat-request"
-            sx={{ mt: 10, px: isSm ? 2 : 4 }}
+            sx={{ mt: 10 }}
         >
-
-            <BlurWrapper sx={{
-                maxWidth: isSm ? '90%' : 400,
-                width: '100%',
-                backgroundColor: theme.palette.background.paper
-            }}>
-                <Typography variant="body2" textAlign='center' color="textSecondary">
-                    {<StyledText text={partnerProfile?.fullName ?? 'unknown'} />}{' '}wants to start a private chat with you.
+            <Card
+                elevation={6}
+                sx={{
+                    maxWidth: isSm ? '70%' : 400,
+                    width: '100%',
+                    margin: '0 auto',
+                    p: 1,
+                    borderRadius: 1,
+                    background: theme.palette.background.default,
+                    border: `2px solid ${theme.palette.divider}`
+                }}
+            >
+                {/* TOP TEXT */}
+                <Typography
+                    variant="body1"
+                    textAlign="center"
+                    sx={{ mb: 2 }}
+                    color="text.secondary"
+                >
+                    {partnerProfile?.fullName ?? 'Unknown'} wants to start a private chat with you.
                 </Typography>
-                <Stack sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    gap: 1,
-                    alignItems: 'center',
-                    justifyContent: 'space-evenly'
-                }}>
-                    <Stack
-                        component={'img'}
+
+                {/* USER INFO SECTION */}
+                <Stack
+                    direction="row"
+                    gap={2}
+                    alignItems="center"
+                    justifyContent="center"
+                    sx={{ mb: 3 }}
+                >
+                    <Box
+                        component="img"
                         src={partnerProfile?.profileImage || defaultAvatar}
                         alt={partnerProfile?.fullName}
                         sx={{
-                            maxWidth: isSm ? 120 : 170,
-                            maxHeight: isSm ? 120 : 170,
-                            width: '100%',
-                            height: '100%',
-                            borderRadius: '50%',
-                            filter: `drop-shadow(10px 0 0.2rem ${theme.palette.divider})`,
-                            transition: 'all 0.2s linear',
-                            objectFit: 'cover',
+                            width: isSm ? 90 : 130,
+                            height: isSm ? 90 : 130,
+                            p: 0.5,
+                            borderRadius: "50%",
+                            border: `2px solid ${theme.palette.divider}`,
+                            objectFit: "cover",
+                            transition: "0.2s",
                             '&:hover': {
-                                transform: 'scale(1.04)',
-                                filter: `drop-shadow(-10px 0 0.2rem ${theme.palette.divider})`,
+                                boxShadow:
+                                    theme.palette.mode === "dark"
+                                        ? `0 4px 15px ${theme.palette.info.dark}90`
+                                        : `0 4px 15px ${theme.palette.info.light}90`,
+                                borderColor: theme.palette.info.main,
+                                transform: "translateY(-3px)",
                             }
                         }}
                     />
-                    <Stack>
-                        <Typography variant='body1' gutterBottom>
-                            {partnerProfile?.fullName}
+
+                    <Stack gap={0.4}>
+                        <Typography variant="subtitle1" fontWeight={700}>
+                            {partnerProfile?.fullName?.toUpperCase()}
                         </Typography>
-                        <Typography variant='body1' gutterBottom>
-                            {partnerProfile?.age ?? 18} {toCapitalCase(partnerProfile?.gender)}
+
+                        <Typography variant="body2" color="text.secondary">
+                            {partnerProfile?.age ?? 18} • {toCapitalCase(partnerProfile?.gender)}
                         </Typography>
                     </Stack>
                 </Stack>
-                <Stack sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                    gap: 1,
-                    justifyContent: 'center'
-                }}>
-                    <Button
-                        onClick={handleAccept}
-                        sx={commonBtnStyle}
-                        variant='outlined'
-                        startIcon={<CheckCircleIcon sx={{ color: theme.palette.success.main }} />}
-                    >Accept
-                    </Button>
-                    <Button
-                        onClick={handleReject}
-                        sx={commonBtnStyle}
-                        variant='outlined'
-                        startIcon={<AccessTimeIcon sx={{ color: theme.palette.error.main }} />}
-                    >Reject
-                    </Button>
-                    <Tooltip title='You can accept later.'>
-                        <Button
-                            onClick={handleCancel}
-                            sx={commonBtnStyle}
-                            variant='outlined'
-                            startIcon={<CancelIcon sx={{ color: theme.palette.warning.main }} />}
-                        >Not Now
-                        </Button>
-                    </Tooltip>
+
+                {/* BUTTONS SECTION */}
+                <Stack
+                    direction="row"
+                    flexWrap="wrap"
+                    gap={1}
+                    justifyContent="center"
+                >
+
+                    {/* Divider with 'Action button icon' text and text on hover */}
+                    <Divider sx={{ width: '100%', my: 2 }}>
+                        <Stack direction="row" gap={4} justifyContent="center">
+
+                            {/* ACCEPT */}
+                            <Stack alignItems="center" spacing={0.5}>
+                                <Tooltip title="Accept Request">
+                                    <IconButton
+                                        onClick={handleAccept}
+                                        sx={{
+                                            border: `1px solid ${theme.palette.success.main}50`,
+                                            background: theme.palette.background.paper,
+                                            transition: "all .2s",
+                                            "&:hover": { transform: "scale(1.08)" }
+                                        }}
+                                    >
+                                        <CheckCircleIcon sx={{ color: theme.palette.success.main, fontSize: 26 }} />
+                                    </IconButton>
+                                </Tooltip>
+                                <Typography variant="caption" color="success.main">Accept</Typography>
+                            </Stack>
+
+                            {/* REJECT */}
+                            <Stack alignItems="center" spacing={0.5}>
+                                <Tooltip title="Reject Request">
+                                    <IconButton
+                                        onClick={handleReject}
+                                        sx={{
+                                            border: `1px solid ${theme.palette.error.main}50`,
+                                            background: theme.palette.background.paper,
+                                            transition: "all .2s",
+                                            "&:hover": {
+                                                transform: "scale(1.08)",
+                                            }
+                                        }}
+                                    >
+                                        <PowerSettingsNewIcon sx={{ color: theme.palette.error.main, fontSize: 26 }} />
+                                    </IconButton>
+                                </Tooltip>
+                                <Typography variant="caption" color="error.main">Reject</Typography>
+                            </Stack>
+
+                            {/* MAYBE LATER */}
+                            <Stack alignItems="center" spacing={0.5}>
+                                <Tooltip title="Maybe Later">
+                                    <IconButton
+                                        onClick={handleCancel}
+                                        sx={{
+                                            border: `1px solid ${theme.palette.warning.main}50`,
+                                            background: theme.palette.background.paper,
+                                            transition: "all .2s",
+                                            "&:hover": { transform: "scale(1.08)" }
+                                        }}
+                                    >
+                                        <CancelIcon sx={{ color: theme.palette.warning.main, fontSize: 26 }} />
+                                    </IconButton>
+                                </Tooltip>
+                                <Typography variant="caption" color="warning.main">Later</Typography>
+                            </Stack>
+
+                        </Stack>
+                    </Divider>
+
                 </Stack>
-            </BlurWrapper>
+            </Card>
         </Modal>
+
     );
 }
 

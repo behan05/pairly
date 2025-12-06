@@ -403,9 +403,17 @@ function MatchingPreferences() {
           </FormControl>
 
           {/* Submit Button */}
-          <StyledActionButton type="submit" endIcon={<SendIcon />} disabled={isDisabled}>
-            {isDisabled ? 'Updating...' : 'Update Preferences'}
-          </StyledActionButton>
+          <StyledActionButton
+            type="submit"
+            onClick={handleSubmit}
+            endIcon={<SendIcon />}
+            disabled={isDisabled}
+            text={isDisabled ? 'Updating...' : 'Update Preferences'}
+            sx={{
+              maxWidth: 300,
+              alignSelf: 'flex-start'
+            }}
+          />
         </Stack>
       </BlurWrapper>
 
