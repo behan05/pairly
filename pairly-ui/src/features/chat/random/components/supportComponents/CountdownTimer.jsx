@@ -6,7 +6,7 @@ import searchingUsersInDarkMode from '@/assets/lottie/searchingUsersInDarkMode.j
 
 const messages = [
   'Finding your best match…',
-  'Be kind 🙂',
+  'Be kind',
   'Respect everyone',
   'Have fun!',
   'Chat safely'
@@ -40,7 +40,7 @@ const CountdownTimer = ({ startFrom = 10, autoRestart = true }) => {
   useEffect(() => {
     const msgTimer = setInterval(() => {
       setMsgIndex(prev => (prev + 1) % messages.length);
-    }, 1000); // change message every second
+    }, 1500);
     return () => clearInterval(msgTimer);
   }, []);
 
@@ -75,22 +75,8 @@ const CountdownTimer = ({ startFrom = 10, autoRestart = true }) => {
           autoplay
           loop
           src={searchingUsers}
-          style={{ width: '100%', height: '100%', maxHeight }}
+          style={{ width: '70%', height: '70%', maxHeight }}
         />
-
-        {/* Countdown number */}
-        <Typography
-          variant={isXs ? 'h4' : 'h3'}
-          sx={{
-            position: 'absolute',
-            top: getTheme === 'dark' ? '80%' : '50%',
-            color: theme.palette.text.primary,
-            fontWeight: 'bold',
-            textShadow: `0 0 8px ${theme.palette.primary.main}`,
-          }}
-        >
-          {count}
-        </Typography>
       </Box>
 
       {/* Rotating messages */}
@@ -101,7 +87,7 @@ const CountdownTimer = ({ startFrom = 10, autoRestart = true }) => {
           fontWeight: 600,
           textAlign: 'center',
           fontStyle: 'italic',
-          fontSize: isXs ? '1rem' : '1.1rem',
+          fontSize: isXs ? '0.9rem' : '1rem',
           textShadow: `0 0 6px ${theme.palette.primary.main}33, 0 0 2px ${theme.palette.info.main}33`, // subtle glow
           transition: 'all 0.3s ease-in-out',
           mx: 2,

@@ -176,7 +176,6 @@ function RandomSidebar() {
             },
           }}
         >
-
           <StyledText text="Random Chat" sx={{ fontSize: isSm ? '1.5rem' : '2rem', textAlign: 'center' }} />
 
           <Typography
@@ -188,7 +187,9 @@ function RandomSidebar() {
           </Typography>
 
           {isWaiting ? (
-            <CountdownTimer startFrom={10} autoRestart />
+            <Box sx={{ width: '100%', maxWidth: 250, mx: 'auto' }}>
+              <CountdownTimer startFrom={10} autoRestart />
+            </Box>
           ) : (
             <Box sx={{ width: '80%', maxWidth: 200, mx: 'auto' }}>
               <RandomLandingLottie />

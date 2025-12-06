@@ -364,7 +364,7 @@ const ChatSidebarHeader = ({ children }) => {
             boxShadow: theme.shadows[6],
             minWidth: 260,
             p: '0px 10px',
-            overflow: 'hidden',
+            overflow: 'auto',
           },
         }}
       >
