@@ -3,7 +3,7 @@ import {
   Box,
   MenuItem,
   IconButton,
-  Button,
+  InputAdornment,
   Stack,
   Tooltip,
   Divider,
@@ -29,7 +29,7 @@ import {
   MarkunreadIcon,
   DraftsIcon,
   SearchIcon,
-  CheckCircleIcon
+  SendIcon
 } from '@/MUI/MuiIcons';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -88,7 +88,8 @@ const ChatSidebarHeader = ({ children }) => {
 
   const [userId, setUserId] = React.useState('');
   const [isRequestSent, setIsRequestSent] = React.useState(false);
-  const [searchedUser, setsearchUser] = React.useState('');
+  const [searchedUser, setSearchedUser] = useState(null);
+  const [searchError, setSearchError] = useState("");
 
   // Fetch initial settings | Preferences data
   useEffect(() => {
@@ -197,23 +198,40 @@ const ChatSidebarHeader = ({ children }) => {
 
   const handleChange = (e) => {
     const value = e.target.value;
+
+    if (!value.trim()) {
+      setSearchError('');
+      setSearchedUser(null);
+      setUserId('');
+    }
+
     setUserId(value);
+  };
 
-    // Debounce API call
-    if (handleChange.timeout) clearTimeout(handleChange.timeout);
+  const handlePublicUserId = async () => {
+    if (!userId.trim()) {
+      setSearchedUser(null);
+      setSearchError("");
+      return;
+    }
 
-    handleChange.timeout = setTimeout(async () => {
-      if (!value.trim()) return setsearchUser('');
-      try {
-        const response = await axios.get(`${USERS_API}/publicId/${value}`, { headers: getAuthHeaders() });
+    try {
+      const response = await axios.get(
+        `${USERS_API}/publicId/${userId}`,
+        { headers: getAuthHeaders() }
+      );
 
-        if (response.data.success) {
-          setsearchUser(response.data.user);
-        }
-      } catch (error) {
-        console.error("User not found:", error);
+      if (response.data.success) {
+        setSearchedUser(response.data.user);
+        setSearchError("");
+      } else {
+        setSearchedUser(null);
+        setSearchError("User not found");
       }
-    }, 400);
+    } catch (error) {
+      setSearchedUser(null);
+      setSearchError(error?.response?.data?.error || "User not found");
+    }
   };
 
   // toggle Theme Mode
@@ -347,6 +365,7 @@ const ChatSidebarHeader = ({ children }) => {
           </Tooltip>
         </Stack>
       </Stack>
+
       <Divider sx={{ mt: 1 }} />
 
       {/* Search Bar if needed */}
@@ -360,8 +379,8 @@ const ChatSidebarHeader = ({ children }) => {
         ModalProps={{ keepMounted: false }}
         PaperProps={{
           sx: {
-            background: `linear-gradient(180deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default} 100%)`,
-            boxShadow: theme.shadows[6],
+            background: theme.palette.background.default,
+            boxShadow: theme.shadows[12],
             minWidth: 260,
             maxWidth: 300,
             p: '0px 10px',
@@ -371,63 +390,20 @@ const ChatSidebarHeader = ({ children }) => {
       >
         {/* Profile Card */}
         <Stack
-          direction={isCustomXs ? 'column' : 'row'}
+          direction='column'
           alignItems="center"
           spacing={1.5}
           sx={{
             my: 1.5,
             p: isCustomXs ? 1 : 2,
-            borderRadius: 2,
+            borderRadius: 1,
             position: 'relative',
-            background: `linear-gradient(135deg, ${theme.palette.background.paper}ff, ${theme.palette.primary.main}08)`,
-            boxShadow: `0 4px 24px ${theme.palette.primary.main}22`,
+            background: theme.palette.background.paper,
+            border: `1px dashed ${theme.palette.divider}`,
+            boxShadow: `0 2px 10px ${theme.palette.primary.main}20`,
             transition: 'box-shadow 0.3s ease',
-            '&:hover': { boxShadow: `inset 0 4px 24px ${theme.palette.primary.main}22` },
           }}
         >
-          {/* Floating Points in Drawer */}
-          <Box
-            sx={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              pointerEvents: 'none',
-              overflow: 'hidden',
-              zIndex: 0,
-            }}
-          >
-            {Array.from({ length: 25 }).map((_, i) => (
-              <Box
-                key={i}
-                className="drawer-point"
-                sx={{
-                  position: 'absolute',
-                  bottom: '-10px',
-                  width: 2,
-                  height: 2,
-                  bgcolor: theme.palette.mode === 'dark' ? '#fff' : '#7b0e8aff',
-                  borderRadius: '50%',
-                  left: `${Math.random() * 100}%`,
-                  opacity: Math.random(),
-                  animation: `drawer-floating ${1.5 + Math.random() * 2}s infinite ease-in-out`,
-                  animationDelay: `${Math.random() * 2}s`,
-                }}
-              />
-            ))}
-
-            <style>
-              {`
-              @keyframes drawer-floating {
-                0% { transform: translateY(0); opacity: 1; }
-               85% { opacity: 0; }
-                100% { transform: translateY(-150px); opacity: 0; }
-              }
-            `}
-            </style>
-          </Box>
-
           {/* Theme Toggle */}
           <Tooltip title={themeMode === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}>
             <IconButton
@@ -451,31 +427,74 @@ const ChatSidebarHeader = ({ children }) => {
           <Box
             component={Link}
             to="/pairly/profile/general-info"
-            sx={{ position: 'relative', mx: isCustomXs ? 'auto' : 0, '&::after': { content: '""', position: 'absolute', inset: -4, borderRadius: '50%', background: `linear-gradient(135deg, ${theme.palette.primary.light}, ${theme.palette.secondary.main})`, filter: 'blur(6px)', opacity: 0.5, zIndex: 0 } }}
+            sx={{
+              position: 'relative',
+              mx: isCustomXs ? 'auto' : 0,
+              border: `2px solid ${theme.palette.primary.dark}`,
+              p: 0.2,
+              overflow: 'hidden',
+              borderRadius: '50%',
+              '&::after':
+              {
+                content: '""',
+                position: 'absolute',
+                borderRadius: '50%',
+                filter: 'blur(6px)',
+                opacity: 0.5,
+                zIndex: 0,
+              }
+            }}
           >
             <Avatar
               src={profileData?.profileImage || defaultAvatar}
-              alt="user"
+              alt={profileData?.fullName}
               sx={{
                 width: isCustomXs ? 72 : 80,
                 height: isCustomXs ? 72 : 80,
-                border: `2px solid ${theme.palette.background.paper}`,
                 zIndex: 1,
-                position: 'relative'
+                position: 'relative',
+                transition: 'transform .2s',
+                "&:hover": {
+                  transform: 'scale(1.1)'
+                },
+
               }}
             />
           </Box>
 
           {/* User Info */}
-          <Stack spacing={0.8} zIndex={1} sx={{ textAlign: isCustomXs ? 'center' : 'left', width: '100%' }}>
-            <Typography variant="subtitle1" fontWeight={700} color="text.primary" sx={{ letterSpacing: 0.5 }}>
-              {toCapitalCase(profileData?.fullName)} ({profileData?.age})
+          <Stack
+            spacing={0.2}
+            zIndex={1}
+            sx={{
+              textAlign: 'center',
+              width: '100%'
+            }}>
+            <Typography
+              variant="subtitle1"
+              fontWeight={700}
+              color="text.primary"
+              sx={{
+                letterSpacing: 0.5
+              }}>
+              {profileData?.fullName?.toUpperCase()}
             </Typography>
 
             {/* ID + Copy */}
-            <Stack direction="row" alignItems="center" justifyContent={isCustomXs ? 'center' : 'flex-start'} spacing={0.5}>
-              <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', letterSpacing: 0.3 }}>
-                ID: {publicId || 'N/A'}
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent={'center'}
+              spacing={0.5}
+            >
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{
+                  fontStyle: 'italic',
+                  letterSpacing: 0.3
+                }}>
+                Public ID: {publicId || 'N/A'}
               </Typography>
               <Tooltip title={copied ? 'User ID copied!' : 'Copy User ID'} arrow>
                 <IconButton
@@ -489,13 +508,33 @@ const ChatSidebarHeader = ({ children }) => {
             </Stack>
 
             {/* Online Status */}
-            <Stack direction="row" alignItems="center" spacing={0.5} justifyContent={isCustomXs ? 'center' : 'flex-start'}>
-              <Box sx={{ width: 10, height: 10, borderRadius: '50%', background: 'linear-gradient(90deg, limegreen, #00ff99)', animation: `${glowDot} 1.5s infinite ease-in-out` }} />
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={0.5}
+              justifyContent={'center'}>
+              <Box
+                sx={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: '50%',
+                  background: 'linear-gradient(90deg, limegreen, #00ff99)',
+                  animation: `${glowDot} 1.5s infinite ease-in-out`
+                }} />
               <Typography variant="body2" color="success.main">Online</Typography>
             </Stack>
 
             {/* Bio */}
-            <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic', maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{
+                fontStyle: 'italic',
+                maxWidth: '100%',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}>
               {shortBioPreview || 'Add your bio to personalize your profile'}
             </Typography>
 
@@ -509,7 +548,7 @@ const ChatSidebarHeader = ({ children }) => {
                 px: 1.4,
                 py: 0.5,
                 borderRadius: 999,
-                alignSelf: isCustomXs ? 'center' : 'flex-start',
+                alignSelf: 'center',
                 background:
                   plan === 'free'
                     ? `${theme.palette.grey[700]}44`
@@ -532,25 +571,89 @@ const ChatSidebarHeader = ({ children }) => {
         </Stack>
 
         {/* Search by User ID */}
-        <Box component={'section'} mt={1}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            mb: 2
+          }}
+        >
           <TextField
             size="small"
             fullWidth
             placeholder="Search by user ID"
             value={userId}
-            name={'userId'}
+            name="userId"
             onChange={handleChange}
-            InputProps={{ startAdornment: <SearchIcon fontSize="small" sx={{ mr: 1, color: 'text.secondary' }} /> }}
+            autoComplete="off"
             sx={{
-              mb: 2,
-              '& .MuiOutlinedInput-root': { borderRadius: 2, backgroundColor: `${theme.palette.background.paper}aa`, transition: 'all 0.3s ease', '&:hover fieldset': { borderColor: theme.palette.primary.main }, '&.Mui-focused fieldset': { borderColor: theme.palette.primary.main } },
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '10px 0 0 10px',
+                background: `${theme.palette.background.paper}`,
+                transition: "all .3s ease",
+                "&:hover fieldset":
+                {
+                  borderColor: theme.palette.primary.main,
+                },
+                "&.Mui-focused fieldset": { borderColor: theme.palette.primary.main },
+              }
             }}
           />
+
+          <IconButton
+            onClick={handlePublicUserId}
+            sx={{
+              height: 40,
+              width: 40,
+              borderRadius: '0 10px 10px 0',
+              border: `1px dashed ${theme.palette.divider}`,
+              background: theme.palette.background.paper,
+              transition: "all .25s ease",
+              "&:hover": {
+                background: theme.palette.background.paper,
+                border: `1px dashed ${theme.palette.success.dark}`,
+              },
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            <SearchIcon
+              sx={{
+                color: theme.palette.success.main,
+                fontSize: 22,
+              }}
+            />
+          </IconButton>
         </Box>
 
-        <Divider sx={{ bgcolor: theme.palette.divider, height: 2 }} />
 
-        {searchedUser ? (
+        <Divider sx={{
+          bgcolor: theme.palette.divider,
+          height: 2
+        }} />
+
+        {searchError && (
+          <Typography
+            variant="body2"
+            sx={{
+              mt: 1,
+              textAlign: "center",
+              color: theme.palette.error.main,
+              backgroundColor: theme.palette.error.light + "22",
+              border: `1px solid ${theme.palette.error.main}44`,
+              display: "inline-block",
+              px: 1.5,
+              py: 0.6,
+              borderRadius: 1.5,
+              fontWeight: 500,
+            }}
+          >
+            {searchError}
+          </Typography>
+        )}
+
+        {searchedUser && (
           <Box sx={{ py: 0.5 }}>
             <Stack
               direction="row"
@@ -558,45 +661,61 @@ const ChatSidebarHeader = ({ children }) => {
               spacing={2}
               sx={{
                 p: 0.5,
-                borderRadius: 0.5,
-                background: theme.palette.background.paper,
-                border: `1px solid ${theme.palette.divider}`,
-                boxShadow: `0 2px 10px ${theme.palette.primary.main}22`,
+                borderRadius: 1,
+                background: theme.palette.background.default,
+                border: `1px dashed ${theme.palette.divider}`,
+                boxShadow: `0 2px 10px ${theme.palette.primary.main}30`,
               }}
             >
-              <Stack direction='row' gap={1} alignItems={'center'} flex={1}>
+              <Stack direction="row" gap={0.5} alignItems="center" flex={1}>
                 <Avatar
                   src={searchedUser?.profileImage || defaultAvatar}
                   alt={searchedUser?.fullName}
-                  sx={{ width: 36, height: 36 }}
+                  sx={{
+                    width: 36,
+                    height: 36,
+                    border: `1px solid ${theme.palette.divider}`,
+                    p: 0.1,
+                  }}
                 />
-                <Stack >
+                <Stack>
                   <Typography variant="subtitle2" fontWeight={600}>
                     {toCapitalCase(searchedUser?.fullName)}
                   </Typography>
 
                   <Typography variant="caption" color="text.secondary">
-                    ID: {searchedUser?.publicId}
+                    Public ID: {searchedUser?.publicId}
                   </Typography>
                 </Stack>
               </Stack>
 
-              {/* Actions */}
-              <Stack direction="row" spacing={1}>
-                <Button
-                  variant={isRequestSent ? "contained" : "outlined"}
-                  size="small"
-                  color={isRequestSent ? "success" : "primary"}
-                  disabled={isRequestSent || !searchedUser?.searchUserId}
-                  onClick={() => handleFriendRequest(searchedUser?.searchUserId)}
+              <Tooltip title={isRequestSent ? "Request Sent" : "Add Friend"}>
+                <IconButton
+                  onClick={() =>
+                    !isRequestSent && handleFriendRequest(searchedUser?.searchUserId)
+                  }
+                  sx={{
+                    border: !isRequestSent
+                      ? `1px solid ${theme.palette.success.main}`
+                      : `1px solid ${theme.palette.divider}`,
+                    background: theme.palette.background.paper,
+                    transition: "all .2s",
+                    "&:hover": { transform: "scale(1.08)" },
+                  }}
                 >
-                  {isRequestSent ? "Request Sent" : "Add Friend"}
-                </Button>
-              </Stack>
-
+                  <PersonAddIcon
+                    sx={{
+                      color: theme.palette.success.main,
+                      fontSize: "medium",
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
             </Stack>
           </Box>
-        ) : (
+        )}
+
+        {!searchError && !searchedUser && (
           <>
             {/* Menu Items */}
             {[
@@ -660,44 +779,6 @@ const ChatSidebarHeader = ({ children }) => {
               <LogoutIcon fontSize="small" sx={{ mr: 1, color: theme.palette.error.main }} />
               Logout
             </MenuItem>
-
-            {/* Upgrade Button / Premium Info */}
-            <Stack sx={{ position: 'absolute', bottom: 16, left: '50%', transform: 'translateX(-50%)', width: '90%', maxWidth: 320 }}>
-              {isFreeUser ? (
-                <Button
-                  component={Link}
-                  to="/pairly/settings/premium"
-                  startIcon={<StarIcon sx={{ fontSize: 20 }} />}
-                  sx={{
-                    position: 'relative',
-                    overflow: 'hidden',
-                    height: 52,
-                    borderRadius: 3,
-                    fontSize: '1rem',
-                    fontWeight: 600,
-                    letterSpacing: 0.4,
-                    color: '#fff',
-                    textTransform: 'none',
-                    background: `linear-gradient(135deg, #7a5af8, #df71ff)`,
-                    boxShadow: '0 0 18px rgba(122, 90, 248, 0.4)',
-                    transition: 'all 0.35s ease',
-                    backdropFilter: 'blur(10px)',
-                    '&:hover': { transform: 'translateY(-2px)', boxShadow: '0 0 25px rgba(223, 113, 255, 0.6)', background: `linear-gradient(135deg, #8b6bff, #e782ff)` },
-                    '&::after': { content: '""', position: 'absolute', top: 0, left: '-75%', width: '50%', height: '100%', background: 'linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent)', transform: 'skewX(-20deg)', animation: 'shine 2.8s infinite ease-in-out' },
-                    '@keyframes shine': { '0%': { left: '-75%' }, '60%': { left: '125%' }, '100%': { left: '125%' } },
-                  }}
-                >
-                  Level Up Your Chat
-                </Button>
-              ) : (
-                <Stack direction="row" alignItems="center" justifyContent="center" gap={1} sx={{ py: 1.3, borderRadius: 3, background: `linear-gradient(90deg, #ffb300, #ff9800)`, color: '#fff', boxShadow: '0 0 18px rgba(255, 193, 7, 0.4)' }}>
-                  <StarIcon sx={{ fontSize: 18 }} />
-                  <Typography variant="body2" fontWeight={600} sx={{ textShadow: '0 0 5px rgba(0,0,0,0.2)' }}>
-                    You’re enjoying Premium Features ✨
-                  </Typography>
-                </Stack>
-              )}
-            </Stack>
           </>
         )}
         <UserSuggestionBox

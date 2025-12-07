@@ -49,14 +49,15 @@ exports.fetchUserByPublicUserId = async (req, res) => {
 
         // Search user by publicId
         const searchResult = await User.findOne({ publicId });
-        const searchUserProfile = await Profile.findById(searchResult._id);
 
         if (!searchResult) {
             return res.status(404).json({
                 success: false,
-                error: 'User not found.',
+                error: 'The Public ID you entered does not match any user.',
             });
         }
+
+        const searchUserProfile = await Profile.findById(searchResult._id);
         const payload = {
             searchUserId: searchResult._id,
             fullName: searchResult?.fullName,
