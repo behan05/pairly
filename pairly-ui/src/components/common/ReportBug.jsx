@@ -13,8 +13,7 @@ import {
 } from '@/MUI/MuiComponents';
 import { SendIcon, UploadIcon } from '@/MUI/MuiIcons';
 import StyledText from '../common/StyledText';
-import BlurWrapper from '../common/BlurWrapper';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import StyledActionButton from '../common/StyledActionButton';
 import { SETTINGS_API } from '@/api/config';
@@ -131,12 +130,20 @@ function ReportBug() {
 
   // Render bug report form UI
   return (
-    <Box flexDirection="column" mt={8} maxWidth={600}  mx={'auto'}>
-      {/* Toast notifications container */}
-      <ToastContainer position="top-right" autoClose={2000} theme="colored" />
-
+    <Box flexDirection="column" mt={8} maxWidth={600} mx={'auto'}>
       {/* Form wrapper with blur effect */}
-      <BlurWrapper component="form" onSubmit={handleSubmit}>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={(theme) => ({
+          mt: 4,
+          border: `1px dashed ${theme.palette.divider}`,
+          p: 1,
+          borderRadius: 1,
+          maxWidth: 600,
+          mx: 'auto'
+        })}
+      >
         {/* Header section */}
         <Stack direction={'column'} textAlign="center">
           <Typography variant="h4" fontWeight={600} mb={1}>
@@ -152,7 +159,7 @@ function ReportBug() {
         {/* Form fields */}
         <Stack direction={'column'} gap={1}>
           {/* Issue type dropdown */}
-          <FormControl fullWidth error={Boolean(error.issueType)}>
+          <FormControl size={'small'} fullWidth error={Boolean(error.issueType)}>
             <InputLabel id="issueType-label">Issue Type</InputLabel>
             <Select
               labelId="issueType-label"
@@ -176,6 +183,7 @@ function ReportBug() {
           {/* Bug title input */}
           <TextField
             label="Bug Title"
+            size={'small'}
             placeholder="e.g., Chat freezes after sending image"
             name="title"
             value={formData.title}
@@ -188,11 +196,12 @@ function ReportBug() {
           {/* Description input */}
           <TextField
             label="Description"
+            size={'small'}
             placeholder="e.g., The chat screen freezes when I send an image over mobile data."
             name="description"
             value={formData.description}
             multiline
-            minRows={10}
+            minRows={3}
             onChange={handleChange}
             error={Boolean(error.description)}
             helperText={error.description}
@@ -206,7 +215,7 @@ function ReportBug() {
             name="expectedBehavior"
             value={formData.expectedBehavior}
             multiline
-            minRows={4}
+            minRows={3}
             onChange={handleChange}
             fullWidth
           />
@@ -218,7 +227,7 @@ function ReportBug() {
             name="actualBehavior"
             value={formData.actualBehavior}
             multiline
-            minRows={6}
+            minRows={3}
             onChange={handleChange}
             fullWidth
           />
@@ -226,6 +235,7 @@ function ReportBug() {
           {/* Device info input (optional) */}
           <TextField
             label="Device Info (Optional)"
+            size='small'
             placeholder="e.g., Android 13, Chrome 114, Samsung Galaxy S21"
             name="deviceInfo"
             value={formData.deviceInfo}
@@ -236,6 +246,7 @@ function ReportBug() {
           {/* Email input */}
           <TextField
             label="Email"
+            size='small'
             placeholder="Pairly@support.chat"
             name="email"
             value={formData.email}
@@ -275,20 +286,17 @@ function ReportBug() {
           <StyledActionButton
             onClick={handleSubmit}
             variant="outlined"
-            endIcon={<SendIcon sx={{ color: 'text.primary' }} />}
+            endIcon={<SendIcon />}
             size="large"
             disabled={isDisabled}
             text={isDisabled ? 'Sending...' : 'Report Issue'}
             sx={{
-              fontSize: '1em',
-              fontWeight: 600,
-              py: 1.2,
               textShadow: '0 0 2px #000',
-              alignSelf: 'end'
+              alignSelf: 'flex-end'
             }}
           />
         </Stack>
-      </BlurWrapper>
+      </Box>
     </Box>
   );
 }

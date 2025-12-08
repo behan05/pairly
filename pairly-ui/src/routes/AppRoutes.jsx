@@ -42,7 +42,8 @@ import Notifications from '@/pages/private/settings/notifications/Notifications'
 import HelpLayout from '@/pages/private/settings/help/HelpLayout';
 import Help from '@/pages/private/settings/help/Help';
 import HelpFAQs from '@/pages/private/settings/help/HelpFAQs';
-import HelpContact from '@/pages/private/settings/help/HelpContact';
+import CreateSupportTicket from '@/pages/private/settings/help/support-ticket/CreateSupportTicket';
+import MyTickets from '@/pages/private/settings/help/support-ticket/MyTickets';
 import HelpPrivacyPolicy from '@/pages/private/settings/help/HelpPrivacyPolicy';
 import HelpReport from '@/pages/private/settings/help/HelpReport';
 
@@ -201,9 +202,10 @@ export const routes = createBrowserRouter([
                 children: [
                   { index: true, element: <Help /> },
                   { path: 'faqs-help', element: <HelpFAQs /> },
-                  { path: 'contact-help', element: <HelpContact /> },
                   { path: 'privacy-policy', element: <HelpPrivacyPolicy /> },
-                  { path: 'report-problem', element: <HelpReport /> }
+                  { path: 'report-problem', element: <HelpReport /> },
+                  { path: 'create-support-ticket', element: <CreateSupportTicket /> },
+                  { path: 'my-tickets', element: <MyTickets /> },
                 ]
               }
             ]

@@ -1,4 +1,3 @@
-const ContactHelp = require('../models/ContactHelp.model');
 const BugReport = require('../models/ReportProblem.model');
 const Settings = require('../models/settings.model');
 const User = require('../models/User.model');
@@ -6,37 +5,6 @@ const bcrypt = require('bcryptjs');
 const zlib = require('zlib');
 const Profile = require('../models/Profile.model');
 // const cloudinary = require('cloudinary').v2;
-
-exports.contactHelp = async (req, res) => {
-    const { fullName, email, category, subject, message } = req.body;
-
-    if (!fullName || !email || !category || !subject || !message) {
-        res.setHeader('Content-Type', 'application/json');
-        return res.status(400).json({
-            error: 'All fields are required.',
-            success: false
-        });
-    }
-
-    try {
-        const newSupportRequest = await ContactHelp.create({ fullName, email, category, subject, message });
-        await newSupportRequest.save();
-
-        res.setHeader('Content-Type', 'application/json');
-        return res.status(201).json({
-            message: 'Your request has been submitted successfully.',
-            success: true
-        });
-
-    } catch (error) {
-        res.setHeader('Content-Type', 'application/json');
-        return res.status(500).json({
-            error: 'An error occurred while processing your request.',
-            success: false,
-            details: error.message
-        });
-    }
-};
 
 exports.bugReport = async (req, res) => {
     const {

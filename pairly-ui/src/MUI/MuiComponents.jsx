@@ -55,7 +55,13 @@ import {
   ListItemAvatar, // Avatar inside list item
   Menu, // Context or dropdown menu
   MenuItem, // Option inside a Menu
-
+  Table,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableBody,
+  
   // ─── Media & Avatars ────────────────────────────────────
   Avatar, // User profile picture
   Badge, // Badge over icon (e.g., unread count)
@@ -139,6 +145,12 @@ export {
   ListItemAvatar,
   Menu,
   MenuItem,
+  Table,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableBody,
 
   // Media
   Avatar,

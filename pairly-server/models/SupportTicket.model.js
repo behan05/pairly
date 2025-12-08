@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
-const contactHelpSchema = new mongoose.Schema({
+const supportTicketSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     fullName: {
         type: String,
         required: true
@@ -20,7 +25,13 @@ const contactHelpSchema = new mongoose.Schema({
     message: {
         type: String,
         required: true
+    },
+    status: {
+        type: String,
+        required: true,
+        default: 'pending',
+        enum: ['pending', 'in-progress', 'resolved']
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model('ContactHelp', contactHelpSchema);
+module.exports = mongoose.model('SupportTicket', supportTicketSchema);

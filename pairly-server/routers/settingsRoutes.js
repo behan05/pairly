@@ -1,5 +1,6 @@
 const Routers = require('express').Router();
 const settingsController = require('../controllers/settingsController');
+const ticketSupportController = require('../controllers/support-ticket/SupportTicket');
 const authMiddleware = require('../middlewares/authMiddleware');
 
 /**
@@ -8,20 +9,27 @@ const authMiddleware = require('../middlewares/authMiddleware');
  * ========================
  */
 
+// ======================== Create Support Ticket API =====================
+/**
+ * @route   POST /api/settings/contact-support
+ * @desc    Support ticket raise by user
+ * @access  Private
+ */
+Routers.post('/contact-support', authMiddleware, ticketSupportController.createSupportTicket);
+/**
+ * @route   GET /api/settings/contact-support
+ * @desc    Getting raised tickets
+ * @access  Private
+ */
+Routers.get('/contact-support', authMiddleware, ticketSupportController.getSupportTicket);
+
+// ======================== Setting Support API =====================
 /**
  * @route   POST /api/settings/report-problem
  * @desc    Submit a bug or problem report
  * @access  Public / private
  */
 Routers.post('/report-problem', settingsController.bugReport);
-
-/**
- * @route   POST /api/settings/contact-support
- * @desc    Contact support team for help
- * @access  Public
- */
-Routers.post('/contact-support', settingsController.contactHelp);
-
 
 /**
  * ========================

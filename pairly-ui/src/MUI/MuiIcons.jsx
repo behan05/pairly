@@ -138,6 +138,7 @@ import StarIcon from '@mui/icons-material/Star';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import LanguageIcon from '@mui/icons-material/Language';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 
 // ==================== Partner Profile Icons ====================
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
@@ -335,7 +336,8 @@ export {
   EmojiEventsIcon,
   MonetizationOnIcon,
   LanguageIcon,
-
+  ListAltIcon,
+  
   // Pricing Icons
   CheckIcon,
   ClearIcon,

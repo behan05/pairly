@@ -19,21 +19,24 @@ a {
   text-decoration: none;
 }
 
-/* SCROLLBAR */
-
+/* GLOBAL SCROLLBAR (Modern + Clean) */
 ::-webkit-scrollbar {
-  width: 0.5rem;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  border-radius: 0.8rem;
-  background-color: #13111C;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  box-shadow: inset 0 0 0.9em #33323E;
-  outline: none;
-  border-radius: 0.8rem;
+  background: rgba(120, 118, 150, 0.35);
+  border-radius: 10px;
+  transition: background 0.25s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(120, 118, 150, 0.55);
 }
 
 /* calling */

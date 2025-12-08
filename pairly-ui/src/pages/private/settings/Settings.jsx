@@ -123,7 +123,7 @@ function Settings() {
       path: 'help',
       icon: <SosIcon sx={{ mr: 1.1, color: 'error.main' }} />,
       title: 'Help | Support',
-      subTitle: 'FAQs, contact support, policies'
+      subTitle: 'Help Center, Support Tickets & Policies'
     }
   ];
 

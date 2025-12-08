@@ -15,13 +15,13 @@ import { SendIcon } from '@/MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import StyledText from '@/components/common/StyledText';
 import StyledActionButton from '@/components/common/StyledActionButton';
-import BlurWrapper from '@/components/common/BlurWrapper';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { SETTINGS_API } from '@/api/config';
 import axios from 'axios';
+import { getAuthHeaders } from '@/utils/authHeaders';
 
-function HelpContact() {
+function CreateSupportTicket() {
   const [isDisabled, setIsDisabled] = React.useState(false);
 
   const [formData, setFormData] = React.useState({
@@ -35,7 +35,7 @@ function HelpContact() {
   const [error, setError] = React.useState({});
 
   React.useEffect(() => {
-    document.title = 'Pairly - Contact Support';
+    document.title = 'Pairly - Create Support Ticket';
   }, []);
 
   const handleChange = React.useCallback((e) => {
@@ -83,7 +83,8 @@ function HelpContact() {
     setIsDisabled(true);
 
     try {
-      const response = await axios.post(`${SETTINGS_API}/contact-support`, formData);
+      const headers = getAuthHeaders();
+      const response = await axios.post(`${SETTINGS_API}/contact-support`, formData, { headers });
       toast.success(response.data.message);
     } catch (error) {
       toast.error(error.response?.data?.error || 'Something went wrong.');
@@ -102,23 +103,35 @@ function HelpContact() {
   };
 
   return (
-    <Box flexDirection="column">
-      <ToastContainer position="top-right" autoClose={2000} theme="colored" />
-
+    <Box sx={{
+      display: 'flex',
+      flexDirection: 'column',
+    }}>
       <Stack mb={2}>
-        <NavigateWithArrow redirectTo="/pairly/settings/help" text="Contact Support" />
+        <NavigateWithArrow redirectTo="/pairly/settings/help" text="Create Support Ticket" />
       </Stack>
 
-      <BlurWrapper component="form" onSubmit={handleSubmit}>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={(theme) => ({
+          mt: 4,
+          border: `1px dashed ${theme.palette.divider}`,
+          p: 1,
+          borderRadius: 1,
+          maxWidth: 600,
+          mx: 'auto'
+        })}
+      >
         {/* === Heading === */}
         <Stack direction="column" textAlign="center">
           <Typography variant="h5" fontWeight={600} mb={1} color="text.primary">
-            Need <StyledText text="Assistance?" />
+            Create a <StyledText text="Support Ticket" />
           </Typography>
 
           <Typography variant="body2" fontWeight={400} mb={4} color="text.secondary">
-            We're here to help. If you're facing issues or have questions, please fill out the form
-            below and our support team will get back to you shortly.
+            If you’re facing an issue or need help, create a support ticket below.
+            Our team will get back to you as soon as possible.
           </Typography>
         </Stack>
 
@@ -130,6 +143,7 @@ function HelpContact() {
             placeholder="Behan Kumar"
             fullWidth
             autoComplete="on"
+            size={'small'}
             value={formData.fullName}
             onChange={handleChange}
             error={Boolean(error.fullName)}
@@ -139,6 +153,7 @@ function HelpContact() {
           <TextField
             label="Email Address"
             name="email"
+            size={'small'}
             placeholder="connect@support.com"
             fullWidth
             autoComplete="on"
@@ -148,7 +163,7 @@ function HelpContact() {
             helperText={error.email}
           />
 
-          <FormControl fullWidth error={Boolean(error.category)}>
+          <FormControl size={'small'} fullWidth error={Boolean(error.category)}>
             <InputLabel id="category-label">Category</InputLabel>
             <Select
               labelId="category-label"
@@ -158,10 +173,11 @@ function HelpContact() {
               label="Category"
               onChange={handleChange}
             >
-              <MenuItem value="general">General Question</MenuItem>
+              <MenuItem value="bug">Bug / Technical Issue</MenuItem>
+              <MenuItem value="billing">Billing & Payments</MenuItem>
               <MenuItem value="account">Account Issue</MenuItem>
-              <MenuItem value="feedback">Feedback</MenuItem>
-              <MenuItem value="other">Other</MenuItem>
+              <MenuItem value="feature">Feature Request</MenuItem>
+              <MenuItem value="general">General Question</MenuItem>
             </Select>
             {error.category && <FormHelperText>{error.category}</FormHelperText>}
           </FormControl>
@@ -169,6 +185,7 @@ function HelpContact() {
           <TextField
             label="Subject"
             name="subject"
+            size={'small'}
             placeholder="Unable to find FAQ for my issue"
             fullWidth
             autoComplete="on"
@@ -181,10 +198,11 @@ function HelpContact() {
           <TextField
             label="Message"
             name="message"
+            size={'small'}
             placeholder="Please describe your issue or question in detail..."
             fullWidth
             multiline
-            minRows={8}
+            minRows={4}
             autoComplete="on"
             value={formData.message}
             onChange={handleChange}
@@ -194,15 +212,19 @@ function HelpContact() {
 
           <StyledActionButton
             type="submit"
+            onClick={handleSubmit}
             disabled={isDisabled}
-            endIcon={<SendIcon sx={{ color: 'success.main' }} />}
-          >
-            {isDisabled ? 'Sending Request...' : 'Request'}
-          </StyledActionButton>
+            endIcon={<SendIcon />}
+            text={isDisabled ? 'Submitting...' : 'Submit Ticket'}
+            sx={{
+              alignSelf: 'flex-end',
+              textShadow: '0 0 2px #000'
+            }}
+          />
         </Stack>
-      </BlurWrapper>
+      </Box>
     </Box>
   );
 }
 
-export default HelpContact;
+export default CreateSupportTicket;
