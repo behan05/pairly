@@ -10,7 +10,16 @@ const usersSchema = new mongoose.Schema({
         default: 'local',
     },
     publicId: { type: String, required: true, unique: true },
+    isOnline: {
+        type: Boolean,
+        default: false
+    },
     lastSeen: { type: Date, default: null },
+    status: {
+        type: String,
+        enum: ['active', 'banned'],
+        default: 'active'
+    },
 
     // Email verification fields
     emailVerified: { type: Boolean, default: false },

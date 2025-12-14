@@ -76,6 +76,7 @@ app.use(cors({
     origin: [
         'https://connect-link-three.vercel.app',
         'http://localhost:5173',
+        'http://localhost:5174',
         'http://localhost:4173',
         'https://pairly.chat',
         'https://www.pairly.chat',
@@ -123,7 +124,13 @@ app.use('/api/feedback', feedbackRoutes);
 app.use('/api/users', UserRoutes);
 
 // ------------- Payment Routes --------------------
-app.use("/api/payments", paymentRoutes);
+app.use('/api/payments', paymentRoutes);
+
+/**
+ * ============================ ADMIN PANEL =====================================
+*/
+const adminRoutes = require('./routers/admin/adminRoutes');
+app.use('/api/admin', adminRoutes);
 
 // ==========================
 // Health Check Route

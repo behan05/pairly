@@ -2,9 +2,11 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User.model');
 const generateToken = require('../utils/generateToken');
 const Subscription = require('../models/payment/Subscription.model');
+const LoginActivity = require('../models/LoginActivity.model');
 const { nanoid } = require('nanoid');
 const sendEmail = require('../utils/email/sendEmail');
 const generateOTP = require('../utils/email/generateEmailOTP');
+const axios = require('axios');
 
 // helper email regex (reasonable strictness)
 const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
@@ -129,6 +131,71 @@ const registerController = async (req, res) => {
 };
 
 // ==================== LOGIN ==================
+const getClientIp = (req) => {
+  return (
+    req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
+    req.socket?.remoteAddress ||
+    null
+  );
+};
+const fetchGeo = async (ip) => {
+  try {
+    const isLocal =
+      !ip ||
+      ip === '::1' ||
+      ip === '127.0.0.1' ||
+      ip.startsWith('192.168.') ||
+      ip.startsWith('10.');
+
+    const url = isLocal
+      ? 'https://ipapi.co/json/'
+      : `https://ipapi.co/${ip}/json/`;
+
+    const res = await axios.get(url, {
+      timeout: 4000,
+      headers: {
+        'User-Agent': 'Pairly-Server/1.0'
+      }
+    });
+
+    return res?.data || null;
+  } catch (err) {
+    console.error('Geo lookup failed:', err.message);
+    return null;
+  }
+};
+const logLoginActivity = async ({
+  user = null,
+  req,
+  success,
+  reason
+}) => {
+  const ip = getClientIp(req);
+  const agent = req.headers['user-agent'] || null;
+  const geo = await fetchGeo(ip);
+
+  await LoginActivity.create({
+    user,
+    ip,
+    agent,
+    geo: geo
+      ? {
+        city: geo.city,
+        state: geo.region,
+        stateCode: geo.region_code,
+        country: geo.country_name,
+        countryCode: geo.country,
+        continent: geo.continent_name,
+        continentCode: geo.continent_code,
+        latitude: geo.latitude?.toString(),
+        longitude: geo.longitude?.toString(),
+      }
+      : null,
+    success,
+    reason
+  });
+};
+
 const loginController = async (req, res) => {
   try {
     const { email, password, authProvider = 'local' } = req.body;
@@ -143,6 +210,13 @@ const loginController = async (req, res) => {
     const user = await User.findOne({ email }).populate('currentSubscriptionId');
 
     if (!user) {
+      await logLoginActivity({
+        user: null,
+        req,
+        success: false,
+        reason: 'User not found'
+      });
+
       return res.status(404).json({
         success: false,
         error: 'User not found.'
@@ -150,6 +224,13 @@ const loginController = async (req, res) => {
     }
 
     if (user.authProvider !== authProvider) {
+      await logLoginActivity({
+        user: user._id,
+        req,
+        success: false,
+        reason: 'Wrong auth provider'
+      });
+
       return res.status(400).json({
         success: false,
         error: `Please login using your ${user.authProvider} account.`
@@ -200,6 +281,13 @@ const loginController = async (req, res) => {
     // Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      await logLoginActivity({
+        user: user._id,
+        req,
+        success: false,
+        reason: 'Invalid password'
+      });
+
       return res.status(401).json({
         success: false,
         error: 'Invalid credentials.'
@@ -231,7 +319,19 @@ const loginController = async (req, res) => {
         { new: true }
       );
       user.publicId = updatedUser.publicId;
-    }
+    };
+
+    // Craete in LoginActivity schema
+    const ip = getClientIp(req);
+    const agent = req.headers['user-agent'] || null;
+    const geo = await fetchGeo(ip);
+
+    await logLoginActivity({
+      user: user._id,
+      req,
+      success: true,
+      reason: null
+    });
 
     return res.status(200).json({
       success: true,

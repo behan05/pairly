@@ -58,8 +58,16 @@ function setupSocket(server) {
     });
 
     // === Main connection listener ===
-    io.on('connection', (socket) => {
+    io.on('connection', async (socket) => {
         userSocketMap.set(socket.userId, socket.id);
+
+        // Update DB
+        const updateOnlineActivity = await User.findByIdAndUpdate(
+            socket.userId,
+            { isOnline: true },
+            { new: true }
+        );
+        updateOnlineActivity.save()
 
         // count active
         onlineUsersCount.add(socket.id);
@@ -95,10 +103,14 @@ function setupSocket(server) {
 
             // Update DB
             const updateLastActivity = await User.findByIdAndUpdate(
-                { _id: socket.userId },
-                { lastSeen: new Date() },
+                socket.userId,
+                {
+                    isOnline: false,
+                    lastSeen: new Date()
+                },
                 { new: true }
             );
+            updateLastActivity.save()
             onlineUsers.delete(String(socket.userId));
 
             io.emit('privateChat:userOffline', { userId: socket.userId, lastSeen: updateLastActivity?.lastSeen });
