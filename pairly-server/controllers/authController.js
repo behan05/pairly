@@ -134,6 +134,7 @@ const registerController = async (req, res) => {
 const getClientIp = (req) => {
   return (
     req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
+    req.headers['x-real-ip'] ||
     req.socket?.remoteAddress ||
     null
   );
@@ -320,11 +321,6 @@ const loginController = async (req, res) => {
       );
       user.publicId = updatedUser.publicId;
     };
-
-    // Craete in LoginActivity schema
-    const ip = getClientIp(req);
-    const agent = req.headers['user-agent'] || null;
-    const geo = await fetchGeo(ip);
 
     await logLoginActivity({
       user: user._id,
