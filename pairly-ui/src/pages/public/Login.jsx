@@ -351,21 +351,22 @@ function Login() {
             {loading ? 'Logging in...' : 'Login'}
           </Button>
 
+          {/* TEMPORARY COMMENT DUE TO SECURITY CONCERN */}
           {/* Divider with 'or' text */}
-          <Divider sx={{ my: 2 }}>
+          {/* <Divider sx={{ my: 2 }}>
             <Typography
               variant="subtitle1"
               sx={{ fontSize: '0.9rem', color: theme.palette.text.secondary }}
             >
               <StyledText text={'or'} />
             </Typography>
-          </Divider>
+          </Divider> */}
 
           {/* Social login icons */}
-          <Stack direction={'row'} alignItems={'center'} m={'auto'} gap={2}>
+          {/* <Stack direction={'row'} alignItems={'center'} m={'auto'} gap={2}> */}
 
-            {/* Login With Google */}
-            <Tooltip title="Login with Google">
+          {/* Login With Google */}
+          {/* <Tooltip title="Login with Google">
               <IconButton
                 edge="start"
                 onClick={() => handleSocialLogin('google')}
@@ -373,10 +374,10 @@ function Login() {
               >
                 <GoogleIcon />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
 
-            {/* Login With GitHub */}
-            <Tooltip title="Login with GitHub">
+          {/* Login With GitHub */}
+          {/* <Tooltip title="Login with GitHub">
               <IconButton
                 edge="start"
                 onClick={() => handleSocialLogin('github')}
@@ -385,7 +386,7 @@ function Login() {
                 <GithubIcon sx={{ color: theme.palette.text.primary }} />
               </IconButton>
             </Tooltip>
-          </Stack>
+          </Stack> */}
         </Box>
       </Box>
     </Box >

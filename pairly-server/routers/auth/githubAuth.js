@@ -134,7 +134,7 @@ router.get(
                 user.publicId = updatedUser.publicId;
             }
 
-            // ✅ Log successful GitHub login
+            // Log successful GitHub login
             await logLoginActivity({
                 user: user._id,
                 req,

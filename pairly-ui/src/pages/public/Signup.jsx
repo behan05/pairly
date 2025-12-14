@@ -428,20 +428,21 @@ function Signup() {
             {loading || buttonDisabled ? 'Creating Account…' : 'Create Account'}
           </Button>
 
-          <Divider sx={{ my: 2 }}>
+          {/* TEMPORARY COMMENT DUE TO SECURITY CONCERN */}
+          {/* <Divider sx={{ my: 2 }}>
             <Typography
               variant="subtitle1"
               sx={{ fontSize: '0.9rem', color: theme.palette.text.secondary }}
             >
               <StyledText text={'or'} />
             </Typography>
-          </Divider>
+          </Divider> */}
 
           {/* Social Signup */}
-          <Stack direction={'row'} alignItems={'center'} m={'auto'} gap={2}>
+          {/* <Stack direction={'row'} alignItems={'center'} m={'auto'} gap={2}> */}
 
-            {/* Signup With Google */}
-            <Tooltip title="Signup with Google">
+          {/* Signup With Google */}
+          {/* <Tooltip title="Signup with Google">
               <IconButton
                 edge="start"
                 onClick={() => handleSocialSignup('google')}
@@ -449,10 +450,10 @@ function Signup() {
               >
                 <GoogleIcon />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
 
-            {/* Signup With GitHub */}
-            <Tooltip title="Signup with GitHub">
+          {/* Signup With GitHub */}
+          {/* <Tooltip title="Signup with GitHub">
               <IconButton
                 edge="start"
                 onClick={() => handleSocialSignup('github')}
@@ -461,7 +462,7 @@ function Signup() {
                 <GithubIcon sx={{ color: theme.palette.text.primary }} />
               </IconButton>
             </Tooltip>
-          </Stack>
+          </Stack> */}
         </Box>
       </Box>
     </Box>
