@@ -80,6 +80,7 @@ app.use(cors({
         'http://localhost:4173',
         'https://pairly.chat',
         'https://www.pairly.chat',
+        'https://pairly-admin.vercel.app'
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
