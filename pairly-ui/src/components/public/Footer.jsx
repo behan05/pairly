@@ -60,10 +60,14 @@ function Footer() {
             component="img"
             src={logo}
             alt="Pairly Logo"
+            maxWidth={48}
             sx={{
-              height: { xs: 40, md: 52 },
-              userSelect: 'none',
-              filter: 'drop-shadow(0 0 6px rgba(0,0,0,0.1))',
+              transition: 'all 0.8s ease',
+
+              '&:hover': {
+                transform: 'rotateZ(360deg)',
+                filter: `drop-shadow(0 0 1rem) `,
+              },
             }}
           />
           <Typography

@@ -286,9 +286,16 @@ const ChatSidebarHeader = ({ children }) => {
             src={'/logo.png'}
             alt="Pairly logo"
             aria-label="Pairly logo"
-            maxWidth={isSm ? 48 : 55}
+            maxWidth={isSm ? 40 : 40}
             sx={{
               filter: `brightness(120%) `,
+
+              transition: 'all 0.8s ease',
+
+              '&:hover': {
+                transform: 'rotateZ(360deg)',
+                filter: `drop-shadow(0 0 10px) `,
+              },
             }}
           />
         </Link>

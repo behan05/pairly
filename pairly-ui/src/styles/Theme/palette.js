@@ -101,8 +101,8 @@ export const darkPalette = {
   },
 
   background: {
-    default: "#07060B",
-    paper: "#040406",
+    default: "#000000",
+    paper: "#000000",
   },
 
   divider: "rgba(224, 242, 241, 0.14)",

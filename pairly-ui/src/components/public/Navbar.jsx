@@ -128,8 +128,17 @@ function Navbar() {
             component="img"
             src="/logo.png"
             alt="Pairly logo"
-            maxWidth={isSm ? 48 : 55}
-            sx={{ filter: 'brightness(120%) drop-shadow(0 4px 2px rgba(0,0,0,0.2))' }}
+            maxWidth={isSm ? 40 : 40}
+            sx={{
+              filter: `brightness(120%) `,
+
+              transition: 'all 0.8s ease',
+
+              '&:hover': {
+                transform: 'rotateZ(360deg)',
+                filter: `drop-shadow(0 0 1rem) `,
+              },
+            }}
           />
         </Stack>
 

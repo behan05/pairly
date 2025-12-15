@@ -10,6 +10,11 @@ const {
     unbanUserByIdController,
     deleteUserByIdController,
 } = require('../../controllers/adminPanelControllers/users.controller');
+const {
+    adminDashboardStatsController,
+    adminDashboardFinancialAndBillingOverviewController,
+    adminDashboardTopUsersController
+} = require('../../controllers/adminPanelControllers/dashboard.controller');
 
 // Middelware (Security)
 const adminAuth = require('../../middlewares/adminAuthMiddleware');
@@ -114,7 +119,9 @@ routes.put('/settings', adminAuth, (req, res) => { });
  * ====================== DASHBOARD ======================
  */
 
-routes.get('/dashboard/stats', adminAuth, (req, res) => { });
+routes.get('/dashboard/stats', adminDashboardStatsController);
+routes.get('/dashboard/financial-billing-overview', adminDashboardFinancialAndBillingOverviewController);
+routes.get('/dashboard/top-users', adminDashboardTopUsersController);
 
 
 module.exports = routes;

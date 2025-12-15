@@ -62,12 +62,11 @@ function setupSocket(server) {
         userSocketMap.set(socket.userId, socket.id);
 
         // Update DB
-        const updateOnlineActivity = await User.findByIdAndUpdate(
+        await User.findByIdAndUpdate(
             socket.userId,
             { isOnline: true },
             { new: true }
         );
-        updateOnlineActivity.save()
 
         // count active
         onlineUsersCount.add(socket.id);
@@ -110,8 +109,7 @@ function setupSocket(server) {
                 },
                 { new: true }
             );
-            updateLastActivity.save()
-            onlineUsers.delete(String(socket.userId));
+            userSocketMap.delete(socket.userId);
 
             io.emit('privateChat:userOffline', { userId: socket.userId, lastSeen: updateLastActivity?.lastSeen });
         });
