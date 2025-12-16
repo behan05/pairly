@@ -89,6 +89,8 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
   // Reference to hidden file input
   const fileInputRef = useRef(null);
   const inputContainerRef = useRef(null);
+  const originalStyleRef = useRef(null);
+  const pinnedRef = useRef(false);
 
   // Handle attach button click (open file menu)
   const handleAttachClick = (event) => {
