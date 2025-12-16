@@ -553,8 +553,9 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
       width="100%"
       zIndex={10}
       sx={{
-        transition: 'bottom 0.25s ease',
-        pb: isSm ? 'env(safe-area-inset-bottom)' : 0
+        transition: 'margin-bottom 0.25s ease',
+        pb: isSm ? 'env(safe-area-inset-bottom)' : 0,
+        marginBottom: 0
       }}
     >
 

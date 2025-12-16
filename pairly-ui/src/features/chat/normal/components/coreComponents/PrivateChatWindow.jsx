@@ -119,6 +119,13 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
     }
   }, [messages, isTyping]);
 
+  // Scroll to bottom when opening a chat / conversation changes
+  useEffect(() => {
+    try {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+    } catch (e) {}
+  }, [conversationId, selectedUserId]);
+
   return (
     <Stack
       height={viewportHeight}

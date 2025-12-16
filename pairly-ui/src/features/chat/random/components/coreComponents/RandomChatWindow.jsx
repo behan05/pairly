@@ -239,6 +239,13 @@ function RandomChatWindow({ setShowChatWindow }) {
     return () => {};
   }, []);
 
+  // Ensure we jump to the last message when opening/connecting
+  useEffect(() => {
+    try {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+    } catch (e) {}
+  }, [isConnected]);
+
   useEffect(() => {
     // Scroll input into view when focused
     const input = document.querySelector("textarea, input");
