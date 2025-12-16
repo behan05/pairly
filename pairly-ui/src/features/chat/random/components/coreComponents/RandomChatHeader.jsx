@@ -20,7 +20,8 @@ import {
   NotificationsOffIcon,
   defaultAvatar,
   CheckCircleIcon,
-  StarIcon
+  StarIcon,
+  PersonAddAltOutlinedIcon
 } from '../../../../../MUI/MuiIcons';
 import { blue } from "@mui/material/colors";
 
@@ -81,7 +82,7 @@ function RandomChatHeader() {
 
   const isPartnerPremium =
     partnerStatus === 'active' && partnerPlan !== 'free';
-  
+
   useEffect(() => {
     setNotification(notificationSettings?.newMessage ?? false);
   }, [notificationSettings]);
@@ -195,7 +196,7 @@ function RandomChatHeader() {
     color: 'text.secondary',
     '&:hover': {
       transform: `translate(1px, -1px) scale(0.99)`,
-      filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
+      filter: `drop-shadow(0 0 0.5px ${theme.palette.primary.main})`
     },
   };
 
@@ -299,8 +300,55 @@ function RandomChatHeader() {
         </Stack>
 
         {/* Right Section: Typing Indicator + Menu */}
-        <Stack direction="row" alignItems="center" justifyContent={'center'} gap={1}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent={'center'}
+          gap={1.2}
+        >
           {partnerTyping ? <TypingIndicator /> : <WaitingIndicator />}
+          <Tooltip title={isFriendRequestSend ? 'Request Sent' : 'Add Friend'}>
+            <IconButton
+              onClick={() => !isFriendRequestSend && handleAction('requestForPrivateChat')}
+              size="small"
+              sx={(theme) => ({
+                cursor: isFriendRequestSend ? 'not-allowed' : 'pointer',
+                pointerEvents: isFriendRequestSend ? 'none' : 'auto',
+                opacity: isFriendRequestSend ? 0.5 : 1,
+
+                backgroundColor: isFriendRequestSend
+                  ? theme.palette.action.disabledBackground
+                  : theme.palette.success.light + '20',
+
+                border: `1px solid ${isFriendRequestSend
+                  ? theme.palette.divider
+                  : theme.palette.success.main
+                  }`,
+
+                boxShadow: isFriendRequestSend
+                  ? 'none'
+                  : `0 0 6px ${theme.palette.success.main}40`,
+
+                transition: 'all 0.25s ease',
+
+                '&:hover': !isFriendRequestSend && {
+                  backgroundColor: theme.palette.success.light + '40',
+                  boxShadow: `0 0 12px ${theme.palette.success.main}80`,
+                },
+
+                '&:active': !isFriendRequestSend && {
+                  boxShadow: `0 0 4px ${theme.palette.success.main}60`,
+                },
+              })}
+            >
+
+              <PersonAddAltOutlinedIcon
+                sx={{
+                  color: isFriendRequestSend ? 'text.disabled' : 'success.main',
+                  fontSize: '1.2rem'
+                }} />
+            </IconButton>
+          </Tooltip>
 
           {/* Action Menu Icon */}
           <IconButton onClick={handleMenuOpen} size="small">
@@ -316,12 +364,10 @@ function RandomChatHeader() {
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             PaperProps={{
               sx: {
-                background: `linear-gradient(130deg,
-        ${theme.palette.primary.dark} 0%, 
-        ${theme.palette.background.paper} 30%,
-        ${theme.palette.background.paper} 100%)`,
+                background: theme.palette.background.paper,
                 boxShadow: theme.shadows[6],
                 borderRadius: 1,
+                border: `1px solid ${theme.palette.divider}`,
                 minWidth: 200,
                 mt: 1,
                 p: '0px 10px',

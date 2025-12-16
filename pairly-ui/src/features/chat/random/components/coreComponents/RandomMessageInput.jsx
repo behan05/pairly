@@ -398,7 +398,7 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
     minHeight: 'unset',
     '&:hover': {
       transform: `translate(1px, -1px) scale(0.99)`,
-      filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
+      filter: `drop-shadow(0 0 0.5px ${theme.palette.primary.main})`
     },
   };
 
@@ -679,11 +679,12 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
         sx={{
           display: 'flex',
           alignItems: 'center',
+          boxSizing: 'border-box',
           p: 1.2,
           mx: 1,
           mb: 1,
           borderRadius: 2,
-          backgroundColor: theme.palette.background.default
+          border: `1px dashed ${theme.palette.text.secondary}40`
         }}
       >
         {/* Attach Button */}
@@ -702,12 +703,10 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
           transformOrigin={{ vertical: 'bottom', horizontal: 'bottom' }}
           PaperProps={{
             sx: {
-              background: `linear-gradient(130deg,
-             ${theme.palette.primary.dark} 0%, 
-            ${theme.palette.background.paper} 30%,
-             ${theme.palette.background.paper} 100%)`,
+              background: theme.palette.background.paper,
               boxShadow: theme.shadows[6],
               borderRadius: 1,
+              border: `1px solid ${theme.palette.divider}`,
               minWidth: 200,
               p: '0px 10px',
               py: 0.75,

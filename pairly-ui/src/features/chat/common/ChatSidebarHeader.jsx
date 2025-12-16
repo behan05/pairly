@@ -763,7 +763,10 @@ const ChatSidebarHeader = ({ children }) => {
                   mt: 0.5,
                   transition: 'all 0.3s ease-out',
                   color: 'text.secondary',
-                  '&:hover': { transform: `translate(1px, -1px) scale(0.99)`, filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})` },
+                  '&:hover': { 
+                    transform: `translate(1px, -1px) scale(0.99)`, 
+                    filter: `drop-shadow(0 0 0.5px ${theme.palette.primary.main})` 
+                  },
                 }}
               >
                 {icon}{label}
@@ -780,7 +783,10 @@ const ChatSidebarHeader = ({ children }) => {
                 p: '8px 10px',
                 color: 'error.main',
                 transition: 'all 0.3s ease-out',
-                '&:hover': { transform: `translate(1px, -1px) scale(0.99)`, filter: `drop-shadow(0 20px 1rem ${theme.palette.error.main})` },
+                '&:hover': { 
+                  transform: `translate(1px, -1px) scale(0.99)`, 
+                  filter: `drop-shadow(0 0 0.5px ${theme.palette.error.main})`
+                 },
               }}
             >
               <LogoutIcon fontSize="small" sx={{ mr: 1, color: theme.palette.error.main }} />

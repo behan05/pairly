@@ -570,11 +570,12 @@ function PrivateMessageInput() {
         sx={{
           display: 'flex',
           alignItems: 'center',
+          boxSizing: 'border-box',
           p: 1.2,
           mx: 1,
           mb: 1,
           borderRadius: 2,
-          background: theme.palette.background.default
+          border: `1px dashed ${theme.palette.text.secondary}40`
         }}
       >
         {/* Attach Button */}

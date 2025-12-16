@@ -164,7 +164,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
     fontSize: '0.875rem',
     '&:hover': {
       transform: `translate(1px, -1px) scale(0.99)`,
-      filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
+      filter: `drop-shadow(0 0 0.5px ${theme.palette.primary.main})`
     },
   };
 
@@ -178,7 +178,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
     color: 'text.secondary',
     '&:hover': {
       transform: `translate(1px, -1px) scale(0.99)`,
-      filter: `drop-shadow(0 20px 1rem ${theme.palette.error.main})`
+      filter: `drop-shadow(0 0 0.5px ${theme.palette.error.main})`
     },
   };
 
@@ -328,12 +328,10 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             PaperProps={{
               sx: {
-                background: `linear-gradient(130deg,
-             ${theme.palette.primary.dark} 0%, 
-            ${theme.palette.background.paper} 30%,
-             ${theme.palette.background.paper} 100%)`,
+                background: theme.palette.background.paper,
                 boxShadow: theme.shadows[6],
                 borderRadius: 1,
+                border: `1px solid ${theme.palette.divider}`,
                 minWidth: 200,
                 mt: 1,
                 p: '0px 10px',
