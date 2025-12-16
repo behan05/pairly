@@ -22,8 +22,7 @@ import {
   CheckCircleIcon,
   StarIcon,
   PersonAddAltOutlinedIcon
-} from '../../../../../MUI/MuiIcons';
-import { blue } from "@mui/material/colors";
+} from '@/MUI/MuiIcons';
 
 // Components
 import TypingIndicator from '@/components/private/randomChat/TypingIndicator';
