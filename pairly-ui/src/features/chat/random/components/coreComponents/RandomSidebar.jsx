@@ -217,9 +217,9 @@ function RandomSidebar() {
             }}
           >
             <GroupIcon sx={{ fontSize: 18, color: 'info.main' }} />
-            {numberOfActiveUsers < 3
-              ? `${3} people online`
-              : `${numberOfActiveUsers} people online`}
+            {numberOfActiveUsers === 1
+              ? `${numberOfActiveUsers} people online`
+              : `${numberOfActiveUsers} peoples online`}
           </Typography>
         </Stack>
       </Box>
