@@ -348,7 +348,7 @@ function PrivateMessageInput() {
     minHeight: 'unset',
     '&:hover': {
       transform: `translate(1px, -1px) scale(0.99)`,
-      filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
+      filter: `drop-shadow(0 0 0.5px ${theme.palette.primary.main})`
     },
   };
 
@@ -358,8 +358,8 @@ function PrivateMessageInput() {
   useEffect(() => {
     const handleViewportChange = () => {
       if (!inputContainerRef.current || !window.visualViewport) return;
-      const vhOffset = window.visualViewport.height - window.innerHeight;
-      inputContainerRef.current.style.marginBottom = `${vhOffset > 0 ? vhOffset + 8 : 0}px`;
+      const offset = window.innerHeight - window.visualViewport.height;
+      inputContainerRef.current.style.marginBottom = `${offset > 0 ? offset + 8 : 0}px`;
     };
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', handleViewportChange);
@@ -574,7 +574,7 @@ function PrivateMessageInput() {
           p: 1.2,
           mx: 1,
           mb: 1,
-          borderRadius: 2,
+          borderRadius: 1,
           border: `1px dashed ${theme.palette.text.secondary}40`
         }}
       >
@@ -595,13 +595,12 @@ function PrivateMessageInput() {
             transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             PaperProps={{
               sx: {
-                background: `linear-gradient(130deg,
-             ${theme.palette.primary.dark} 0%, 
-            ${theme.palette.background.paper} 30%,
-             ${theme.palette.background.paper} 100%)`,
+                background: theme.palette.background.paper,
                 boxShadow: theme.shadows[6],
                 borderRadius: 1,
+                border: `1px solid ${theme.palette.divider}`,
                 minWidth: 200,
+                mt: 1,
                 p: '0px 10px',
                 py: 0.75,
                 overflow: 'hidden'
@@ -623,9 +622,9 @@ function PrivateMessageInput() {
                 sx={{
                   transition: 'all 0.3s ease-in-out',
                   '&:hover': {
-                    transform: `translate(1px, -2px) scale(0.99)`,
-                    filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
-                  }
+                    transform: `translate(1px, -1px) scale(0.99)`,
+                    filter: `drop-shadow(0 0 0.5px ${theme.palette.primary.main})`
+                  },
                 }}
               >
                 <IconButton
@@ -649,9 +648,9 @@ function PrivateMessageInput() {
               <Stack alignItems="center" spacing={1} sx={{
                 transition: 'all 0.3s ease-in-out',
                 '&:hover': {
-                  transform: `translate(1px, -2px) scale(0.99)`,
-                  filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
-                }
+                  transform: `translate(1px, -1px) scale(0.99)`,
+                  filter: `drop-shadow(0 0 0.5px ${theme.palette.primary.main})`
+                },
               }}>
                 <IconButton
                   sx={{ bgcolor: theme.palette.action.hover, p: 1, borderRadius: 2 }}
@@ -670,9 +669,9 @@ function PrivateMessageInput() {
               <Stack alignItems="center" spacing={1} sx={{
                 transition: 'all 0.3s ease-in-out',
                 '&:hover': {
-                  transform: `translate(1px, -2px) scale(0.99)`,
-                  filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
-                }
+                  transform: `translate(1px, -1px) scale(0.99)`,
+                  filter: `drop-shadow(0 0 0.5px ${theme.palette.primary.main})`
+                },
               }}>
                 <IconButton
                   sx={{ bgcolor: theme.palette.action.hover, p: 1, borderRadius: 2 }}
@@ -691,9 +690,9 @@ function PrivateMessageInput() {
               <Stack alignItems="center" spacing={1} sx={{
                 transition: 'all 0.3s ease-in-out',
                 '&:hover': {
-                  transform: `translate(1px, -2px) scale(0.99)`,
-                  filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
-                }
+                  transform: `translate(1px, -1px) scale(0.99)`,
+                  filter: `drop-shadow(0 0 0.5px ${theme.palette.primary.main})`
+                },
               }}>
                 <IconButton
                   sx={{ bgcolor: theme.palette.action.hover, p: 1, borderRadius: 2 }}
@@ -716,9 +715,9 @@ function PrivateMessageInput() {
                 sx={{
                   transition: 'all 0.3s ease-in-out',
                   '&:hover': {
-                    transform: `translate(1px, -2px) scale(0.99)`,
-                    filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
-                  }
+                    transform: `translate(1px, -1px) scale(0.99)`,
+                    filter: `drop-shadow(0 0 0.5px ${theme.palette.primary.main})`
+                  },
                 }}>
                 <IconButton sx={{ bgcolor: theme.palette.action.hover, p: 1, borderRadius: 2 }}>
                   <LocationOnIcon sx={{ color: 'error.main', fontSize: '1.4rem' }} />
@@ -730,9 +729,9 @@ function PrivateMessageInput() {
               <Stack alignItems="center" spacing={1} sx={{
                 transition: 'all 0.3s ease-in-out',
                 '&:hover': {
-                  transform: `translate(1px, -2px) scale(0.99)`,
-                  filter: `drop-shadow(0 20px 1rem ${theme.palette.primary.main})`
-                }
+                  transform: `translate(1px, -1px) scale(0.99)`,
+                  filter: `drop-shadow(0 0 0.5px ${theme.palette.primary.main})`
+                },
               }}>
                 <IconButton sx={{ bgcolor: theme.palette.action.hover, p: 1, borderRadius: 2 }}>
                   <LockIcon sx={{ color: 'warning.main', fontSize: '1.4rem' }} />
@@ -750,13 +749,12 @@ function PrivateMessageInput() {
             transformOrigin={{ vertical: 'bottom', horizontal: 'bottom' }}
             PaperProps={{
               sx: {
-                background: `linear-gradient(130deg,
-             ${theme.palette.primary.dark} 0%, 
-            ${theme.palette.background.paper} 30%,
-             ${theme.palette.background.paper} 100%)`,
+                background: theme.palette.background.paper,
                 boxShadow: theme.shadows[6],
                 borderRadius: 1,
+                border: `1px solid ${theme.palette.divider}`,
                 minWidth: 200,
+                mt: 1,
                 p: '0px 10px',
                 py: 0.75,
                 overflow: 'hidden'
@@ -840,6 +838,16 @@ function PrivateMessageInput() {
           value={message}
           onChange={handleInputChange}
           sx={{ mx: 2 }}
+          onFocus={() => {
+            if (!inputContainerRef.current) return;
+            setTimeout(() => {
+              try {
+                inputContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+              } catch (e) {
+                /* ignore */
+              }
+            }, 50);
+          }}
           onKeyDown={(e) => {
             if (enterToSend && e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
