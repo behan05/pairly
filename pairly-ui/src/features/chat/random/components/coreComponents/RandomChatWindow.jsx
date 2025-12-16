@@ -241,13 +241,9 @@ function RandomChatWindow({ setShowChatWindow }) {
 
   // Ensure we jump to the last message when opening/connecting
   useEffect(() => {
-    const el = document.getElementById('chat-messages');
-    setTimeout(() => {
-      try {
-        if (el) el.scrollTop = el.scrollHeight;
-        else messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
-      } catch (e) {}
-    }, 50);
+    try {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+    } catch (e) {}
   }, [isConnected]);
 
   useEffect(() => {
