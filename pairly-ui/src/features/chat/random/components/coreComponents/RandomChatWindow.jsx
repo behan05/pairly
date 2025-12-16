@@ -234,23 +234,9 @@ function RandomChatWindow({ setShowChatWindow }) {
   };
 
   useEffect(() => {
-    const handleResize = () => {
-      const chatWindow = document.getElementById("chat-messages");
-      if (chatWindow && window.visualViewport) {
-        chatWindow.style.height = `${window.visualViewport.height}px`;
-      }
-    };
-
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", handleResize);
-      handleResize();
-    }
-
-    return () => {
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener("resize", handleResize);
-      }
-    };
+    // No-op: rely on parent layout and CSS variables for height.
+    // Left intentionally empty to avoid forcing pixel heights on chat container.
+    return () => {};
   }, []);
 
   useEffect(() => {
@@ -305,13 +291,16 @@ function RandomChatWindow({ setShowChatWindow }) {
 
           {/* Messages Area */}
           <Box
+            id="chat-messages"
             flex={1}
             p={2}
             sx={{
               overflowY: 'auto',
-              maxHeight: `calc(100vh - 160px)`
+              display: 'flex',
+              flexDirection: 'column',
+              minHeight: 0,
+              maxHeight: `calc(var(--vh, 1vh) * 100 - 160px)`
             }}
-            id="chat-messages"
           >
             <Stack spacing={1.5}>
               {/* Render each message */}

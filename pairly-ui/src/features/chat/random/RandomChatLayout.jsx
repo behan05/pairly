@@ -54,8 +54,8 @@ function RandomChatLayout() {
   return (
     <Box
       sx={{
-        minHeight: '100vh',
-        maxHeight: '100vh',
+        minHeight: 'calc(var(--vh, 1vh) * 100)',
+        maxHeight: 'calc(var(--vh, 1vh) * 100)',
         display: 'flex',
         flexDirection: 'row'
       }}
