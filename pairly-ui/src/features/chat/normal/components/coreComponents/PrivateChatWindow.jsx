@@ -121,9 +121,13 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
 
   // Scroll to bottom when opening a chat / conversation changes
   useEffect(() => {
-    try {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
-    } catch (e) {}
+    const el = document.getElementById('chat-messages');
+    setTimeout(() => {
+      try {
+        if (el) el.scrollTop = el.scrollHeight;
+        else messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+      } catch (e) {}
+    }, 50);
   }, [conversationId, selectedUserId]);
 
   return (
