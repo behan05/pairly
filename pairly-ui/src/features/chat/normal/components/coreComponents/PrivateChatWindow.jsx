@@ -108,7 +108,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
   };
 
   useEffect(() => {
-    const messagesContainer = document.getElementById('chat-messages'); // Added now
+    const messagesContainer = document.getElementById('chat-messages');
     if (!messagesContainer || !messagesEndRef.current) return;
 
     const { scrollTop, scrollHeight, clientHeight } = messagesContainer;

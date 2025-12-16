@@ -372,9 +372,9 @@ function PrivateMessageInput() {
       pinnedRef.current = false;
     };
 
-    const applyPinned = () => {
+    const applyPinned = (offset) => {
       const el = inputContainerRef.current;
-      if (!el || !window.visualViewport) return;
+      if (!el) return;
       if (!originalStyleRef.current) {
         originalStyleRef.current = {
           position: el.style.position,
@@ -387,44 +387,27 @@ function PrivateMessageInput() {
         };
       }
 
-      // Calculate keyboard height relative to layout viewport and visual viewport offset
-      const vv = window.visualViewport;
-      const keyboardHeight = Math.max(0, window.innerHeight - vv.height - (vv.offsetTop || 0));
-
       el.style.position = 'fixed';
       el.style.left = 0;
       el.style.right = 0;
-      el.style.bottom = `${keyboardHeight + 8}px`;
+      el.style.bottom = `${offset}px`;
       el.style.width = '100%';
       el.style.zIndex = 1500;
       // keep a small bottom spacing so element isn't flush to keyboard
-      el.style.marginBottom = '0px';
+      el.style.marginBottom = '8px';
       pinnedRef.current = true;
     };
 
     const handleViewportChange = () => {
-      if (!inputContainerRef.current) return;
-      if (window.visualViewport) {
-        const offset = window.innerHeight - window.visualViewport.height;
-        if (offset > 0) {
-          applyPinned();
-        } else if (pinnedRef.current) {
-          restoreStyles();
-        } else {
-          // ensure no extra bottom margin when keyboard closed
-          inputContainerRef.current.style.marginBottom = '0px';
-        }
+      if (!inputContainerRef.current || !window.visualViewport) return;
+      const offset = window.innerHeight - window.visualViewport.height;
+      if (offset > 0) {
+        applyPinned(offset + 6);
+      } else if (pinnedRef.current) {
+        restoreStyles();
       } else {
-        // fallback behavior without visualViewport: treat small window.innerHeight reductions as keyboard
-        const smallOffset = window.innerHeight < (originalStyleRef.current?.savedInnerHeight || window.screen.height - 100);
-        if (smallOffset) {
-          // approximate keyboard; pin with small bottom
-          inputContainerRef.current.style.position = 'fixed';
-          inputContainerRef.current.style.bottom = '8px';
-          pinnedRef.current = true;
-        } else if (pinnedRef.current) {
-          restoreStyles();
-        }
+        // ensure no extra bottom margin when keyboard closed
+        inputContainerRef.current.style.marginBottom = '0px';
       }
     };
 

@@ -87,8 +87,8 @@ app.use(cors({
 }));
 
 // Handle JSON & URL-encoded bodies with large payloads (e.g., media)
-app.use(express.json({ limit: '500mb' }));
-app.use(express.urlencoded({ limit: '500mb', extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Schedule daily cleanup of unverified users
 require('./cron/cleanupUnverifiedUsers.cron');

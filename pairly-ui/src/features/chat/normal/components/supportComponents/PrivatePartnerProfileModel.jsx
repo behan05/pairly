@@ -230,7 +230,7 @@ function PrivatePartnerProfileModel(
                 background: theme.palette.background.paper,
                 boxShadow: theme.shadows[6],
                 borderRadius: 1,
-                border: `1px dashed ${theme.palette.divider}`,
+                border: `1px solid ${theme.palette.divider}`,
                 minWidth: 200,
                 mt: 1,
                 p: '0px 10px',

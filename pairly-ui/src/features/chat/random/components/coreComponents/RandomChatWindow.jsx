@@ -235,7 +235,7 @@ function RandomChatWindow({ setShowChatWindow }) {
 
   useEffect(() => {
     const handleResize = () => {
-      const chatWindow = document.getElementById("chat-window");
+      const chatWindow = document.getElementById("chat-messages");
       if (chatWindow && window.visualViewport) {
         chatWindow.style.height = `${window.visualViewport.height}px`;
       }
@@ -311,6 +311,7 @@ function RandomChatWindow({ setShowChatWindow }) {
               overflowY: 'auto',
               maxHeight: `calc(100vh - 160px)`
             }}
+            id="chat-messages"
           >
             <Stack spacing={1.5}>
               {/* Render each message */}

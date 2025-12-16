@@ -404,15 +404,66 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
 
   // Adding this useEffect to handle mobile keyboard resizing
   useEffect(() => {
+    const restoreStyles = () => {
+      const el = inputContainerRef.current;
+      if (!el || !originalStyleRef.current) return;
+      const s = originalStyleRef.current;
+      el.style.position = s.position || '';
+      el.style.left = s.left || '';
+      el.style.right = s.right || '';
+      el.style.bottom = s.bottom || '';
+      el.style.width = s.width || '';
+      el.style.zIndex = s.zIndex || '';
+      el.style.marginBottom = s.marginBottom || '';
+      pinnedRef.current = false;
+    };
+
+    const applyPinned = (offset) => {
+      const el = inputContainerRef.current;
+      if (!el) return;
+      if (!originalStyleRef.current) {
+        originalStyleRef.current = {
+          position: el.style.position,
+          left: el.style.left,
+          right: el.style.right,
+          bottom: el.style.bottom,
+          width: el.style.width,
+          zIndex: el.style.zIndex,
+          marginBottom: el.style.marginBottom,
+        };
+      }
+
+      el.style.position = 'fixed';
+      el.style.left = 0;
+      el.style.right = 0;
+      el.style.bottom = `${offset}px`;
+      el.style.width = '100%';
+      el.style.zIndex = 1500;
+      // keep a small bottom spacing so element isn't flush to keyboard
+      el.style.marginBottom = '8px';
+      pinnedRef.current = true;
+    };
+
     const handleViewportChange = () => {
       if (!inputContainerRef.current || !window.visualViewport) return;
-      const vhOffset = window.visualViewport.height - window.innerHeight;
-      inputContainerRef.current.style.bottom = `${vhOffset > 0 ? vhOffset + 8 : 0}px`;
+      const offset = window.innerHeight - window.visualViewport.height;
+      if (offset > 0) {
+        applyPinned(offset + 6);
+      } else if (pinnedRef.current) {
+        restoreStyles();
+      } else {
+        // ensure no extra bottom margin when keyboard closed
+        inputContainerRef.current.style.marginBottom = '0px';
+      }
     };
 
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', handleViewportChange);
       window.visualViewport.addEventListener('scroll', handleViewportChange);
+      handleViewportChange();
+    } else {
+      // fallback for browsers without visualViewport
+      window.addEventListener('resize', handleViewportChange);
       handleViewportChange();
     }
 
@@ -420,6 +471,8 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
       if (window.visualViewport) {
         window.visualViewport.removeEventListener('resize', handleViewportChange);
         window.visualViewport.removeEventListener('scroll', handleViewportChange);
+      } else {
+        window.removeEventListener('resize', handleViewportChange);
       }
     };
   }, []);
@@ -683,7 +736,7 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
           p: 1.2,
           mx: 1,
           mb: 1,
-          borderRadius: 2,
+          borderRadius: 1,
           border: `1px dashed ${theme.palette.text.secondary}40`
         }}
       >
