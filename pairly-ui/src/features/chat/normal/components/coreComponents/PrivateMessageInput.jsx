@@ -49,6 +49,8 @@ function PrivateMessageInput() {
   const open = Boolean(anchorEl);
   const fileInputRef = useRef(null);
   const inputContainerRef = useRef(null);
+  const originalStyleRef = useRef(null);
+  const pinnedRef = useRef(false);
 
   const [limitModalOpen, setLimitModalOpen] = useState(false);
   const [limitType, setLimitType] = useState(null);
@@ -356,20 +358,75 @@ function PrivateMessageInput() {
   const handleCloseMenu = () => setAnchorEl(null);
 
   useEffect(() => {
+    const restoreStyles = () => {
+      const el = inputContainerRef.current;
+      if (!el || !originalStyleRef.current) return;
+      const s = originalStyleRef.current;
+      el.style.position = s.position || '';
+      el.style.left = s.left || '';
+      el.style.right = s.right || '';
+      el.style.bottom = s.bottom || '';
+      el.style.width = s.width || '';
+      el.style.zIndex = s.zIndex || '';
+      el.style.marginBottom = s.marginBottom || '';
+      pinnedRef.current = false;
+    };
+
+    const applyPinned = (offset) => {
+      const el = inputContainerRef.current;
+      if (!el) return;
+      if (!originalStyleRef.current) {
+        originalStyleRef.current = {
+          position: el.style.position,
+          left: el.style.left,
+          right: el.style.right,
+          bottom: el.style.bottom,
+          width: el.style.width,
+          zIndex: el.style.zIndex,
+          marginBottom: el.style.marginBottom,
+        };
+      }
+
+      el.style.position = 'fixed';
+      el.style.left = 0;
+      el.style.right = 0;
+      el.style.bottom = `${offset}px`;
+      el.style.width = '100%';
+      el.style.zIndex = 1500;
+      // keep a small bottom spacing so element isn't flush to keyboard
+      el.style.marginBottom = '8px';
+      pinnedRef.current = true;
+    };
+
     const handleViewportChange = () => {
       if (!inputContainerRef.current || !window.visualViewport) return;
       const offset = window.innerHeight - window.visualViewport.height;
-      inputContainerRef.current.style.marginBottom = `${offset > 0 ? offset + 8 : 0}px`;
+      if (offset > 0) {
+        applyPinned(offset + 6);
+      } else if (pinnedRef.current) {
+        restoreStyles();
+      } else {
+        // ensure no extra bottom margin when keyboard closed
+        inputContainerRef.current.style.marginBottom = '0px';
+      }
     };
+
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', handleViewportChange);
       window.visualViewport.addEventListener('scroll', handleViewportChange);
       handleViewportChange();
-    };
+    } else {
+      // fallback for browsers without visualViewport
+      window.addEventListener('resize', handleViewportChange);
+      handleViewportChange();
+    }
+
     return () => {
       if (window.visualViewport) {
         window.visualViewport.removeEventListener('resize', handleViewportChange);
         window.visualViewport.removeEventListener('scroll', handleViewportChange);
+      } else {
+        window.removeEventListener('resize', handleViewportChange);
       }
     };
   }, []);
@@ -838,16 +895,6 @@ function PrivateMessageInput() {
           value={message}
           onChange={handleInputChange}
           sx={{ mx: 2 }}
-          onFocus={() => {
-            if (!inputContainerRef.current) return;
-            setTimeout(() => {
-              try {
-                inputContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
-              } catch (e) {
-                /* ignore */
-              }
-            }, 50);
-          }}
           onKeyDown={(e) => {
             if (enterToSend && e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
