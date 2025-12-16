@@ -108,7 +108,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
   };
 
   useEffect(() => {
-    const messagesContainer = document.getElementById('chat-window');
+    const messagesContainer = document.getElementById('chat-messages'); // Added now
     if (!messagesContainer || !messagesEndRef.current) return;
 
     const { scrollTop, scrollHeight, clientHeight } = messagesContainer;
@@ -126,6 +126,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
       justifyContent="space-between"
       sx={{
         position: 'relative',
+        overflow: 'hidden'
       }}
       id='chat-window'
     >
@@ -141,7 +142,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
       {loading ? <Loading /> : (
         <>
           {/* Messages */}
-          <Box flex={1} px={isSm ? 1.5 : 2} pt={0.5} sx={{ overflowY: 'auto' }}>
+          <Box id="chat-messages" flex={1} px={isSm ? 1.5 : 2} pt={0.5} sx={{ overflowY: 'auto', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
             <Stack spacing={1.5}>
               {messages.length === 0 && (
                 <Box sx={{ textAlign: 'center', color: theme.palette.text.secondary }}>
