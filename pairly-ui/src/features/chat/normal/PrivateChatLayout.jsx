@@ -30,6 +30,33 @@ function NormalChatLayout() {
     document.title = 'Pairly - private worlds';
   }, [dispatch]);
 
+  // Set a CSS variable `--vh` to represent 1% of the viewport height.
+  // This avoids mobile keyboard/100vh issues where 100vh doesn't reflect
+  // the visual viewport when the keyboard appears.
+  React.useEffect(() => {
+    const setVh = () => {
+      const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      document.documentElement.style.setProperty('--vh', `${height * 0.01}px`);
+    };
+
+    setVh();
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', setVh);
+      window.visualViewport.addEventListener('scroll', setVh);
+    } else {
+      window.addEventListener('resize', setVh);
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', setVh);
+        window.visualViewport.removeEventListener('scroll', setVh);
+      } else {
+        window.removeEventListener('resize', setVh);
+      }
+    };
+  }, []);
+
   const handleBackToSidebar = () => {
     // go back to sidebar on small screen
     setSelectedUserId(null);
@@ -97,8 +124,8 @@ function NormalChatLayout() {
   return (
     <Box
       sx={{
-        minHeight: '100vh',
-        maxHeight: '100vh',
+        minHeight: 'calc(var(--vh, 1vh) * 100)',
+        maxHeight: 'calc(var(--vh, 1vh) * 100)',
         display: 'flex',
         flexDirection: 'row'
       }}
