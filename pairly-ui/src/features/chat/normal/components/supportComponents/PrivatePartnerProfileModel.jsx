@@ -15,6 +15,7 @@ import {
   Switch,
   Menu,
   MenuItem,
+  Avatar,
 } from "@/MUI/MuiComponents";
 import {
   defaultAvatar,
@@ -27,7 +28,6 @@ import {
   MoreVertIcon,
   CheckCircleIcon
 } from "@/MUI/MuiIcons";
-import { blue } from "@mui/material/colors";
 
 import { deleteConversationMessage, clearConversationMessage, fetchAllUser } from '@/redux/slices/privateChat/privateChatAction';
 import { useDispatch, useSelector } from 'react-redux'
@@ -79,7 +79,6 @@ function PrivatePartnerProfileModel(
 
     return [state, country].filter(Boolean).join(", ");
   }, [partnerProfile]);
-
 
   const handleMenuOpen = (e) => setMenuAnchor(e.currentTarget);
   const handleMenuClose = () => setMenuAnchor(null);
@@ -172,19 +171,25 @@ function PrivatePartnerProfileModel(
 
   return (
     <Box>
-      <Modal open={open} onClose={onClose}>
+      <Modal
+        open={open}
+        onClose={onClose}
+        sx={{
+          px: isSm ? 1 : 3,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <Box
           sx={{
-            width: isSm ? "95%" : 400,
-            background: theme.palette.background.paper,
+            overflowY: 'auto',
+            mx: 'auto',
+            maxHeight: '90vh',
+            width: isSm ? '70%' : 380,
             borderRadius: 1,
             p: 0,
-            mx: "auto",
-            mt: "8vh",
-            color: "text.primary",
-            boxShadow: theme.shadows[10],
-            maxHeight: "85vh",
-            overflowY: "auto",
+            background: theme.palette.background.paper,
           }}
         >
           {/* Header */}
@@ -192,7 +197,9 @@ function PrivatePartnerProfileModel(
             direction="row"
             alignItems="center"
             justifyContent="space-between"
-            sx={{ p: 2, mx: 1, borderBottom: `1px solid ${theme.palette.divider}` }}
+            px={2}
+            py={0.5}
+            borderBottom={`1px solid ${theme.palette.divider}`}
           >
             <Typography
               variant="subtitle1"
@@ -240,11 +247,11 @@ function PrivatePartnerProfileModel(
             }}
           >
             {[
-              {
-                icon: <FavoriteIcon fontSize="small" sx={{ mr: 1, color: 'primary.main' }} />,
-                label: 'Create Proposal',
-                onClick: () => handleAction('proposeToPartner'),
-              },
+              // {
+              //   icon: <FavoriteIcon fontSize="small" sx={{ mr: 1, color: 'primary.main' }} />,
+              //   label: 'Create Proposal',
+              //   onClick: () => handleAction('proposeToPartner'),
+              // },
               {
                 icon: <CloseIcon fontSize="small" sx={{ mr: 1, color: 'error.main' }} />,
                 label: 'Close Chat',
@@ -258,7 +265,7 @@ function PrivatePartnerProfileModel(
               </MenuItem>
             ))}
 
-            <Divider sx={{ mb: 1 }} />
+            {/* <Divider sx={{ mb: 1 }} /> */}
 
             {[
               {
@@ -285,53 +292,50 @@ function PrivatePartnerProfileModel(
           </Menu>
 
           {/* Profile Section */}
-          <Stack alignItems="center" spacing={1} sx={{ py: 3 }}>
-            <Box
-              component="img"
-              src={partnerSetting.showProfilePic ? (partnerProfile?.profileImage || defaultAvatar) : defaultAvatar}
-              alt="Partner Image"
+          <Stack alignItems="center" spacing={1} sx={{ py: 2 }}>
+            <Avatar
+              src={
+                partnerSetting.showProfilePic
+                  ? (partnerProfile?.profileImage || defaultAvatar)
+                  : defaultAvatar
+              }
               sx={{
-                width: isSm ? 90 : 120,
-                height: isSm ? 90 : 120,
-                borderRadius: "50%",
-                objectFit: "cover",
-                mb: 1,
-                transition: 'all 0.3s',
-                ':hover': {
-                  transform: 'scale(2.6)',
-                  borderRadius: 1,
-                }
+                width: isSm ? 88 : 110,
+                height: isSm ? 88 : 110,
+                borderRadius: '50%',
+                boxShadow: `0 4px 14px ${theme.palette.common.black}20`,
+                backgroundColor: theme.palette.background.paper,
               }}
             />
-            <Stack textAlign="center">
+
+            <Stack alignItems="center" spacing={0.3}>
               <Typography
                 variant="h6"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                gap={0.5}
+                fontWeight={600}
+                color="text.primary"
               >
-                {partnerProfile?.fullName || "Stranger"}
-                {isPartnerVarified && (
-                  <CheckCircleIcon sx={{ color: blue[500], fontSize: 22 }} />
-                )}
+                {partnerProfile?.fullName || 'Stranger'}
               </Typography>
 
-              <Typography variant="body2" color="gray" gutterBottom>
-                {partnerSetting.showLocation ? (location || "Unknown Location") : 'Location hidden'}
+              <Typography
+                variant="body2"
+                color="text.secondary"
+              >
+                {partnerSetting.showLocation
+                  ? (location || 'Unknown Location')
+                  : 'Location hidden'}
               </Typography>
             </Stack>
 
-            {/* Short Bio */}
             {partnerProfile?.shortBio && (
               <Typography
                 variant="body2"
                 sx={{
-                  mt: 1,
+                  mt: 0.5,
                   px: 3,
-                  textAlign: "center",
-                  color: "text.secondary",
-                  fontStyle: "italic",
+                  textAlign: 'center',
+                  color: 'text.secondary',
+                  lineHeight: 1.5,
                 }}
               >
                 {partnerProfile.shortBio}
@@ -339,7 +343,7 @@ function PrivatePartnerProfileModel(
             )}
           </Stack>
 
-          <Divider sx={{ bgcolor: theme.palette.divider, height: '4px' }} />
+          <Divider sx={{ bgcolor: theme.palette.divider }} />
 
           {/* Notifications */}
           <Stack
@@ -353,36 +357,73 @@ function PrivatePartnerProfileModel(
             <Switch defaultChecked />
           </Stack>
 
-          <Divider sx={{ bgcolor: theme.palette.divider, height: '4px' }} />
-
           {/* Action List */}
-          <List>
-            <ListItemButton
+          <List
+            disablePadding
+            sx={{
+              py: 0.5,
+              borderRadius: '0 0 16px 16px',
+              backgroundColor: theme.palette.background.paper,
+              border: `1px solid ${theme.palette.divider}`,
+            }}
+          >
+            {/* <ListItemButton
               sx={{ mx: 1, borderRadius: 1 }}
               onClick={() => handleAction('proposeToPartner')}>
               <ListItemIcon>
                 <FavoriteIcon sx={{ color: theme.palette.secondary.main }} />
               </ListItemIcon>
               <ListItemText primary="Propose for Relationship" />
+            </ListItemButton> */}
+
+            <ListItemButton
+              sx={{
+                mx: 1,
+                px: 1.5,
+                py: 0.9,
+                borderRadius: 1,
+                color: theme.palette.text.primary,
+                transition: 'background-color 120ms ease',
+
+                '&:hover': {
+                  backgroundColor: theme.palette.warning.light + '20',
+                },
+              }}
+              onClick={() => handleAction('block')}
+            >
+              <ListItemIcon sx={{ minWidth: 32 }}>
+                <BlockIcon sx={{ color: theme.palette.warning.main }} />
+              </ListItemIcon>
+              <ListItemText
+                primary="Block User"
+                primaryTypographyProps={{ fontWeight: 500 }}
+              />
             </ListItemButton>
 
             <ListItemButton
-              sx={{ mx: 1, borderRadius: 1 }}
-              onClick={() => handleAction('block')}>
-              <ListItemIcon>
-                <BlockIcon sx={{ color: "orange" }} />
+              sx={{
+                mx: 1,
+                px: 1.5,
+                py: 0.9,
+                borderRadius: 1,
+                color: theme.palette.error.main,
+                transition: 'background-color 120ms ease',
+
+                '&:hover': {
+                  backgroundColor: theme.palette.error.light + '18',
+                },
+              }}
+              onClick={() => handleAction('deleteChat')}
+            >
+              <ListItemIcon sx={{ minWidth: 32 }}>
+                <DeleteIcon sx={{ color: theme.palette.error.main }} />
               </ListItemIcon>
-              <ListItemText primary="Block User" />
+              <ListItemText
+                primary="Delete Contact"
+                primaryTypographyProps={{ fontWeight: 500 }}
+              />
             </ListItemButton>
 
-            <ListItemButton
-              sx={{ mx: 1, borderRadius: 1 }}
-              onClick={() => handleAction('deleteChat')}>
-              <ListItemIcon>
-                <DeleteIcon sx={{ color: "red" }} />
-              </ListItemIcon>
-              <ListItemText primary="Delete Contact" sx={{ color: "red" }} />
-            </ListItemButton>
           </List>
         </Box>
       </Modal>

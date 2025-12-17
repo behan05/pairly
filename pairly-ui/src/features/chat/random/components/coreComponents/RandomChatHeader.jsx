@@ -263,10 +263,9 @@ function RandomChatHeader() {
                     <Tooltip title="Premium User">
                       <StarIcon
                         sx={{
-                          color: theme.palette.warning.dark,
+                          color: theme.palette.warning.main,
                           fontSize: 20,
                           ml: 0.5,
-                          filter: `drop-shadow(0 0 1rem)`
                         }}
                       />
                     </Tooltip>
@@ -274,10 +273,9 @@ function RandomChatHeader() {
                     <Tooltip title="Verified User">
                       <CheckCircleIcon
                         sx={{
-                          color: 'gray',
+                          color: theme.palette.success.main,
                           fontSize: 20,
                           ml: 0.5,
-                          filter: `drop-shadow(0 0 1rem)`
                         }}
                       />
                     </Tooltip>
