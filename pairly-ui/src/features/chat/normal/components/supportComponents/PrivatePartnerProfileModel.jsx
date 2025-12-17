@@ -35,6 +35,7 @@ import { Country, State } from "country-state-city";
 import ProposeToPartnerModel from '../createProposal/ProposeToPartnerModel';
 import ReportUserModal from '../supportComponents/ReportUserModal';
 import BlockUserModal from '../supportComponents/BlockUsermodal'
+import ActionConfirm from '@/components/private/actionConfirmation/ActionConfirm';
 
 function PrivatePartnerProfileModel(
   { userId, open, onClose,
@@ -45,9 +46,13 @@ function PrivatePartnerProfileModel(
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down("sm"));
 
+  // Local State
   const [proposeModel, setProposeModel] = useState(false);
   const [openBlockDialog, setOpenBlockDialog] = useState(false);
   const [openReportDialog, setOpenReportDialog] = useState(false);
+
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openClearModal, setOpenClearModal] = useState(false);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const { allUsers: users, activeChat } = useSelector(state => state.privateChat);
@@ -96,26 +101,12 @@ function PrivatePartnerProfileModel(
   /** Handle delete Partner */
   const handleDeleteChat = async () => {
     if (!activeChat) return;
-
-    const confirmed = window.confirm('Are you sure you want to delete this chat? This action cannot be undone.');
-    if (!confirmed) return;
-
-    const res = await dispatch(deleteConversationMessage(activeChat));
-    if (res?.success) {
-      clearActiveChat(null);
-      onCloseChatWindow(null);
-    }
+    setOpenDeleteModal(true);
   };
   /** Handle Clear Message */
   const handleClearChatLog = async () => {
     if (!activeChat) return;
-
-    const res = await dispatch(clearConversationMessage(activeChat));
-    if (res?.success) {
-      clearActiveChat(null);
-      onCloseChatWindow(null);
-      dispatch(fetchAllUser())
-    }
+    setOpenClearModal(true);
   };
 
   const handleAction = (action) => {
@@ -132,7 +123,7 @@ function PrivatePartnerProfileModel(
         break;
 
       case 'block':
-        setOpenBlockDialog(true);
+        handleBlockPartner()
         break;
 
       case 'clearChat':
@@ -447,6 +438,30 @@ function PrivatePartnerProfileModel(
         onClose={() => setOpenReportDialog(false)}
         partner={partnerProfile}
         partnerId={userId}
+      />
+
+      {/* Delete Chat Modal */}
+      <ActionConfirm
+        open={openDeleteModal}
+        onClose={() => setOpenDeleteModal(false)}
+        activeChat={activeChat}
+        onCloseChatWindow={onCloseChatWindow}
+        clearActiveChat={clearActiveChat}
+        title="Delete Chat"
+        actionType="delete"
+        description="Are you sure you want to delete this chat? This action cannot be undone."
+      />
+
+      {/* Clear Chat Modal */}
+      <ActionConfirm
+        open={openClearModal}
+        onClose={() => setOpenClearModal(false)}
+        activeChat={activeChat}
+        onCloseChatWindow={onCloseChatWindow}
+        clearActiveChat={clearActiveChat}
+        title="Clear Chat"
+        actionType="clear"
+        description="Are you sure you want to clear this chat history? This action cannot be undone."
       />
     </Box>
 

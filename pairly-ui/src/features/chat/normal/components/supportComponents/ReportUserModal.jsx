@@ -148,90 +148,149 @@ function ReportUserModal({ open, onClose, partner, partnerId }) {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                p: isSm ? 1 : ''
+                p: isSm ? 1 : 2,
             }}
         >
-            <Box sx={{
-                maxWidth: 600,
-                mx: 'auto',
-                width: '100%',
-                backgroundColor: theme.palette.background.paper,
-                p: isSm ? 1.2 : 2
-            }}>
-                {/* Title */}
-                <Typography variant="body1" >
-                    Report <StyledText text={partner?.fullName} />
-                </Typography>
+            <Box
+                sx={{
+                    maxWidth: 520,
+                    width: '100%',
+                    bgcolor: theme.palette.background.paper,
+                    borderRadius: 1,
+                    boxShadow: 24,
+                    overflow: 'hidden',
+                    border: `1px solid ${theme.palette.divider}`,
+                }}
+            >
+                {/* Header */}
+                <Box
+                    sx={{
+                        px: 3,
+                        py: 2,
+                        borderBottom: `1px solid ${theme.palette.divider}`,
+                    }}
+                >
+                    <Typography variant="h6" fontWeight={600}>
+                        Report <StyledText text={partner?.fullName} />
+                    </Typography>
 
-                {/* Confirmation text */}
-                <Typography variant="body2" sx={{ mt: 1, mb: 2 }} >
-                    Are you sure you want to report <strong>{partner?.fullName}</strong>?.
-                </Typography>
-
-                {/* Reason dropdown */}
-                <FormControl fullWidth margin="normal" error={Boolean(error.reason)}>
-                    <InputLabel id="reportReason-label">Report Reason</InputLabel>
-                    <Select
-                        labelId="reportReason-label"
-                        id="reason"
-                        name="reason"
-                        label="Report Reason"
-                        value={formData.reason}
-                        onChange={handleChange}
+                    <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mt: 0.5 }}
                     >
-                        <MenuItem value="harassment">Harassment</MenuItem>
-                        <MenuItem value="spam">Spam</MenuItem>
-                        <MenuItem value="inappropriate-content">Inappropriate Content</MenuItem>
-                        <MenuItem value="scam">scam</MenuItem>
-                        <MenuItem value="other">Other</MenuItem>
-                    </Select>
-                    {error.reason && <FormHelperText>{error.reason}</FormHelperText>}
-                </FormControl>
+                        Your report helps us keep the community safe.
+                    </Typography>
+                </Box>
 
-                {/* Custom reason text field when 'Other' is selected */}
-                {formData.reason === 'other' && (
-                    <TextField
-                        label="Please specify a valid reason"
-                        name="customReason"
-                        value={formData.customReason}
-                        onChange={handleChange}
+                {/* Content */}
+                <Box sx={{ px: 3, py: 2.5 }}>
+                    <Typography variant="body2" sx={{ mb: 2 }}>
+                        Please select the reason for reporting{" "}
+                        <strong>{partner?.fullName}</strong>.
+                    </Typography>
+
+                    {/* Reason dropdown */}
+                    <FormControl
                         fullWidth
-                        multiline
-                        minRows={4}
-                        maxRows={8}
-                        placeholder="E.g., user violated guidelines by sending inappropriate messages."
-                        margin="normal"
-                        error={Boolean(error.customReason)}
-                        helperText={error.customReason}
-                    />
-                )}
+                        error={Boolean(error.reason)}
+                        sx={{ mb: 1.5 }}
+                        size='small'
+                    >
+                        <InputLabel id="reportReason-label">
+                            Report reason
+                        </InputLabel>
+                        <Select
+                            labelId="reportReason-label"
+                            id="reason"
+                            name="reason"
+                            label="Report reason"
+                            value={formData.reason}
+                            onChange={handleChange}
+                        >
+                            <MenuItem value="harassment">Harassment</MenuItem>
+                            <MenuItem value="spam">Spam</MenuItem>
+                            <MenuItem value="inappropriate-content">
+                                Inappropriate content
+                            </MenuItem>
+                            <MenuItem value="scam">Scam</MenuItem>
+                            <MenuItem value="other">Other</MenuItem>
+                        </Select>
+                        {error.reason && (
+                            <FormHelperText>{error.reason}</FormHelperText>
+                        )}
+                    </FormControl>
 
-                {/* Action buttons */}
-                <Stack direction="row" spacing={1} mt={3} flexWrap={isXs ? 'wrap' : 'nowrap'}>
+                    {/* Custom reason */}
+                    {formData.reason === 'other' && (
+                        <TextField
+                            label="Additional details"
+                            name="customReason"
+                            value={formData.customReason}
+                            onChange={handleChange}
+                            fullWidth
+                            multiline
+                            minRows={4}
+                            maxRows={6}
+                            placeholder="Briefly describe the issue"
+                            error={Boolean(error.customReason)}
+                            helperText={error.customReason}
+                        />
+                    )}
+                </Box>
+
+                {/* Footer actions */}
+                <Box
+                    sx={{
+                        px: 3,
+                        py: 2,
+                        borderTop: `1px solid ${theme.palette.divider}`,
+                        display: 'flex',
+                        gap: 1,
+                    }}
+                >
+                    {/* Cancel */}
                     <Button
                         variant="outlined"
                         fullWidth
                         onClick={handleCancel}
                         sx={{
+                            borderRadius: 1.5,
                             textTransform: 'none',
-                            fontWeight: 600,
+                            fontWeight: 500,
                             color: theme.palette.text.primary,
                             borderColor: theme.palette.divider,
-                            '&:hover': { background: theme.palette.action.hover },
+                            '&:hover': {
+                                borderColor: theme.palette.text.secondary,
+                                backgroundColor: theme.palette.action.hover,
+                            },
                         }}
                     >
                         Cancel
                     </Button>
+
+                    {/* Report */}
                     <Button
                         variant="contained"
                         color="error"
                         fullWidth
                         onClick={handleReportConfirm}
                         endIcon={<ReportIcon fontSize="small" />}
+                        sx={{
+                            borderRadius: 1.5,
+                            textTransform: 'none',
+                            fontWeight: 600,
+                            boxShadow: 'none',
+                            '&:hover': {
+                                backgroundColor: theme.palette.error.main,
+                                boxShadow: 'none',
+                            },
+                        }}
                     >
-                        {setIsReporting ? 'Reporting....' : 'Report'}
+                        {setIsReporting ? 'Reporting…' : 'Report user'}
                     </Button>
-                </Stack>
+                </Box>
+
             </Box>
         </Modal>
     );
