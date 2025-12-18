@@ -24,7 +24,7 @@ function NormalChatLayout() {
 
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [activeUserId, setActiveUserId] = useState(null);
-
+  const [height, setHeight] = useState('100vh')
   // Set page title when component mounts
   React.useEffect(() => {
     document.title = 'Pairly - private worlds';
@@ -37,12 +37,14 @@ function NormalChatLayout() {
     const setVh = () => {
       const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
       document.documentElement.style.setProperty('--vh', `${height * 0.01}px`);
+      setHeight(height);
     };
 
     setVh();
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', setVh);
       window.visualViewport.addEventListener('scroll', setVh);
+      setHeight(window.visualViewport);
     } else {
       window.addEventListener('resize', setVh);
     }
@@ -51,8 +53,10 @@ function NormalChatLayout() {
       if (window.visualViewport) {
         window.visualViewport.removeEventListener('resize', setVh);
         window.visualViewport.removeEventListener('scroll', setVh);
+        setHeight('100vh');
       } else {
         window.removeEventListener('resize', setVh);
+        setHeight('100vh');
       }
     };
   }, []);
@@ -74,7 +78,7 @@ function NormalChatLayout() {
     ];
 
     // generate 120 random emojis
-    const emojiElements = Array.from({ length: isTabletOrBelow ? 200 :  400 }, () => {
+    const emojiElements = Array.from({ length: isTabletOrBelow ? 200 : 400 }, () => {
       const emoji = emojis[Math.floor(Math.random() * emojis.length)];
 
       return (
@@ -125,7 +129,7 @@ function NormalChatLayout() {
     <Box
       sx={{
         minHeight: 'calc(var(--vh, 1vh) * 100)',
-        maxHeight: 'calc(var(--vh, 1vh) * 100)',
+        // maxHeight: 'calc(var(--vh, 1vh) * 100)',
         display: 'flex',
         flexDirection: 'row'
       }}

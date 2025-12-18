@@ -281,7 +281,6 @@ const ChatSidebarHeader = ({ children }) => {
 
               '&:hover': {
                 transform: 'rotateZ(360deg)',
-                filter: `drop-shadow(0 0 10px) `,
               },
             }}
           />
