@@ -39,17 +39,47 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
   const [isTyping, setIsTyping] = useState(false);
   const dispatch = useDispatch();
 
-  // Fix: Dynamic viewport height to handle keyboard on mobile
-  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+  // NOTE: replaced global viewportHeight state with per-container visualViewport resizing effect below
   useEffect(() => {
-    const updateHeight = () => {
-      const vh = window.visualViewport?.height || window.innerHeight;
-      setViewportHeight(vh);
+    const el = document.getElementById('chat-messages');
+    const header = document.getElementById('private-chat-header');
+    const input = document.getElementById('private-input');
+
+    if (!el) return;
+
+    const resize = () => {
+      try {
+        const vv = window.visualViewport;
+        if (vv) {
+          const vh = vv.height;
+          const headerH = header ? header.getBoundingClientRect().height : 0;
+          const inputH = input ? input.getBoundingClientRect().height : 0;
+          const newH = Math.max(0, vh - headerH - inputH);
+          el.style.height = `${newH}px`;
+        } else {
+          el.style.height = '';
+        }
+      } catch (e) {
+        // ignore
+      }
     };
-    window.visualViewport?.addEventListener('resize', updateHeight);
-    updateHeight();
+
+    resize();
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', resize);
+      window.visualViewport.addEventListener('scroll', resize);
+    } else {
+      window.addEventListener('resize', resize);
+    }
+
     return () => {
-      window.visualViewport?.removeEventListener('resize', updateHeight);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', resize);
+        window.visualViewport.removeEventListener('scroll', resize);
+      } else {
+        window.removeEventListener('resize', resize);
+      }
+      try { if (el) el.style.height = ''; } catch(e){}
     };
   }, []);
 
@@ -126,9 +156,9 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
     } catch (e) {}
   }, [conversationId, selectedUserId]);
 
+
   return (
     <Stack
-      height={viewportHeight}
       width="100%"
       justifyContent="space-between"
       sx={{
