@@ -124,7 +124,7 @@ function About() {
               color="text.secondary"
               sx={{ maxWidth: 800, lineHeight: 1.6, fontSize: '18px' }}
             >
-              Pairly was built from the belief that online connection should be real, respectful, and emotionally thoughtful. We design features that encourage people to talk, listen, and form meaningful bonds — not just collect likes.
+              Pairly was built from the belief that online connection should be real, respectful, and emotionally thoughtful. We design features that encourage people to talk, listen, and form meaningful bonds not just collect likes.
             </Typography>
           )}
 
@@ -446,7 +446,10 @@ function About() {
             display: 'flex',
             flexDirection: 'row',
             overflow: 'hidden',
-            background: theme.palette.background.default,
+            background: `linear-gradient(180deg,
+      ${theme.palette.background.default}30,
+      ${theme.palette.info.dark}10)`,
+            borderRadius: 1,
             mt: 8,
             py: 2
           }}
@@ -627,7 +630,10 @@ function About() {
             flexDirection: 'row',
             overflow: 'hidden',
             py: 2,
-            background: theme.palette.background.default,
+            background: `linear-gradient(180deg,
+      ${theme.palette.background.default}30,
+      ${theme.palette.info.dark}10)`,
+            borderRadius: 1,
             mt: 8,
           }}
         >

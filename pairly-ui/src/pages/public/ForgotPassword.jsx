@@ -73,12 +73,17 @@ function ForgotPassword() {
     return (
         <Box
             sx={{
+                borderRadius: 1,
+                maxWidth: 450,
+                width: '100%',
                 display: 'flex',
+                flexDirection: 'column',
                 justifyContent: 'center',
-                alignItems: 'center',
-                minHeight: '70vh',
-                px: isSm ? 2 : 4,
-                background: 'inherit'
+                my: '6dvh',
+                mx: 'auto',
+                border: `1px solid ${theme.palette.divider}`,
+                background: theme.palette.background.paper,
+                p: 2
             }}
         >
             <Box
@@ -87,11 +92,7 @@ function ForgotPassword() {
                 sx={{
                     background: theme.palette.background.paper,
                     p: isSm ? 3 : 5,
-                    borderRadius: 3,
-                    boxShadow:
-                        theme.palette.mode === 'dark'
-                            ? '0 4px 24px rgba(255,255,255,0.05)'
-                            : '0 4px 24px rgba(0,0,0,0.08)',
+                    borderRadius: 2,
                     width: '100%',
                     maxWidth: 450,
                     display: 'flex',
@@ -115,7 +116,7 @@ function ForgotPassword() {
 
                 <TextField
                     variant="outlined"
-                    size="medium"
+                    size="small"
                     label="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -130,11 +131,11 @@ function ForgotPassword() {
                     endIcon={<SendIcon />}
                     disabled={disabled || loading}
                     sx={{
-                        py: 1.3,
+                        py: 0.8,
                         fontWeight: 600,
                         fontSize: '1rem',
                         textTransform: 'none',
-                        borderRadius: 2,
+                        borderRadius: 1,
                         background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.info.main})`,
                         '&:hover': {
                             background: `linear-gradient(135deg, ${theme.palette.info.main}, ${theme.palette.primary.main})`,

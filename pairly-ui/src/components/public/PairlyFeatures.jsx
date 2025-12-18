@@ -165,11 +165,12 @@ export default function PairlyFeaturesTimeline() {
         px: { xs: 2, md: 10 },
         py: { xs: 6, md: 10 },
         position: 'relative',
-        background: theme.palette.background.default,
-        borderRadius: 1.5
+        background: `linear-gradient(180deg,
+      ${theme.palette.background.default}20,
+      ${theme.palette.info.dark}10)`,
+        borderRadius: 1
       }}
     >
-
       <Box
         sx={{
           position: 'relative',

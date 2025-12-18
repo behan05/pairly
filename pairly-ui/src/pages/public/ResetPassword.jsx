@@ -1,10 +1,8 @@
 import StyledText from '@/components/common/StyledText';
-import ReusableVideo from '@/components/public/ReusableVideo';
 import {
     Box,
     TextField,
     Typography,
-    useMediaQuery,
     useTheme,
     MuiLink,
     Button,
@@ -30,10 +28,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function ResetPassword() {
     const theme = useTheme();
-    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
-    const isMd = useMediaQuery(theme.breakpoints.down('md'));
-    const isXl = useMediaQuery(theme.breakpoints.down('xl'));
-    const isLg = useMediaQuery(theme.breakpoints.down('lg'));
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const loading = useSelector((state) => state.auth.loading);
@@ -124,63 +118,19 @@ function ResetPassword() {
     return (
         <Box
             sx={{
-                m: '1.5rem auto',
-                borderRadius: 2,
+                borderRadius: 1,
+                maxWidth: 450,
+                width: '100%',
                 display: 'flex',
+                flexDirection: 'column',
                 justifyContent: 'center',
-                flexDirection: { xs: 'column', md: 'row' },
-                flexGrow: 1,
-                gap: 2,
-                pt: theme.spacing(2),
-                mt: '10dvh',
-                px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '20%',
+                my: '6dvh',
+                mx: 'auto',
+                border: `1px solid ${theme.palette.divider}`,
+                background: theme.palette.background.paper,
+                p: 2
             }}
         >
-            {/* Left side content for larger screens */}
-            {!isLg && (
-                <Box flex={1.2} textAlign="left">
-                    <Typography
-                        variant="h3"
-                        fontWeight={700}
-                        sx={{
-                            color: 'text.primary',
-                            mb: 2,
-                            textShadow:
-                                theme.palette.mode === 'dark'
-                                    ? '0 2px 10px rgba(255,255,255,0.05)'
-                                    : '0 2px 10px rgba(0,0,0,0.08)',
-                        }}
-                    >
-                        Reset your <StyledText text="Password" /> — Stay Connected
-                    </Typography>
-
-                    <Typography
-                        variant="h6"
-                        sx={{
-                            color: 'text.secondary',
-                            lineHeight: 1.6,
-                            maxWidth: 480,
-                            mb: 3,
-                        }}
-                    >
-                        Forgot your password? No worries. Reset it now and continue chatting with real people on <StyledText text="Pairly" />.
-                    </Typography>
-
-                    <Box
-                        sx={{
-                            borderRadius: 3,
-                            overflow: 'hidden',
-                            boxShadow:
-                                theme.palette.mode === 'dark'
-                                    ? '0 4px 20px rgba(255,255,255,0.1)'
-                                    : '0 4px 20px rgba(0,0,0,0.08)',
-                        }}
-                    >
-                        <ReusableVideo />
-                    </Box>
-                </Box>
-            )}
-
             {/* Right side form */}
             <Box
                 sx={{
@@ -189,10 +139,6 @@ function ResetPassword() {
                     alignItems: 'center',
                     flex: 1,
                     background: 'inherit',
-                    boxShadow:
-                        theme.palette.mode === 'dark'
-                            ? '0 4px 24px rgba(255,255,255,0.05)'
-                            : '0 4px 24px rgba(0,0,0,0.08)',
                     borderRadius: 0.5,
                     py: 4
                 }}
@@ -300,18 +246,17 @@ function ResetPassword() {
                         sx={{
                             maxWidth: 'fit-content',
                             alignSelf: 'flex-end',
-                            borderRadius: 0.8,
-                            textTransform: "none",
+                            border: `1px solid ${theme.palette.divider}`,
+                            borderRadius: 0.5,
                             fontWeight: 700,
                             px: 3,
                             py: 0.8,
                             fontSize: "1rem",
                             color: theme.palette.common.white,
-                            background: `linear-gradient(135deg, ${theme.palette.info.main}, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                            boxShadow: `0 6px 20px ${theme.palette.secondary.main}66`,
+                            textShadow: `0 0 2px #212121`,
+                            background: theme.palette.background.paper,
                             "&:hover": {
-                                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.info.main}, ${theme.palette.secondary.main})`,
-                                boxShadow: `0 5px 15px ${theme.palette.primary.main}66`,
+                                background: theme.palette.background.default,
                             },
                         }}
                     >

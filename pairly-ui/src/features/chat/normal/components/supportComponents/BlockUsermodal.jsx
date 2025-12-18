@@ -169,158 +169,167 @@ function BlockUserModal({ open, onClose, partner, partnerId, clearActiveChat, on
                     border: `1px solid ${theme.palette.divider}`,
                 }}
             >
-                {/* Header */}
                 <Box
                     sx={{
-                        px: 3,
-                        py: 2,
-                        borderBottom: `1px solid ${theme.palette.divider}`,
-                    }}
-                >
-                    <Typography variant="h6" fontWeight={600}>
-                        Block <StyledText text={partner?.fullName} />
-                    </Typography>
-
-                    <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{ mt: 0.5 }}
-                    >
-                        You won’t be able to send or receive messages from this user.
-                    </Typography>
-                </Box>
-
-                {/* Content */}
-                <Box sx={{ px: 3, py: 2.5 }}>
-                    <Typography variant="body2" sx={{ mb: 2 }}>
-                        Please tell us why you are blocking{" "}
-                        <strong>{partner?.fullName}</strong>.
-                    </Typography>
-
-                    {/* Reason dropdown */}
-                    <FormControl
-                        fullWidth
-                        error={Boolean(error.reason)}
-                        sx={{ mb: 1.5 }}
-                        size='small'
-                    >
-                        <InputLabel id="blockReason-label">
-                            Block reason
-                        </InputLabel>
-                        <Select
-                            labelId="blockReason-label"
-                            id="reason"
-                            name="reason"
-                            label="Block reason"
-                            value={formData.reason}
-                            onChange={handleChange}
-                        >
-                            <MenuItem value="inappropriate_messages">
-                                Inappropriate messages
-                            </MenuItem>
-                            <MenuItem value="spam_or_advertising">
-                                Spam or advertising
-                            </MenuItem>
-                            <MenuItem value="harassment_or_bullying">
-                                Harassment or bullying
-                            </MenuItem>
-                            <MenuItem value="offensive_content">
-                                Offensive content
-                            </MenuItem>
-                            <MenuItem value="fake_profile">
-                                Fake profile
-                            </MenuItem>
-                            <MenuItem value="unwanted_contact">
-                                Unwanted contact
-                            </MenuItem>
-                            <MenuItem value="scam_or_fraud">
-                                Scam or fraud
-                            </MenuItem>
-                            <MenuItem value="privacy_concerns">
-                                Privacy concerns
-                            </MenuItem>
-                            <MenuItem value="hate_speech_or_threats">
-                                Hate speech or threats
-                            </MenuItem>
-                            <MenuItem value="other">
-                                Other
-                            </MenuItem>
-                        </Select>
-                        {error.reason && (
-                            <FormHelperText>{error.reason}</FormHelperText>
-                        )}
-                    </FormControl>
-
-                    {/* Custom reason */}
-                    {formData.reason === 'other' && (
-                        <TextField
-                            label="Additional details"
-                            name="customReason"
-                            value={formData.customReason}
-                            onChange={handleChange}
-                            fullWidth
-                            multiline
-                            minRows={4}
-                            maxRows={6}
-                            placeholder="Briefly describe the issue"
-                            error={Boolean(error.customReason)}
-                            helperText={error.customReason}
-                        />
-                    )}
-                </Box>
-
-                {/* Footer actions */}
-                <Box
-                    sx={{
-                        px: 3,
-                        py: 2,
-                        borderTop: `1px solid ${theme.palette.divider}`,
+                        background: `linear-gradient(180deg,
+      ${theme.palette.background.paper},
+      ${theme.palette.info.dark}10)`,
                         display: 'flex',
-                        gap: 1,
+                        flexDirection: 'column',
                     }}
                 >
-                    {/* Cancel */}
-                    <Button
-                        variant="outlined"
-                        fullWidth
-                        onClick={handleCancel}
+                    {/* Header */}
+                    <Box
                         sx={{
-                            borderRadius: 1.5,
-                            textTransform: 'none',
-                            fontWeight: 500,
-                            color: theme.palette.text.primary,
-                            borderColor: theme.palette.divider,
-                            '&:hover': {
-                                borderColor: theme.palette.text.secondary,
-                                backgroundColor: theme.palette.action.hover,
-                            },
+                            px: 3,
+                            py: 2,
+                            borderBottom: `1px solid ${theme.palette.divider}`,
                         }}
                     >
-                        Cancel
-                    </Button>
+                        <Typography variant="h6" fontWeight={600}>
+                            Block <StyledText text={partner?.fullName} />
+                        </Typography>
 
-                    {/* Block */}
-                    <Button
-                        variant="contained"
-                        color="error"
-                        fullWidth
-                        onClick={handleBlockConfirm}
-                        endIcon={<BlockIcon fontSize="small" />}
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ mt: 0.5 }}
+                        >
+                            You won’t be able to send or receive messages from this user.
+                        </Typography>
+                    </Box>
+
+                    {/* Content */}
+                    <Box sx={{ px: 3, py: 2.5 }}>
+                        <Typography variant="body2" sx={{ mb: 2 }}>
+                            Please tell us why you are blocking{" "}
+                            <strong>{partner?.fullName}</strong>.
+                        </Typography>
+
+                        {/* Reason dropdown */}
+                        <FormControl
+                            fullWidth
+                            error={Boolean(error.reason)}
+                            sx={{ mb: 1.5 }}
+                            size='small'
+                        >
+                            <InputLabel id="blockReason-label">
+                                Block reason
+                            </InputLabel>
+                            <Select
+                                labelId="blockReason-label"
+                                id="reason"
+                                name="reason"
+                                label="Block reason"
+                                value={formData.reason}
+                                onChange={handleChange}
+                            >
+                                <MenuItem value="inappropriate_messages">
+                                    Inappropriate messages
+                                </MenuItem>
+                                <MenuItem value="spam_or_advertising">
+                                    Spam or advertising
+                                </MenuItem>
+                                <MenuItem value="harassment_or_bullying">
+                                    Harassment or bullying
+                                </MenuItem>
+                                <MenuItem value="offensive_content">
+                                    Offensive content
+                                </MenuItem>
+                                <MenuItem value="fake_profile">
+                                    Fake profile
+                                </MenuItem>
+                                <MenuItem value="unwanted_contact">
+                                    Unwanted contact
+                                </MenuItem>
+                                <MenuItem value="scam_or_fraud">
+                                    Scam or fraud
+                                </MenuItem>
+                                <MenuItem value="privacy_concerns">
+                                    Privacy concerns
+                                </MenuItem>
+                                <MenuItem value="hate_speech_or_threats">
+                                    Hate speech or threats
+                                </MenuItem>
+                                <MenuItem value="other">
+                                    Other
+                                </MenuItem>
+                            </Select>
+                            {error.reason && (
+                                <FormHelperText>{error.reason}</FormHelperText>
+                            )}
+                        </FormControl>
+
+                        {/* Custom reason */}
+                        {formData.reason === 'other' && (
+                            <TextField
+                                label="Additional details"
+                                name="customReason"
+                                value={formData.customReason}
+                                onChange={handleChange}
+                                fullWidth
+                                multiline
+                                minRows={4}
+                                maxRows={6}
+                                placeholder="Briefly describe the issue"
+                                error={Boolean(error.customReason)}
+                                helperText={error.customReason}
+                            />
+                        )}
+                    </Box>
+
+                    {/* Footer actions */}
+                    <Box
                         sx={{
-                            borderRadius: 1.5,
-                            textTransform: 'none',
-                            fontWeight: 600,
-                            boxShadow: 'none',
-                            '&:hover': {
-                                backgroundColor: theme.palette.error.main,
+                            px: 3,
+                            py: 2,
+                            borderTop: `1px solid ${theme.palette.divider}`,
+                            display: 'flex',
+                            gap: 1,
+                        }}
+                    >
+                        {/* Cancel */}
+                        <Button
+                            variant="outlined"
+                            fullWidth
+                            onClick={handleCancel}
+                            sx={{
+                                borderRadius: 1.5,
+                                textTransform: 'none',
+                                fontWeight: 500,
+                                color: theme.palette.text.primary,
+                                borderColor: theme.palette.divider,
+                                '&:hover': {
+                                    borderColor: theme.palette.text.secondary,
+                                    backgroundColor: theme.palette.action.hover,
+                                },
+                            }}
+                        >
+                            Cancel
+                        </Button>
+
+                        {/* Block */}
+                        <Button
+                            variant="contained"
+                            color="error"
+                            fullWidth
+                            onClick={handleBlockConfirm}
+                            endIcon={<BlockIcon fontSize="small" />}
+                            sx={{
+                                borderRadius: 1.5,
+                                textTransform: 'none',
+                                fontWeight: 600,
                                 boxShadow: 'none',
-                            },
-                        }}
-                    >
-                        {isBlocking ? 'Blocking…' : 'Block user'}
-                    </Button>
+                                '&:hover': {
+                                    backgroundColor: theme.palette.error.main,
+                                    boxShadow: 'none',
+                                },
+                            }}
+                        >
+                            {isBlocking ? 'Blocking…' : 'Block user'}
+                        </Button>
+                    </Box>
                 </Box>
-
             </Box>
         </Modal>
 

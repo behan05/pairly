@@ -221,17 +221,18 @@ function HowItWorks() {
             sx={{
               position: 'relative',
               justifyContent: 'space-between',
-              overflow: 'hidden'
+              overflow: 'hidden',
             }}
           >
             {/* Content box */}
             <Box
               sx={{
                 width: { xs: '100%', md: '45%' },
-                bgcolor: theme.palette.background.paper,
-                borderRadius: 2,
+                background: `linear-gradient(180deg,
+      ${theme.palette.background.default}30,
+      ${theme.palette.info.dark}10)`,
+                borderRadius:1,
                 p: 3,
-                boxShadow: `0 4px 2px ${theme.palette.warning.main}`,
                 border: `1px solid ${theme.palette.divider}`,
                 textAlign: 'left',
               }}

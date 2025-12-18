@@ -136,12 +136,16 @@ function ReportBug() {
         component="form"
         onSubmit={handleSubmit}
         sx={(theme) => ({
-          mt: 4,
-          border: `1px dashed ${theme.palette.divider}`,
-          p: 1,
           borderRadius: 1,
-          maxWidth: 600,
-          mx: 'auto'
+          maxWidth: 450,
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          my: '6dvh',
+          mx: 'auto',
+          border: `1px solid ${theme.palette.divider}`,
+          p: 2
         })}
       >
         {/* Header section */}

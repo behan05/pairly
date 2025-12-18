@@ -753,13 +753,21 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
           display: 'flex',
           alignItems: 'center',
           boxSizing: 'border-box',
-          p: 1.2,
+          p: 1,
           mx: 1,
           mb: 1,
           borderRadius: 1,
-          border: `1px dashed ${theme.palette.text.secondary}40`
+          border: `1px solid ${theme.palette.divider}`,
+
+          position: { xs: 'fixed', sm: 'sticky' },
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1200,
+          background: theme.palette.background.paper,
         }}
       >
+
         {/* Attach Button */}
         <Tooltip title="Attach">
           <IconButton onClick={handleAttachClick}>
@@ -838,6 +846,7 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
           </MenuItem>
 
         </Menu>
+
         {/* Emoji Button */}
         <Tooltip title="Emoji">
           <IconButton onClick={() => setShowEmojiPicker((prev) => !prev)}>
@@ -878,11 +887,11 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
               onClick={handleSend}
               sx={{
                 bgcolor: theme.palette.primary.main,
-                color: theme.palette.mode === "dark" ? '#ddd' : '#000',
+                color: theme.palette.text.primary,
                 transition: 'all 0.3s ease',
                 '&:hover': {
                   bgcolor: theme.palette.success.main,
-                  color: theme.palette.mode === "dark" ? '#000' : '#ddd',
+                  color: theme.palette.text.primary,
                   transform: 'scale(1.1)',
                   boxShadow: `0 4px 12px ${theme.palette.success.main}60`
                 },

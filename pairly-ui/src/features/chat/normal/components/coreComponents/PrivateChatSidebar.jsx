@@ -414,14 +414,14 @@ function PrivateChatSidebar() {
                                             flexDirection: 'row',
                                             justifyContent: 'space-between',
                                             alignItems: 'center',
-                                            border: `1px dashed ${theme.palette.divider}`,
+                                            border: `1px solid ${theme.palette.divider}`,
                                             borderRadius: 0.5,
                                             p: 0.5,
                                             my: 0.5,
                                             bgcolor: isActive ? theme.palette.action.selected : 'transparent',
                                             transition: 'background-color 0.3s ease',
                                             ':hover': {
-                                                backgroundColor: theme.palette.action.hover
+                                                background: theme.palette.action.hover
                                             }
                                         }}
                                         onClick={() => handleUserClick(user.userId)}

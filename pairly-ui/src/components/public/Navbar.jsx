@@ -131,12 +131,10 @@ function Navbar() {
             maxWidth={isSm ? 40 : 40}
             sx={{
               filter: `brightness(120%) `,
-
               transition: 'all 0.8s ease',
 
               '&:hover': {
                 transform: 'rotateZ(360deg)',
-                filter: `drop-shadow(0 0 1rem) `,
               },
             }}
           />
@@ -229,7 +227,7 @@ function Navbar() {
         PaperProps={{
           sx: {
             maxWidth: '100%',
-            background: theme.palette.background.default,
+            background: theme.palette.background.paper,
             p: 2,
             display: 'flex',
             flexDirection: 'column',
@@ -237,7 +235,11 @@ function Navbar() {
         }}
       >
         {/* === Drawer Header === */}
-        <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={1}>
           <Box
             component="img"
             src="/logo.png"
@@ -306,7 +308,6 @@ function Navbar() {
                     sx={{
                       fontSize: '1em',
                       fontWeight: 600,
-                      py: 1.2,
                     }}
                   />
                 ) : (
@@ -319,8 +320,6 @@ function Navbar() {
                     sx={{
                       fontSize: '1em',
                       fontWeight: 600,
-                      py: 1.2,
-                      textShadow: '0 0 2px #000',
                     }}
                   />
                 )
@@ -342,7 +341,7 @@ function Navbar() {
           sx: {
             background: `${theme.palette.background.default}`,
             borderRadius: 1,
-            border: `1px dashed ${theme.palette.divider}`,
+            border: `1px solid ${theme.palette.divider}`,
             minWidth: 260,
             mt: 1.5,
             p: 2,

@@ -173,7 +173,6 @@ function Home() {
               fontWeight: 700,
               fontSize: isMd ? '1.8em' : '4em',
               lineHeight: isSm ? 1.2 : 1,
-              filter: `drop-shadow(0 0 5rem ${theme.palette.secondary.main})`
             }}
           >
             Pairly a mini social universe. <br /> Your space to connect, truly.
@@ -208,7 +207,6 @@ function Home() {
             <StyledActionButton
               text={'Begin Your Journey'}
               redirectUrl={'/register'}
-              sx={{ fontSize: '1em', fontWeight: 600, py: 1.2, textShadow: '0 0 2px #000' }}
             />
             {!custome && <StyledButton text={'Why Pairly?'} redirectUrl={'/about'} />}
           </Stack>
@@ -524,6 +522,7 @@ function Home() {
       {/* Pairly Growth & Feedback Section */}
       <Stack sx={{
         px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '8%',
+        background: theme.palette.background.paper
       }}>
         <Stack
           sx={{
@@ -532,10 +531,12 @@ function Home() {
             display: 'flex',
             flexDirection: 'row',
             overflow: 'hidden',
-            background: theme.palette.background.default,
             mt: 8,
-            borderRadius: 0.5,
-            boxShadow: `0 0 2px inherit`
+            borderRadius: 1,
+            boxShadow: `0 0 2px inherit`,
+            background: `linear-gradient(180deg,
+      ${theme.palette.background.default}30,
+      ${theme.palette.info.dark}10)`,
           }}
         >
           {/* Left track */}
@@ -856,13 +857,13 @@ function Home() {
                 </Typography>
 
                 <Typography variant="body1" sx={{ color: 'text.secondary', mb: 1 }}>
-                  Pairly stands out by putting **genuine human connection** first. We’ve built
+                  Pairly stands out by putting <b>genuine human connection</b> first. We’ve built
                   a space where conversations feel natural, not forced — and where every
                   feature encourages real interaction instead of endless swiping or small talk.
                 </Typography>
 
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                  From **AI-powered matchmaking** that understands your vibe, to private chat
+                  From <b>AI-powered matchmaking</b> that understands your vibe, to private chat
                   rooms and thoughtful proposal options — Pairly redefines how people meet,
                   bond, and build trust online. It’s not just chatting, it’s connecting.
                 </Typography>
@@ -910,8 +911,8 @@ function Home() {
                 }}
               >
                 Pairly brings a refreshing twist to online interaction — built for real people
-                who crave authenticity. With features like **Random Match**, **Private Chat Rooms**,
-                and **Proposals**, we make it easy to find your kind of connection —
+                who crave authenticity. With features like <b>Random Match</b>, <b>Private Chat Rooms</b>,
+                and <b>Proposals</b>, we make it easy to find your kind of connection
                 whether it’s friendship, love, or just meaningful conversation.
               </Typography>
             </Box>
@@ -938,8 +939,10 @@ function Home() {
             flexDirection: 'row',
             overflow: 'hidden',
             mt: 8,
-            background: theme.palette.background.default,
-            borderRadius: 0.5,
+            background: `linear-gradient(180deg,
+      ${theme.palette.background.default}30,
+      ${theme.palette.info.dark}10)`,
+            borderRadius: 1,
             boxShadow: `0 0 2px inherit`
           }}
         >

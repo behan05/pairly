@@ -66,7 +66,6 @@ function Footer() {
 
               '&:hover': {
                 transform: 'rotateZ(360deg)',
-                filter: `drop-shadow(0 0 1rem) `,
               },
             }}
           />

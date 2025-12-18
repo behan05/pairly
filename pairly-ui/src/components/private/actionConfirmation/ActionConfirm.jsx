@@ -58,78 +58,97 @@ function ActionConfirm({
         >
             <Box
                 sx={{
-                    backgroundColor: 'background.paper',
-                    borderRadius: 3,
                     boxShadow: 24,
-                    p: 4,
-                    maxWidth: 420,
                     width: '90%',
+                    maxWidth: 420,
                     textAlign: 'center',
                     transition: 'all 0.3s ease-in-out',
+                    border: `1px solid ${theme.palette.divider}`,
+                    borderRadius: 1,
+                    background: theme.palette.background.paper
                 }}
             >
-                <Typography
-                    id="action-confirm-modal"
-                    variant="h6"
-                    fontWeight={700}
-                    gutterBottom
+                <Box
                     sx={{
-                        color: theme.palette.warning.main,
-                        letterSpacing: 0.3,
+                        background: `linear-gradient(180deg,
+                        ${theme.palette.background.paper},
+                        ${theme.palette.info.dark}10)`,
+                        p: 3,
+                        borderRadius: 1,
                     }}
                 >
-                    {title}
-                </Typography>
-
-                <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ mb: 3, lineHeight: 1.6 }}
-                >
-                    {description}
-                </Typography>
-
-                <Stack direction="row" justifyContent="center" spacing={2}>
-                    <Button
-                        variant="outlined"
-                        onClick={handleClose}
-                        disabled={isProcessing}
+                    <Typography
+                        id="action-confirm-modal"
+                        variant="h6"
+                        fontWeight={700}
+                        gutterBottom
                         sx={{
-                            borderRadius: 3,
-                            textTransform: 'none',
-                            fontWeight: 600,
-                            color: theme.palette.text.primary,
-                            borderColor: theme.palette.divider,
-                            '&:hover': {
-                                background: theme.palette.action.hover,
-                            },
+                            color: theme.palette.error.main,
+                            letterSpacing: 0.3,
                         }}
                     >
-                        Cancel
-                    </Button>
+                        {title}
+                    </Typography>
 
-                    <Button
-                        variant="contained"
-                        color="warning"
-                        disabled={isProcessing}
-                        onClick={handleConfirm}
-                        sx={{
-                            borderRadius: 3,
-                            textTransform: 'none',
-                            fontWeight: 700,
-                            px: 3,
-                            py: 1.2,
-                            background: `linear-gradient(135deg, ${theme.palette.warning.main}aa, ${theme.palette.warning.main})`,
-                            color: '#000',
-                            '&:hover': {
-                                background: 'linear-gradient(135deg, #FFB300, #FFD700)',
-                                boxShadow: '0 5px 15px rgba(255,193,7,0.4)',
-                            },
-                        }}
+                    <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mb: 3, lineHeight: 1.6 }}
                     >
-                        {isProcessing ? 'Processing...' : 'Confirm'}
-                    </Button>
-                </Stack>
+                        {description}
+                    </Typography>
+
+                    <Stack direction="row" justifyContent="center" spacing={2}>
+                        <Button
+                            variant="outlined"
+                            onClick={handleClose}
+                            disabled={isProcessing}
+                            sx={{
+                                borderRadius: 3,
+                                textTransform: 'none',
+                                fontWeight: 600,
+                                color: theme.palette.text.primary,
+                                borderColor: theme.palette.divider,
+                                '&:hover': {
+                                    background: theme.palette.action.hover,
+                                },
+                            }}
+                        >
+                            Cancel
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            disabled={isProcessing}
+                            onClick={handleConfirm}
+                            sx={{
+                                borderRadius: 3,
+                                textTransform: 'none',
+                                fontWeight: 700,
+                                px: 3,
+                                py: 1.2,
+                                background: `linear-gradient(
+      135deg,
+      ${theme.palette.error.main}cc,
+      ${theme.palette.error.main}
+    )`,
+                                color: theme.palette.error.contrastText,
+                                '&:hover': {
+                                    background: `linear-gradient(
+        135deg,
+        ${theme.palette.error.dark},
+        ${theme.palette.error.main}
+      )`,
+                                    boxShadow: `0 6px 16px ${theme.palette.error.main}55`,
+                                },
+                            }}
+                        >
+                            {isProcessing ? 'Processing...' : 'Confirm'}
+                        </Button>
+
+                    </Stack>
+                </Box>
+
             </Box>
         </Modal>
     );

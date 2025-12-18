@@ -7,7 +7,6 @@ import StyledActionButton from '@/components/common/StyledActionButton';
 function Features() {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
-  const isMd = useMediaQuery(theme.breakpoints.down('md'));
   const isLg = useMediaQuery(theme.breakpoints.down('lg'));
   const isXl = useMediaQuery(theme.breakpoints.down('xl'));
 

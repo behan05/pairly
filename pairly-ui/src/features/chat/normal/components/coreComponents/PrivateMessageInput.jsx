@@ -645,11 +645,18 @@ function PrivateMessageInput() {
           display: 'flex',
           alignItems: 'center',
           boxSizing: 'border-box',
-          p: 1.2,
+          p: 1,
           mx: 1,
           mb: 1,
           borderRadius: 1,
-          border: `1px dashed ${theme.palette.text.secondary}40`
+          border: `1px solid ${theme.palette.divider}`,
+
+          position: { xs: 'fixed', sm: 'sticky' },
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1200,
+          background: theme.palette.background.paper,
         }}
       >
         {/* Attach Button */}

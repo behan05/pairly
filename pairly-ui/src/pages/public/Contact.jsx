@@ -3,7 +3,6 @@ import { Box, TextField, Typography, Stack, useTheme } from '@/MUI/MuiComponents
 import { SendIcon } from '@/MUI/MuiIcons';
 import StyledText from '@/components/common/StyledText';
 import StyledActionButton from '@/components/common/StyledActionButton';
-import BlurWrapper from '@/components/common/BlurWrapper';
 import { toast, ToastContainer } from 'react-toastify';
 
 function Contact() {
@@ -72,105 +71,103 @@ function Contact() {
   return (
     <Stack sx={{
       borderRadius: 1,
-      maxWidth: 600,
+      maxWidth: 450,
+      width: '100%',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
       my: '6dvh',
       mx: 'auto',
+      border: `1px solid ${theme.palette.divider}`,
+      p: 2
     }}>
-      <BlurWrapper
-        sx={{
-          backdropFilter: 'blur(14px)',
-          backgroundColor: 'transparent',
-        }}
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
       >
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-        >
-          {/* ToastContainer added locally */}
-          <ToastContainer position="top-right" autoClose={3000} theme="dark" />
+        {/* ToastContainer added locally */}
+        <ToastContainer position="top-right" autoClose={3000} theme="dark" />
 
-          <Typography variant="h5" fontWeight={600} textAlign="center" mb={1}>
-            Get in {<StyledText text="Touch" />}
-          </Typography>
-          <Typography variant="body1" fontWeight={400} textAlign="center" mb={4}>
-            We'd love to hear from you! Please fill out the form below.
-          </Typography>
+        <Typography variant="h5" fontWeight={600} textAlign="center" mb={1}>
+          Get in {<StyledText text="Touch" />}
+        </Typography>
+        <Typography variant="body1" fontWeight={400} textAlign="center" mb={4}>
+          We'd love to hear from you! Please fill out the form below.
+        </Typography>
 
-          <Stack spacing={3}>
+        <Stack spacing={3}>
+          <TextField
+            fullWidth
+            size='small'
+            label="Full Name"
+            variant="outlined"
+            name="name"
+            placeholder="Pairly"
+            value={formData.name}
+            onChange={handleChange}
+            error={!!error.name}
+            helperText={error.name}
+          />
+
+          <Stack direction={{ xs: 'column', sm: 'row' }} gap={1}>
             <TextField
               fullWidth
-              label="Full Name"
+              size='small'
+              label="Email Address"
               variant="outlined"
-              name="name"
-              placeholder="Pairly"
-              value={formData.name}
+              name="email"
+              placeholder="Pairly@gmail.com"
+              value={formData.email}
               onChange={handleChange}
-              error={!!error.name}
-              helperText={error.name}
+              error={!!error.email}
+              helperText={error.email}
             />
-
-            <Stack direction={{ xs: 'column', sm: 'row' }} gap={1}>
-              <TextField
-                fullWidth
-                label="Email Address"
-                variant="outlined"
-                name="email"
-                placeholder="Pairly@gmail.com"
-                value={formData.email}
-                onChange={handleChange}
-                error={!!error.email}
-                helperText={error.email}
-              />
-
-              <TextField
-                fullWidth
-                label="Phone (Optional)"
-                variant="outlined"
-                name="phone"
-                placeholder="+91 896 901 XXXX"
-                value={formData.phone}
-                onChange={handleChange}
-              />
-            </Stack>
 
             <TextField
               fullWidth
-              label="Your Message"
+              size='small'
+              label="Phone (Optional)"
               variant="outlined"
-              name="message"
-              multiline
-              minRows={4}
-              placeholder="Type your message here..."
-              value={formData.message}
+              name="phone"
+              placeholder="+91 896 901 XXXX"
+              value={formData.phone}
               onChange={handleChange}
-              error={!!error.message}
-              helperText={error.message}
-            />
-
-            <StyledActionButton
-              onClick={handleSubmit}
-              variant="outlined"
-              endIcon={<SendIcon sx={{ color: 'text.primary' }} />}
-              size="large"
-              disabled={isSubmitting}
-              text={isSubmitting ? 'Sending...' : 'Drop a Line'}
-              sx={{
-                fontSize: '1em',
-                fontWeight: 600,
-                py: 1.2,
-                textShadow: '0 0 2px #000',
-                alignSelf: 'end'
-              }}
             />
           </Stack>
-        </Box>
-      </BlurWrapper>
+
+          <TextField
+            fullWidth
+            size='small'
+            label="Your Message"
+            variant="outlined"
+            name="message"
+            multiline
+            minRows={3}
+            placeholder="Type your message here..."
+            value={formData.message}
+            onChange={handleChange}
+            error={!!error.message}
+            helperText={error.message}
+          />
+
+          <StyledActionButton
+            onClick={handleSubmit}
+            variant="outlined"
+            endIcon={<SendIcon sx={{ color: 'text.primary' }} />}
+            size="large"
+            disabled={isSubmitting}
+            text={isSubmitting ? 'Sending...' : 'Drop a Line'}
+            sx={{
+              fontSize: '1em',
+              fontWeight: 600,
+              py: 0.5,
+              textShadow: '0 0 2px #000',
+              alignSelf: 'end'
+            }}
+          />
+        </Stack>
+      </Box>
     </Stack>
-
-
   );
 }
 

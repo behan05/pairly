@@ -167,7 +167,7 @@ const ChatSidebarHeader = ({ children }) => {
 
   const handleLogout = async () => {
     dispatch(logout());
-    toast.success(`We'll miss you ${firstWord} 😔`, {
+    toast.success(`We'll miss you ${firstWord}`, {
       style: {
         backdropFilter: 'blur(14px)',
         background: theme.palette.background.paper,
@@ -182,19 +182,6 @@ const ChatSidebarHeader = ({ children }) => {
 
   // Get the first 6 words only for settings profile bio
   const shortBioPreview = userBio?.slice(0, 6).join(' ');
-
-  // glow animation
-  const glowDot = keyframes`
-    0% {
-      box-shadow: 0 0 0px 0px ${theme.palette.success.main}aa;
-    }
-    50% {
-      box-shadow: 0 0 5px 1px ${theme.palette.success.main}bb;
-    }
-    100% {
-      box-shadow: 0 0 0px 0px ${theme.palette.success.main}cc;
-    }
-  `;
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -273,7 +260,7 @@ const ChatSidebarHeader = ({ children }) => {
         top: 0,
         zIndex: 999,
         backdropFilter: 'blur(4px)',
-        WebkitBackdropFilter: 'blur(4px)'
+        WebkitBackdropFilter: 'blur(4px)',
       }}
     >
 
@@ -386,8 +373,8 @@ const ChatSidebarHeader = ({ children }) => {
         ModalProps={{ keepMounted: false }}
         PaperProps={{
           sx: {
-            background: theme.palette.background.default,
-            boxShadow: theme.shadows[12],
+            background: theme.palette.background.paper,
+            boxShadow: theme.shadows[1],
             minWidth: 260,
             maxWidth: 300,
             p: '0px 10px',
@@ -397,36 +384,36 @@ const ChatSidebarHeader = ({ children }) => {
       >
         {/* Profile Card */}
         <Stack
-          direction='column'
+          direction="column"
           alignItems="center"
-          spacing={1.5}
+          spacing={2}
           sx={{
-            my: 1.5,
-            p: isCustomXs ? 1 : 2,
+            my: 2,
+            p: isCustomXs ? 1.5 : 2.5,
             borderRadius: 1,
+            background: `linear-gradient(180deg,
+      ${theme.palette.background.paper},
+      ${theme.palette.info.dark}10)`,
+            border: `1px solid ${theme.palette.divider}`,
             position: 'relative',
-            background: theme.palette.background.paper,
-            border: `1px dashed ${theme.palette.divider}`,
-            boxShadow: `0 2px 10px ${theme.palette.primary.main}20`,
-            transition: 'box-shadow 0.3s ease',
           }}
         >
           {/* Theme Toggle */}
-          <Tooltip title={themeMode === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}>
+          <Tooltip title={themeMode === 'light' ? 'Dark mode' : 'Light mode'}>
             <IconButton
               onClick={toggleThemeMode}
+              size="small"
               sx={{
                 position: 'absolute',
-                top: 12,
-                right: 12,
-                width: 30,
-                height: 30,
-                bgcolor: 'background.paper',
-                boxShadow: 2,
-                zIndex: 2,
+                top: 10,
+                right: 10,
+                bgcolor: theme.palette.background.paper,
+                border: `1px solid ${theme.palette.divider}`,
               }}
             >
-              {themeMode === 'light' ? <DarkModeIcon fontSize="small" /> : <LightModeIcon fontSize="small" />}
+              {themeMode === 'light'
+                ? <DarkModeIcon fontSize="small" />
+                : <LightModeIcon fontSize="small" />}
             </IconButton>
           </Tooltip>
 
@@ -435,21 +422,10 @@ const ChatSidebarHeader = ({ children }) => {
             component={Link}
             to="/pairly/profile/general-info"
             sx={{
-              position: 'relative',
-              mx: isCustomXs ? 'auto' : 0,
-              border: `2px solid ${theme.palette.primary.dark}`,
-              p: 0.2,
-              overflow: 'hidden',
+              p: 0.4,
               borderRadius: '50%',
-              '&::after':
-              {
-                content: '""',
-                position: 'absolute',
-                borderRadius: '50%',
-                filter: 'blur(6px)',
-                opacity: 0.5,
-                zIndex: 0,
-              }
+              backgroundColor: theme.palette.background.paper,
+              border: `1px solid ${theme.palette.divider}`,
             }}
           >
             <Avatar
@@ -458,120 +434,95 @@ const ChatSidebarHeader = ({ children }) => {
               sx={{
                 width: isCustomXs ? 72 : 80,
                 height: isCustomXs ? 72 : 80,
-                zIndex: 1,
-                position: 'relative',
-                transition: 'transform .2s',
-                "&:hover": {
-                  transform: 'scale(1.1)'
-                },
-
               }}
             />
           </Box>
 
           {/* User Info */}
-          <Stack
-            spacing={0.2}
-            zIndex={1}
-            sx={{
-              textAlign: 'center',
-              width: '100%'
-            }}>
+          <Stack spacing={0.6} textAlign="center">
             <Typography
               variant="subtitle1"
               fontWeight={700}
-              color="text.primary"
-              sx={{
-                letterSpacing: 0.5
-              }}>
-              {profileData?.fullName?.toUpperCase()}
+              sx={{ letterSpacing: 0.2 }}
+            >
+              {profileData?.fullName}
             </Typography>
 
-            {/* ID + Copy */}
+            {/* Public ID */}
             <Stack
               direction="row"
+              justifyContent="center"
               alignItems="center"
-              justifyContent={'center'}
               spacing={0.5}
             >
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                sx={{
-                  fontStyle: 'italic',
-                  letterSpacing: 0.3
-                }}>
-                Public ID: {publicId || 'N/A'}
+              <Typography variant="caption" color="text.secondary">
+                ID: {publicId || 'N/A'}
               </Typography>
-              <Tooltip title={copied ? 'User ID copied!' : 'Copy User ID'} arrow>
-                <IconButton
-                  onClick={handleCopy}
-                  size="small"
-                  sx={{ p: 0.4 }}
-                >
-                  {copied ? <CheckIcon sx={{ fontSize: 16 }} /> : <ContentCopyIcon sx={{ fontSize: 16 }} />}
+              <Tooltip title={copied ? 'Copied' : 'Copy ID'}>
+                <IconButton size="small" onClick={handleCopy}>
+                  {copied
+                    ? <CheckIcon sx={{ fontSize: '0.8rem' }} />
+                    : <ContentCopyIcon sx={{ fontSize: '0.8rem' }} />}
                 </IconButton>
               </Tooltip>
             </Stack>
 
-            {/* Online Status */}
+            {/* Status */}
             <Stack
               direction="row"
+              justifyContent="center"
               alignItems="center"
               spacing={0.5}
-              justifyContent={'center'}>
+            >
               <Box
                 sx={{
-                  width: 10,
-                  height: 10,
+                  width: 7,
+                  height: 7,
                   borderRadius: '50%',
-                  background: 'linear-gradient(90deg, limegreen, #00ff99)',
-                  animation: `${glowDot} 1.5s infinite ease-in-out`
-                }} />
-              <Typography variant="body2" color="success.main">Online</Typography>
+                  bgcolor: 'success.main',
+                }}
+              />
+              <Typography variant="caption" color="text.secondary">
+                Online
+              </Typography>
             </Stack>
 
             {/* Bio */}
             <Typography
               variant="body2"
               color="text.secondary"
-              sx={{
-                fontStyle: 'italic',
-                maxWidth: '100%',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap'
-              }}>
-              {shortBioPreview || 'Add your bio to personalize your profile'}
+              sx={{ maxWidth: 220 }}
+            >
+              {shortBioPreview || 'Add a short bio'}
             </Typography>
 
-            {/* Plan Badge */}
+            {/* Plan */}
             <Stack
               direction="row"
-              alignItems="center"
               spacing={0.5}
+              alignItems="center"
               sx={{
-                mt: 0.6,
-                px: 1.4,
-                py: 0.5,
+                mt: 1,
+                px: 1.2,
+                py: 0.3,
                 borderRadius: 999,
-                alignSelf: 'center',
-                background:
-                  plan === 'free'
-                    ? `${theme.palette.grey[700]}44`
-                    : status === 'active'
-                      ? `linear-gradient(90deg, #ffb300, #ff9800)`
-                      : `${theme.palette.grey[700]}44`,
-                boxShadow:
-                  plan !== 'free'
-                    ? `0 0 2px ${status === 'active' ? theme.palette.warning.main : theme.palette.grey[600]
-                    }66`
-                    : `0 0 2px ${theme.palette.divider}`,
+                border: `1px solid ${theme.palette.divider}`,
+                backgroundColor: theme.palette.background.paper,
               }}
             >
-              <StarIcon sx={{ fontSize: 18, color: plan === 'free' ? theme.palette.text.secondary : '#fff' }} />
-              <Typography variant="caption" fontWeight={600} color={plan === 'free' ? 'text.secondary' : '#fff'}>
-                {status === 'active' ? `${toCapitalCase(plan)} Plan` : `${toCapitalCase(plan)} (Pending)`}
+              <StarIcon
+                sx={{
+                  fontSize: 14,
+                  color:
+                    isFreeUser
+                      ? theme.palette.text.secondary
+                      : theme.palette.warning.main,
+                }}
+              />
+              <Typography variant="caption" fontWeight={600}>
+                {status === 'active'
+                  ? toCapitalCase(plan)
+                  : `${toCapitalCase(plan)} · Pending`}
               </Typography>
             </Stack>
           </Stack>
@@ -581,8 +532,8 @@ const ChatSidebarHeader = ({ children }) => {
         <Box
           sx={{
             display: "flex",
-            alignItems: "center",
-            mb: 2
+            alignItems: "stretch",
+            mb: 2,
           }}
         >
           <TextField
@@ -595,50 +546,48 @@ const ChatSidebarHeader = ({ children }) => {
             autoComplete="off"
             sx={{
               '& .MuiOutlinedInput-root': {
+                height: 40,
                 borderRadius: '10px 0 0 10px',
-                background: `${theme.palette.background.paper}`,
-                transition: "all .3s ease",
-                "&:hover fieldset":
-                {
+                backgroundColor: theme.palette.background.paper,
+                '& fieldset': {
+                  borderRight: 'none',
+                },
+                '&:hover fieldset': {
                   borderColor: theme.palette.primary.main,
                 },
-                "&.Mui-focused fieldset": { borderColor: theme.palette.primary.main },
-              }
+                '&.Mui-focused fieldset': {
+                  borderColor: theme.palette.primary.main,
+                },
+              },
             }}
           />
 
           <IconButton
             onClick={handlePublicUserId}
             sx={{
-              height: 40,
               width: 40,
+              height: 40,
               borderRadius: '0 10px 10px 0',
-              border: `1px dashed ${theme.palette.divider}`,
-              background: theme.palette.background.paper,
-              transition: "all .25s ease",
-              "&:hover": {
-                background: theme.palette.background.paper,
-                border: `1px dashed ${theme.palette.success.dark}`,
+              border: `1px solid ${theme.palette.divider}`,
+              borderLeft: 'none',
+              backgroundColor: theme.palette.background.paper,
+              transition: 'background-color 0.2s ease, border-color 0.2s ease',
+              '&:hover': {
+                backgroundColor: theme.palette.action.hover,
+                borderColor: theme.palette.primary.main,
               },
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center"
             }}
           >
             <SearchIcon
               sx={{
-                color: theme.palette.success.main,
-                fontSize: 22,
+                fontSize: 20,
+                color: theme.palette.text.secondary,
               }}
             />
           </IconButton>
         </Box>
 
-
-        <Divider sx={{
-          bgcolor: theme.palette.divider,
-          height: 2
-        }} />
+        <Divider />
 
         {searchError && (
           <Typography
@@ -763,9 +712,9 @@ const ChatSidebarHeader = ({ children }) => {
                   mt: 0.5,
                   transition: 'all 0.3s ease-out',
                   color: 'text.secondary',
-                  '&:hover': { 
-                    transform: `translate(1px, -1px) scale(0.99)`, 
-                    filter: `drop-shadow(0 0 0.5px ${theme.palette.primary.main})` 
+                  '&:hover': {
+                    transform: `translate(1px, -1px) scale(0.99)`,
+                    filter: `drop-shadow(0 0 0.5px ${theme.palette.primary.main})`
                   },
                 }}
               >
@@ -783,10 +732,10 @@ const ChatSidebarHeader = ({ children }) => {
                 p: '8px 10px',
                 color: 'error.main',
                 transition: 'all 0.3s ease-out',
-                '&:hover': { 
-                  transform: `translate(1px, -1px) scale(0.99)`, 
+                '&:hover': {
+                  transform: `translate(1px, -1px) scale(0.99)`,
                   filter: `drop-shadow(0 0 0.5px ${theme.palette.error.main})`
-                 },
+                },
               }}
             >
               <LogoutIcon fontSize="small" sx={{ mr: 1, color: theme.palette.error.main }} />
