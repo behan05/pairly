@@ -382,7 +382,7 @@ const ChatSidebarHeader = ({ children }) => {
           },
         }}
       >
-        {/* Profile Card */}
+        {/* Profile Card */} 
         <Stack
           direction="column"
           alignItems="center"
