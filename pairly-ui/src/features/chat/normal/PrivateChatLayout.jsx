@@ -24,7 +24,9 @@ function NormalChatLayout() {
 
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [activeUserId, setActiveUserId] = useState(null);
-  const [height, setHeight] = useState('100vh')
+  const [height, setHeight] = useState(window.visualViewport.height || window.innerHeight)
+    // console.log("layout :", height);
+
   // Set page title when component mounts
   React.useEffect(() => {
     document.title = 'Pairly - private worlds';
@@ -44,7 +46,7 @@ function NormalChatLayout() {
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', setVh);
       window.visualViewport.addEventListener('scroll', setVh);
-      setHeight(window.visualViewport);
+      // setHeight(window.visualViewport);
     } else {
       window.addEventListener('resize', setVh);
     }
@@ -53,10 +55,10 @@ function NormalChatLayout() {
       if (window.visualViewport) {
         window.visualViewport.removeEventListener('resize', setVh);
         window.visualViewport.removeEventListener('scroll', setVh);
-        setHeight('100vh');
+        // setHeight('100vh');
       } else {
         window.removeEventListener('resize', setVh);
-        setHeight('100vh');
+        // setHeight('100vh');
       }
     };
   }, []);
