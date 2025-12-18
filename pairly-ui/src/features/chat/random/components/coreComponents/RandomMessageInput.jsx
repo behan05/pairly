@@ -549,6 +549,7 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
 
   return (
     <Box
+      id="random-input"
       ref={inputContainerRef}
       width="100%"
       zIndex={10}

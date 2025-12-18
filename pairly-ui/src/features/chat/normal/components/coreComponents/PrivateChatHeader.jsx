@@ -233,7 +233,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
   };
 
   return (
-    <Box position="sticky" top={0} zIndex={20}>
+    <Box id="private-chat-header" position="sticky" top={0} zIndex={20}>
       <Stack
         direction="row"
         alignItems="center"
