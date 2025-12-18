@@ -6,36 +6,12 @@ import App from "./App";
 import { store, persistor } from "./redux/store";
 import { Provider, useSelector } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { useMemo, useEffect } from "react";
+import { useMemo } from "react";
 
 // A wrapper component for theme handling
 function ThemeWrapper() {
   const mode = useSelector((state) => state.theme.themeMode);
   const theme = useMemo(() => getTheme(mode), [mode]);
-
-  useEffect(() => {
-    const setVh = () => {
-      const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-      document.documentElement.style.setProperty('--vh', `${height * 0.01}px`);
-    };
-
-    setVh();
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', setVh);
-      window.visualViewport.addEventListener('scroll', setVh);
-    } else {
-      window.addEventListener('resize', setVh);
-    }
-
-    return () => {
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', setVh);
-        window.visualViewport.removeEventListener('scroll', setVh);
-      } else {
-        window.removeEventListener('resize', setVh);
-      }
-    };
-  }, []);
 
   return (
     <ThemeProvider theme={theme}>
