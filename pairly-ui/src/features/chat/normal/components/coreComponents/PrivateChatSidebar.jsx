@@ -125,10 +125,10 @@ function PrivateChatSidebar() {
             minWidth={isSm ? '100%' : 300}
             px={1.5}
             sx={{
-                minHeight: '100vh',
-                maxHeight: '100vh',
-                overflowY: 'auto'
-            }}
+                    minHeight: 'calc(var(--vh, 1vh) * 100)',
+                    maxHeight: 'calc(var(--vh, 1vh) * 100)',
+                    overflowY: 'auto'
+                }}
         >
             {/* === Sidebar header with Search Bar === */}
             <ChatSidebarHeader>
