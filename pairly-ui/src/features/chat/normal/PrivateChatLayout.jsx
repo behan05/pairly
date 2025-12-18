@@ -128,7 +128,7 @@ function NormalChatLayout() {
   return (
     <Box
       sx={{
-        minHeight: 'calc(var(--vh, 1vh) * 100)',
+        minHeight: height,
         // maxHeight: 'calc(var(--vh, 1vh) * 100)',
         display: 'flex',
         flexDirection: 'row'
