@@ -246,50 +246,6 @@ function RandomChatWindow({ setShowChatWindow }) {
     } catch (e) {}
   }, [isConnected]);
 
-  // Adjust messages container height based on visualViewport, header, and input heights (mobile keyboard)
-  useEffect(() => {
-    const el = document.getElementById('chat-messages');
-    const header = document.getElementById('random-chat-header');
-    const input = document.getElementById('random-input');
-
-    if (!el) return;
-
-    const resize = () => {
-      try {
-        const vv = window.visualViewport;
-        if (vv) {
-          const vh = vv.height;
-          const headerH = header ? header.getBoundingClientRect().height : 0;
-          const inputH = input ? input.getBoundingClientRect().height : 0;
-          const newH = Math.max(0, vh - headerH - inputH);
-          el.style.height = `${newH}px`;
-        } else {
-          el.style.height = '';
-        }
-      } catch (e) {
-        // ignore
-      }
-    };
-
-    resize();
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', resize);
-      window.visualViewport.addEventListener('scroll', resize);
-    } else {
-      window.addEventListener('resize', resize);
-    }
-
-    return () => {
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', resize);
-        window.visualViewport.removeEventListener('scroll', resize);
-      } else {
-        window.removeEventListener('resize', resize);
-      }
-      try { if (el) el.style.height = ''; } catch(e){}
-    };
-  }, []);
-
   useEffect(() => {
     // Scroll input into view when focused
     const input = document.querySelector("textarea, input");
