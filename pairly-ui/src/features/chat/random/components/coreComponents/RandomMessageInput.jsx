@@ -753,10 +753,11 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
           display: 'flex',
           alignItems: 'center',
           boxSizing: 'border-box',
-          p: 1,
           mx: 1,
           mb: 1,
-          borderRadius: 1,
+          p: 0.5,
+          borderRadius: 3,
+          background: theme.palette.background.default,
           border: `1px solid ${theme.palette.divider}`,
 
           position: { xs: 'fixed', sm: 'sticky' },
@@ -764,7 +765,6 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
           left: 0,
           right: 0,
           zIndex: 1200,
-          background: theme.palette.background.paper,
         }}
       >
 
@@ -880,7 +880,6 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
           }}
           sx={{ mx: 2 }}
         />
-
         {message.trim() || previews.length > 0 ? (
           <Tooltip title="Send">
             <IconButton
@@ -922,8 +921,7 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
           <Stack
             direction='row'
             ml={1}
-            border={`0.5px solid ${theme.palette.divider}`}
-            borderRadius={1}
+            gap={0.5}
           >
             {NextButton}
             {DisconnectButton}

@@ -25,7 +25,7 @@ function NormalChatLayout() {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [activeUserId, setActiveUserId] = useState(null);
   const [height, setHeight] = useState(window.visualViewport.height || window.innerHeight)
-    // console.log("layout :", height);
+  // console.log("layout :", height);
 
   // Set page title when component mounts
   React.useEffect(() => {
@@ -69,42 +69,27 @@ function NormalChatLayout() {
   };
 
   const chatBgStyle = (currentTheme) => {
-    const emojis = [
-      "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇", "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "😚",
-      "😋", "😛", "😝", "😜", "🤪", "🧐", "🤓", "😎", "🤩", "🥳", "😏", "😒", "😞", "😔", "😟", "😕", "🙁", "☹️", "😣", "😖",
-      "😫", "😩", "🥺", "😢", "😭", "😤", "😠", "😡", "🤬", "😳", "🫣", "🫢", "🤯", "😱", "😨", "😰", "😥", "😓", "🤗",
-      "🤭", "🤫", "🤥", "😶", "😐", "😑", "😬", "🙄", "😮‍💨", "😴", "🤤", "😪", "😵", "😵‍💫", "🤢", "🤮", "🤧", "😷", "🤒", "🤕",
-      "🤑", "🤠", "😈", "👿", "👻", "💀", "☠️", "👽", "🤖", "🎃", "😺", "😸", "😹", "😻", "😼", "😽", "🙀", "😿", "😾",
-      "🦊", "🐶", "🐱", "🐹", "🐰",
-      "❤️", "💛", "💚", "💙", "💜", "💯", "✨", "⭐", "⚡", "🔥",
-    ];
+    const dotCount = isTabletOrBelow ? 300 : 600;
 
-    // generate 120 random emojis
-    const emojiElements = Array.from({ length: isTabletOrBelow ? 200 : 400 }, () => {
-      const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-
-      return (
-        <Stack
-          component='span'
-          style={{
-            position: "absolute",
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-
-            // random sizes: small OR medium OR large
-            fontSize: `${Math.floor(Math.random() * 20) + 12}px`,
-
-            // very light opacity to look like background
-            opacity: Math.random() * 0.1 + 0.02,
-
-            transform: `rotate(${Math.random() * 30 - 15}deg)`,
-            pointerEvents: "none",
-          }}
-        >
-          {emoji}
-        </Stack>
-      );
-    });
+    const dotElements = Array.from({ length: dotCount }, (_, i) => (
+      <Box
+        key={i}
+        sx={{
+          position: "absolute",
+          left: `${Math.random() * 100}%`,
+          top: `${Math.random() * 100}%`,
+          width: Math.random() * 2 + 1,
+          height: Math.random() * 2 + 1,
+          borderRadius: "50%",
+          backgroundColor:
+            currentTheme === "dark"
+              ? theme.palette.text.primary
+              : theme.palette.text.secondary,
+          opacity: Math.random() * 0.08 + 0.02,
+          pointerEvents: "none",
+        }}
+      />
+    ));
 
     return (
       <Box
@@ -112,11 +97,13 @@ function NormalChatLayout() {
           position: "absolute",
           inset: 0,
           overflow: "hidden",
-          background: currentTheme === "dark"
-            ? `${theme.palette.background.paper}` : `${theme.palette.background.default}`,
+          background:
+            currentTheme === "dark"
+              ? theme.palette.background.paper
+              : theme.palette.background.default,
         }}
       >
-        {emojiElements}
+        {dotElements}
       </Box>
     );
   };
@@ -159,7 +146,7 @@ function NormalChatLayout() {
             flex={1}
             sx={{
               background: theme.palette.background.paper,
-              borderRight: `2px solid ${theme.palette.divider}`,
+              borderRight: `1px solid ${theme.palette.divider}`,
             }}
           >
             <Outlet context={{ setSelectedUserId, activeUserId, setActiveUserId }} />
@@ -172,7 +159,7 @@ function NormalChatLayout() {
             flex={1}
             sx={{
               background: theme.palette.background.paper,
-              borderRight: `2px solid ${theme.palette.divider}`,
+              borderRight: `1px solid ${theme.palette.divider}`,
             }}
           >
             <Outlet context={{ setSelectedUserId, activeUserId, setActiveUserId }} />

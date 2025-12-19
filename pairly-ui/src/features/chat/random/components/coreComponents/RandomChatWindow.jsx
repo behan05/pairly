@@ -45,42 +45,27 @@ function RandomChatWindow({ setShowChatWindow }) {
   const isFreeUser = status === 'active' && plan === 'free';
 
   const chatBgStyle = (currentTheme) => {
-    const emojis = [
-      "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇", "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "😚",
-      "😋", "😛", "😝", "😜", "🤪", "🧐", "🤓", "😎", "🤩", "🥳", "😏", "😒", "😞", "😔", "😟", "😕", "🙁", "☹️", "😣", "😖",
-      "😫", "😩", "🥺", "😢", "😭", "😤", "😠", "😡", "🤬", "😳", "🫣", "🫢", "🤯", "😱", "😨", "😰", "😥", "😓", "🤗",
-      "🤭", "🤫", "🤥", "😶", "😐", "😑", "😬", "🙄", "😮‍💨", "😴", "🤤", "😪", "😵", "😵‍💫", "🤢", "🤮", "🤧", "😷", "🤒", "🤕",
-      "🤑", "🤠", "😈", "👿", "👻", "💀", "☠️", "👽", "🤖", "🎃", "😺", "😸", "😹", "😻", "😼", "😽", "🙀", "😿", "😾",
-      "🦊", "🐶", "🐱", "🐹", "🐰",
-      "❤️", "💛", "💚", "💙", "💜", "💯", "✨", "⭐", "⚡", "🔥",
-    ];
+    const dotCount = isTabletOrBelow ? 300 : 600;
 
-    // generate 120 random emojis
-    const emojiElements = Array.from({ length: isTabletOrBelow ? 200 : 400 }, () => {
-      const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-
-      return (
-        <Stack
-          component='span'
-          style={{
-            position: "absolute",
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-
-            // random sizes: small OR medium OR large
-            fontSize: `${Math.floor(Math.random() * 20) + 12}px`,
-
-            // very light opacity to look like background
-            opacity: Math.random() * 0.1 + 0.02,
-
-            transform: `rotate(${Math.random() * 30 - 15}deg)`,
-            pointerEvents: "none",
-          }}
-        >
-          {emoji}
-        </Stack>
-      );
-    });
+    const dotElements = Array.from({ length: dotCount }, (_, i) => (
+      <Box
+        key={i}
+        sx={{
+          position: "absolute",
+          left: `${Math.random() * 100}%`,
+          top: `${Math.random() * 100}%`,
+          width: Math.random() * 2 + 1,
+          height: Math.random() * 2 + 1,
+          borderRadius: "50%",
+          backgroundColor:
+            currentTheme === "dark"
+              ? theme.palette.text.primary
+              : theme.palette.text.secondary,
+          opacity: Math.random() * 0.08 + 0.02,
+          pointerEvents: "none",
+        }}
+      />
+    ));
 
     return (
       <Box
@@ -88,11 +73,13 @@ function RandomChatWindow({ setShowChatWindow }) {
           position: "absolute",
           inset: 0,
           overflow: "hidden",
-          background: currentTheme === "dark"
-            ? `${theme.palette.background.paper}` : `${theme.palette.background.default}`,
+          background:
+            currentTheme === "dark"
+              ? theme.palette.background.paper
+              : theme.palette.background.default,
         }}
       >
-        {emojiElements}
+        {dotElements}
       </Box>
     );
   };
@@ -236,14 +223,14 @@ function RandomChatWindow({ setShowChatWindow }) {
   useEffect(() => {
     // No-op: rely on parent layout and CSS variables for height.
     // Left intentionally empty to avoid forcing pixel heights on chat container.
-    return () => {};
+    return () => { };
   }, []);
 
   // Ensure we jump to the last message when opening/connecting
   useEffect(() => {
     try {
       messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
-    } catch (e) {}
+    } catch (e) { }
   }, [isConnected]);
 
   useEffect(() => {
@@ -320,10 +307,11 @@ function RandomChatWindow({ setShowChatWindow }) {
                     sx={{
                       background: isOwnMessage
                         ? theme.palette.mode === "dark"
-                          ? "#075E54"
+                          ? "#005C4B"
                           : "#DCF8C6"
-                        : theme.palette.background.paper,
-
+                        : theme.palette.mode === "dark"
+                          ? "#1F2C34"
+                          : "#FFFFFF",
                       color: theme.palette.text.primary,
                       px: 1.6,
                       py: 1.2,
@@ -373,7 +361,12 @@ function RandomChatWindow({ setShowChatWindow }) {
                               {msg.message}
                             </Typography>
                           ) : (
-                            <Typography variant="body1" sx={{ wordBreak: 'break-word', fontSize: fontSizeMap[chatFontSize] || '0.875rem' }}>
+                            <Typography
+                              variant="body1"
+                              sx={{
+                                wordBreak: 'break-word',
+                                fontSize: fontSizeMap[chatFontSize] || '0.875rem'
+                              }}>
                               {msg.message}
                             </Typography>
                           )}

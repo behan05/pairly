@@ -35,6 +35,7 @@ import { fetchAllUser, fetchUnreadCounts, fetchConversationMessages } from '@/re
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useOutletContext } from 'react-router-dom';
 import { socket } from '@/services/socket';
+import StyledActionButton from '../../../../../components/common/StyledActionButton';
 
 function PrivateChatSidebar() {
     const theme = useTheme();
@@ -134,234 +135,45 @@ function PrivateChatSidebar() {
             <ChatSidebarHeader>
                 <Box
                     mt={1}
-                    sx={{ display: "flex", gap: 1, justifyContent: "center", alignItems: "center" }}
+                    sx={{
+                        display: "flex",
+                        gap: 1,
+                        alignItems: "center"
+                    }}
                 >
-                    <TextField
-                        size="small"
-                        fullWidth
-                        placeholder="Search user..."
-                        value={searchValue}
-                        onChange={(e) => setSearchValue(e.target.value)}
-                        InputProps={{
-                            startAdornment: <SearchIcon fontSize="small" sx={{ mr: 1 }} />,
-                        }}
-                        sx={{
-                            "& .MuiOutlinedInput-root": {
-                                height: 48,
-                                borderRadius: 1,
-                            },
-                        }}
-                    />
-                    <Stack sx={{ width: "100%" }}>
-                        <Button
-                            component={Link}
-                            to="/pairly"
+                    <Stack flex={1}>
+                        <TextField
+                            size="small"
+                            fullWidth
+                            placeholder="Search user..."
+                            value={searchValue}
+                            onChange={(e) => setSearchValue(e.target.value)}
+                            InputProps={{
+                                startAdornment: <SearchIcon fontSize="small" sx={{ mr: 1 }} />,
+                            }}
                             sx={{
-                                "--round": "0.75rem",
-                                position: "relative",
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 1,
-                                overflow: "hidden",
-                                transition: "all 0.25s ease",
-                                height: 48,
-                                minWidth: 102,
-                                background:
-                                    "radial-gradient(65.28% 65.28% at 50% 100%, rgba(223,113,255,0.8) 0%, rgba(223,113,255,0) 100%), linear-gradient(0deg, #7a5af8, #7a5af8)",
-                                borderRadius: "var(--round)",
-                                border: "none",
-                                outline: "none",
-                                px: "18px",
-                                color: "#fff",
-                                fontSize: "16px",
-                                fontWeight: 500,
-                                lineHeight: 1.5,
-                                cursor: "pointer",
-
-                                "&::before, &::after": {
-                                    content: '""',
-                                    position: "absolute",
-                                    inset: "var(--space)",
-                                    transition: "all 0.5s ease-in-out",
-                                    borderRadius: "calc(var(--round) - var(--space))",
-                                    zIndex: 0,
-                                },
-                                "&::before": {
-                                    "--space": "1px",
-                                    background:
-                                        "linear-gradient(177.95deg, rgba(255,255,255,0.19) 0%, rgba(255,255,255,0) 100%)",
-                                },
-                                "&::after": {
-                                    "--space": "2px",
-                                    background:
-                                        "radial-gradient(65.28% 65.28% at 50% 100%, rgba(223,113,255,0.8) 0%, rgba(223,113,255,0) 100%), linear-gradient(0deg, #7a5af8, #7a5af8)",
-                                },
-
-                                "&:active": {
-                                    transform: "scale(0.95)",
-                                },
-
-                                // folded corner
-                                "& .fold": {
-                                    zIndex: 1,
-                                    position: "absolute",
-                                    top: 0,
-                                    right: 0,
-                                    height: "1rem",
-                                    width: "1rem",
-                                    transition: "all 0.5s ease-in-out",
-                                    background:
-                                        "radial-gradient(100% 75% at 55%, rgba(223,113,255,0.8) 0%, rgba(223,113,255,0) 100%)",
-                                    boxShadow: "0 0 3px black",
-                                    borderBottomLeftRadius: "0.5rem",
-                                    borderTopRightRadius: "var(--round)",
-                                    "&::after": {
-                                        content: '""',
-                                        position: "absolute",
-                                        top: 0,
-                                        right: 0,
-                                        width: "150%",
-                                        height: "150%",
-                                        transform: "rotate(45deg) translateY(-18px)",
-                                        backgroundColor: "#e8e8e8",
-                                        pointerEvents: "none",
-                                    },
-                                },
-                                "&:hover .fold": {
-                                    mt: "-1rem",
-                                    mr: "-1rem",
-                                },
-
-                                // points animation
-                                "& .points_wrapper": {
-                                    overflow: "hidden",
-                                    width: "100%",
-                                    height: "100%",
-                                    pointerEvents: "none",
-                                    position: "absolute",
-                                    zIndex: 1,
-                                },
-                                "& .point": {
-                                    bottom: "-10px",
-                                    position: "absolute",
-                                    animation: "floating-points infinite ease-in-out",
-                                    pointerEvents: "none",
-                                    width: "2px",
-                                    height: "2px",
-                                    bgcolor: "#fff",
-                                    borderRadius: "9999px",
-                                },
-                                "@keyframes floating-points": {
-                                    "0%": { transform: "translateY(0)" },
-                                    "85%": { opacity: 0 },
-                                    "100%": { transform: "translateY(-55px)", opacity: 0 },
+                                "& .MuiOutlinedInput-root": {
+                                    borderRadius: 0.5,
                                 },
                             }}
-                        >
-                            <span className="fold" />
-                            <span className="points_wrapper">
-                                <span
-                                    className="point"
-                                    style={{
-                                        left: "10%",
-                                        animationDuration: "2.35s",
-                                        animationDelay: "0.2s",
-                                    }}
-                                />
-                                <span
-                                    className="point"
-                                    style={{
-                                        left: "30%",
-                                        opacity: 0.7,
-                                        animationDuration: "2.5s",
-                                        animationDelay: "0.5s",
-                                    }}
-                                />
-                                <span
-                                    className="point"
-                                    style={{
-                                        left: "25%",
-                                        opacity: 0.8,
-                                        animationDuration: "2.2s",
-                                        animationDelay: "0.1s",
-                                    }}
-                                />
-                                <span
-                                    className="point"
-                                    style={{
-                                        left: "44%",
-                                        opacity: 0.6,
-                                        animationDuration: "2.05s",
-                                    }}
-                                />
-                                <span
-                                    className="point"
-                                    style={{
-                                        left: "50%",
-                                        opacity: 1,
-                                        animationDuration: "1.9s",
-                                    }}
-                                />
-                                <span
-                                    className="point"
-                                    style={{
-                                        left: "75%",
-                                        opacity: 0.5,
-                                        animationDuration: "1.5s",
-                                        animationDelay: "1.5s",
-                                    }}
-                                />
-                                <span
-                                    className="point"
-                                    style={{
-                                        left: "88%",
-                                        opacity: 0.9,
-                                        animationDuration: "2.2s",
-                                        animationDelay: "0.2s",
-                                    }}
-                                />
-                                <span
-                                    className="point"
-                                    style={{
-                                        left: "58%",
-                                        opacity: 0.8,
-                                        animationDuration: "2.25s",
-                                        animationDelay: "0.2s",
-                                    }}
-                                />
-                                <span
-                                    className="point"
-                                    style={{
-                                        left: "98%",
-                                        opacity: 0.6,
-                                        animationDuration: "2.6s",
-                                        animationDelay: "0.1s",
-                                    }}
-                                />
-                                <span
-                                    className="point"
-                                    style={{
-                                        left: "65%",
-                                        opacity: 1,
-                                        animationDuration: "2.5s",
-                                        animationDelay: "0.2s",
-                                    }}
-                                />
-                            </span>
-                            <span
-                                style={{
-                                    zIndex: 2,
-                                    position: "relative",
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    fontSize: '0.9rem'
-                                }}>
-                                <BoltIcon />
-                                Random Chat
-                            </span>
-                        </Button>
+                        />
                     </Stack>
+                        <StyledActionButton
+                            icon={<BoltIcon sx={{ color: 'info.dark' }} />}
+                            text='Random Chat'
+                            redirectUrl={'/pairly'}
+                            sx={{
+                                background: `linear-gradient(180deg,
+                                ${theme.palette.background.paper},
+                                ${theme.palette.info.dark}10)`,
+                                transition: 'all 0.3s ease',
+                                '&:hover': {
+                                    background: `linear-gradient(180deg,
+                                ${theme.palette.info.dark}10,
+                                ${theme.palette.background.paper}15)`,
+                                }
+                            }}
+                        />
                 </Box>
             </ChatSidebarHeader>
 
@@ -573,13 +385,7 @@ function PrivateChatSidebar() {
             )}
 
             {/* Floating Settings icon at bottom of sidebar */}
-            <Box sx={{
-                position: 'absolute',
-                bottom: 20,
-                right: 60
-            }}>
-                <SettingsAction />
-            </Box>
+            <SettingsAction />
         </Box>
     )
 };

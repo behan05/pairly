@@ -11,8 +11,9 @@ function SettingsAction() {
     <Box
       sx={{
         p: 1.5,
-        position: 'sticky',
+        position: 'absolute',
         bottom: 20,
+        right: 10,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -24,15 +25,22 @@ function SettingsAction() {
         <IconButton
           component={Link}
           to="/pairly/settings"
-          sx={{
+          sx={(theme) => ({
             boxShadow: 3,
+            bgcolor: theme.palette.background.paper,
+            border: `1px solid ${theme.palette.divider}`,
             '&:hover .rotate-icon': {
               transform: 'rotate(230deg)',
               transition: 'transform 0.4s ease-in-out'
             }
-          }}
+          })}
         >
-          <SettingsIcon className="rotate-icon" />
+          <SettingsIcon
+            className="rotate-icon"
+            sx={{
+              fontSize: '1rem'
+            }}
+          />
         </IconButton>
       </Tooltip>
     </Box>

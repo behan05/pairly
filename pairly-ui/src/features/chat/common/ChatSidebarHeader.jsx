@@ -254,7 +254,8 @@ const ChatSidebarHeader = ({ children }) => {
 
   return (
     <Box
-      pt={1}
+      pt={1.5}
+      pb={1}
       sx={{
         position: 'sticky',
         top: 0,
@@ -265,7 +266,11 @@ const ChatSidebarHeader = ({ children }) => {
     >
 
       {/* Header */}
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
         {/* Logo */}
         <Link to={'/pairly'}>
           <Stack
@@ -303,22 +308,13 @@ const ChatSidebarHeader = ({ children }) => {
                   sx={{
                     width: 34,
                     height: 34,
-                    borderRadius: 0.8,
+                    borderRadius: 2,
                     transition: 'background 0.3s ease, box-shadow 0.3s ease',
                     backdropFilter: 'blur(6px)',
-                    background: `${theme.palette.background.paper}66`,
-                    boxShadow: `0 0 4px ${theme.palette.primary.main}22`,
-                    '&:hover': {
-                      background: `linear-gradient(135deg,
-          ${theme.palette.primary.light}55,
-          ${theme.palette.background.paper}99)`,
-                      boxShadow: `0 0 8px ${theme.palette.primary.main}55`,
-                    },
+                    bgcolor: theme.palette.background.paper,
+                    border: `1px solid ${theme.palette.divider}`,
                     '&.active': {
-                      background: `linear-gradient(135deg,
-          ${theme.palette.primary.main}88,
-          ${theme.palette.secondary.main}55)`,
-                      boxShadow: `0 0 10px ${theme.palette.primary.main}99`,
+                      boxShadow: `0 0 10px ${theme.palette.info.main}20`,
                     },
                   }}
                 >
@@ -341,25 +337,18 @@ const ChatSidebarHeader = ({ children }) => {
               alt="user profile with dropdown menu"
               onClick={(e) => setMenuAnchorEl(e.currentTarget)}
               sx={{
-                width: 40,
-                height: 40,
-                borderRadius: 0.8,
-                transition: 'all 0.3s linear',
+                p: 0.4,
+                borderRadius: 2,
                 cursor: 'pointer',
-                '&:hover': {
-                  transform: 'scale(1.1)'
-                },
-                '& img': {
-                  objectFit: 'cover',
-                  imageRendering: 'auto'
-                }
+                bgcolor: theme.palette.background.paper,
+                border: `1px solid ${theme.palette.divider}`
               }}
             />
           </Tooltip>
         </Stack>
       </Stack>
 
-      <Divider sx={{ mt: 1 }} />
+      {/* <Divider sx={{ mt: 1 }} /> */}
 
       {/* Search Bar if needed */}
       {children}
@@ -378,10 +367,11 @@ const ChatSidebarHeader = ({ children }) => {
             maxWidth: 300,
             p: '0px 10px',
             overflow: 'auto',
+            borderRight: `1px solid ${theme.palette.divider}`,
           },
         }}
       >
-        {/* Profile Card */} 
+        {/* Profile Card */}
         <Stack
           direction="column"
           alignItems="center"

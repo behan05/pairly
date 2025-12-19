@@ -18,10 +18,7 @@ function NextButton({ onClick, disabled = false }) {
             onClick={onClick}
             disabled={disabled}
             sx={theme => ({
-              background:
-                theme.palette.mode === 'dark'
-                  ? theme.palette.background.default
-                  : theme.palette.background.paper,
+              bgcolor: theme.palette.background.paper,
             })}
           >
             <SkipNextIcon sx={{ color: 'info.main', fontSize: '0.8em' }} />
@@ -40,23 +37,17 @@ function NextButton({ onClick, disabled = false }) {
             textTransform: 'none',
             fontWeight: 600,
 
-            boxShadow: `inset 0 0 0.2em ${theme.palette.info.main}`,
-            border: 'none',
+            border: `1px solid ${theme.palette.divider}`,
             color: theme.palette.info.main,
 
             transition: 'all 0.3s ease',
 
             background:
               theme.palette.mode === 'dark'
-                ? theme.palette.background.default
-                : theme.palette.background.paper,
+                ? theme.palette.background.paper
+                : theme.palette.background.default,
 
             '&:hover': {
-              borderColor: theme.palette.info.dark,
-              boxShadow:
-                theme.palette.mode === 'dark'
-                  ? `0 4px 12px ${theme.palette.success.dark}80`
-                  : `0 4px 12px ${theme.palette.success.light}80`,
               transform: 'translateY(-2px)',
             },
 

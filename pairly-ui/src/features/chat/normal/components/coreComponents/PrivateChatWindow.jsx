@@ -42,7 +42,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
   // Fix: Dynamic viewport height to handle keyboard on mobile
   const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
   // console.log("window :", viewportHeight);
-  
+
   useEffect(() => {
     const updateHeight = () => {
       const vh = window.visualViewport?.height || window.innerHeight;
@@ -125,7 +125,7 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
   useEffect(() => {
     try {
       messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
-    } catch (e) {}
+    } catch (e) { }
   }, [conversationId, selectedUserId]);
 
   return (
@@ -169,10 +169,11 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
                     sx={{
                       background: isOwnMessage
                         ? theme.palette.mode === "dark"
-                          ? "#075E54"
+                          ? "#005C4B"
                           : "#DCF8C6"
-                        : theme.palette.background.paper,
-
+                        : theme.palette.mode === "dark"
+                          ? "#1F2C34"
+                          : "#FFFFFF",
                       color: theme.palette.text.primary,
                       px: 1.6,
                       py: 1.2,

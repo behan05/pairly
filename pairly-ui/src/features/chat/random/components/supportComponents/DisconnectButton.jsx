@@ -18,10 +18,7 @@ function DisconnectButton({ onClick, disabled = false }) {
             onClick={onClick}
             disabled={disabled}
             sx={theme => ({
-              background:
-                theme.palette.mode === 'dark'
-                  ? theme.palette.background.default
-                  : theme.palette.background.paper,
+              bgcolor: theme.palette.background.paper,
             })}
           >
             <PowerSettingsNewIcon sx={{ color: 'error.main', fontSize: '0.8em' }} />
@@ -40,23 +37,17 @@ function DisconnectButton({ onClick, disabled = false }) {
             textTransform: 'none',
             fontWeight: 600,
 
-            boxShadow: `inset 0 0 0.2em ${theme.palette.error.main}`,
-            border: 'none',
+            border: `1px solid ${theme.palette.divider}`,
             color: theme.palette.error.main,
 
             transition: 'all 0.3s ease',
 
             background:
               theme.palette.mode === 'dark'
-                ? theme.palette.background.default
-                : theme.palette.background.paper,
+                ? theme.palette.background.paper
+                : theme.palette.background.default,
 
             '&:hover': {
-              boxShadow:
-                theme.palette.mode === 'dark'
-                  ? `0 4px 12px ${theme.palette.error.dark}80`
-                  : `0 4px 12px ${theme.palette.error.light}80`,
-              border: 'none',
               transform: 'translateY(-2px)',
             },
 

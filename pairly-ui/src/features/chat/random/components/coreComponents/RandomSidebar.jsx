@@ -148,20 +148,28 @@ function RandomSidebar() {
             borderRadius: 1,
             p: 2,
             transition: "0.3s",
-            boxShadow: `4px 4px 0.2em ${theme.palette.success.main}20`,
-
-            "&:hover": {
-              boxShadow: `none`,
-              border: `1px solid ${theme.palette.success.dark}`
-            },
+            bgcolor: theme.palette.background.paper,
+            border: `1px solid ${theme.palette.divider}`,
           }}
         >
-          <StyledText text="Random Chat" sx={{ fontSize: isSm ? '1.5rem' : '2rem', textAlign: 'center' }} />
+          <Typography
+            variant='h2'
+            sx={{
+              fontSize: isSm ? '1.5rem' : '2rem',
+              textAlign: 'center'
+            }}
+          >
+            Random Chat
+          </Typography>
 
           <Typography
-            variant="subtitle1"
+            variant="subtitle2"
             color="text.secondary"
-            sx={{ mb: 1, fontWeight: 500, textAlign: 'center' }}
+            sx={{
+              mb: 1,
+              fontWeight: 500,
+              textAlign: 'center'
+            }}
           >
             Meet someone new instantly
           </Typography>
@@ -207,13 +215,14 @@ function RandomSidebar() {
               mt: 2,
               color: theme.palette.text.secondary,
               gap: 0.6,
-              border: ` 1px solid ${theme.palette.divider}`,
-              boxShadow: `0 0 0.2em ${theme.palette.divider}`,
               borderRadius: 0.5,
               p: 1,
               display: 'flex',
               justifyContent: 'center',
-              alignItem: 'center'
+              alignItem: 'center',
+              background: `linear-gradient(180deg,
+      ${theme.palette.background.paper},
+      ${theme.palette.info.dark}10)`,
             }}
           >
             <GroupIcon sx={{ fontSize: 18, color: 'info.main' }} />
@@ -239,9 +248,7 @@ function RandomSidebar() {
       )}
 
       {/* Settings */}
-      <Box sx={{ py: 2, display: 'flex', justifyContent: 'center' }}>
-        <SettingsAction />
-      </Box>
+      <SettingsAction />
 
       {/* Onboarding Feedback */}
       <OnboardingFeedback
