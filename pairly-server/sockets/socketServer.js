@@ -8,7 +8,7 @@ const User = require('../models/User.model');
 let onlineUsersCount = new Set();
 let onlineUsers = new Map();
 
-// Track all users by userId → socketId
+// Track all sockets per user: userId -> Set(socketId)
 const userSocketMap = new Map();
 /**
  * Initializes and configures the Socket.IO server.
@@ -59,16 +59,19 @@ function setupSocket(server) {
 
     // === Main connection listener ===
     io.on('connection', async (socket) => {
-        userSocketMap.set(socket.userId, socket.id);
+        // track socket id for this user
+        const uid = String(socket.userId);
+        if (!userSocketMap.has(uid)) userSocketMap.set(uid, new Set());
+        userSocketMap.get(uid).add(socket.id);
 
-        // Update DB
+        // Update DB (mark online)
         await User.findByIdAndUpdate(
             socket.userId,
             { isOnline: true },
             { new: true }
         );
 
-        // count active
+        // count active socket connections
         onlineUsersCount.add(socket.id);
         io.emit('onlineCount', onlineUsersCount.size);
 
@@ -76,13 +79,16 @@ function setupSocket(server) {
             socket.emit('onlineCount', onlineUsersCount.size);
         });
 
-        // mark user online
-        onlineUsers.set(String(socket.userId), socket.id);
+        // mark user as online in onlineUsers map (track set of socket ids)
+        if (!onlineUsers.has(uid)) onlineUsers.set(uid, new Set());
+        onlineUsers.get(uid).add(socket.id);
 
         // send all online users one by one to the new client
         for (const userId of onlineUsers.keys()) {
-            socket.emit('privateChat:userOnline', { userId });
-        };
+            // only announce users that have at least one active socket
+            const sockets = onlineUsers.get(userId);
+            if (sockets && sockets.size > 0) socket.emit('privateChat:userOnline', { userId });
+        }
 
         // notify others about this user
         socket.broadcast.emit('privateChat:userOnline', { userId: socket.userId });
@@ -95,23 +101,58 @@ function setupSocket(server) {
 
         // Handle disconnection
         socket.on('disconnect', async () => {
+            // remove this socket from active counts
             onlineUsersCount.delete(socket.id);
-            userSocketMap.delete(socket.id);
-
             io.emit('onlineCount', onlineUsersCount.size);
 
-            // Update DB
-            const updateLastActivity = await User.findByIdAndUpdate(
-                socket.userId,
-                {
-                    isOnline: false,
-                    lastSeen: new Date()
-                },
-                { new: true }
-            );
-            userSocketMap.delete(socket.userId);
+            const uid = String(socket.userId);
 
-            io.emit('privateChat:userOffline', { userId: socket.userId, lastSeen: updateLastActivity?.lastSeen });
+            // remove socket id from user's socket set
+            const socketsSet = userSocketMap.get(uid);
+            if (socketsSet) {
+                socketsSet.delete(socket.id);
+                if (socketsSet.size === 0) {
+                    userSocketMap.delete(uid);
+                } else {
+                    userSocketMap.set(uid, socketsSet);
+                }
+            }
+
+            // also remove from onlineUsers map
+            const onlineSet = onlineUsers.get(uid);
+            if (onlineSet) {
+                onlineSet.delete(socket.id);
+                if (onlineSet.size === 0) {
+                    onlineUsers.delete(uid);
+
+                    // Update DB only when user's last socket disconnected
+                    const updateLastActivity = await User.findByIdAndUpdate(
+                        socket.userId,
+                        {
+                            isOnline: false,
+                            lastSeen: new Date()
+                        },
+                        { new: true }
+                    );
+
+                    // notify others that this user is offline
+                    io.emit('privateChat:userOffline', { userId: socket.userId, lastSeen: updateLastActivity?.lastSeen });
+                } else {
+                    // still has active sockets — do not mark offline
+                    onlineUsers.set(uid, onlineSet);
+                }
+            } else {
+                // no onlineSet found — ensure userSocketMap cleaned and mark offline as fallback
+                const updateLastActivity = await User.findByIdAndUpdate(
+                    socket.userId,
+                    {
+                        isOnline: false,
+                        lastSeen: new Date()
+                    },
+                    { new: true }
+                );
+                io.emit('privateChat:userOffline', { userId: socket.userId, lastSeen: updateLastActivity?.lastSeen });
+            }
         });
     });
 }
