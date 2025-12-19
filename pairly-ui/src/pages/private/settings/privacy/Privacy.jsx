@@ -8,9 +8,8 @@ import {
   SettingsBackupRestoreIcon
 } from '@/MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
-import BlurWrapper from '@/components/common/BlurWrapper';
 import CyberSwitch from '@/components/private/CyberSwitch';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PremiumFeatureModel from '@/components/private/premium/PremiumFeatureModal';
 
@@ -119,14 +118,22 @@ function Privacy() {
 
   return (
     <Box>
-      <ToastContainer position="top-right" autoClose={1000} theme="colored" />
 
       {/* Navigation Back */}
       <Stack mb={2}>
         <NavigateWithArrow redirectTo="/pairly/settings" text="Privacy Settings" />
       </Stack>
 
-      <BlurWrapper>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          border: `1px solid ${theme.palette.divider}`,
+          borderRadius: 1,
+          p: 2
+        }}
+      >
         {/* === Sections === */}
         <Section
           icon={<VisibilityIcon fontSize="small" sx={{ color: 'info.main' }} />}
@@ -247,7 +254,7 @@ function Privacy() {
             label="Allow export of my data"
           />
         </Section>
-      </BlurWrapper>
+      </Box>
 
       <PremiumFeatureModel
         open={modalOpen}

@@ -42,7 +42,8 @@ function RandomChatWindow({ setShowChatWindow }) {
   const isLg = useMediaQuery(theme.breakpoints.down('lg'));
   const dispatch = useDispatch();
   const { plan, status } = useSelector((state) => state?.auth?.user?.subscription);
-  const isFreeUser = status === 'active' && plan === 'free';
+  const hasPremiumAccess = plan !== 'free' && status === 'active';
+  const isFreeUser = !hasPremiumAccess;
 
   const chatBgStyle = (currentTheme) => {
     const dotCount = isTabletOrBelow ? 300 : 600;
@@ -638,22 +639,22 @@ function RandomChatWindow({ setShowChatWindow }) {
 
           {/* Input area for sending messages */}
 
-            <RandomMessageInput
-              onFocus={() => setIsTyping(true)}
-              onBlur={() => setIsTyping(false)}
-              NextButton={isSm && <NextButton
-                onClick={() => {
-                  handleMenuClose();
-                  handleNext();
-                }}
-              />}
-              DisconnectButton={isSm && <DisconnectButton
-                onClick={() => {
-                  handleMenuClose();
-                  handleDisconnect();
-                }}
-              />}
-            />
+          <RandomMessageInput
+            onFocus={() => setIsTyping(true)}
+            onBlur={() => setIsTyping(false)}
+            NextButton={isSm && <NextButton
+              onClick={() => {
+                handleMenuClose();
+                handleNext();
+              }}
+            />}
+            DisconnectButton={isSm && <DisconnectButton
+              onClick={() => {
+                handleMenuClose();
+                handleDisconnect();
+              }}
+            />}
+          />
         </>
       ) : (
         // === Not Connected Placeholder ===
@@ -668,7 +669,7 @@ function RandomChatWindow({ setShowChatWindow }) {
           }}
         >
           {isSm && isWaiting ? (
-                <Stack
+            <Stack
               sx={{
                 position: "relative",
                 overflow: "hidden",
@@ -685,7 +686,7 @@ function RandomChatWindow({ setShowChatWindow }) {
               </Stack>
             </Stack>
           ) : (
-                <Stack
+            <Stack
               sx={{
                 backgroundImage: isLg ? `url(${randomChatWindowImage2})` : `url(${randomChatWindowImage})`,
                 backgroundSize: "cover",

@@ -4,13 +4,13 @@ import { Box, Stack, Button, useTheme, Typography, TextField, InputAdornment, Ic
 import { SendIcon, VisibilityIcon, VisibilityOffIcon } from '@/MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import StyledText from '@/components/common/StyledText';
-import BlurWrapper from '@/components/common/BlurWrapper';
+import StyledActionButton from '@/components/common/StyledActionButton';
 import { SETTINGS_API } from '@/api/config';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
 // toast prompt
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function ChangeCredentials() {
@@ -113,8 +113,6 @@ function ChangeCredentials() {
 
   return (
     <Box component={'section'}>
-      {/* ToastContainer */}
-      <ToastContainer position="top-right" autoClose={2000} theme="colored" />
 
       {/* Navigate Back */}
       <Stack mb={2}>
@@ -125,7 +123,18 @@ function ChangeCredentials() {
       </Stack>
 
       {/* Form */}
-      <BlurWrapper component={'form'} onSubmit={handleSubmit}>
+      <Box
+        component={'form'}
+        onSubmit={handleSubmit}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          border: `1px solid ${theme.palette.divider}`,
+          borderRadius: 1,
+          p: 2
+        }}
+      >
         <Stack direction="column" textAlign="center">
           <Typography variant="h5" fontWeight={600} mb={1}>
             Manage <StyledText text="Credentials" />
@@ -141,6 +150,7 @@ function ChangeCredentials() {
           <TextField
             label="Current Password"
             name="currentPassword"
+            size='small'
             value={formData.currentPassword}
             onChange={handleClick}
             type={showCurrentPassword ? 'text' : 'password'}
@@ -161,6 +171,7 @@ function ChangeCredentials() {
           <TextField
             label="New Email (optional)"
             name="newEmail"
+            size='small'
             value={formData.newEmail}
             onChange={handleClick}
             fullWidth
@@ -171,6 +182,7 @@ function ChangeCredentials() {
           <TextField
             label="New Password"
             name="newPassword"
+            size='small'
             type={showNewPassword ? 'text' : 'password'}
             value={formData.newPassword}
             onChange={handleClick}
@@ -191,6 +203,7 @@ function ChangeCredentials() {
           <TextField
             label="Confirm New Password"
             name="confirmPassword"
+            size='small'
             type={showConfirmPassword ? 'text' : 'password'}
             value={formData.confirmPassword}
             onChange={handleClick}
@@ -208,32 +221,20 @@ function ChangeCredentials() {
             }}
           />
 
-          <Button
+          <StyledActionButton
             type="submit"
+            onClick={handleSubmit}
             endIcon={<SendIcon sx={{ color: 'text.primary' }} />}
             disabled={isDisabled}
+            text={isDisabled ? 'Saving...' : 'Save Changes'}
             sx={{
-              maxWidth: 'fit-content',
-              alignSelf: 'flex-end',
-              borderRadius: 0.8,
-              textTransform: "none",
-              fontWeight: 700,
-              px: 3,
-              py: 0.8,
-              fontSize: "1rem",
-              color: theme.palette.common.white,
-              background: `linear-gradient(135deg, ${theme.palette.info.main}, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-              boxShadow: `0 6px 20px ${theme.palette.secondary.main}66`,
-              "&:hover": {
-                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.info.main}, ${theme.palette.secondary.main})`,
-                boxShadow: `0 5px 15px ${theme.palette.primary.main}66`,
-              },
+              maxWidth: 300,
+              alignSelf: 'flex-start'
             }}
-          >
-            {isDisabled ? 'Updating...' : 'Update Credentials'}
-          </Button>
+
+          />
         </Stack>
-      </BlurWrapper>
+      </Box>
     </Box>
   );
 }

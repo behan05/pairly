@@ -32,7 +32,8 @@ function RandomSidebar() {
   const [numberOfActiveUsers, setNumberOfActiveUsers] = useState(0);
   const { subscription, hasGivenOnboardingFeedback } = useSelector((state) => state?.auth?.user);
   const { plan, status } = subscription;
-  const isFreeUser = status === 'active' && plan === 'free';
+  const hasPremiumAccess = plan !== 'free' && status === 'active';
+  const isFreeUser = !hasPremiumAccess;
 
   const [openOnboardingFeedback, setOpenOnboardingFeedback] = useState(false);
 

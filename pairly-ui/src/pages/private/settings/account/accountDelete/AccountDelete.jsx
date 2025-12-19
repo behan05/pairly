@@ -13,7 +13,7 @@ import {
 } from '@/MUI/MuiComponents';
 
 import { DeleteIcon } from '@/MUI/MuiIcons';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import BlurWrapper from '@/components/common/BlurWrapper';
@@ -56,13 +56,22 @@ function AccountDelete() {
 
   return (
     <Box component={'section'}>
-      <ToastContainer position="top-right" autoClose={2000} theme="colored" />
 
       <Stack mb={2}>
         <NavigateWithArrow redirectTo={'/pairly/settings/account'} text={'Delete Account'} />
       </Stack>
 
-      <BlurWrapper>
+      <Box
+        component='section'
+        sx={(theme) => ({
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          border: `1px solid ${theme.palette.divider}`,
+          borderRadius: 1,
+          p: 2
+        })}
+      >
         <Typography textAlign="center" variant="h5" fontWeight={600} mb={1}>
           Delete <span style={{ color: theme.palette.error.main }}>Account</span>
         </Typography>
@@ -83,10 +92,13 @@ function AccountDelete() {
             {isDeleting ? 'Deleting...' : 'Delete My Account'}
           </Button>
         </Stack>
-      </BlurWrapper>
+      </Box>
 
       {/* Confirmation Dialog */}
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+      <Dialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+      >
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <DialogContentText>

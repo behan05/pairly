@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Box, useTheme, Stack, Typography, Button } from '@/MUI/MuiComponents';
 import { DownloadIcon, CheckCircleIcon } from '@/MUI/MuiIcons';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import StyledText from '@/components/common/StyledText';
-import BlurWrapper from '@/components/common/BlurWrapper';
 import { SETTINGS_API } from '@/api/config';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
@@ -64,7 +63,6 @@ function RequestAccountInfo() {
 
   return (
     <Box component={'section'}>
-      <ToastContainer position="top-right" autoClose={2000} theme="colored" />
 
       {/* Back Button */}
       <Stack mb={2}>
@@ -72,7 +70,18 @@ function RequestAccountInfo() {
       </Stack>
 
       {/* Form Box */}
-      <BlurWrapper component={'form'} onSubmit={handleRequest}>
+      <Box
+        component={'form'}
+        onSubmit={handleRequest}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          border: `1px solid ${theme.palette.divider}`,
+          borderRadius: 1,
+          p: 2
+        }}
+      >
         <Stack spacing={3} alignItems="center">
           <Typography textAlign="center" variant="h5" fontWeight={600}>
             Account <StyledText text="Information" />
@@ -90,21 +99,53 @@ function RequestAccountInfo() {
             disabled={isLoading || requested}
             sx={{
               px: 4,
-              color: 'text.primary',
-              background: 'transparent',
-              boxShadow: `inset 0 1px 1px ${theme.palette.success.main}`,
-              transition: 'all 0.3s',
+              py: 1.2,
+              borderRadius: '12px',
+              fontWeight: 600,
+              textTransform: 'none',
+              letterSpacing: '0.3px',
+
+              border: `1.5px solid ${requested
+                  ? theme.palette.success.main
+                  : theme.palette.divider
+                }`,
+
+              color: requested
+                ? theme.palette.success.main
+                : theme.palette.text.primary,
+
+              backgroundColor: requested
+                ? theme.palette.success.light + '22'
+                : 'transparent',
+
+              transition: 'all 0.25s ease',
+
               '&:hover': {
-                boxShadow: `inset 0 -1px 1px ${theme.palette.success.main}`,
-                transform: 'translateY(-5px)',
-                background: 'transparent'
+                backgroundColor: requested
+                  ? theme.palette.success.light + '22'
+                  : theme.palette.action.hover,
+                transform: 'translateY(-2px)',
+                boxShadow: '0 6px 18px rgba(0,0,0,0.12)',
+                borderColor: theme.palette.success.main
+              },
+
+              '&:active': {
+                transform: 'translateY(0)',
+                boxShadow: '0 3px 10px rgba(0,0,0,0.15)'
+              },
+
+              '&.Mui-disabled': {
+                opacity: 0.6,
+                color: theme.palette.text.disabled,
+                borderColor: theme.palette.divider
               }
             }}
           >
             {requested ? 'Requested' : isLoading ? 'Requesting...' : 'Request Info'}
           </Button>
+
         </Stack>
-      </BlurWrapper>
+      </Box>
 
       <PremiumFeatureModel
         open={modalOpen}

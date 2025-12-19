@@ -11,10 +11,9 @@ import {
 } from '@/MUI/MuiComponents';
 import { SendIcon, EditIcon, RefreshIcon } from '@/MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
-import BlurWrapper from '@/components/common/BlurWrapper';
 import StyledText from '@/components/common/StyledText';
 import StyledActionButton from '@/components/common/StyledActionButton';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { updateGeneralInfo, getProfile } from '@/redux/slices/profile/profileAction';
@@ -100,6 +99,7 @@ function GeneralInfo() {
     {
       label: 'Your Full Name',
       placeholder: 'e.g. Behan Kumar',
+      size: 'small',
       name: 'fullName',
       value: formData.fullName,
       fullWidth: true,
@@ -109,6 +109,7 @@ function GeneralInfo() {
     {
       label: 'Your Age',
       placeholder: 'e.g. 19',
+      size: 'small',
       name: 'age',
       value: formData.age,
       fullWidth: true,
@@ -118,6 +119,7 @@ function GeneralInfo() {
     {
       label: 'Gender',
       placeholder: 'e.g. Male',
+      size: 'small',
       name: 'gender',
       value: formData.gender,
       fullWidth: true,
@@ -127,6 +129,7 @@ function GeneralInfo() {
     {
       label: 'Pronouns',
       placeholder: 'e.g. He/Him, She/Her, They/Them',
+      size: 'small',
       name: 'pronouns',
       value: formData.pronouns,
       fullWidth: true,
@@ -136,6 +139,7 @@ function GeneralInfo() {
     {
       label: 'Short Bio',
       placeholder: 'Write a short introduction...',
+      size: 'small',
       name: 'shortBio',
       value: formData.shortBio || randomBio,
       multiline: true,
@@ -274,14 +278,27 @@ function GeneralInfo() {
   };
 
   return (
-    <Box component={'section'} sx={{ p: 2 }}>
-      <ToastContainer position="top-right" autoClose={1000} theme="colored" />
+    <Box
+      component={'section'}
+      sx={{ p: 2 }}
+    >
 
       <Stack mb={2}>
         <NavigateWithArrow redirectTo={'/pairly/profile'} text={'General Info'} />
       </Stack>
 
-      <BlurWrapper component="form" onSubmit={handleSubmit}>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          border: `1px solid ${theme.palette.divider}`,
+          borderRadius: 1,
+          p: 2
+        }}
+      >
         <Stack>
           <Typography textAlign="center" variant="h5" fontWeight={600} gutterBottom>
             General <StyledText text={'Information'} />
@@ -348,10 +365,13 @@ function GeneralInfo() {
         </Tooltip>
 
         {/* Input Fields */}
-        <Stack gap={1.5}>
+        <Stack gap={2}>
           {inputField.map((input, index) => (
             <Stack key={index}>
-              <TextField {...input} onChange={handleChange} />
+              <TextField
+                {...input}
+                onChange={handleChange}
+              />
             </Stack>
           ))}
         </Stack>
@@ -368,7 +388,7 @@ function GeneralInfo() {
             alignSelf: 'flex-start'
           }}
         />
-      </BlurWrapper>
+      </Box>
     </Box>
   );
 }

@@ -18,15 +18,7 @@ function SubscriptionManager() {
       {/* Header */}
       <ChatSidebarHeader />
 
-      <Stack
-        sx={{
-          borderRadius: 1,
-          background: (theme) =>
-            `linear-gradient(135deg, ${theme.palette.background.paper}E6 0%, ${theme.palette.background.default}BF 100%)`,
-          backdropFilter: "blur(10px)",
-          boxShadow: (theme) =>
-            `0 4px 20px ${theme.palette.mode === "dark" ? "rgba(0,0,0,0.6)" : "rgba(0,0,0,0.1)"}`,
-        }}>
+      <Stack>
         {/* Sub header */}
         <Stack
           direction="row"

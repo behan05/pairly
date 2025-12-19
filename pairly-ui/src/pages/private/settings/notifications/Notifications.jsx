@@ -16,11 +16,10 @@ import {
   BlockIcon
 } from '@/MUI/MuiIcons';
 
-import BlurWrapper from '@/components/common/BlurWrapper';
 import CyberSwitch from '@/components/private/CyberSwitch';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import { useSelector, useDispatch } from 'react-redux';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { updateSettingsNotification, getSettingsNotification } from '@/redux/slices/settings/settingsAction';
 import PremiumFeatureModel from '@/components/private/premium/PremiumFeatureModal';
@@ -115,13 +114,20 @@ function Notifications() {
 
   return (
     <Box>
-      <ToastContainer position="top-right" autoClose={1000} theme="colored" />
-
       <Stack mb={2}>
         <NavigateWithArrow redirectTo="/pairly/settings" text="Notifications" />
       </Stack>
 
-      <BlurWrapper>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          border: `1px solid ${theme.palette.divider}`,
+          borderRadius: 1,
+          p: 2
+        }}
+      >
         <Section
           icon={<NotificationsActiveIcon sx={{ color: theme.palette.success.main }} />}
           title="New Match"
@@ -219,7 +225,7 @@ function Notifications() {
             label="Enable block notifications"
           />
         </Section>
-      </BlurWrapper>
+      </Box>
 
       <PremiumFeatureModel
         open={modalOpen}

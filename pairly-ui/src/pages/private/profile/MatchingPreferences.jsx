@@ -17,9 +17,8 @@ import {
 
 import { SendIcon } from '@/MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
-import BlurWrapper from '@/components/common/BlurWrapper';
 import StyledText from '@/components/common/StyledText';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import StyledActionButton from '@/components/common/StyledActionButton';
 import { Country, State, City } from 'country-state-city';
@@ -234,15 +233,24 @@ function MatchingPreferences() {
 
   return (
     <Box component={'section'} sx={{ p: 2 }}>
-      <ToastContainer position="top-right" autoClose={1000} theme="colored" />
-
       {/* Header */}
       <Stack mb={2}>
         <NavigateWithArrow redirectTo={'/pairly/profile'} text={'Matching Preferences'} />
       </Stack>
 
       {/* Form Wrapper */}
-      <BlurWrapper component="form" onSubmit={handleSubmit}>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={(theme) => ({
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          border: `1px solid ${theme.palette.divider}`,
+          borderRadius: 1,
+          p: 2
+        })}
+      >
         {/* Title */}
         <Stack>
           <Typography textAlign="center" variant="h5" fontWeight={600} gutterBottom>
@@ -256,7 +264,7 @@ function MatchingPreferences() {
         {/* Form Fields */}
         <Stack direction={'column'} gap={2} mt={2}>
           {/* Looking For */}
-          <FormControl fullWidth error={!!error.lookingFor}>
+          <FormControl size='small' fullWidth error={!!error.lookingFor}>
             <InputLabel id="lookingFor-label">Looking For</InputLabel>
             <Select
               labelId="lookingFor-label"
@@ -274,7 +282,7 @@ function MatchingPreferences() {
           </FormControl>
 
           {/* Language */}
-          <FormControl fullWidth error={!!error.preferredLanguage}>
+          <FormControl size='small' fullWidth error={!!error.preferredLanguage}>
             <InputLabel id="preferredLanguage-label">Preferred Language</InputLabel>
             <Select
               labelId="preferredLanguage-label"
@@ -324,7 +332,7 @@ function MatchingPreferences() {
           <Divider sx={{ my: 2 }} />
 
           {/* Country */}
-          <FormControl fullWidth error={!!error.country}>
+          <FormControl size='small' fullWidth error={!!error.country}>
             <InputLabel id="country-label">Country</InputLabel>
             <Select
               labelId="country-label"
@@ -344,7 +352,7 @@ function MatchingPreferences() {
           </FormControl>
 
           {/* State */}
-          <FormControl fullWidth error={!!error.state} disabled={!formData.country}>
+          <FormControl size='small' fullWidth error={!!error.state} disabled={!formData.country}>
             <InputLabel id="state-label">State</InputLabel>
             <Select
               labelId="state-label"
@@ -364,7 +372,7 @@ function MatchingPreferences() {
           </FormControl>
 
           {/* City */}
-          <FormControl fullWidth error={!!error.city} disabled={!formData.state}>
+          <FormControl size='small' fullWidth error={!!error.city} disabled={!formData.state}>
             <InputLabel id="city-label">City</InputLabel>
             <Select
               labelId="city-label"
@@ -408,14 +416,14 @@ function MatchingPreferences() {
             onClick={handleSubmit}
             endIcon={<SendIcon />}
             disabled={isDisabled}
-            text={isDisabled ? 'Updating...' : 'Update Preferences'}
+            text={isDisabled ? 'Saving...' : 'Save Changes'}
             sx={{
               maxWidth: 300,
               alignSelf: 'flex-start'
             }}
           />
         </Stack>
-      </BlurWrapper>
+      </Box>
 
       <PremiumFeatureModel
         open={modalOpen}

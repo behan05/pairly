@@ -21,13 +21,12 @@ import { SendIcon } from '@/MUI/MuiIcons';
 // Custom UI Components
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 import StyledText from '@/components/common/StyledText';
-import BlurWrapper from '@/components/common/BlurWrapper';
 import StyledActionButton from '@/components/common/StyledActionButton';
 
 // Redux + Toast
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTagsAndInterests, getProfile } from '@/redux/slices/profile/profileAction';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PremiumFeatureModel from '@/components/private/premium/PremiumFeatureModal';
 
@@ -168,7 +167,6 @@ function TagsAndInterests() {
 
   return (
     <Box component="section" sx={{ p: 2 }}>
-      <ToastContainer position="top-right" autoClose={1000} theme="colored" />
 
       {/* Page Header with back button */}
       <Stack mb={2}>
@@ -176,7 +174,18 @@ function TagsAndInterests() {
       </Stack>
 
       {/* Form wrapper with blur styling */}
-      <BlurWrapper component="form" onSubmit={handleSubmit}>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={(theme) => ({
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          border: `1px solid ${theme.palette.divider}`,
+          borderRadius: 1,
+          p: 2
+        })}
+      >
         <Stack spacing={3}>
           {/* Section Heading */}
           <Typography textAlign="center" variant="h5" fontWeight={600}>
@@ -267,7 +276,7 @@ function TagsAndInterests() {
             endIcon={<SendIcon />}
             type="submit"
             disabled={loading}
-            text={loading ? 'Saving...' : 'Save Preferences'}
+            text={loading ? 'Saving...' : 'Save Changes'}
             sx={{
               maxWidth: 300,
               alignSelf: 'flex-start'
@@ -275,7 +284,7 @@ function TagsAndInterests() {
           />
 
         </Stack>
-      </BlurWrapper>
+      </Box>
 
       <PremiumFeatureModel
         open={modalOpen}

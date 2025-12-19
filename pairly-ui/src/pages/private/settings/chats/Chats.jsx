@@ -19,11 +19,10 @@ import {
   AccessTimeIcon
 } from '@/MUI/MuiIcons';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
-import BlurWrapper from '@/components/common/BlurWrapper';
 import CyberSwitch from '@/components/private/CyberSwitch';
 import { toggleTheme } from '@/redux/slices/theme/themeSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getChatSettings, updateChatSettings } from '@/redux/slices/settings/settingsAction';
 
@@ -176,12 +175,18 @@ function Chats() {
 
   return (
     <Box>
-      <ToastContainer position="top-right" autoClose={1000} theme="colored" />
-
       <Stack mb={2}>
         <NavigateWithArrow redirectTo={'/pairly/settings'} text={'Chats'} />
       </Stack>
-      <BlurWrapper>
+
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+        border: `1px solid ${theme.palette.divider}`,
+        borderRadius: 1,
+        p: 2
+      }}>
         {chatsItem.map((item, i) => (
           <Box key={i}>
             <Stack direction="row" alignItems="center" gap={1} mb={1}>
@@ -197,7 +202,7 @@ function Chats() {
             <Divider sx={{ my: 2 }} />
           </Box>
         ))}
-      </BlurWrapper>
+      </Box>
     </Box>
   );
 }

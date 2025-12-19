@@ -55,24 +55,26 @@ function NormalChatController() {
             if (!message) return;
             const createdAt = message?.timestamp ?? message?.createdAt ?? new Date().toISOString();
 
-            // new message ringtone 
-            const partnerSettings = allUsers.find((u) => u.userId === partnerId)?.settings || {};
+            // determine actual sender id from the message payload
+            const senderId = message?.sender ?? message?.senderId;
 
-            if (partnerId !== currentUserId && partnerSettings.newMessage) {
-                new Audio('/messageTone/message-ringtone-magic.ogg').play()
-            };
+            // new message ringtone: only play when the message is from another user
+            const senderSettings = allUsers.find((u) => u.userId === senderId)?.settings || {};
+            if (String(senderId) !== String(currentUserId) && senderSettings.newMessage) {
+                try { new Audio('/messageTone/message-ringtone-magic.ogg').play(); } catch (e) { }
+            }
 
             // auto-join if partner not active
-            if (partnerId && String(partnerId) !== String(activePartnerId)) {
-                socket.emit('privateChat:join', { partnerUserId: partnerId });
-            };
+            if (senderId && String(senderId) !== String(activePartnerId)) {
+                socket.emit('privateChat:join', { partnerUserId: senderId });
+            }
 
             dispatch(addMessage({
                 conversationId,
                 message: {
                     _id: message?._id ?? message?.clientMessageId,
                     content: message?.content ?? message?.text ?? '',
-                    sender: message?.sender ?? message?.senderId,
+                    sender: senderId,
                     messageType: message?.messageType ?? message?.type ?? 'text',
                     createdAt,
                     seen: message?.seen ?? false
@@ -80,7 +82,6 @@ function NormalChatController() {
             }));
 
             // Clear unread count if current user is the sender
-            const senderId = message?.sender ?? message?.senderId;
             if (String(senderId) === String(currentUserId)) {
                 dispatch(setUnreadCount({
                     conversationId,

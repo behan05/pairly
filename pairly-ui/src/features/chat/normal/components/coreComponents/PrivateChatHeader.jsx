@@ -69,7 +69,8 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
   const { allUsers: users, chatUsers, activeChat } = useSelector(state => state.privateChat);
   const { notificationSettings } = useSelector((state) => state.settings);
   const [notification, setNotification] = useState(notificationSettings?.newMessage ?? false);
-
+  console.log({chatUsers});
+  
   useEffect(() => {
     setNotification(notificationSettings?.newMessage ?? false);
   }, [notificationSettings]);

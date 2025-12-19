@@ -24,8 +24,7 @@ function NormalChatLayout() {
 
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [activeUserId, setActiveUserId] = useState(null);
-  const [height, setHeight] = useState(window.visualViewport.height || window.innerHeight)
-  // console.log("layout :", height);
+  // const [height, setHeight] = useState(window.visualViewport.height || window.innerHeight)
 
   // Set page title when component mounts
   React.useEffect(() => {
@@ -35,33 +34,33 @@ function NormalChatLayout() {
   // Set a CSS variable `--vh` to represent 1% of the viewport height.
   // This avoids mobile keyboard/100vh issues where 100vh doesn't reflect
   // the visual viewport when the keyboard appears.
-  React.useEffect(() => {
-    const setVh = () => {
-      const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-      document.documentElement.style.setProperty('--vh', `${height * 0.01}px`);
-      setHeight(height);
-    };
+  // React.useEffect(() => {
+  //   const setVh = () => {
+  //     const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  //     document.documentElement.style.setProperty('--vh', `${height * 0.01}px`);
+  //     setHeight(height);
+  //   };
 
-    setVh();
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', setVh);
-      window.visualViewport.addEventListener('scroll', setVh);
-      // setHeight(window.visualViewport);
-    } else {
-      window.addEventListener('resize', setVh);
-    }
+  //   setVh();
+  //   if (window.visualViewport) {
+  //     window.visualViewport.addEventListener('resize', setVh);
+  //     window.visualViewport.addEventListener('scroll', setVh);
+  //     // setHeight(window.visualViewport);
+  //   } else {
+  //     window.addEventListener('resize', setVh);
+  //   }
 
-    return () => {
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', setVh);
-        window.visualViewport.removeEventListener('scroll', setVh);
-        // setHeight('100vh');
-      } else {
-        window.removeEventListener('resize', setVh);
-        // setHeight('100vh');
-      }
-    };
-  }, []);
+  //   return () => {
+  //     if (window.visualViewport) {
+  //       window.visualViewport.removeEventListener('resize', setVh);
+  //       window.visualViewport.removeEventListener('scroll', setVh);
+  //       // setHeight('100vh');
+  //     } else {
+  //       window.removeEventListener('resize', setVh);
+  //       // setHeight('100vh');
+  //     }
+  //   };
+  // }, []);
 
   const handleBackToSidebar = () => {
     // go back to sidebar on small screen

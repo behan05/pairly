@@ -130,21 +130,17 @@ function ReportBug() {
 
   // Render bug report form UI
   return (
-    <Box flexDirection="column" mt={8} maxWidth={600} mx={'auto'}>
+    <Box flexDirection="column" maxWidth={450} mx={'auto'}>
       {/* Form wrapper with blur effect */}
       <Box
         component="form"
         onSubmit={handleSubmit}
         sx={(theme) => ({
-          borderRadius: 1,
-          maxWidth: 450,
-          width: '100%',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
-          my: '6dvh',
-          mx: 'auto',
+          gap: 2,
           border: `1px solid ${theme.palette.divider}`,
+          borderRadius: 1,
           p: 2
         })}
       >
