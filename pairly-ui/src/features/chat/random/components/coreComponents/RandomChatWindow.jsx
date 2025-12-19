@@ -61,7 +61,7 @@ function RandomChatWindow({ setShowChatWindow }) {
             currentTheme === "dark"
               ? theme.palette.text.primary
               : theme.palette.text.secondary,
-          opacity: Math.random() * 0.08 + 0.02,
+          opacity: Math.random() * 0.4 + 0.02,
           pointerEvents: "none",
         }}
       />
