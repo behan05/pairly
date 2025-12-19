@@ -637,13 +637,7 @@ function RandomChatWindow({ setShowChatWindow }) {
           </Box>
 
           {/* Input area for sending messages */}
-          <Stack
-            sx={{
-              position: 'sticky',
-              bottom: 0,
-              zIndex: 10,
-            }}
-          >
+
             <RandomMessageInput
               onFocus={() => setIsTyping(true)}
               onBlur={() => setIsTyping(false)}
@@ -660,8 +654,6 @@ function RandomChatWindow({ setShowChatWindow }) {
                 }}
               />}
             />
-          </Stack>
-
         </>
       ) : (
         // === Not Connected Placeholder ===

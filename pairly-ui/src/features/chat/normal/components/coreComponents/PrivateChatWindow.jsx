@@ -492,20 +492,11 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
       )}
 
       {/* Message Input */}
-      <Stack
-        sx={{
-          position: 'sticky',
-          bottom: 0,
-          zIndex: 10,
-        }}
-      >
-        <PrivateMessageInput
-          conversationId={conversationId}
-          onFocus={() => setIsTyping(true)}
-          onBlur={() => setIsTyping(false)}
-        />
-      </Stack>
-
+      <PrivateMessageInput
+        conversationId={conversationId}
+        onFocus={() => setIsTyping(true)}
+        onBlur={() => setIsTyping(false)}
+      />
     </Stack>
   );
 }

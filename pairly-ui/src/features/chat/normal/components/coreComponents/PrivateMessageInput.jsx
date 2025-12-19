@@ -449,7 +449,14 @@ function PrivateMessageInput() {
   // }, []);
 
   return (
-    <Box ref={inputContainerRef} width="100%" sx={{ transition: 'margin-bottom 0.25s ease', pb: isSm ? 'env(safe-area-inset-bottom)' : 0 }}>
+    <Box
+      ref={inputContainerRef}
+      width="100%"
+      sx={{
+        transition: 'margin-bottom 0.25s ease',
+        pb: isSm ? 'env(safe-area-inset-bottom)' : 0
+      }}
+    >
 
       {/* Media preview area */}
       <Box
