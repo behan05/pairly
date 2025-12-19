@@ -676,12 +676,12 @@ function RandomChatWindow({ setShowChatWindow }) {
           }}
         >
           {isSm && isWaiting ? (
-            <Stack
+                <Stack
               sx={{
                 position: "relative",
                 overflow: "hidden",
                 borderRadius: 1,
-                width: '100%',
+                width: "100%",
                 maxWidth: 300,
                 p: 2,
                 border: `1px solid ${theme.palette.success.light}`
@@ -693,13 +693,13 @@ function RandomChatWindow({ setShowChatWindow }) {
               </Stack>
             </Stack>
           ) : (
-            <Stack
+                <Stack
               sx={{
                 backgroundImage: isLg ? `url(${randomChatWindowImage2})` : `url(${randomChatWindowImage})`,
                 backgroundSize: "cover",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
-                minHeight: "100dvh",
+                minHeight: 'calc(var(--vh, 1vh) * 100)',
                 width: "100%",
                 display: 'flex',
                 justifyContent: 'center',

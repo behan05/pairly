@@ -101,9 +101,9 @@ function RandomSidebar() {
       display="flex"
       flexDirection="column"
       minWidth={isSm ? '100%' : 380}
-      height="100vh"
       position="relative"
       sx={{
+        height: 'calc(var(--vh, 1vh) * 100)',
         background: theme.palette.background.paper,
         overflow: 'hidden',
       }}

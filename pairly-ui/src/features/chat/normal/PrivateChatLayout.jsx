@@ -117,8 +117,7 @@ function NormalChatLayout() {
   return (
     <Box
       sx={{
-        minHeight: height,
-        // maxHeight: 'calc(var(--vh, 1vh) * 100)',
+        minHeight: 'calc(var(--vh, 1vh) * 100)',
         display: 'flex',
         flexDirection: 'row'
       }}
@@ -184,7 +183,7 @@ function NormalChatLayout() {
               </Stack>
             ) : (
               // Default empty chat window placeholder
-              <Box
+                  <Box
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
@@ -196,7 +195,7 @@ function NormalChatLayout() {
                   backgroundSize: "cover",
                   backgroundRepeat: "no-repeat",
                   backgroundPosition: "center",
-                  minHeight: "100dvh",
+                  minHeight: 'calc(var(--vh, 1vh) * 100)',
                   width: "100%",
                   display: 'flex',
                   justifyContent: 'center',
