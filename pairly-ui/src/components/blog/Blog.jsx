@@ -15,7 +15,7 @@ const Blog = () => {
         <Box
             sx={{
                 background: theme.palette.background.default,
-                minHeight: "100vh",
+                minHeight: 'calc(var(--vh, 1vh) * 100)',
                 py: { xs: 4, md: 8 },
                 mt: 5
             }}

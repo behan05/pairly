@@ -6,7 +6,7 @@ function Loading({ sx = {} }) {
     return (
         <Box
             sx={{
-                height: '100dvh',
+                height: 'calc(var(--vh, 1vh) * 100)',
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'center',

@@ -41,7 +41,6 @@ function PrivateChatWindow({ selectedUserId, onBack, onCloseChatWindow, clearAct
 
   // Fix: Dynamic viewport height to handle keyboard on mobile
   const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
-  // console.log("window :", viewportHeight);
 
   useEffect(() => {
     const updateHeight = () => {

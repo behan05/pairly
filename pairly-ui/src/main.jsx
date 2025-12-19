@@ -21,6 +21,27 @@ function ThemeWrapper() {
   );
 }
 
+// Ensure we set a keyboard-safe viewport CSS variable early for the whole app.
+// This avoids layout jumps when mobile keyboards open (visualViewport may shrink).
+{
+  const setVh = () => {
+    try {
+      const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      document.documentElement.style.setProperty('--vh', `${height * 0.01}px`);
+    } catch (e) {
+      // silent
+    }
+  };
+
+  setVh();
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', setVh);
+    window.visualViewport.addEventListener('scroll', setVh);
+  } else {
+    window.addEventListener('resize', setVh);
+  }
+}
+
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     {/* Add PersistGate to persist Redux state (auth.user stays saved) */}

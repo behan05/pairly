@@ -142,7 +142,7 @@ function CheckoutPage() {
     return (
         <Stack
             sx={{
-                minHeight: "100dvh",
+                minHeight: 'calc(var(--vh, 1vh) * 100)',
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",

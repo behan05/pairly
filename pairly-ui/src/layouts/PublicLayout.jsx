@@ -16,7 +16,7 @@ const Layout = () => {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        minHeight: '100dvh',
+        minHeight: 'calc(var(--vh, 1vh) * 100)',
         background: theme.palette.background.paper
       }}
     >

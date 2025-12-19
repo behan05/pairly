@@ -9,8 +9,8 @@ function SettingLayout() {
         display: 'flex',
         flexDirection: 'column',
         bgcolor: 'background.paper',
-        minHeight: '100vh',
-        maxHeight: '100vh',
+        minHeight: 'calc(var(--vh, 1vh) * 100)',
+        maxHeight: 'calc(var(--vh, 1vh) * 100)',
         overflowY: 'auto'
       }}
     >
