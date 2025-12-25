@@ -36,19 +36,19 @@ function Features() {
 
           <Typography
             variant="body1"
-            color= {`${theme.palette.text.primary}70`}
+            color={`${theme.palette.text.primary}70`}
             maxWidth={700}
             lineHeight={1.7}
           >
-            Pairly isn’t just another chat app it’s a revolution in how people
-            connect online. Our mission is to bring back authenticity to digital
+            Pairly transforms online chatting, helping people connect in a deeper, more meaningful way.
+            Our mission is to bring back authenticity to digital
             conversations using <strong>AI-driven matching</strong>, private and safe
             communication tools, and emotionally aware interaction modes.
           </Typography>
 
           <Typography
             variant="body1"
-            color= {`${theme.palette.text.primary}70`}
+            color={`${theme.palette.text.primary}70`}
             maxWidth={700}
             lineHeight={1.7}
           >
@@ -61,7 +61,7 @@ function Features() {
 
           <Typography
             variant="body1"
-            color= {`${theme.palette.text.primary}70`}
+            color={`${theme.palette.text.primary}70`}
             maxWidth={700}
             lineHeight={1.7}
           >
@@ -73,7 +73,7 @@ function Features() {
             text="Start Exploring"
             redirectUrl="/register"
             endIcon={<StarIcon />}
-            sx={{width: 'fit-content'}}
+            sx={{ width: 'fit-content' }}
           />
         </Stack>
       </Stack>

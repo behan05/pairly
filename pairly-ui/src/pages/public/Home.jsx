@@ -499,7 +499,7 @@ function Home() {
                   maxWidth: '600px',
                 }}
               >
-                Craft a complete full-stack application with a powerful visual canvas
+                Build a full-featured application with an intuitive, interactive visual interface.
               </Typography>
 
               <Typography

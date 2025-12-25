@@ -53,10 +53,10 @@ function CookiesPolicyPage() {
                         <strong>Personalization Cookies:</strong> Store your theme, match preferences, and app settings
                         to enhance your experience.
                     </li>
-                    <li>
+                    {/* <li>
                         <strong>Advertising Cookies (if applicable):</strong> Used for relevant ad delivery and tracking
                         performance of campaigns (if ads are enabled).
-                    </li>
+                    </li> */}
                 </ul>
             </Section>
 

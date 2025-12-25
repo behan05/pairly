@@ -60,8 +60,9 @@ function UserSuggestionBox({ open, onClose }) {
           borderRadius: 1,
           p: 2,
           minWidth: 320,
-          background: theme.palette.background.paper,
+          background: theme.palette.background.default,
           boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
+          border: `1px solid ${theme.palette.divider}`
         },
       }}
     >
