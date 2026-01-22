@@ -2,7 +2,7 @@
 
 ---
 
-# Pairly – Real-Time Couple-Friendly Chat App
+# Pairly – Open-Source Real-Time Chat Platform (Random + Private)
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](./CONTRIBUTING.md)
@@ -10,12 +10,14 @@
 ![Status](https://img.shields.io/badge/status-active-success)
 ![Made with React](https://img.shields.io/badge/Made%20with-React-61DAFB?logo=react)
 ![Backend: Node](https://img.shields.io/badge/Backend-Express%20%7C%20MongoDB-brightgreen?logo=node.js)
-![Issues](https://img.shields.io/github/issues/behan05/real-time-chat-app)
-![Forks](https://img.shields.io/github/forks/behan05/real-time-chat-app)
-![Stars](https://img.shields.io/github/stars/behan05/real-time-chat-app)
-![Last Commit](https://img.shields.io/github/last-commit/behan05/real-time-chat-app)
+![Issues](https://img.shields.io/github/issues/behan05/pairly)
+![Forks](https://img.shields.io/github/forks/behan05/pairly)
+![Stars](https://img.shields.io/github/stars/behan05/pairly)
+![Last Commit](https://img.shields.io/github/last-commit/behan05/pairly)
 
 A full-stack real-time chat application that connects users anonymously for private 1-on-1 messaging. Built with **React**, **Node.js**, **Express**, **Socket.IO**, and **MongoDB**.
+
+> **📢 Project Status**: This project was previously made private but is **now publicly available again** as an actively maintained open-source project. We're committed to transparency and community-driven development. Previously had **29 stars** and **17 forks**—thank you for your continued support!
 
 ---
 
@@ -37,10 +39,11 @@ A full-stack real-time chat application that connects users anonymously for priv
 - [Project Structure](#project-structure)
 - [Deployment](#deployment)
 - [Contributing](#contributing)
-- [Made by Contributors](#made-by-contributors)
-- [Acknowledgements](#acknowledgements)
-- [Contact](#contact)
-- [License](#license)
+- [Transparency & Trust](#-transparency--trust)
+- [Made by Contributors](#-made-by-contributors)
+- [Acknowledgements](#-acknowledgements)
+- [Contact](#-contact)
+- [License](#-license)
 
 ---
 
@@ -54,14 +57,29 @@ A full-stack real-time chat application that connects users anonymously for priv
 
 ## 🚀 Features
 
+Pairly operates on a **freemium model** with core features available to all users and premium features for subscribers. This allows us to maintain the project sustainably while keeping the core chat experience free and open-source.
+
+### ✅ Free Features
+
 - 🔐 Secure User Authentication (Login/Signup)
 - 🎲 Random One-to-One Private Chat
 - 📡 Real-time Messaging with Socket.IO
 - 📜 Chat History Persistence using MongoDB
-- ✏️ Typing Indicator (optional)
+- ✏️ Typing Indicator
 - 🛡️ Protected Routes for Logged-in Users
 - 🕒 Timestamped Messages
 - 📱 Fully Responsive UI (Mobile & Desktop)
+- 🔔 Basic Notifications
+
+### 💎 Premium Features
+
+- ⭐ Priority Support
+- 🎨 Custom Themes & Personalization
+- 📸 Advanced Media Sharing
+- 🔐 Enhanced Privacy Controls
+- 📱 PWA App Installation
+
+**Contributing Note:** Contributors are welcome to work on both free and premium features. The codebase is fully open-source under the MIT License, and both tiers benefit from community improvements!
 
 ---
 
@@ -196,25 +214,124 @@ Common issues and solutions:
 
 ```
 pairly/
-├── pairly-ui/
+├── pairly-ui/                          # Frontend React Application
 │   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── routes/
-│   │   ├── redux/ or context/
-│   │   └── App.jsx
-│   └── package.json
-├── pairly-server/
+│   │   ├── api/                        # API service calls
+│   │   ├── assets/                     # Images, fonts, static assets
+│   │   ├── components/                 # Reusable React components
+│   │   ├── context/                    # Context API setup
+│   │   ├── features/                   # Feature-specific modules
+│   │   ├── layouts/                    # Layout components
+│   │   ├── middleware/                 # Custom middleware
+│   │   ├── MUI/                        # Material-UI customizations
+│   │   ├── pages/                      # Page components
+│   │   ├── redux/                      # Redux store & slices
+│   │   ├── routes/                     # Route definitions
+│   │   ├── services/                   # Service functions
+│   │   ├── styles/                     # Global styles
+│   │   ├── utils/                      # Utility functions
+│   │   ├── installPrompt/              # PWA install prompt
+│   │   ├── SubscriptionManager/        # Subscription handling
+│   │   ├── App.jsx                     # Main App component
+│   │   └── main.jsx                    # Entry point
+│   ├── public/
+│   │   ├── manifest.json               # PWA manifest
+│   │   ├── robots.txt                  # SEO robots config
+│   │   ├── service-worker.js           # Service worker
+│   │   ├── messageTone/                # Message audio files
+│   │   └── sounds/                     # Sound effects
+│   ├── vite.config.js
+│   ├── eslint.config.js
+│   ├── package.json
+│   └── README.md
+│
+├── pairly-server/                      # Backend Express Application
 │   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── profileController.js
+│   │   ├── settingsController.js
+│   │   ├── adminPanelControllers/      # Admin management
+│   │   ├── feedbackControllers/        # User feedback
+│   │   ├── paymentControllers/         # Payment processing
+│   │   ├── privateChatControllers/     # Private chat logic
+│   │   ├── randomChatControllers/      # Random chat matching
+│   │   ├── searchUserControllers/      # User search
+│   │   ├── support-ticket/             # Support tickets
+│   │   └── common/                     # Shared controller logic
+│   │
 │   ├── models/
-│   ├── routes/
-│   ├── socket/
-│   └── server.js
+│   │   ├── User.model.js               # User schema
+│   │   ├── Profile.model.js            # User profile
+│   │   ├── settings.model.js           # User settings
+│   │   ├── LoginActivity.model.js      # Login tracking
+│   │   ├── UserActivity.model.js       # User activity logs
+│   │   ├── ReportProblem.model.js      # Problem reports
+│   │   ├── SupportTicket.model.js      # Support tickets
+│   │   ├── admin/                      # Admin-related models
+│   │   ├── chat/                       # Chat-related models
+│   │   ├── feedback/                   # Feedback models
+│   │   ├── payment/                    # Payment models
+│   │   └── proposal/                   # Proposal models
+│   │
+│   ├── routers/
+│   │   ├── profileRoutes.js
+│   │   ├── settingsRoutes.js
+│   │   ├── admin/                      # Admin routes
+│   │   ├── auth/                       # Authentication routes
+│   │   ├── chat/                       # Chat routes
+│   │   ├── feedback/                   # Feedback routes
+│   │   ├── payment/                    # Payment routes
+│   │   └── searchUsers/                # Search routes
+│   │
+│   ├── middlewares/
+│   │   ├── authMiddleware.js           # JWT authentication
+│   │   ├── adminAuthMiddleware.js      # Admin authorization
+│   │   ├── multerMiddleware.js         # File upload handling
+│   │   ├── uploadPrivateMedia.js       # Private chat media upload
+│   │   ├── uploadRandomMedia.js        # Random chat media upload
+│   │   └── uploadProfileS3.js          # S3 profile upload
+│   │
+│   ├── sockets/
+│   │   ├── socketServer.js             # Main socket configuration
+│   │   ├── privateChat/                # Private chat socket events
+│   │   └── randomChat/                 # Random chat socket events
+│   │
+│   ├── config/
+│   │   ├── db.js                       # MongoDB connection
+│   │   ├── passport/                   # OAuth strategies
+│   │   │   ├── passportGithub.js
+│   │   │   └── passportGoogle.js
+│   │   └── razorpay/
+│   │       └── razorpay.js             # Razorpay integration
+│   │
+│   ├── utils/
+│   │   ├── generateToken.js
+│   │   ├── aws/                        # AWS S3 utilities
+│   │   ├── email/                      # Email service
+│   │   └── socket/                     # Socket utilities
+│   │
+│   ├── cron/
+│   │   ├── cleanupUnverifiedUsers.cron.js
+│   │   └── deleteRandomExpiredMessages.cron.js
+│   │
+│   ├── tests/
+│   │   ├── unit/                       # Unit tests
+│   │   └── integration/                # Integration tests
+│   │
+│   ├── server.js                       # Main server entry
+│   └── package.json
+│
 ├── docs/
-│   ├── screenshot/
+│   ├── screenshot/                     # App screenshots
 │   └── translations/
-├── .env
-└── README.md
+│       ├── README.en.md                # English docs
+│       ├── README.es.md                # Spanish docs
+│       └── README.id.md                # Indonesian docs
+│
+├── CODE_OF_CONDUCT.md                  # Community guidelines
+├── CONTRIBUTING.md                     # Contribution guide
+├── LICENSE                             # MIT License
+└── README.md                           # This file
 ```
 
 ---
@@ -232,6 +349,15 @@ pairly/
 
 Don't worry if you're new to open source — we're happy to help guide you! 😄
 Just open an issue or comment on one you'd like to tackle.
+
+### About Our Freemium Model
+
+Pairly supports both **free and premium features**. All contributions are welcome, whether you're:
+- 🆓 Improving free features that benefit all users
+- 💎 Building premium features for subscribers
+- 🔧 Fixing bugs or improving performance for everyone
+
+The entire codebase is open-source under the MIT License. Contributors get credit for their work regardless of which tier they contribute to!
 
 ### We welcome contributions!
 
@@ -256,7 +382,31 @@ Be sure to read the [contributing guide](CONTRIBUTING.md) if available.
 
 ---
 
-## 🙏 Made by Contributors
+## � Transparency & Trust
+
+We understand that making a project private and then public again may raise concerns. Here's what we want you to know:
+
+### Why Did We Go Private?
+- We needed time to restructure the codebase and improve stability
+- We wanted to ensure the project was production-ready
+- We were evaluating the best path forward for long-term maintenance
+
+### Why We're Back & Committed
+- **100% Open Source**: All code is publicly visible and auditable
+- **Active Maintenance**: The project is actively maintained and updated regularly
+- **Community-Driven**: We welcome feedback, issues, and pull requests from the community
+- **Clear Roadmap**: We're committed to transparent development practices
+- **MIT License**: You can use, modify, and distribute this software freely
+
+### Moving Forward
+- All future development will be in the open
+- We'll maintain regular communication through issues and discussions
+- Security and stability are our top priorities
+- Your feedback and contributions directly shape the project's future
+
+---
+
+## �🙏 Made by Contributors
 
 We are grateful to all contributors who make this better every day.
 Add yourself in `CONTRIBUTORS.md` when you contribute!
@@ -280,5 +430,3 @@ For questions or contributions, feel free to reach out:
 ## 📄 License
 
 This project is licensed under the [MIT License](./LICENSE)
-
----

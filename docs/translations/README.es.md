@@ -1,4 +1,4 @@
-# Aplicación de Chat Aleatorio en Tiempo Real
+# Pairly – Plataforma de Chat en Tiempo Real de Código Abierto (Aleatorio + Privado)
 
 [![Licencia MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 [![Se aceptan contribuciones](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](#contribuciones)
@@ -6,12 +6,14 @@
 ![Estado](https://img.shields.io/badge/status-active-success)
 ![Hecho con React](https://img.shields.io/badge/Made%20with-React-61DAFB?logo=react)
 ![Backend: Node](https://img.shields.io/badge/Backend-Express%20%7C%20MongoDB-brightgreen?logo=node.js)
-![Issues](https://img.shields.io/github/issues/behan05/real-time-chat-app)
-![Forks](https://img.shields.io/github/forks/behan05/real-time-chat-app)
-![Stars](https://img.shields.io/github/stars/behan05/real-time-chat-app)
-![Último Commit](https://img.shields.io/github/last-commit/behan05/real-time-chat-app)
+![Issues](https://img.shields.io/github/issues/behan05/pairly)
+![Forks](https://img.shields.io/github/forks/behan05/pairly)
+![Stars](https://img.shields.io/github/stars/behan05/pairly)
+![Último Commit](https://img.shields.io/github/last-commit/behan05/pairly)
 
-Una aplicación de chat aleatorio en tiempo real full-stack que conecta a usuarios anónimamente para mensajería privada 1-a-1. Construida con **React**, **Node.js**, **Express**, **Socket.IO** y **MongoDB**.
+Una aplicación de chat full-stack en tiempo real que conecta usuarios de forma anónima para mensajería privada 1-a-1. Construida con **React**, **Node.js**, **Express**, **Socket.IO** y **MongoDB**.
+
+> **📢 Estado del Proyecto**: Este proyecto fue hecho privado previamente, pero **ahora está disponible públicamente nuevamente** como un proyecto de código abierto activamente mantenido. Estamos comprometidos con la transparencia y el desarrollo impulsado por la comunidad. Anteriormente tenía **29 estrellas** y **17 bifurcaciones**—¡gracias por su continuo apoyo!
 
 ---
 
@@ -25,6 +27,7 @@ Una aplicación de chat aleatorio en tiempo real full-stack que conecta a usuari
 - [Estructura del Proyecto](#estructura-del-proyecto)
 - [Despliegue](#despliegue)
 - [Contribuciones](#contribuciones)
+- [Transparencia y Confianza](#-transparencia-y-confianza)
 - [Hecho por Contribuidores](#hecho-por-contribuidores)
 - [Agradecimientos](#agradecimientos)
 - [Contacto](#contacto)
@@ -42,6 +45,8 @@ Una aplicación de chat aleatorio en tiempo real full-stack que conecta a usuari
 
 ## 🚀 Características
 
+### ✅ Características Gratuitas
+
 - 🔐 Autenticación segura de usuarios (Login/Registro)
 - 🎲 Chat privado 1-a-1 aleatorio
 - 📡 Mensajería en tiempo real con Socket.IO
@@ -50,6 +55,18 @@ Una aplicación de chat aleatorio en tiempo real full-stack que conecta a usuari
 - 🛡️ Rutas protegidas para usuarios autenticados
 - 🕒 Mensajes con marca de tiempo
 - 📱 UI completamente responsiva (Móvil y Escritorio)
+- 🔔 Notificaciones básicas
+
+### 💎 Características Premium
+
+- ⭐ Soporte prioritario
+- 🎎 Temas personalizados y personalización
+- 📸 Uso compartido avanzado de medios
+- 🔐 Controles de privacidad mejorados
+- 📊 Analítica e información del usuario
+- 🌐 Soporte de múltiples idiomas
+- 📱 Instalación de aplicación PWA
+- 🎵 Tonos de mensaje personalizados
 
 ---
 
@@ -179,26 +196,125 @@ Errores comunes y soluciones:
 ## 📁 Estructura del Proyecto
 
 ```
-real-time-chat-app/
-├── connect-ui/
+pairly/
+├── pairly-ui/                          # Aplicación Frontend React
 │   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── routes/
-│   │   ├── redux/ or context/
-│   │   └── App.jsx
-│   └── package.json
-├── connect-server/
+│   │   ├── api/                        # Llamadas de servicio API
+│   │   ├── assets/                     # Imágenes, fuentes, activos estáticos
+│   │   ├── components/                 # Componentes React reutilizables
+│   │   ├── context/                    # Configuración de Context API
+│   │   ├── features/                   # Módulos específicos de características
+│   │   ├── layouts/                    # Componentes de diseño
+│   │   ├── middleware/                 # Middleware personalizado
+│   │   ├── MUI/                        # Personalizaciones de Material-UI
+│   │   ├── pages/                      # Componentes de página
+│   │   ├── redux/                      # Tienda Redux y slices
+│   │   ├── routes/                     # Definiciones de rutas
+│   │   ├── services/                   # Funciones de servicio
+│   │   ├── styles/                     # Estilos globales
+│   │   ├── utils/                      # Funciones de utilidad
+│   │   ├── installPrompt/              # Indicador de instalación PWA
+│   │   ├── SubscriptionManager/        # Gestión de suscripciones
+│   │   ├── App.jsx                     # Componente principal
+│   │   └── main.jsx                    # Punto de entrada
+│   ├── public/
+│   │   ├── manifest.json               # Manifiesto PWA
+│   │   ├── robots.txt                  # Configuración de robots SEO
+│   │   ├── service-worker.js           # Service worker
+│   │   ├── messageTone/                # Archivos de audio de mensajes
+│   │   └── sounds/                     # Efectos de sonido
+│   ├── vite.config.js
+│   ├── eslint.config.js
+│   ├── package.json
+│   └── README.md
+│
+├── pairly-server/                      # Aplicación Backend Express
 │   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── profileController.js
+│   │   ├── settingsController.js
+│   │   ├── adminPanelControllers/      # Gestión de administrador
+│   │   ├── feedbackControllers/        # Retroalimentación del usuario
+│   │   ├── paymentControllers/         # Procesamiento de pagos
+│   │   ├── privateChatControllers/     # Lógica de chat privado
+│   │   ├── randomChatControllers/      # Coincidencia de chat aleatorio
+│   │   ├── searchUserControllers/      # Búsqueda de usuario
+│   │   ├── support-ticket/             # Tickets de soporte
+│   │   └── common/                     # Lógica de controlador compartida
+│   │
 │   ├── models/
-│   ├── routes/
-│   ├── socket/
-│   └── server.js
+│   │   ├── User.model.js               # Esquema de usuario
+│   │   ├── Profile.model.js            # Perfil de usuario
+│   │   ├── settings.model.js           # Configuración de usuario
+│   │   ├── LoginActivity.model.js      # Seguimiento de inicio de sesión
+│   │   ├── UserActivity.model.js       # Registros de actividad del usuario
+│   │   ├── ReportProblem.model.js      # Reportes de problemas
+│   │   ├── SupportTicket.model.js      # Tickets de soporte
+│   │   ├── admin/                      # Modelos relacionados con administrador
+│   │   ├── chat/                       # Modelos relacionados con chat
+│   │   ├── feedback/                   # Modelos de retroalimentación
+│   │   ├── payment/                    # Modelos de pago
+│   │   └── proposal/                   # Modelos de propuesta
+│   │
+│   ├── routers/
+│   │   ├── profileRoutes.js
+│   │   ├── settingsRoutes.js
+│   │   ├── admin/                      # Rutas de administrador
+│   │   ├── auth/                       # Rutas de autenticación
+│   │   ├── chat/                       # Rutas de chat
+│   │   ├── feedback/                   # Rutas de retroalimentación
+│   │   ├── payment/                    # Rutas de pago
+│   │   └── searchUsers/                # Rutas de búsqueda
+│   │
+│   ├── middlewares/
+│   │   ├── authMiddleware.js           # Autenticación JWT
+│   │   ├── adminAuthMiddleware.js      # Autorización de administrador
+│   │   ├── multerMiddleware.js         # Manejo de carga de archivos
+│   │   ├── uploadPrivateMedia.js       # Carga de medios de chat privado
+│   │   ├── uploadRandomMedia.js        # Carga de medios de chat aleatorio
+│   │   └── uploadProfileS3.js          # Carga de perfil S3
+│   │
+│   ├── sockets/
+│   │   ├── socketServer.js             # Configuración principal de socket
+│   │   ├── privateChat/                # Eventos de socket de chat privado
+│   │   └── randomChat/                 # Eventos de socket de chat aleatorio
+│   │
+│   ├── config/
+│   │   ├── db.js                       # Conexión de MongoDB
+│   │   ├── passport/                   # Estrategias OAuth
+│   │   │   ├── passportGithub.js
+│   │   │   └── passportGoogle.js
+│   │   └── razorpay/
+│   │       └── razorpay.js             # Integración de Razorpay
+│   │
+│   ├── utils/
+│   │   ├── generateToken.js
+│   │   ├── aws/                        # Utilidades AWS S3
+│   │   ├── email/                      # Servicio de correo electrónico
+│   │   └── socket/                     # Utilidades de socket
+│   │
+│   ├── cron/
+│   │   ├── cleanupUnverifiedUsers.cron.js
+│   │   └── deleteRandomExpiredMessages.cron.js
+│   │
+│   ├── tests/
+│   │   ├── unit/                       # Pruebas unitarias
+│   │   └── integration/                # Pruebas de integración
+│   │
+│   ├── server.js                       # Entrada principal del servidor
+│   └── package.json
+│
 ├── docs/
-│   ├──screenshot/
-│   └──translations/
-├── .env
-└── README.md
+│   ├── screenshot/                     # Capturas de pantalla de la app
+│   └── translations/
+│       ├── README.en.md                # Documentación en inglés
+│       ├── README.es.md                # Documentación en español
+│       └── README.id.md                # Documentación en indonesio
+│
+├── CODE_OF_CONDUCT.md                  # Directrices comunitarias
+├── CONTRIBUTING.md                     # Guía de contribución
+├── LICENSE                             # Licencia MIT
+└── README.md                           # Este archivo
 ```
 
 ---
@@ -240,7 +356,31 @@ Asegúrate de leer la [guia de contribución](/CONTRIBUTING.md) si está disponi
 
 ---
 
-## 🙏 Hecho por Contribuidores
+## � Transparencia y Confianza
+
+Entendemos que hacer un proyecto privado y luego hacerlo público nuevamente puede generar preocupaciones. Esto es lo que queremos que sepas:
+
+### ¿Por qué lo hicimos privado?
+- Necesitábamos tiempo para reestructurar el código y mejorar la estabilidad
+- Queríamos asegurar que el proyecto estuviera listo para producción
+- Estábamos evaluando el mejor camino para el mantenimiento a largo plazo
+
+### ¿Por qué estamos de vuelta y comprometidos?
+- **100% Código Abierto**: Todo el código es visible y auditable públicamente
+- **Mantenimiento Activo**: El proyecto se mantiene activamente y se actualiza regularmente
+- **Impulsado por la Comunidad**: Bienvenimos feedback, issues y pull requests de la comunidad
+- **Hoja de Ruta Clara**: Estamos comprometidos con prácticas de desarrollo transparentes
+- **Licencia MIT**: Puedes usar, modificar y distribuir este software libremente
+
+### Hacia el Futuro
+- Todo el desarrollo futuro será en abierto
+- Mantendremos comunicación regular a través de issues y discusiones
+- La seguridad y estabilidad son nuestras prioridades principales
+- Tu feedback y contribuciones dan forma directa al futuro del proyecto
+
+---
+
+## �🙏 Hecho por Contribuidores
 
 Agradecemos a todos los contribuidores que mejoran este proyecto cada día.
 ¡Agregate en `CONTRIBUTORS.md` cuando hagas tu primera contribución!

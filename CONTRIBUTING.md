@@ -1,4 +1,4 @@
-# 🛠️ Contributing to Pairly (Real time couple friendly chat web application)
+# 🛠️ Contributing to Pairly (Open-Source Real-Time Chat Platform)
 
 Thank you for your interest in contributing to **Pairly**! 🎉  
 We welcome all kinds of contributions — code, design, documentation, bug reports, or suggestions.
@@ -21,7 +21,7 @@ We welcome all kinds of contributions — code, design, documentation, bug repor
 
 ---
 
-## ✅ How to Contribute
+## How to Contribute
 
 1. **Star** ⭐ the repository to support the project.
 2. **Fork** the repo and clone it locally.
@@ -43,8 +43,8 @@ Please follow our [Code of Conduct](CODE_OF_CONDUCT.md) and treat others with re
 To run Pairly locally:
 
 ```bash
-git clone https://github.com/behan05/real-time-chat-app.git
-cd real-time-chat-app
+git clone https://github.com/behan05/pairly.git
+cd pairly
 npm install
 npm run dev
 ```
@@ -107,7 +107,7 @@ Examples:
 
 ## 🐛 Reporting Bugs & ✨ Requesting Features
 
-Use [GitHub Issues](../../issues) to:
+Use [GitHub Issues](https://github.com/behan05/pairly/issues) to:
 
 - Report bugs 🐞
 - Suggest features 💡
@@ -135,23 +135,36 @@ We appreciate translations!
 
 If you need help:
 
-- Open a [GitHub Discussion](../../discussions)
+- Open a [GitHub Discussion](https://github.com/behan05/pairly/discussions)
 - Comment on an open issue
 - Tag or mention maintainers for guidance
 - Follow project updates in the README or pinned issues
 
 ---
 
-## 🙌 Credits
+## � Our Commitment to Transparency
 
-Thanks to all our amazing [contributors](https://github.com/behan05/real-time-chat-app/graphs/contributors) 💖
+Pairly is now fully open-source and actively maintained. We're committed to:
+
+- **Transparency**: All development happens in the open
+- **Community-Driven**: Your feedback and contributions shape the project
+- **Quality**: We maintain high standards for code and communication
+- **Inclusivity**: We welcome contributors of all experience levels
+
+We previously had **29 stars** and **17 forks**—we're excited to rebuild and grow this community together!
+
+---
+
+## �🙌 Credits
+
+Thanks to all our amazing [contributors](https://github.com/behan05/pairly/graphs/contributors) 💖
 
 Special thanks to [@Bluefox192](https://github.com/Bluefox192)  
 > 👏 *First contributor for enhancing the README and setting a great foundation.*
 
 ---
 
-## ✅ Final Tips
+## Final Tips
 
 - Be respectful, inclusive, and helpful.
 - Review open issues before creating new ones.
