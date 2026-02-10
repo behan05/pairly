@@ -16,7 +16,6 @@ import {
   FacebookIcon,
 } from '@/MUI/MuiIcons';
 import { Link as RouterLink } from 'react-router-dom';
-import logo from '@/assets/logo/logo.png';
 import StyledText from '../common/StyledText';
 
 function Footer() {
@@ -58,16 +57,9 @@ function Footer() {
         >
           <Box
             component="img"
-            src={logo}
-            alt="Pairly Logo"
-            maxWidth={48}
-            sx={{
-              transition: 'all 0.8s ease',
-
-              '&:hover': {
-                transform: 'rotateZ(360deg)',
-              },
-            }}
+            src="/logo.png"
+            alt="Pairly logo"
+            maxWidth={isSm ? 40 : 90 }
           />
           <Typography
             variant="body2"

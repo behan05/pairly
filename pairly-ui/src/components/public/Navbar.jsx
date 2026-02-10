@@ -123,20 +123,22 @@ function Navbar() {
         }}
       >
         {/* === Left: Logo === */}
-        <Stack className="nav-logo" component={Link} to="/" sx={{ textDecoration: 'none' }}>
+        <Stack
+          className="nav-logo"
+          component={Link}
+          to="/"
+          sx={{
+            textDecoration: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            userSelect: 'none',
+          }}
+        >
           <Box
             component="img"
             src="/logo.png"
             alt="Pairly logo"
-            maxWidth={isSm ? 40 : 40}
-            sx={{
-              filter: `brightness(120%) `,
-              transition: 'all 0.8s ease',
-
-              '&:hover': {
-                transform: 'rotateZ(360deg)',
-              },
-            }}
+            maxWidth={isSm ? 40 : 70}
           />
         </Stack>
 
@@ -245,7 +247,6 @@ function Navbar() {
             src="/logo.png"
             alt="Pairly logo"
             maxWidth={40}
-            sx={{ filter: 'brightness(120%)' }}
           />
           <IconButton onClick={toggleDrawer(false)}>
             <CloseIcon />
