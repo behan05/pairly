@@ -774,7 +774,7 @@ function PrivateMessageInput() {
               </Stack>
 
               {/* Notes */}
-              <Stack alignItems="center" spacing={1} sx={{
+              {/* <Stack alignItems="center" spacing={1} sx={{
                 transition: 'all 0.3s ease-in-out',
                 '&:hover': {
                   transform: `translate(1px, -1px) scale(0.99)`,
@@ -792,7 +792,21 @@ function PrivateMessageInput() {
                   <NoteAltIcon sx={{ color: 'info.main', fontSize: '1.4rem' }} />
                 </IconButton>
                 <Typography variant="caption">Notes</Typography>
-              </Stack>
+              </Stack> */}
+
+              {/* Secret */}
+              {/* <Stack alignItems="center" spacing={1} sx={{
+                transition: 'all 0.3s ease-in-out',
+                '&:hover': {
+                  transform: `translate(1px, -1px) scale(0.99)`,
+                  filter: `drop-shadow(0 0 0.5px ${theme.palette.primary.main})`
+                },
+              }}>
+                <IconButton sx={{ bgcolor: theme.palette.action.hover, p: 1, borderRadius: 2 }}>
+                  <LockIcon sx={{ color: 'warning.main', fontSize: '1.4rem' }} />
+                </IconButton>
+                <Typography variant="caption">Secret</Typography>
+              </Stack> */}
 
               {/* Location */}
               <Stack
@@ -810,20 +824,6 @@ function PrivateMessageInput() {
                   <LocationOnIcon sx={{ color: 'error.main', fontSize: '1.4rem' }} />
                 </IconButton>
                 <Typography variant="caption">Location</Typography>
-              </Stack>
-
-              {/* Secret */}
-              <Stack alignItems="center" spacing={1} sx={{
-                transition: 'all 0.3s ease-in-out',
-                '&:hover': {
-                  transform: `translate(1px, -1px) scale(0.99)`,
-                  filter: `drop-shadow(0 0 0.5px ${theme.palette.primary.main})`
-                },
-              }}>
-                <IconButton sx={{ bgcolor: theme.palette.action.hover, p: 1, borderRadius: 2 }}>
-                  <LockIcon sx={{ color: 'warning.main', fontSize: '1.4rem' }} />
-                </IconButton>
-                <Typography variant="caption">Secret</Typography>
               </Stack>
             </Box>
           </Menu>
@@ -881,14 +881,16 @@ function PrivateMessageInput() {
               <MusicNoteIcon sx={{ mr: 1, color: 'secondary.main', fontSize: '1.3rem', }} />
               <Typography variant="subtitle2">Audio</Typography>
             </MenuItem>
-            <MenuItem sx={menuCommonStyle}>
+
+            {/* <MenuItem sx={menuCommonStyle}>
               <NoteAltIcon sx={{ mr: 1, color: 'info.main', fontSize: '1.3rem', }} />
               <Typography variant="subtitle2">Private Notes</Typography>
             </MenuItem>
             <MenuItem sx={menuCommonStyle}>
               <LockIcon sx={{ mr: 1, color: 'warning.main', fontSize: '1.3rem', }} />
               <Typography variant="subtitle2">Secret Messages</Typography>
-            </MenuItem>
+            </MenuItem> */}
+
             {/* Location */}
             <MenuItem
               onClick={handleLocationClick}

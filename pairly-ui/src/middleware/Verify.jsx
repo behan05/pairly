@@ -111,10 +111,10 @@ function Verify() {
                 sx={{
                     width: '100%',
                     maxWidth: 400,
-                    backgroundColor: theme.palette.background.default,
+                    backgroundColor: theme.palette.background.paper,
                     p: 4,
-                    borderRadius: 3,
-                    boxShadow: `inset 0 2px 4px ${theme.palette.info.dark}`,
+                    borderRadius: 1.5,
+                    border: `1px solid ${theme.palette.divider}`,
                     textAlign: 'center',
                 }}
             >

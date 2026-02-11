@@ -70,9 +70,6 @@ import CheckoutPage from '@/pages/payment/CheckoutPage';
 import Alerts from '../features/chat/common/Alerts';
 import SubscriptionManager from '@/SubscriptionManager/SubscriptionManager';
 import NextGenerationChat from '../components/common/NextGenerationChat';
-import VirtualStandupHallLayout from '../features/virtual_standup_hall/VirtualStandupHallLayout';
-import CreateEvent from '../features/virtual_standup_hall/CreateEvent';
-import MyEarnings from '../features/virtual_standup_hall/MyEarnings';
 
 export const routes = createBrowserRouter([
   // === Public routes ===
@@ -223,17 +220,6 @@ export const routes = createBrowserRouter([
               { path: 'interests', element: <TagsAndInterests /> }
             ]
           }
-        ]
-      },
-
-      // virtual-standup-hall
-      {
-        path: 'virtual-standup-hall',
-        element: <VirtualStandupHallLayout />,
-        children: [
-          { path: 'create-event', element: <CreateEvent /> },
-          { path: 'my-earnings', element: <MyEarnings /> },
-          { path: 'terms-of-use', element: <TermsOfUsePage /> }
         ]
       },
 

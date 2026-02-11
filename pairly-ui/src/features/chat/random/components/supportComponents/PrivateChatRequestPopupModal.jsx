@@ -16,9 +16,6 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import { toast } from 'react-toastify';
 
-// components
-import StyledText from '@/components/common/StyledText';
-
 // Default Profile Image
 import defaultAvatar from '@/assets/placeholders/defaultAvatar.png'
 
@@ -88,13 +85,13 @@ function PrivateChatRequestPopupModal() {
             <Card
                 elevation={6}
                 sx={{
-                    maxWidth: isSm ? '70%' : 400,
+                    maxWidth: isSm ? '60%' : 380,
                     width: '100%',
                     margin: '0 auto',
-                    p: 1,
+                    p: 1.5,
                     borderRadius: 1,
-                    background: theme.palette.background.default,
-                    border: `2px solid ${theme.palette.divider}`
+                    background: theme.palette.background.paper,
+                    border: `1px solid ${theme.palette.divider}`
                 }}
             >
                 {/* TOP TEXT */}
