@@ -70,6 +70,11 @@ import CheckoutPage from '@/pages/payment/CheckoutPage';
 import Alerts from '../features/chat/common/Alerts';
 import SubscriptionManager from '@/SubscriptionManager/SubscriptionManager';
 import NextGenerationChat from '../components/common/NextGenerationChat';
+import AllChatOptions from '../features/chat/all-chat-options/AllChatOptions';
+import GroupChatSidebar from '../features/chat/group-chat/components/coreComponents/GroupChatSidebar';
+import AnonymousChatSidebar from '../features/chat/anonymous-chat/components/coreComponents/AnonymousChatSidebar';
+import InviteChatSidebar from '../features/chat/invite-chat/components/coreComponents/InviteChatSidebar';
+import TopicBasedChatSidebar from '../features/chat/topic-based-chat/components/coreComponents/TopicBasedChatSidebar';
 
 export const routes = createBrowserRouter([
   // === Public routes ===
@@ -121,7 +126,12 @@ export const routes = createBrowserRouter([
         element: <RandomChatLayout />,
         children: [
           // Default view at /pairly
-          { index: true, element: <RandomSidebar /> },
+          { index: true, element: <AllChatOptions /> },
+          { path: 'random-chat', element: <RandomSidebar /> },
+          { path: 'group-chat', element: <GroupChatSidebar /> },
+          { path: 'anonymous-chat', element: <AnonymousChatSidebar /> },
+          { path: 'invite-chat', element: <InviteChatSidebar /> },
+          { path: 'topic-based-chat', element: <TopicBasedChatSidebar /> },
           { path: 'friend-requests', element: <FriendRequestList /> },
           { path: 'alerts', element: <Alerts /> },
           { path: 'terms-of-use', element: <TermsOfUsePage /> },

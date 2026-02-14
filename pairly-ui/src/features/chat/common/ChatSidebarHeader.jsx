@@ -106,7 +106,7 @@ const ChatSidebarHeader = ({ children }) => {
     {
       path: '/pairly',
       icon: <ShuffleIcon sx={{ color: theme.palette.info.main }} />,
-      label: 'Random Chat'
+      label: 'Chat Types'
     },
     {
       path: '/pairly/chat',

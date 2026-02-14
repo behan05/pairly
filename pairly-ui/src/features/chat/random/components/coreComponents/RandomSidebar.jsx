@@ -8,20 +8,21 @@ import {
   IconButton,
   Tooltip,
 } from '@/MUI/MuiComponents';
-import { ArrowBackIcon, GroupIcon } from '@/MUI/MuiIcons';
+import {
+  ArrowBackIcon,
+  GroupIcon,
+} from '@/MUI/MuiIcons';
 import ChatSidebarHeader from '../../../common/ChatSidebarHeader';
 import ConnectButton from '../supportComponents/ConnectButton';
 import DisconnectButton from '../supportComponents/DisconnectButton';
 import NextButton from '../supportComponents/NextButton';
 import SettingsAction from '@/components/private/SettingsAction';
-import StyledText from '@/components/common/StyledText';
 import CountdownTimer from '../supportComponents/CountdownTimer';
 import RandomLandingLottie from '../supportComponents/RandomLandingPageLottie';
 import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '@/services/socket';
 import { resetRandomChat, setWaiting } from '@/redux/slices/randomChat/randomChatSlice';
 import { useOutletContext } from 'react-router-dom';
-import OnboardingFeedback from '@/pages/feedback/OnboardingFeedback'
 
 function RandomSidebar() {
   const theme = useTheme();
@@ -30,12 +31,10 @@ function RandomSidebar() {
   const { waiting: isWaiting, connected: isConnected } = useSelector((state) => state.randomChat);
   const { setShowChatWindow, showChatWindow } = useOutletContext();
   const [numberOfActiveUsers, setNumberOfActiveUsers] = useState(0);
-  const { subscription, hasGivenOnboardingFeedback } = useSelector((state) => state?.auth?.user);
+  const { subscription } = useSelector((state) => state?.auth?.user);
   const { plan, status } = subscription;
   const hasPremiumAccess = plan !== 'free' && status === 'active';
   const isFreeUser = !hasPremiumAccess;
-
-  const [openOnboardingFeedback, setOpenOnboardingFeedback] = useState(false);
 
   useEffect(() => {
     if (!isConnected && isSm) setShowChatWindow(false);
@@ -48,31 +47,6 @@ function RandomSidebar() {
     socket.emit('join-random');
     setShowChatWindow(true);
   };
-
-  useEffect(() => {
-    if (!hasGivenOnboardingFeedback) {
-      const lastSkipped = localStorage.getItem("onboardingFeedbackSkippedAt");
-      const completed = localStorage.getItem("onboardingFeedbackDoneAt");
-
-      const oneWeek = 7 * 24 * 60 * 60 * 1000;      // 7 days
-      const twoMonths = 60 * 24 * 60 * 60 * 1000;   // ~60 days
-
-      // If user skipped — show again after a week
-      if (lastSkipped && Date.now() - lastSkipped > oneWeek) {
-        setOpenOnboardingFeedback(true);
-      }
-
-      // If user has given feedback — show again after 2 months
-      if (completed && Date.now() - completed > twoMonths) {
-        setOpenOnboardingFeedback(true);
-      }
-
-      // If user never skipped or gave feedback before — show immediately
-      if (!lastSkipped && !completed) {
-        setOpenOnboardingFeedback(true);
-      }
-    }
-  }, []);
 
   const handleNext = () => socket.emit('random:next');
   const handleDisconnect = () => {
@@ -251,11 +225,6 @@ function RandomSidebar() {
       {/* Settings */}
       <SettingsAction />
 
-      {/* Onboarding Feedback */}
-      <OnboardingFeedback
-        open={openOnboardingFeedback}
-        onClose={() => setOpenOnboardingFeedback(false)}
-      />
     </Box>
   );
 }
