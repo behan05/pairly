@@ -12,6 +12,8 @@ import {
   ArrowBackIcon,
   GroupIcon,
 } from '@/MUI/MuiIcons';
+import { keyframes } from '@emotion/react'
+
 import ChatSidebarHeader from '../../../common/ChatSidebarHeader';
 import ConnectButton from '../supportComponents/ConnectButton';
 import DisconnectButton from '../supportComponents/DisconnectButton';
@@ -71,6 +73,11 @@ function RandomSidebar() {
     }
   }, [isFreeUser]);
 
+  const twinkle = keyframes`
+      0% { opacity: 0.2; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0.2; transform: scale(0.8); }`
+
   return (
     <Box
       display="flex"
@@ -88,6 +95,32 @@ function RandomSidebar() {
       <Stack sx={{ px: 1.5 }}>
         <ChatSidebarHeader />
       </Stack>
+
+      {/* Stars Background */}
+      {Array.from({ length: 100 }).map((_, i) => {
+        const size = Math.random() * 3 + 1
+        const duration = Math.random() * 5 + 3
+        const delay = Math.random() * 5
+
+        return (
+          <Stack
+            key={i}
+            sx={{
+              position: 'absolute',
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              width: size,
+              height: size,
+              borderRadius: '50%',
+              background: `${theme.palette.secondary.dark}`,
+              boxShadow: `0 20px 50px ${theme.palette.primary.main}40`,
+              opacity: Math.random(),
+              animation: `${twinkle} ${duration}s ease-in-out ${delay}s infinite`,
+              pointerEvents: 'none',
+            }}
+          />
+        )
+      })}
 
       {/* Back button (mobile) */}
       {isSm && showChatWindow && (
@@ -118,20 +151,62 @@ function RandomSidebar() {
       >
         <Stack
           sx={{
-            position: "relative",
-            overflow: "hidden",
-            borderRadius: 1,
-            p: 2,
-            transition: "0.3s",
-            bgcolor: theme.palette.background.paper,
-            border: `1px solid ${theme.palette.divider}`,
+            position: 'relative',
+            padding: 4,
+            background: theme.palette.background.paper,
+            overflow: 'hidden',
+            zIndex: 1,
+            minWidth: '360px',
+
+            // Animated border layer
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              inset: -2,
+              background: `conic-gradient(
+        from 0deg,
+        ${theme.palette.primary.dark},
+        ${theme.palette.secondary.dark},
+        ${theme.palette.primary.dark}
+      )`,
+              animation: 'rotateBorder 8s linear infinite',
+              zIndex: -2,
+            },
+
+            // Inner mask to create border thickness
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              inset: 2,
+              background: theme.palette.background.paper,
+              zIndex: -1,
+              boxShadow: `0 0 10rem ${theme.palette.primary.dark}`
+            },
+
+            backdropFilter: 'blur(12px)',
+            transition: 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)',
+
+            '&:hover': {
+              boxShadow: `0 0 2rem ${theme.palette.primary.dark}`
+            },
+
+            '@keyframes rotateBorder': {
+              '0%': { transform: 'rotate(0deg)' },
+              '100%': { transform: 'rotate(360deg)' },
+            },
           }}
         >
+
           <Typography
-            variant='h2'
+            variant="h2"
             sx={{
-              fontSize: isSm ? '1.5rem' : '2rem',
-              textAlign: 'center'
+              fontSize: isSm ? "1.8rem" : "2.4rem",
+              fontWeight: 700,
+              letterSpacing: "1px",
+              background: `linear-gradient(90deg, ${theme.palette.primary.light}, ${theme.palette.secondary.light})`,
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              mb: 1,
             }}
           >
             Random Chat

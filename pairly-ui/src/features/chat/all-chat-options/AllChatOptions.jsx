@@ -9,12 +9,12 @@ import {
 } from '@/MUI/MuiComponents';
 import {
     GroupIcon,
-    PersonIcon
+    PersonIcon,
+    LocationPinIcon
 } from '@/MUI/MuiIcons';
 import { keyframes } from '@emotion/react'
 import ChatSidebarHeader from '@/features/chat/common/ChatSidebarHeader';
 import SettingsAction from '@/components/private/SettingsAction';
-
 
 // Lotties
 import RandomLandingLottie from '@/features/chat/random/components/supportComponents/RandomLandingPageLottie';
@@ -22,6 +22,7 @@ import GroupChatLottie from '../group-chat/components/supportComponents/GroupCha
 import AnonymousChatLottie from '../anonymous-chat/components/supportComponents/AnonymousChatLottiePage';
 import InviteChatLottie from '../invite-chat/components/supportComponents/InviteChatLottiePage';
 import TopicBasedChatLottie from '../topic-based-chat/components/supportComponents/TopicBasedChatLottiePage';
+import NearMeChatLottie from '../nearme-chat/components/supportComponents/NearMeChatLottiePage';
 
 import { useSelector } from 'react-redux';
 import { socket } from '@/services/socket';
@@ -135,6 +136,17 @@ function AllChatOptions() {
             redirectTo: "/pairly/topic-based-chat",
             buttonTextIcon: <GroupIcon />,
         },
+        {
+            title: "Near Me Chat",
+            titleIcon: <LocationPinIcon fontSize='small' />,
+            subTitle: "Chat with people nearby",
+            subTitleIcon: <LocationPinIcon fontSize='small' />,
+            lottie: < NearMeChatLottie />,
+            buttonText: "Find Nearby",
+            redirectTo: "/pairly/near-me-chat",
+            buttonTextIcon: <LocationPinIcon />,
+        }
+
     ]
 
     // Chat options
@@ -154,13 +166,11 @@ function AllChatOptions() {
                 key={key}
                 sx={(theme) => ({
                     position: 'relative',
-                    // minHeight: 140,
                     borderRadius: 1,
                     padding: '10px 10px 0 10px',
                     background: `
                     linear-gradient(${theme.palette.background.paper}, ${theme.palette.background.paper}) padding-box,
-                    linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main}) border-box
-                `,
+                    linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main}) border-box`,
                     border: '1px solid transparent',
                     backdropFilter: 'blur(12px)',
                     transition: 'all 0.35s cubic-bezier(0.22, 1, 0.36, 1)',
@@ -254,7 +264,7 @@ function AllChatOptions() {
                     startIcon={buttonTextIcon}
                     fullWidth
                     sx={(theme) => ({
-                        m: '1em 0 0.2em 0',
+                        m: '2em 0 0.2em 0',
                         position: 'relative',
                         overflow: 'hidden',
                         borderRadius: 1.5,
@@ -340,7 +350,7 @@ function AllChatOptions() {
     0% { opacity: 0.2; transform: scale(0.8); }
     50% { opacity: 1; transform: scale(1.2); }
     100% { opacity: 0.2; transform: scale(0.8); }`
-    
+
     return (
         <Box
             display="flex"
@@ -385,7 +395,8 @@ function AllChatOptions() {
             </Stack>
 
             {/* Main content */}
-            <Box mt={3}
+            <Box
+                mt={3}
                 sx={{
                     flexGrow: 1,
                     overflowY: 'auto',
@@ -422,7 +433,8 @@ function AllChatOptions() {
                         display: 'grid',
                         gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))',
                         gap: 4,
-                        p: '0 20px',
+                        p: '40px 20px',
+                        overflowX: 'hidden',
                     }}
                 >
                     {chatOptions.map((item, index) => (
@@ -448,7 +460,6 @@ function AllChatOptions() {
                         </Box>
                     ))}
                 </Box>
-
 
                 {/* All created groups or Topic Room goes below to join news users */}
             </Box>
