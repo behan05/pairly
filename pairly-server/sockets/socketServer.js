@@ -101,31 +101,52 @@ function setupSocket(server) {
 
         // Handle disconnection
         socket.on('disconnect', async () => {
-            // remove this socket from active counts
-            onlineUsersCount.delete(socket.id);
-            io.emit('onlineCount', onlineUsersCount.size);
+            try {
+                // always remove this socket from active counts
+                onlineUsersCount.delete(socket.id);
+                io.emit('onlineCount', onlineUsersCount.size);
 
-            const uid = String(socket.userId);
+                // If we don't have a userId on the socket (auth may have failed), skip user-specific cleanup
+                if (!socket.userId) return;
 
-            // remove socket id from user's socket set
-            const socketsSet = userSocketMap.get(uid);
-            if (socketsSet) {
-                socketsSet.delete(socket.id);
-                if (socketsSet.size === 0) {
-                    userSocketMap.delete(uid);
-                } else {
-                    userSocketMap.set(uid, socketsSet);
+                const uid = String(socket.userId);
+
+                // remove socket id from user's socket set
+                const socketsSet = userSocketMap.get(uid);
+                if (socketsSet) {
+                    socketsSet.delete(socket.id);
+                    if (socketsSet.size === 0) {
+                        userSocketMap.delete(uid);
+                    } else {
+                        userSocketMap.set(uid, socketsSet);
+                    }
                 }
-            }
 
-            // also remove from onlineUsers map
-            const onlineSet = onlineUsers.get(uid);
-            if (onlineSet) {
-                onlineSet.delete(socket.id);
-                if (onlineSet.size === 0) {
-                    onlineUsers.delete(uid);
+                // also remove from onlineUsers map
+                const onlineSet = onlineUsers.get(uid);
+                if (onlineSet) {
+                    onlineSet.delete(socket.id);
+                    if (onlineSet.size === 0) {
+                        onlineUsers.delete(uid);
 
-                    // Update DB only when user's last socket disconnected
+                        // Update DB only when user's last socket disconnected
+                        const updateLastActivity = await User.findByIdAndUpdate(
+                            socket.userId,
+                            {
+                                isOnline: false,
+                                lastSeen: new Date()
+                            },
+                            { new: true }
+                        );
+
+                        // notify others that this user is offline
+                        io.emit('privateChat:userOffline', { userId: socket.userId, lastSeen: updateLastActivity?.lastSeen });
+                    } else {
+                        // still has active sockets — do not mark offline
+                        onlineUsers.set(uid, onlineSet);
+                    }
+                } else {
+                    // no onlineSet found — ensure userSocketMap cleaned and mark offline as fallback
                     const updateLastActivity = await User.findByIdAndUpdate(
                         socket.userId,
                         {
@@ -134,24 +155,10 @@ function setupSocket(server) {
                         },
                         { new: true }
                     );
-
-                    // notify others that this user is offline
                     io.emit('privateChat:userOffline', { userId: socket.userId, lastSeen: updateLastActivity?.lastSeen });
-                } else {
-                    // still has active sockets — do not mark offline
-                    onlineUsers.set(uid, onlineSet);
                 }
-            } else {
-                // no onlineSet found — ensure userSocketMap cleaned and mark offline as fallback
-                const updateLastActivity = await User.findByIdAndUpdate(
-                    socket.userId,
-                    {
-                        isOnline: false,
-                        lastSeen: new Date()
-                    },
-                    { new: true }
-                );
-                io.emit('privateChat:userOffline', { userId: socket.userId, lastSeen: updateLastActivity?.lastSeen });
+            } catch (err) {
+                console.error('Error during socket disconnect cleanup:', err);
             }
         });
     });

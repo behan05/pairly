@@ -21,24 +21,37 @@ async function matchRandomUser(
 
     // --- Clean old entries for this user ---
     if (userSocketMap.has(socket.userId)) {
-        const oldSocketId = userSocketMap.get(socket.userId);
+        const existing = userSocketMap.get(socket.userId);
+        // Support both legacy string value and new Set value
+        const oldSocketIds = existing instanceof Set ? Array.from(existing) : [existing];
 
         // Remove from waiting queue
         for (let i = waitingQueue.length - 1; i >= 0; i--) {
-            if (waitingQueue[i].userId === socket.userId || waitingQueue[i].id === oldSocketId) {
+            const w = waitingQueue[i];
+            if (w.userId === socket.userId || oldSocketIds.includes(w.id)) {
                 waitingQueue.splice(i, 1);
             }
         }
 
-        // Remove old matches
-        activeMatches.delete(oldSocketId);
-        for (const [key, value] of activeMatches.entries()) {
-            if (value === oldSocketId) activeMatches.delete(key);
+        // Remove old matches for any previous socket ids
+        for (const oldId of oldSocketIds) {
+            activeMatches.delete(oldId);
+        }
+        for (const [key, value] of Array.from(activeMatches.entries())) {
+            if (oldSocketIds.includes(value)) activeMatches.delete(key);
         }
     }
 
     // --- Store new socket ID for user ---
-    userSocketMap.set(socket.userId, socket.id);
+    if (!userSocketMap.has(socket.userId)) userSocketMap.set(socket.userId, new Set());
+    const socketSet = userSocketMap.get(socket.userId);
+    if (socketSet instanceof Set) {
+        socketSet.add(socket.id);
+        userSocketMap.set(socket.userId, socketSet);
+    } else {
+        // fallback: replace with Set if value was a single id string
+        userSocketMap.set(socket.userId, new Set([socket.id]));
+    }
 
     // --- Prevent duplicate queue entries ---
     const alreadyInQueue = waitingQueue.some(s => s.userId === socket.userId);
