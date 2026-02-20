@@ -105,106 +105,109 @@ function AllChatOptions() {
             redirectTo: "/pairly/random-chat",
             buttonTextIcon: <PersonIcon sx={{ color: '#fff' }} />,
         },
-        {
-            title: "Group Chat",
-            titleIcon: (
-                <GroupIcon
-                    fontSize='small'
-                    sx={{ color: '#7B61FF' }}
-                />
-            ),
-            subTitle: "Talk with many people",
-            subTitleIcon: (
-                <PeopleIcon
-                    fontSize='small'
-                    sx={{ color: '#7B61FF' }}
-                />
-            ),
-            lottie: <GroupChatLottie />,
-            buttonText: "Join Group",
-            redirectTo: "/pairly/group-chat",
-            buttonTextIcon: <GroupIcon sx={{ color: '#fff' }} />,
-        },
-        {
-            title: "Anonymous Chat",
-            titleIcon: (
-                <GroupIcon
-                    fontSize='small'
-                    sx={{ color: '#00C896' }}
-                />
-            ),
-            subTitle: "No name. No profile.",
-            subTitleIcon: (
-                <GroupIcon
-                    fontSize='small'
-                    sx={{ color: '#00C896' }}
-                />
-            ),
-            lottie: <AnonymousChatLottie />,
-            buttonText: "Chat Anonymously",
-            redirectTo: "/pairly/anonymous-chat",
-            buttonTextIcon: <GroupIcon sx={{ color: '#fff' }} />,
-        },
-        {
-            title: "Invite Chat",
-            titleIcon: (
-                <GroupIcon
-                    fontSize='small'
-                    sx={{ color: '#FF8C42' }}
-                />
-            ),
-            subTitle: "Chat with your friends",
-            subTitleIcon: (
-                <GroupIcon
-                    fontSize='small'
-                    sx={{ color: '#FF8C42' }}
-                />
-            ),
-            lottie: <InviteChatLottie />,
-            buttonText: "Send Invite",
-            redirectTo: "/pairly/invite-chat",
-            buttonTextIcon: <GroupIcon sx={{ color: '#fff' }} />,
-        },
-        {
-            title: "Topic Chat",
-            titleIcon: (
-                <GroupIcon
-                    fontSize='small'
-                    sx={{ color: '#FF4D6D' }}
-                />
-            ),
-            subTitle: "Chat by interests",
-            subTitleIcon: (
-                <GroupIcon
-                    fontSize='small'
-                    sx={{ color: '#FF4D6D' }}
-                />
-            ),
-            lottie: <TopicBasedChatLottie />,
-            buttonText: "Explore Topics",
-            redirectTo: "/pairly/topic-based-chat",
-            buttonTextIcon: <GroupIcon sx={{ color: '#fff' }} />,
-        },
-        {
-            title: "Nearby Chat",
-            titleIcon: (
-                <LocationPinIcon
-                    fontSize='small'
-                    sx={{ color: '#FFD93D' }}
-                />
-            ),
-            subTitle: "Find people near you",
-            subTitleIcon: (
-                <LocationPinIcon
-                    fontSize='small'
-                    sx={{ color: '#FFD93D' }}
-                />
-            ),
-            lottie: <NearMeChatLottie />,
-            buttonText: "Find Nearby",
-            redirectTo: "/pairly/nearby-chat",
-            buttonTextIcon: <LocationPinIcon sx={{ color: '#fff' }} />,
-        }
+
+        // Other chat modes can be added here in the future
+
+        // {
+        //     title: "Group Chat",
+        //     titleIcon: (
+        //         <GroupIcon
+        //             fontSize='small'
+        //             sx={{ color: '#7B61FF' }}
+        //         />
+        //     ),
+        //     subTitle: "Talk with many people",
+        //     subTitleIcon: (
+        //         <PeopleIcon
+        //             fontSize='small'
+        //             sx={{ color: '#7B61FF' }}
+        //         />
+        //     ),
+        //     lottie: <GroupChatLottie />,
+        //     buttonText: "Join Group",
+        //     redirectTo: "/pairly/group-chat",
+        //     buttonTextIcon: <GroupIcon sx={{ color: '#fff' }} />,
+        // },
+        // {
+        //     title: "Anonymous Chat",
+        //     titleIcon: (
+        //         <GroupIcon
+        //             fontSize='small'
+        //             sx={{ color: '#00C896' }}
+        //         />
+        //     ),
+        //     subTitle: "No name. No profile.",
+        //     subTitleIcon: (
+        //         <GroupIcon
+        //             fontSize='small'
+        //             sx={{ color: '#00C896' }}
+        //         />
+        //     ),
+        //     lottie: <AnonymousChatLottie />,
+        //     buttonText: "Chat Anonymously",
+        //     redirectTo: "/pairly/anonymous-chat",
+        //     buttonTextIcon: <GroupIcon sx={{ color: '#fff' }} />,
+        // },
+        // {
+        //     title: "Invite Chat",
+        //     titleIcon: (
+        //         <GroupIcon
+        //             fontSize='small'
+        //             sx={{ color: '#FF8C42' }}
+        //         />
+        //     ),
+        //     subTitle: "Chat with your friends",
+        //     subTitleIcon: (
+        //         <GroupIcon
+        //             fontSize='small'
+        //             sx={{ color: '#FF8C42' }}
+        //         />
+        //     ),
+        //     lottie: <InviteChatLottie />,
+        //     buttonText: "Send Invite",
+        //     redirectTo: "/pairly/invite-chat",
+        //     buttonTextIcon: <GroupIcon sx={{ color: '#fff' }} />,
+        // },
+        // {
+        //     title: "Topic Chat",
+        //     titleIcon: (
+        //         <GroupIcon
+        //             fontSize='small'
+        //             sx={{ color: '#FF4D6D' }}
+        //         />
+        //     ),
+        //     subTitle: "Chat by interests",
+        //     subTitleIcon: (
+        //         <GroupIcon
+        //             fontSize='small'
+        //             sx={{ color: '#FF4D6D' }}
+        //         />
+        //     ),
+        //     lottie: <TopicBasedChatLottie />,
+        //     buttonText: "Explore Topics",
+        //     redirectTo: "/pairly/topic-based-chat",
+        //     buttonTextIcon: <GroupIcon sx={{ color: '#fff' }} />,
+        // },
+        // {
+        //     title: "Nearby Chat",
+        //     titleIcon: (
+        //         <LocationPinIcon
+        //             fontSize='small'
+        //             sx={{ color: '#FFD93D' }}
+        //         />
+        //     ),
+        //     subTitle: "Find people near you",
+        //     subTitleIcon: (
+        //         <LocationPinIcon
+        //             fontSize='small'
+        //             sx={{ color: '#FFD93D' }}
+        //         />
+        //     ),
+        //     lottie: <NearMeChatLottie />,
+        //     buttonText: "Find Nearby",
+        //     redirectTo: "/pairly/nearby-chat",
+        //     buttonTextIcon: <LocationPinIcon sx={{ color: '#fff' }} />,
+        // }
     ]
 
     // Chat options
@@ -242,10 +245,10 @@ function AllChatOptions() {
                     justifyContent="space-between"
                     spacing={2}
                 >
-                    <Stack>
+                    <Stack gap={0.4}>
                         <Typography
                             variant="h5"
-                            sx={(theme) => ({
+                            sx={{
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: 1,
@@ -254,7 +257,7 @@ function AllChatOptions() {
                                 textTransform: 'uppercase',
                                 fontSize: 14,
                                 whiteSpace: 'nowrap',
-                            })}
+                            }}
                         >
                             {titleIcon}
                             {title}
@@ -365,12 +368,17 @@ function AllChatOptions() {
                 sx={{
                     flexGrow: 1,
                     overflowY: 'auto',
+
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'column',
                 }}
             >
                 <Stack
                     spacing={0.5}
                     alignItems="center"
-                    sx={{ mb: 4 }}
+                    sx={{ mb: 2 }}
                 >
                     <Typography
                         sx={{
@@ -379,7 +387,7 @@ function AllChatOptions() {
                             letterSpacing: 0.3
                         }}
                     >
-                        Select a Chat Mode
+                        Select a Chat Mode | (Beta)
                     </Typography>
 
                     <Typography
@@ -389,7 +397,8 @@ function AllChatOptions() {
                             fontSize: 13
                         }}
                     >
-                        Choose how you'd like to connect.
+                        More modes coming soon!
+                        {/* Choose how you'd like to connect. */}
                     </Typography>
                 </Stack>
 
