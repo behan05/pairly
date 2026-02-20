@@ -9,7 +9,7 @@ function Contact() {
   const theme = useTheme();
 
   React.useEffect(() => {
-    document.title = 'Pairly - Contact';
+    document.title = 'Pairly - Support';
   }, []);
 
   const [formData, setFormData] = useState({
@@ -158,10 +158,6 @@ function Contact() {
             disabled={isSubmitting}
             text={isSubmitting ? 'Sending...' : 'Drop a Line'}
             sx={{
-              fontSize: '1em',
-              fontWeight: 600,
-              py: 0.5,
-              textShadow: '0 0 2px #000',
               alignSelf: 'end'
             }}
           />

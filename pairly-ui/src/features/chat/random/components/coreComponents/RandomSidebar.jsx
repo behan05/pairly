@@ -8,20 +8,23 @@ import {
   IconButton,
   Tooltip,
 } from '@/MUI/MuiComponents';
-import { ArrowBackIcon, GroupIcon } from '@/MUI/MuiIcons';
+import {
+  ArrowBackIcon,
+  GroupIcon,
+} from '@/MUI/MuiIcons';
+import { keyframes } from '@emotion/react'
+
 import ChatSidebarHeader from '../../../common/ChatSidebarHeader';
 import ConnectButton from '../supportComponents/ConnectButton';
 import DisconnectButton from '../supportComponents/DisconnectButton';
 import NextButton from '../supportComponents/NextButton';
 import SettingsAction from '@/components/private/SettingsAction';
-import StyledText from '@/components/common/StyledText';
 import CountdownTimer from '../supportComponents/CountdownTimer';
 import RandomLandingLottie from '../supportComponents/RandomLandingPageLottie';
 import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '@/services/socket';
 import { resetRandomChat, setWaiting } from '@/redux/slices/randomChat/randomChatSlice';
 import { useOutletContext } from 'react-router-dom';
-import OnboardingFeedback from '@/pages/feedback/OnboardingFeedback'
 
 function RandomSidebar() {
   const theme = useTheme();
@@ -30,12 +33,10 @@ function RandomSidebar() {
   const { waiting: isWaiting, connected: isConnected } = useSelector((state) => state.randomChat);
   const { setShowChatWindow, showChatWindow } = useOutletContext();
   const [numberOfActiveUsers, setNumberOfActiveUsers] = useState(0);
-  const { subscription, hasGivenOnboardingFeedback } = useSelector((state) => state?.auth?.user);
+  const { subscription } = useSelector((state) => state?.auth?.user);
   const { plan, status } = subscription;
   const hasPremiumAccess = plan !== 'free' && status === 'active';
   const isFreeUser = !hasPremiumAccess;
-
-  const [openOnboardingFeedback, setOpenOnboardingFeedback] = useState(false);
 
   useEffect(() => {
     if (!isConnected && isSm) setShowChatWindow(false);
@@ -48,31 +49,6 @@ function RandomSidebar() {
     socket.emit('join-random');
     setShowChatWindow(true);
   };
-
-  useEffect(() => {
-    if (!hasGivenOnboardingFeedback) {
-      const lastSkipped = localStorage.getItem("onboardingFeedbackSkippedAt");
-      const completed = localStorage.getItem("onboardingFeedbackDoneAt");
-
-      const oneWeek = 7 * 24 * 60 * 60 * 1000;      // 7 days
-      const twoMonths = 60 * 24 * 60 * 60 * 1000;   // ~60 days
-
-      // If user skipped — show again after a week
-      if (lastSkipped && Date.now() - lastSkipped > oneWeek) {
-        setOpenOnboardingFeedback(true);
-      }
-
-      // If user has given feedback — show again after 2 months
-      if (completed && Date.now() - completed > twoMonths) {
-        setOpenOnboardingFeedback(true);
-      }
-
-      // If user never skipped or gave feedback before — show immediately
-      if (!lastSkipped && !completed) {
-        setOpenOnboardingFeedback(true);
-      }
-    }
-  }, []);
 
   const handleNext = () => socket.emit('random:next');
   const handleDisconnect = () => {
@@ -97,6 +73,11 @@ function RandomSidebar() {
     }
   }, [isFreeUser]);
 
+  const floatShape = keyframes`
+           0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+      100% { transform: translateY(0px) rotate(360deg); }`;
+
   return (
     <Box
       display="flex"
@@ -115,6 +96,35 @@ function RandomSidebar() {
         <ChatSidebarHeader />
       </Stack>
 
+      {/* Stars Background */}
+      {Array.from({ length: 15 }).map((_, i) => {
+        const size = Math.random() * 30 + 20;
+        const duration = Math.random() * 8 + 4;
+        const delay = Math.random() * 5;
+        const rotate = Math.random() * 360;
+
+        return (
+          <Box
+            key={i}
+            sx={{
+              position: 'absolute',
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              width: size,
+              height: size,
+              borderRadius: '12px',
+              background: `linear-gradient(185deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+              opacity: 0.01,
+              transform: `rotate(${rotate}deg)`,
+              filter: 'blur(2px)',
+              animation: `${floatShape} ${duration}s ease-in-out ${delay}s infinite alternate`,
+              pointerEvents: 'none',
+              boxShadow: `0 0 ${size / 3}px ${theme.palette.primary.main}80, 0 0 ${size / 2}px ${theme.palette.secondary.main}50`,
+            }}
+          />
+        );
+      })}
+
       {/* Back button (mobile) */}
       {isSm && showChatWindow && (
         <IconButton
@@ -132,6 +142,34 @@ function RandomSidebar() {
         </IconButton>
       )}
 
+      {/* active user count */}
+      <Stack
+        alignItems="flex-end"
+        mr={1}
+        mt={1}
+        >
+        <Typography
+          variant="overline"
+          sx={{
+            mt: 2,
+            gap: 0.6,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            letterSpacing: 2,
+            background: `linear-gradient(90deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            borderBottom: `1px solid ${theme.palette.divider}`       
+          }}
+        >
+          <GroupIcon sx={{ fontSize: 18 }} />
+          {numberOfActiveUsers === 1
+            ? `${numberOfActiveUsers} person online`
+            : `${numberOfActiveUsers} people online`}
+        </Typography>
+      </Stack>
+
       {/* Main content */}
       <Box
         flex={1}
@@ -144,36 +182,40 @@ function RandomSidebar() {
       >
         <Stack
           sx={{
-            position: "relative",
-            overflow: "hidden",
+            position: 'relative',
             borderRadius: 1,
-            p: 2,
-            transition: "0.3s",
-            bgcolor: theme.palette.background.paper,
-            border: `1px solid ${theme.palette.divider}`,
+            padding: 4,
+            cursor: 'pointer',
+            boxShadow: `inset 0 0 0.5rem ${theme.palette.success.dark}`,
+
+            '&:hover': {
+              boxShadow: `inset 0 0 0.7rem ${theme.palette.success.dark}`,
+            },
           }}
         >
-          <Typography
-            variant='h2'
-            sx={{
-              fontSize: isSm ? '1.5rem' : '2rem',
-              textAlign: 'center'
-            }}
-          >
-            Random Chat
-          </Typography>
+          <Stack mx="auto" textAlign="center" spacing={1}>
+            <Typography
+              variant="h5"
+              sx={{
+                color: "#00F5FF",
+                letterSpacing: 3,
+                fontSize: 20,
+                textTransform: 'uppercase',
+                fontWeight: 600,
+              }}
+            >
+              Your Next Chat Awaits
+            </Typography>
 
-          <Typography
-            variant="subtitle2"
-            color="text.secondary"
-            sx={{
-              mb: 1,
-              fontWeight: 500,
-              textAlign: 'center'
-            }}
-          >
-            Meet someone new instantly
-          </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                color: `${theme.palette.text.secondary}`,
+              }}
+            >
+              Connect with random people worldwide
+            </Typography>
+          </Stack>
 
           {isWaiting ? (
             <Box sx={{ width: '100%', maxWidth: 250, mx: 'auto' }}>
@@ -209,28 +251,6 @@ function RandomSidebar() {
               </Tooltip>
             )}
           </Stack>
-
-          <Typography
-            variant="body2"
-            sx={{
-              mt: 2,
-              color: theme.palette.text.secondary,
-              gap: 0.6,
-              borderRadius: 0.5,
-              p: 1,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItem: 'center',
-              background: `linear-gradient(180deg,
-      ${theme.palette.background.paper},
-      ${theme.palette.info.dark}10)`,
-            }}
-          >
-            <GroupIcon sx={{ fontSize: 18, color: 'info.main' }} />
-            {numberOfActiveUsers === 1
-              ? `${numberOfActiveUsers} people online`
-              : `${numberOfActiveUsers} peoples online`}
-          </Typography>
         </Stack>
       </Box>
 
@@ -251,11 +271,6 @@ function RandomSidebar() {
       {/* Settings */}
       <SettingsAction />
 
-      {/* Onboarding Feedback */}
-      <OnboardingFeedback
-        open={openOnboardingFeedback}
-        onClose={() => setOpenOnboardingFeedback(false)}
-      />
     </Box>
   );
 }

@@ -33,9 +33,9 @@ import Loading from '@/components/common/Loading';
 import { setActivePartnerId, setUnreadCount } from '@/redux/slices/privateChat/privateChatSlice';
 import { fetchAllUser, fetchUnreadCounts, fetchConversationMessages } from '@/redux/slices/privateChat/privateChatAction';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useOutletContext } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 import { socket } from '@/services/socket';
-import StyledActionButton from '../../../../../components/common/StyledActionButton';
+import StyledActionButton from '@/components/common/StyledActionButton';
 
 function PrivateChatSidebar() {
     const theme = useTheme();
@@ -158,22 +158,16 @@ function PrivateChatSidebar() {
                             }}
                         />
                     </Stack>
-                        <StyledActionButton
-                            icon={<BoltIcon sx={{ color: 'info.dark' }} />}
-                            text='Random Chat'
-                            redirectUrl={'/pairly'}
-                            sx={{
-                                background: `linear-gradient(180deg,
-                                ${theme.palette.background.paper},
-                                ${theme.palette.info.dark}10)`,
-                                transition: 'all 0.3s ease',
-                                '&:hover': {
-                                    background: `linear-gradient(180deg,
-                                ${theme.palette.info.dark}10,
-                                ${theme.palette.background.paper}15)`,
-                                }
-                            }}
-                        />
+                    <StyledActionButton
+                        icon={<BoltIcon sx={{ color: 'success.main' }} />}
+                        text='Choose Chat'
+                        redirectUrl={'/pairly'}
+                        sx={{
+                            px: 2,
+                            py: 1,
+                            borderRadius: 0.2
+                        }}
+                    />
                 </Box>
             </ChatSidebarHeader>
 

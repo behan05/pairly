@@ -306,10 +306,6 @@ function Navbar() {
                     onClick={toggleDrawer(false)}
                     text={item.text}
                     redirectUrl={item.path}
-                    sx={{
-                      fontSize: '1em',
-                      fontWeight: 600,
-                    }}
                   />
                 ) : (
                   <StyledActionButton
@@ -318,10 +314,6 @@ function Navbar() {
                     onClick={toggleDrawer(false)}
                     text={item.text}
                     redirectUrl={item.path}
-                    sx={{
-                      fontSize: '1em',
-                      fontWeight: 600,
-                    }}
                   />
                 )
               )}
@@ -340,14 +332,13 @@ function Navbar() {
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         PaperProps={{
           sx: {
-            background: `${theme.palette.background.default}`,
+            background: `${theme.palette.background.paper}`,
             borderRadius: 1,
             border: `1px solid ${theme.palette.divider}`,
             minWidth: 260,
-            mt: 1.5,
+            mt: 1,
             p: 2,
             overflow: 'hidden',
-            backdropFilter: 'blur(8px)',
           },
         }}
       >

@@ -2,13 +2,12 @@ import { useState, useRef, useEffect } from 'react';
 import {
   Box,
   Stack,
-  Tooltip,
   Typography,
   useTheme,
   useMediaQuery,
   IconButton,
 } from '@/MUI/MuiComponents';
-import { ForumRoundedIcon, DownloadIcon, LocationOnIcon } from '@/MUI/MuiIcons';
+import { DownloadIcon, LocationOnIcon } from '@/MUI/MuiIcons';
 
 // Custom Components
 import RandomChatHeader from './RandomChatHeader';
@@ -25,9 +24,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 // Styled components
 import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
-import randomChatWindowImage from '@/assets/images/chatWindowImage1.png'
-import randomChatWindowImage2 from '@/assets/images/chatWindowImage.png'
+import NotConnectedWindow from '../../../common/NotConnectedWindow';
 
 /**
  * RandomChatWindow component
@@ -277,7 +274,6 @@ function RandomChatWindow({ setShowChatWindow }) {
       borderLeft: `1px solid ${theme.palette.divider}`
     }}>
       {isConnected && bgChatImg}
-
       {/* === Connected State: Chat Window === */}
       {isConnected ? (
         <>
@@ -669,108 +665,19 @@ function RandomChatWindow({ setShowChatWindow }) {
           }}
         >
           {isSm && isWaiting ? (
-            <Stack
-              sx={{
-                position: "relative",
-                overflow: "hidden",
-                borderRadius: 1,
-                width: "100%",
-                maxWidth: 300,
-                p: 2,
-                border: `1px solid ${theme.palette.success.light}`
-              }}
-            >
-              <CountdownTimer startFrom={10} autoRestart={true} />
-              <Stack sx={{ mx: 'auto' }}>
-                <DisconnectButton onClick={handleDisconnectOnSmallScreen} />
-              </Stack>
-            </Stack>
+            <>
+              <NotConnectedWindow
+                findingUserCountDown={<CountdownTimer startFrom={10} autoRestart={true} />}
+                disconnectButton={<DisconnectButton onClick={handleDisconnectOnSmallScreen} />}
+              />
+            </>
           ) : (
-            <Stack
-              sx={{
-                backgroundImage: isLg ? `url(${randomChatWindowImage2})` : `url(${randomChatWindowImage})`,
-                backgroundSize: "cover",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                minHeight: 'calc(var(--vh, 1vh) * 100)',
-                width: "100%",
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-              <Box sx={{ mb: 20 }}>
-                <Tooltip title="Your chat will appear here once you're matched">
-                  <ForumRoundedIcon
-                    sx={{
-                      fontSize: 80,
-                      color: 'info.main',
-                    }}
-                  />
-                </Tooltip>
-                <Stack sx={{
-                  background: theme.palette.background.paper,
-                  py: 1,
-                  px: 2,
-                  borderRadius: 2,
-                  userSelect: 'none'
-                }}>
-                  <Typography
-                    variant="h5"
-                    color="text.primary"
-                    gutterBottom
-                  >
-                    You're not connected yet
-                  </Typography>
-                  <Typography
-                    variant="body1"
-                    color="text.primary"
-                  >
-                    Click <strong>“Start random Chat”</strong> to meet someone new and start a random chat!
-                  </Typography>
-                </Stack>
-
-                {/* === Free User Ad === */}
-                {isFreeUser && (
-                  <Box sx={{ width: '100%', mt: 2, textAlign: 'center' }}>
-                    <ins className="adsbygoogle"
-                      style={{ display: 'block' }}
-                      data-ad-client="ca-pub-8711176865382424"
-                      data-ad-slot="3527563531"
-                      data-ad-format="auto"
-                      data-full-width-responsive="true"></ins>
-                  </Box>
-                )}
-              </Box>
-
-              {!isConnected && isSm && (
-                <Button
-                  onClick={() => handleDisconnectOnSmallScreen()}
-                  variant={'contained'}
-                  fontWeight={900}
-                  p={'1rem 2rem'}
-                  color={theme.palette.text.secondary}
-                  letterSpacing={1.4}
-                  startIcon={<NavigateWithArrow />}
-                  sx={{
-                    mt: 2,
-                    borderRadius: 1,
-                    cursor: 'pointer',
-                    background: theme.palette.primary.main,
-                    boxShadow: '0 8px 1rem',
-                    fontStyle: 'oblique',
-                    fontSize: '1.2rem',
-                    transition: 'all 0.3s ease-in-out',
-                    '&:hover': {
-                      transform: 'translateY(-5px) scale(1.1)',
-                      boxShadow: 'inset 0 8px 1rem',
-                    }
-                  }}
-                >
-                  Back To Home
-                </Button>
-              )}
-            </Stack>
+            <NotConnectedWindow
+              title='SYSTEM STATUS'
+              subTitle='Awaiting Connection'
+              description='Neural channel initializing.
+                    Click Start Random Chat to activate.'
+            />
           )}
         </Box>
 

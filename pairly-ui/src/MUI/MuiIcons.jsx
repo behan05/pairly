@@ -146,6 +146,7 @@ import LockPersonOutlinedIcon from '@mui/icons-material/LockPersonOutlined';
 import defaultAvatar from '@/assets/placeholders/defaultAvatar.png';
 import GraphicEqIcon from '@mui/icons-material/GraphicEq';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+import LocationPinIcon from '@mui/icons-material/LocationPin';
 import WcOutlinedIcon from '@mui/icons-material/WcOutlined';
 import RecordVoiceOverOutlinedIcon from '@mui/icons-material/RecordVoiceOverOutlined';
 import SubjectOutlinedIcon from '@mui/icons-material/SubjectOutlined';
@@ -231,6 +232,7 @@ export {
   defaultAvatar,
   GraphicEqIcon,
   LocationOnOutlinedIcon,
+  LocationPinIcon,
   WcOutlinedIcon,
   RecordVoiceOverOutlinedIcon,
   SubjectOutlinedIcon,
