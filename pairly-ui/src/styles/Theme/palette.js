@@ -35,7 +35,7 @@ export const lightPalette = {
 
   success: {
     main: "#38B2AC",
-    dark: "#2C7A7B",
+    dark: "rgba(0,245,255,0.15)",
     contrastText: "#FFFFFF",
   },
 
@@ -90,7 +90,7 @@ export const darkPalette = {
 
   success: {
     main: "#38B2AC",
-    dark: "#2C7A7B",
+    dark: "rgba(0,245,255,0.15)",
     contrastText: "#FFFFFF",
   },
 

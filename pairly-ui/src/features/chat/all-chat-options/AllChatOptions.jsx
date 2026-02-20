@@ -5,7 +5,6 @@ import {
     Typography,
     useTheme,
     useMediaQuery,
-    Button,
 } from '@/MUI/MuiComponents';
 import {
     GroupIcon,
@@ -15,6 +14,7 @@ import {
 import { keyframes } from '@emotion/react'
 import ChatSidebarHeader from '@/features/chat/common/ChatSidebarHeader';
 import SettingsAction from '@/components/private/SettingsAction';
+import StyledActionButton from '../../../components/common/StyledActionButton';
 
 // Lotties
 import RandomLandingLottie from '@/features/chat/random/components/supportComponents/RandomLandingPageLottie';
@@ -26,7 +26,6 @@ import NearMeChatLottie from '../nearme-chat/components/supportComponents/NearMe
 
 import { useSelector } from 'react-redux';
 import { socket } from '@/services/socket';
-import { Link } from 'react-router-dom';
 import OnboardingFeedback from '@/pages/feedback/OnboardingFeedback'
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -88,65 +87,124 @@ function AllChatOptions() {
     const chatOptions = [
         {
             title: "Random Chat",
-            titleIcon: <AddCircleOutlineIcon fontSize='small' />,
-            subTitle: `${numberOfActiveUsers} online`,
-            subTitleIcon: <PeopleIcon fontSize='small' />,
+            titleIcon: (
+                <AddCircleOutlineIcon
+                    fontSize='small'
+                    sx={{ color: '#4F8CFF' }}
+                />
+            ),
+            subTitle: `${numberOfActiveUsers} people online`,
+            subTitleIcon: (
+                <PeopleIcon
+                    fontSize='small'
+                    sx={{ color: '#4F8CFF' }}
+                />
+            ),
             lottie: <RandomLandingLottie />,
-            buttonText: "Chat randomly",
+            buttonText: "Start Chat",
             redirectTo: "/pairly/random-chat",
-            buttonTextIcon: <PersonIcon />,
+            buttonTextIcon: <PersonIcon sx={{ color: '#fff' }} />,
         },
         {
             title: "Group Chat",
-            titleIcon: <GroupIcon fontSize='small' />,
-            subTitle: "Group conversations",
-            subTitleIcon: <PeopleIcon fontSize='small' />,
+            titleIcon: (
+                <GroupIcon
+                    fontSize='small'
+                    sx={{ color: '#7B61FF' }}
+                />
+            ),
+            subTitle: "Talk with many people",
+            subTitleIcon: (
+                <PeopleIcon
+                    fontSize='small'
+                    sx={{ color: '#7B61FF' }}
+                />
+            ),
             lottie: <GroupChatLottie />,
-            buttonText: "Chat with people",
+            buttonText: "Join Group",
             redirectTo: "/pairly/group-chat",
-            buttonTextIcon: <GroupIcon />,
+            buttonTextIcon: <GroupIcon sx={{ color: '#fff' }} />,
         },
         {
             title: "Anonymous Chat",
-            titleIcon: <GroupIcon fontSize='small' />,
-            subTitle: "Stay anonymous",
-            subTitleIcon: <GroupIcon fontSize='small' />,
+            titleIcon: (
+                <GroupIcon
+                    fontSize='small'
+                    sx={{ color: '#00C896' }}
+                />
+            ),
+            subTitle: "No name. No profile.",
+            subTitleIcon: (
+                <GroupIcon
+                    fontSize='small'
+                    sx={{ color: '#00C896' }}
+                />
+            ),
             lottie: <AnonymousChatLottie />,
-            buttonText: "Chat anonymously",
+            buttonText: "Chat Anonymously",
             redirectTo: "/pairly/anonymous-chat",
-            buttonTextIcon: <GroupIcon />,
+            buttonTextIcon: <GroupIcon sx={{ color: '#fff' }} />,
         },
         {
-            title: "Invite Only Chat",
-            titleIcon: <GroupIcon fontSize='small' />,
-            subTitle: "Chat with friends",
-            subTitleIcon: <GroupIcon fontSize='small' />,
-            lottie: < InviteChatLottie />,
-            buttonText: "Invite friend",
+            title: "Invite Chat",
+            titleIcon: (
+                <GroupIcon
+                    fontSize='small'
+                    sx={{ color: '#FF8C42' }}
+                />
+            ),
+            subTitle: "Chat with your friends",
+            subTitleIcon: (
+                <GroupIcon
+                    fontSize='small'
+                    sx={{ color: '#FF8C42' }}
+                />
+            ),
+            lottie: <InviteChatLottie />,
+            buttonText: "Send Invite",
             redirectTo: "/pairly/invite-chat",
-            buttonTextIcon: <GroupIcon />,
+            buttonTextIcon: <GroupIcon sx={{ color: '#fff' }} />,
         },
         {
-            title: "Topic Based Chat",
-            titleIcon: <GroupIcon fontSize='small' />,
-            subTitle: "Interest based chat",
-            subTitleIcon: <GroupIcon fontSize='small' />,
-            lottie: < TopicBasedChatLottie />,
-            buttonText: "Shared Interests",
+            title: "Topic Chat",
+            titleIcon: (
+                <GroupIcon
+                    fontSize='small'
+                    sx={{ color: '#FF4D6D' }}
+                />
+            ),
+            subTitle: "Chat by interests",
+            subTitleIcon: (
+                <GroupIcon
+                    fontSize='small'
+                    sx={{ color: '#FF4D6D' }}
+                />
+            ),
+            lottie: <TopicBasedChatLottie />,
+            buttonText: "Explore Topics",
             redirectTo: "/pairly/topic-based-chat",
-            buttonTextIcon: <GroupIcon />,
+            buttonTextIcon: <GroupIcon sx={{ color: '#fff' }} />,
         },
         {
-            title: "Near Me Chat",
-            titleIcon: <LocationPinIcon fontSize='small' />,
-            subTitle: "Chat with people nearby",
-            subTitleIcon: <LocationPinIcon fontSize='small' />,
-            lottie: < NearMeChatLottie />,
+            title: "Nearby Chat",
+            titleIcon: (
+                <LocationPinIcon
+                    fontSize='small'
+                    sx={{ color: '#FFD93D' }}
+                />
+            ),
+            subTitle: "Find people near you",
+            subTitleIcon: (
+                <LocationPinIcon
+                    fontSize='small'
+                    sx={{ color: '#FFD93D' }}
+                />
+            ),
+            lottie: <NearMeChatLottie />,
             buttonText: "Find Nearby",
-            redirectTo: "/pairly/near-me-chat",
-            buttonTextIcon: <LocationPinIcon />,
+            redirectTo: "/pairly/nearby-chat",
+            buttonTextIcon: <LocationPinIcon sx={{ color: '#fff' }} />,
         }
-
     ]
 
     // Chat options
@@ -168,34 +226,13 @@ function AllChatOptions() {
                     position: 'relative',
                     borderRadius: 1,
                     padding: '10px 10px 0 10px',
-                    background: `
-                    linear-gradient(${theme.palette.background.paper}, ${theme.palette.background.paper}) padding-box,
-                    linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main}) border-box`,
-                    border: '1px solid transparent',
-                    backdropFilter: 'blur(12px)',
                     transition: 'all 0.35s cubic-bezier(0.22, 1, 0.36, 1)',
                     cursor: 'pointer',
-
-                    '&::before': {
-                        content: '""',
-                        position: 'absolute',
-                        inset: 0,
-                        background: `radial-gradient(circle at 20% 30%, ${theme.palette.primary.main}25, transparent 60%)`,
-                        opacity: 0,
-                        transition: 'opacity 0.4s ease',
-                    },
-
-                    '&:hover': {
-                        boxShadow: `0 20px 50px ${theme.palette.primary.main}40`,
-                    },
-
-                    '&:hover::before': {
-                        opacity: 1,
-                    },
+                    boxShadow: `inset 0 0 0.5rem ${theme.palette.success.dark}`,
 
                     '&:hover .lottie-advanced': {
-                        transform: 'scale(1.15) rotate(8deg)',
-                        boxShadow: `0 0 3rem ${theme.palette.secondary.main}80`,
+                        transform: 'scale(1.10) rotate(6deg)',
+                        boxShadow: `0 0 3rem ${theme.palette.success.dark}80`,
                     },
                 })}
             >
@@ -205,17 +242,18 @@ function AllChatOptions() {
                     justifyContent="space-between"
                     spacing={2}
                 >
-                    <Stack spacing={0.7}>
+                    <Stack>
                         <Typography
-                            variant="body1"
+                            variant="h5"
                             sx={(theme) => ({
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: 1,
                                 fontWeight: 600,
-                                background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
+                                letterSpacing: 1,
+                                textTransform: 'uppercase',
+                                fontSize: 14,
+                                whiteSpace: 'nowrap',
                             })}
                         >
                             {titleIcon}
@@ -231,6 +269,7 @@ function AllChatOptions() {
                                 fontSize: '0.75rem',
                                 color: theme.palette.text.secondary,
                                 letterSpacing: 0.5,
+                                whiteSpace: 'nowrap',
                             })}
                         >
                             {subTitleIcon}
@@ -241,11 +280,8 @@ function AllChatOptions() {
                     <Stack
                         className="lottie-advanced"
                         sx={{
-                            position: 'absolute',
-                            top: -25,
-                            right: -22,
-                            height: 55,
-                            width: 55,
+                            height: 45,
+                            width: 45,
                             borderRadius: '50%',
                             display: 'flex',
                             alignItems: 'center',
@@ -257,99 +293,25 @@ function AllChatOptions() {
                     </Stack>
                 </Stack>
 
-                <Button
-                    variant="contained"
-                    component={Link}
-                    to={redirectTo}
-                    startIcon={buttonTextIcon}
-                    fullWidth
-                    sx={(theme) => ({
-                        m: '2em 0 0.2em 0',
-                        position: 'relative',
-                        overflow: 'hidden',
-                        borderRadius: 1.5,
-                        fontSize: '0.85rem',
-                        fontWeight: 600,
-                        letterSpacing: 1.2,
-                        paddingY: 0.8,
-                        color: theme.palette.common.white,
-                        background: `linear-gradient(120deg, 
-            ${theme.palette.primary.main}, 
-            ${theme.palette.secondary.main}
-        )`,
-                        boxShadow: `
-            0 6px 20px ${theme.palette.primary.main}40,
-            inset 0 1px 0 rgba(255,255,255,0.2)
-        `,
-                        transition: 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
-
-                        // animated shine layer
-                        '&::before': {
-                            content: '""',
-                            position: 'absolute',
-                            top: 0,
-                            left: '-75%',
-                            width: '50%',
-                            height: '100%',
-                            background: 'linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent)',
-                            transform: 'skewX(-20deg)',
-                            transition: 'all 0.7s ease',
-                        },
-
-                        // animated border glow
-                        '&::after': {
-                            content: '""',
-                            position: 'absolute',
-                            inset: 0,
-                            borderRadius: 3,
-                            padding: '1px',
-                            background: `linear-gradient(120deg, 
-                ${theme.palette.primary.light}, 
-                ${theme.palette.secondary.light}
-            )`,
-                            WebkitMask:
-                                'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                            WebkitMaskComposite: 'xor',
-                            maskComposite: 'exclude',
-                            opacity: 0,
-                            transition: 'opacity 0.4s ease',
-                        },
-
-                        '&:hover': {
-                            transform: 'translateY(-3px)',
-                            boxShadow: `
-                0 12px 35px ${theme.palette.primary.main}55,
-                inset 0 1px 0 rgba(255,255,255,0.3)
-            `,
-                        },
-
-                        '&:hover::before': {
-                            left: '130%',
-                        },
-
-                        '&:hover::after': {
-                            opacity: 1,
-                        },
-
-                        '&:active': {
-                            transform: 'translateY(0px) scale(0.98)',
-                            boxShadow: `
-                0 4px 15px ${theme.palette.primary.main}35,
-                inset 0 2px 4px rgba(0,0,0,0.2)
-            `,
-                        },
-                    })}
-                >{buttonText}
-                </Button>
-
+                <StyledActionButton
+                    text={buttonText}
+                    redirectUrl={redirectTo}
+                    icon={buttonTextIcon}
+                    sx={{
+                        m: '26px 0 8px 0',
+                        p: '6px 0px',
+                        borderRadius: 0.2,
+                        minWidth: '100%'
+                    }}
+                />
             </Stack>
         )
     }
 
-    const twinkle = keyframes`
-    0% { opacity: 0.2; transform: scale(0.8); }
-    50% { opacity: 1; transform: scale(1.2); }
-    100% { opacity: 0.2; transform: scale(0.8); }`
+    const floatShape = keyframes`
+           0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+      100% { transform: translateY(0px) rotate(360deg); }`;
 
     return (
         <Box
@@ -364,13 +326,14 @@ function AllChatOptions() {
             }}
         >
             {/* Stars Background */}
-            {Array.from({ length: 100 }).map((_, i) => {
-                const size = Math.random() * 3 + 1
-                const duration = Math.random() * 5 + 3
-                const delay = Math.random() * 5
+            {Array.from({ length: 15 }).map((_, i) => {
+                const size = Math.random() * 30 + 20;
+                const duration = Math.random() * 8 + 4;
+                const delay = Math.random() * 5;
+                const rotate = Math.random() * 360;
 
                 return (
-                    <Stack
+                    <Box
                         key={i}
                         sx={{
                             position: 'absolute',
@@ -378,15 +341,17 @@ function AllChatOptions() {
                             left: `${Math.random() * 100}%`,
                             width: size,
                             height: size,
-                            borderRadius: '50%',
-                            background: `${theme.palette.secondary.dark}`,
-                            boxShadow: `0 20px 50px ${theme.palette.primary.main}40`,
-                            opacity: Math.random(),
-                            animation: `${twinkle} ${duration}s ease-in-out ${delay}s infinite`,
+                            borderRadius: '12px',
+                            background: `linear-gradient(185deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                            opacity: 0.01,
+                            transform: `rotate(${rotate}deg)`,
+                            filter: 'blur(2px)',
+                            animation: `${floatShape} ${duration}s ease-in-out ${delay}s infinite alternate`,
                             pointerEvents: 'none',
+                            boxShadow: `0 0 ${size / 3}px ${theme.palette.primary.main}80, 0 0 ${size / 2}px ${theme.palette.secondary.main}50`,
                         }}
                     />
-                )
+                );
             })}
 
             {/* Header */}
@@ -432,7 +397,7 @@ function AllChatOptions() {
                     sx={{
                         display: 'grid',
                         gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))',
-                        gap: 4,
+                        gap: 2,
                         p: '40px 20px',
                         overflowX: 'hidden',
                     }}
@@ -460,8 +425,6 @@ function AllChatOptions() {
                         </Box>
                     ))}
                 </Box>
-
-                {/* All created groups or Topic Room goes below to join news users */}
             </Box>
 
             {/* Ads for Free User */}

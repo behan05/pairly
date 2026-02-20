@@ -1,4 +1,4 @@
-import { Button, useMediaQuery, useTheme, Tooltip, IconButton } from '@/MUI/MuiComponents';
+import { Box, useMediaQuery, useTheme, Tooltip, IconButton } from '@/MUI/MuiComponents';
 import { useSelector } from 'react-redux';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 
@@ -18,50 +18,71 @@ function NextButton({ onClick, disabled = false }) {
             onClick={onClick}
             disabled={disabled}
             sx={theme => ({
-              bgcolor: theme.palette.background.paper,
+              width: 35,
+              height: 35,
+              background:
+                'linear-gradient(90deg, transparent, rgba(255,165,0,0.25), transparent)',
+              border: '1px solid rgba(255,165,0,0.4)',
+              transition: 'all 0.3s ease',
+
+              '&:hover': {
+                borderColor: 'rgba(255,165,0,0.8)',
+                boxShadow: '0 0 30px rgba(255,165,0,0.35)',
+              },
+
             })}
           >
-            <SkipNextIcon sx={{ color: 'info.main', fontSize: '0.8em' }} />
+            <SkipNextIcon sx={{ color: 'warning.main', fontSize: '0.8em' }} />
           </IconButton>
         </Tooltip>
       ) : (
-        <Button
-          variant="outlined"
-          onClick={onClick}
-          disabled={disabled}
-          startIcon={<SkipNextIcon sx={{ color: 'info.main' }} />}
-          sx={(theme) => ({
-            fontSize: '0.95rem',
-            borderRadius: 0.5,
-            padding: '6px 16px',
-            textTransform: 'none',
-            fontWeight: 600,
-
-            border: `1px solid ${theme.palette.divider}`,
-            color: theme.palette.info.main,
-
+        <Box
+          onClick={!disabled ? onClick : undefined}
+          sx={{
+            position: 'relative',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            px: 2,
+            py: 1.3,
+            cursor: disabled ? 'not-allowed' : 'pointer',
+            overflow: 'hidden',
+            border: '1px solid rgba(255,165,0,0.4)',
+            borderRadius: 0.2,
+            background: 'rgba(10,15,20,0.6)',
+            color: 'rgba(255,165,0,0.9)',
+            backdropFilter: 'blur(10px)',
+            letterSpacing: '0.25em',
+            fontFamily: 'monospace',
+            fontSize: '0.8rem',
+            textTransform: 'uppercase',
             transition: 'all 0.3s ease',
 
-            background:
-              theme.palette.mode === 'dark'
-                ? theme.palette.background.paper
-                : theme.palette.background.default,
-
             '&:hover': {
-              transform: 'translateY(-2px)',
+              borderColor: 'rgba(255,165,0,0.8)',
+              boxShadow: '0 0 25px rgba(255,165,0,0.25)',
             },
 
-            '&:active': {
-              transform: 'scale(0.95)',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: '-100%',
+              height: '100%',
+              width: '100%',
+              background: 'linear-gradient(90deg, transparent, rgba(255,165,0,0.2), transparent)',
+              animation: 'scanNext 2.8s linear infinite',
             },
 
-            '&.Mui-disabled': {
-              opacity: 0.6,
+            '@keyframes scanNext': {
+              '0%': { left: '-100%' },
+              '100%': { left: '100%' },
             },
-          })}
+          }}
         >
-          Next
-        </Button>
+          <SkipNextIcon sx={{ fontSize: 16, mr: 0.5, color: 'warning.main' }} />
+          NEXT
+        </Box>
       )}
     </>
   );

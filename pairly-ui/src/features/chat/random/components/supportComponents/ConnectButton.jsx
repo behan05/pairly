@@ -1,78 +1,59 @@
-import { Button } from '@/MUI/MuiComponents';
-import BoltIcon from '@mui/icons-material/Bolt';
+import { Box, useTheme, useMediaQuery } from '@/MUI/MuiComponents';
 
 function ConnectButton({ onClick, disabled = false }) {
+  const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Button
-      variant="outlined"
-      onClick={onClick}
-      disabled={disabled}
-      sx={(theme) => ({
-        fontSize: '1rem',
-        borderRadius: 50,
-        height: '3.2rem',
-        width: '3.2rem',
-        minWidth: 0,
-        padding: 0,
-
-        display: 'flex',
+    <Box
+      onClick={!disabled ? onClick : undefined}
+      sx={{
+        position: 'relative',
+        display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-
-        borderWidth: 2,
-        borderColor: theme.palette.success.main,
-
-        background:
-          theme.palette.mode === 'dark'
-            ? theme.palette.background.paper
-            : theme.palette.background.default,
-
-        boxShadow:
-          theme.palette.mode === 'dark'
-            ? `0 4px 12px ${theme.palette.success.dark}40`
-            : `0 4px 12px ${theme.palette.success.light}40`,
-
-        transition: 'all 0.25s ease',
+        px: isSm ? 4 : 2,
+        py: 1.4,
+        cursor: disabled ? 'not-allowed' : 'pointer',
+        overflow: 'hidden',
+        border: '1px solid rgba(0,255,180,0.4)',
+        borderRadius: 0.2,
+        background: 'rgba(10,15,20,0.6)',
+        backdropFilter: 'blur(10px)',
+        letterSpacing: '0.25em',
+        fontFamily: 'monospace',
+        fontSize: '0.8rem',
+        textTransform: 'uppercase',
+        color: 'rgba(0,255,180,0.9)',
+        transition: 'all 0.3s ease',
 
         '&:hover': {
-          transform: 'scale(1.08) translateY(-2px)',
+          borderColor: 'rgba(0,255,180,0.8)',
+          boxShadow: '0 0 25px rgba(0,255,180,0.25)',
+        },
+
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: '-100%',
+          height: '100%',
+          width: '100%',
           background:
-            theme.palette.mode === 'dark'
-              ? theme.palette.background.paper
-              : theme.palette.action.hover,
-
-          boxShadow:
-            theme.palette.mode === 'dark'
-              ? `0 6px 16px ${theme.palette.success.main}60`
-              : `0 6px 16px ${theme.palette.success.light}60`,
+            'linear-gradient(90deg, transparent, rgba(0,255,180,0.2), transparent)',
+          animation: 'scan 2.8s linear infinite',
         },
 
-        '&:active': {
-          transform: 'scale(0.95)',
+        '@keyframes scan': {
+          '0%': { left: '-100%' },
+          '100%': { left: '100%' },
         },
-
-        '&.Mui-disabled': {
-          opacity: 0.5,
-          cursor: 'not-allowed',
-        },
-      })}
+      }}
     >
-      <BoltIcon
-        sx={(theme) => ({
-          color: theme.palette.success.main,
-          fontSize: '2rem',
-          animation: 'pulseBolt 1.6s infinite ease-in-out',
-
-          '@keyframes pulseBolt': {
-            '0%': { transform: 'scale(1)', opacity: 0.9 },
-            '50%': { transform: 'scale(1.25)', opacity: 1 },
-            '100%': { transform: 'scale(1)', opacity: 0.9 },
-          },
-        })}
-      />
-    </Button>
+      {isSm ? 'CONNECT' : 'INITIATE RANDOM CHAT'}
+    </Box>
   );
+
 }
 
 export default ConnectButton;

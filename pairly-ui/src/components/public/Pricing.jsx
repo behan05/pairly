@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import {
     Box,
     Typography,
@@ -8,19 +8,11 @@ import {
     Button,
 } from '@/MUI/MuiComponents';
 
-// Import Table parts directly from MUI
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-} from '@mui/material';
 import { CheckIcon, ClearIcon } from '@/MUI/MuiIcons';
-import { styled } from '@mui/system';
+import { fontSize, styled } from '@mui/system';
 import { alpha } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import StyledActionButton from '../common/StyledActionButton';
 
 function Pricing() {
     const theme = useTheme();
@@ -85,51 +77,69 @@ function Pricing() {
     // ==== Styled Components ====
     const Card = styled(Paper)(({ theme, featured }) => ({
         position: 'relative',
-        borderRadius: 20,
+        borderRadius: 16,
         overflow: 'hidden',
-        padding: '1rem',
-        background: alpha(theme.palette.background.paper, 0.95),
-        border: featured
-            ? `2px solid ${theme.palette.warning.main}`
-            : `1px solid ${alpha(theme.palette.divider, 0.2)}`,
-        boxShadow: featured
-            ? '0 15px 25px rgba(0,0,0,0.1)'
-            : '0 5px 10px rgba(0,0,0,0.05)',
+        padding: '1.5rem',
+
+        backdropFilter: 'blur(16px)',
+        background: alpha(theme.palette.background.paper, 0.75),
+
+        border: `1px solid ${featured
+            ? alpha(theme.palette.success.dark, 0.8)
+            : alpha(theme.palette.divider, 0.2)
+            }`,
+
         transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+
         '&:hover': {
-            transform: 'translateY(-8px)',
-            boxShadow:
-                '0 20px 30px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.05)',
-            borderColor: alpha(theme.palette.warning.main, 0.4),
+            borderColor: alpha(theme.palette.success.dark, 0.8),
         },
-        '&:hover .shine': { opacity: 1, animation: 'shine 3s infinite' },
-        '&:hover .glow': { opacity: 1 },
+
+        // animated
+        '&::before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            background: `linear-gradient(
+      120deg,
+      transparent 40%,
+      ${alpha(theme.palette.success.dark, 0.08)} 50%,
+      transparent 60%
+    )`,
+            transform: 'translateX(-100%)',
+            transition: 'transform 0.8s ease',
+        },
+
+        '&:hover::before': {
+            transform: 'translateX(100%)',
+        },
     }));
 
-    const Shine = styled('div')({
+    const Shine = styled('div')(({ theme }) => ({
         position: 'absolute',
         inset: 0,
-        background:
-            'linear-gradient(120deg, rgba(255,255,255,0) 40%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 60%)',
+        background: `linear-gradient(
+    90deg,
+    transparent,
+    ${alpha(theme.palette.success.light, 0.25)},
+    transparent
+  )`,
         opacity: 0,
-        transition: 'opacity 0.3s ease',
         pointerEvents: 'none',
-        '@keyframes shine': {
-            '0%': { backgroundPosition: '-100% 0' },
-            '100%': { backgroundPosition: '200% 0' },
-        },
-    });
+        transition: 'opacity 0.3s ease',
+    }));
 
     const Glow = styled('div')(({ theme }) => ({
         position: 'absolute',
-        inset: '-10px',
-        background: `radial-gradient(circle at 50% 0%, ${alpha(
-            theme.palette.warning.main,
-            0.3
-        )} 0%, transparent 70%)`,
+        inset: '-20px',
+        background: `radial-gradient(
+    circle at 50% 0%,
+    ${alpha(theme.palette.success.dark, 0.3)} 0%,
+    transparent 70%
+  )`,
         opacity: 0,
-        transition: 'opacity 0.5s ease',
         pointerEvents: 'none',
+        transition: 'opacity 0.4s ease',
     }));
 
     return (
@@ -165,115 +175,111 @@ function Pricing() {
             </Typography>
 
             {/* === Plan Cards === */}
-            <Stack
-                spacing={3}
-                direction={{ xs: 'column', sm: 'row' }}
-                justifyContent="center"
-                alignItems="stretch"
-                sx={{ flexWrap: 'wrap', gap: 2 }}
+            <Box
+                sx={{
+                    display: 'grid',
+                    gridTemplateColumns: {
+                        xs: '1fr',
+                        sm: 'repeat(2, 1fr)',
+                        md: 'repeat(3, 1fr)',
+                    },
+                    gap: 3,
+                    maxWidth: 1100,
+                    mx: 'auto',
+                }}
             >
                 {plans.map((plan, i) => (
                     <Card
                         key={i}
                         featured={plan.featured}
                         sx={{
-                            flex: '1 1 280px',
-                            maxWidth: 340,
-                        }}>
+                            height: '100%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                        }}
+                    >
                         <Shine className="shine" />
                         <Glow className="glow" />
 
-                        <Typography variant="subtitle1" fontWeight={700} mb={0.5}>
+                        <Typography
+                            variant="overline"
+                            sx={{
+                                color: 'success.main',
+                                letterSpacing: 2,
+                                fontSize: 14,
+                            }}
+                        >
                             {plan.title} {plan.featured && '★'}
                         </Typography>
 
-                        <Typography variant="h6" color="success.main">
+                        <Typography
+                            variant="h6"
+                            sx={{
+                                fontWeight: 700,
+                                mt: 1,
+                            }}
+                        >
                             ₹{plan.price}/mo
                         </Typography>
 
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="subtitle2" color="text.secondary">
                             {plan.label}
                         </Typography>
 
-                        <Stack direction="row" spacing={1} justifyContent="space-between" mt={1} mb={1}>
-                            <Typography variant="caption">Matches: {plan.limits.matches}</Typography>
-                            <Typography variant="caption">Messages: {plan.limits.messages}</Typography>
-                            <Typography variant="caption">Media: {plan.limits.media}</Typography>
+                        <Stack
+                            direction="row"
+                            spacing={1}
+                            justifyContent="space-between"
+                            mt={2}
+                            mb={2}
+                        >
+                            <Typography variant="caption">
+                                Matches: {plan.limits.matches}
+                            </Typography>
+                            <Typography variant="caption">
+                                Messages: {plan.limits.messages}
+                            </Typography>
+                            <Typography variant="caption">
+                                Media: {plan.limits.media}
+                            </Typography>
                         </Stack>
 
-                        <Stack spacing={0.5} mb={1}>
+                        <Stack spacing={1} mb={2}>
                             {plan.features.map((f, idx) => (
-                                <Stack key={idx} direction="row" spacing={0.5} alignItems="center">
+                                <Stack key={idx} direction="row" spacing={1} alignItems="center">
                                     <CheckIcon fontSize="small" color="success" />
                                     <Typography variant="body2">{f}</Typography>
                                 </Stack>
                             ))}
+
                             {plan.notAvailable.map((f, idx) => (
-                                <Stack key={idx} direction="row" spacing={0.5} alignItems="center" opacity={0.5}>
+                                <Stack
+                                    key={idx}
+                                    direction="row"
+                                    spacing={1}
+                                    alignItems="center"
+                                    sx={{ opacity: 0.5 }}
+                                >
                                     <ClearIcon fontSize="small" color="error" />
                                     <Typography variant="body2">{f}</Typography>
                                 </Stack>
                             ))}
                         </Stack>
 
-                        <Button
-                            fullWidth
-                            variant="contained"
-                            sx={{
-                                mt: 1,
-                                borderRadius: 2,
-                                backgroundColor: theme.palette.warning.main,
-                                '&:hover': { backgroundColor: theme.palette.warning.dark },
-                            }}
-                            onClick={() => navigate('/login')}
-                        >
-                            {plan.price === 0 ? 'Get Started Free' : 'Login to Upgrade'}
-                        </Button>
+                        {/* Push button to bottom */}
+                        <Box sx={{ mt: 'auto' }}>
+                            <StyledActionButton
+                                onClick={() => navigate('/pairly/settings/premium')}
+                                variant="outlined"
+                                text={plan.price === 0 ? 'Get Started Free' : 'Login to Upgrade'}
+                                sx={{
+                                    minWidth: '100%',
+                                }}
+                            />
+                        </Box>
                     </Card>
                 ))}
-            </Stack>
-
-            {/* === Comparison Table === */}
-            {/* <Box
-                mt={8}
-                width="100%"
-                maxWidth={800}
-            >
-                <Typography variant="h6" textAlign="center" mb={2}>
-                    Compare All Features
-                </Typography>
-                <TableContainer component={Paper} sx={{ borderRadius: 1, overflow: 'hidden' }}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Feature</TableCell>
-                                {plans.map((p) => (
-                                    <TableCell key={p.title} align="center">
-                                        {p.title}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody sx={{background:theme.palette.background.default}}>
-                            {allFeatures.map((feature) => (
-                                <TableRow key={feature}>
-                                    <TableCell>{feature}</TableCell>
-                                    {plans.map((plan) => (
-                                        <TableCell key={plan.title + feature} align="center">
-                                            {plan.features.includes(feature) ||
-                                                (feature === 'Basic AI personality' && plan.title === 'Free') ? (
-                                                <CheckIcon color="success" />
-                                            ) : (
-                                                <ClearIcon color="error" />
-                                            )}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Box> */}
+            </Box>
         </Box>
     );
 }

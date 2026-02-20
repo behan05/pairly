@@ -73,10 +73,10 @@ function RandomSidebar() {
     }
   }, [isFreeUser]);
 
-  const twinkle = keyframes`
-      0% { opacity: 0.2; transform: scale(0.8); }
-      50% { opacity: 1; transform: scale(1.2); }
-      100% { opacity: 0.2; transform: scale(0.8); }`
+  const floatShape = keyframes`
+           0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+      100% { transform: translateY(0px) rotate(360deg); }`;
 
   return (
     <Box
@@ -97,13 +97,14 @@ function RandomSidebar() {
       </Stack>
 
       {/* Stars Background */}
-      {Array.from({ length: 100 }).map((_, i) => {
-        const size = Math.random() * 3 + 1
-        const duration = Math.random() * 5 + 3
-        const delay = Math.random() * 5
+      {Array.from({ length: 15 }).map((_, i) => {
+        const size = Math.random() * 30 + 20;
+        const duration = Math.random() * 8 + 4;
+        const delay = Math.random() * 5;
+        const rotate = Math.random() * 360;
 
         return (
-          <Stack
+          <Box
             key={i}
             sx={{
               position: 'absolute',
@@ -111,15 +112,17 @@ function RandomSidebar() {
               left: `${Math.random() * 100}%`,
               width: size,
               height: size,
-              borderRadius: '50%',
-              background: `${theme.palette.secondary.dark}`,
-              boxShadow: `0 20px 50px ${theme.palette.primary.main}40`,
-              opacity: Math.random(),
-              animation: `${twinkle} ${duration}s ease-in-out ${delay}s infinite`,
+              borderRadius: '12px',
+              background: `linear-gradient(185deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+              opacity: 0.01,
+              transform: `rotate(${rotate}deg)`,
+              filter: 'blur(2px)',
+              animation: `${floatShape} ${duration}s ease-in-out ${delay}s infinite alternate`,
               pointerEvents: 'none',
+              boxShadow: `0 0 ${size / 3}px ${theme.palette.primary.main}80, 0 0 ${size / 2}px ${theme.palette.secondary.main}50`,
             }}
           />
-        )
+        );
       })}
 
       {/* Back button (mobile) */}
@@ -139,6 +142,34 @@ function RandomSidebar() {
         </IconButton>
       )}
 
+      {/* active user count */}
+      <Stack
+        alignItems="flex-end"
+        mr={1}
+        mt={1}
+        >
+        <Typography
+          variant="overline"
+          sx={{
+            mt: 2,
+            gap: 0.6,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            letterSpacing: 2,
+            background: `linear-gradient(90deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            borderBottom: `1px solid ${theme.palette.divider}`       
+          }}
+        >
+          <GroupIcon sx={{ fontSize: 18 }} />
+          {numberOfActiveUsers === 1
+            ? `${numberOfActiveUsers} person online`
+            : `${numberOfActiveUsers} people online`}
+        </Typography>
+      </Stack>
+
       {/* Main content */}
       <Box
         flex={1}
@@ -152,77 +183,39 @@ function RandomSidebar() {
         <Stack
           sx={{
             position: 'relative',
+            borderRadius: 1,
             padding: 4,
-            background: theme.palette.background.paper,
-            overflow: 'hidden',
-            zIndex: 1,
-            minWidth: '360px',
-
-            // Animated border layer
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              inset: -2,
-              background: `conic-gradient(
-        from 0deg,
-        ${theme.palette.primary.dark},
-        ${theme.palette.secondary.dark},
-        ${theme.palette.primary.dark}
-      )`,
-              animation: 'rotateBorder 8s linear infinite',
-              zIndex: -2,
-            },
-
-            // Inner mask to create border thickness
-            '&::after': {
-              content: '""',
-              position: 'absolute',
-              inset: 2,
-              background: theme.palette.background.paper,
-              zIndex: -1,
-              boxShadow: `0 0 10rem ${theme.palette.primary.dark}`
-            },
-
-            backdropFilter: 'blur(12px)',
-            transition: 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)',
+            cursor: 'pointer',
+            boxShadow: `inset 0 0 0.5rem ${theme.palette.success.dark}`,
 
             '&:hover': {
-              boxShadow: `0 0 2rem ${theme.palette.primary.dark}`
-            },
-
-            '@keyframes rotateBorder': {
-              '0%': { transform: 'rotate(0deg)' },
-              '100%': { transform: 'rotate(360deg)' },
+              boxShadow: `inset 0 0 0.7rem ${theme.palette.success.dark}`,
             },
           }}
         >
+          <Stack mx="auto" textAlign="center" spacing={1}>
+            <Typography
+              variant="h5"
+              sx={{
+                color: "#00F5FF",
+                letterSpacing: 3,
+                fontSize: 20,
+                textTransform: 'uppercase',
+                fontWeight: 600,
+              }}
+            >
+              Your Next Chat Awaits
+            </Typography>
 
-          <Typography
-            variant="h2"
-            sx={{
-              fontSize: isSm ? "1.8rem" : "2.4rem",
-              fontWeight: 700,
-              letterSpacing: "1px",
-              background: `linear-gradient(90deg, ${theme.palette.primary.light}, ${theme.palette.secondary.light})`,
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              mb: 1,
-            }}
-          >
-            Random Chat
-          </Typography>
-
-          <Typography
-            variant="subtitle2"
-            color="text.secondary"
-            sx={{
-              mb: 1,
-              fontWeight: 500,
-              textAlign: 'center'
-            }}
-          >
-            Meet someone new instantly
-          </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                color: `${theme.palette.text.secondary}`,
+              }}
+            >
+              Connect with random people worldwide
+            </Typography>
+          </Stack>
 
           {isWaiting ? (
             <Box sx={{ width: '100%', maxWidth: 250, mx: 'auto' }}>
@@ -258,28 +251,6 @@ function RandomSidebar() {
               </Tooltip>
             )}
           </Stack>
-
-          <Typography
-            variant="body2"
-            sx={{
-              mt: 2,
-              color: theme.palette.text.secondary,
-              gap: 0.6,
-              borderRadius: 0.5,
-              p: 1,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItem: 'center',
-              background: `linear-gradient(180deg,
-      ${theme.palette.background.paper},
-      ${theme.palette.info.dark}10)`,
-            }}
-          >
-            <GroupIcon sx={{ fontSize: 18, color: 'info.main' }} />
-            {numberOfActiveUsers === 1
-              ? `${numberOfActiveUsers} people online`
-              : `${numberOfActiveUsers} peoples online`}
-          </Typography>
         </Stack>
       </Box>
 
