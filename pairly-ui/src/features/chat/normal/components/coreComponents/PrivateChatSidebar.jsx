@@ -138,7 +138,7 @@ function PrivateChatSidebar() {
                     sx={{
                         display: "flex",
                         gap: 1,
-                        alignItems: "center"
+                        alignItems: "center",
                     }}
                 >
                     <Stack flex={1}>
@@ -148,14 +148,45 @@ function PrivateChatSidebar() {
                             placeholder="Search user..."
                             value={searchValue}
                             onChange={(e) => setSearchValue(e.target.value)}
+                            variant="outlined"
                             InputProps={{
-                                startAdornment: <SearchIcon fontSize="small" sx={{ mr: 1 }} />,
+                                startAdornment: (
+                                    <SearchIcon
+                                        fontSize="small"
+                                        sx={(theme) => ({
+                                            mr: 1,
+                                            color: theme.palette.text.secondary,
+                                            transition: "0.2s ease",
+                                        })}
+                                    />
+                                ),
                             }}
-                            sx={{
+                            sx={(theme) => ({
                                 "& .MuiOutlinedInput-root": {
-                                    borderRadius: 0.5,
+                                    borderRadius: 0, // sharp edges
+                                    backgroundColor: "transparent",
+                                    transition: "all 0.25s ease",
+
+                                    "& fieldset": {
+                                        borderColor: theme.palette.divider,
+                                        transition: "all 0.25s ease",
+                                    },
+
+                                    "&:hover fieldset": {
+                                        borderColor: theme.palette.text.primary,
+                                    },
+
+                                    "&.Mui-focused fieldset": {
+                                        borderColor: theme.palette.success.main,
+                                        borderWidth: "1px",
+                                    },
                                 },
-                            }}
+
+                                "& input": {
+                                    fontSize: "0.85rem",
+                                    letterSpacing: 0.5,
+                                },
+                            })}
                         />
                     </Stack>
                     <StyledActionButton
@@ -201,11 +232,6 @@ function PrivateChatSidebar() {
                                 // determine online indicator
                                 const isOnline = chatUsers.find(u => u.partnerId === user.userId)?.isOnline;
 
-                                // color logic
-                                const dotColor = showOnlineStatus
-                                    ? (isOnline ? 'green' : 'gray')
-                                    : 'gray';
-
                                 // tooltip text
                                 const tooltipText = showOnlineStatus
                                     ? (isOnline ? 'Online' : 'Offline')
@@ -216,21 +242,43 @@ function PrivateChatSidebar() {
                                 return (
                                     <Stack
                                         key={index}
-                                        sx={{
-                                            flexDirection: 'row',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center',
-                                            border: `1px solid ${theme.palette.divider}`,
-                                            borderRadius: 0.5,
-                                            p: 0.5,
-                                            my: 0.5,
-                                            bgcolor: isActive ? theme.palette.action.selected : 'transparent',
-                                            transition: 'background-color 0.3s ease',
-                                            ':hover': {
-                                                background: theme.palette.action.hover
-                                            }
-                                        }}
                                         onClick={() => handleUserClick(user.userId)}
+                                        sx={(theme) => ({
+                                            position: "relative",
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+
+                                            px: 1,
+                                            py: 1,
+                                            my: 0.3,
+
+                                            cursor: "pointer",
+
+                                            backgroundColor: isActive
+                                                ? theme.palette.action.selected
+                                                : "transparent",
+
+                                            transition: "all 0.25s cubic-bezier(0.22, 1, 0.36, 1)",
+
+                                            // LEFT ACTIVE BAR
+                                            "&::before": {
+                                                content: '""',
+                                                position: "absolute",
+                                                left: 0,
+                                                top: 0,
+                                                bottom: 0,
+                                                width: isActive ? 3 : 0,
+                                                backgroundColor: theme.palette.primary.main,
+                                                transition: "all 0.25s ease",
+                                            },
+
+                                            "&:hover": {
+                                                backgroundColor: theme.palette.action.hover,
+                                                transform: "translateX(3px)",
+                                            },
+                                        })}
                                     >
                                         <Stack
                                             sx={{
@@ -243,26 +291,49 @@ function PrivateChatSidebar() {
                                             <Tooltip title={tooltipText}>
                                                 <Badge
                                                     overlap="circular"
-                                                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                                                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                                                     variant="dot"
-                                                    sx={{
-                                                        '& .MuiBadge-dot': {
-                                                            backgroundColor: dotColor,
-                                                            animation: (isOnline && showOnlineStatus) ? 'blink 2s infinite' : 'none',
-                                                            width: 10,
-                                                            height: 10,
-                                                            borderRadius: '50%'
+                                                    sx={(theme) => ({
+                                                        "& .MuiBadge-dot": {
+                                                            backgroundColor: showOnlineStatus
+                                                                ? isOnline
+                                                                    ? theme.palette.success.main
+                                                                    : theme.palette.grey[500]
+                                                                : theme.palette.grey[400],
+                                                            width: 12,
+                                                            height: 12,
+                                                            borderRadius: "50%",
+                                                            border: `2px solid ${theme.palette.background.paper}`,
+                                                            boxShadow: isOnline
+                                                                ? `0 0 8px ${theme.palette.success.main}`
+                                                                : "none",
+                                                            transition: "all 0.3s ease",
                                                         },
-                                                        '@keyframes blink': {
-                                                            '0%, 50%, 100%': { opacity: 1 },
-                                                            '25%, 75%': { opacity: 0 },
-                                                        },
-                                                    }}
+                                                    })}
                                                 >
                                                     <Avatar
-                                                        src={userSettings?.showProfilePic ? (user?.profile?.profileImage || defaultAvatar) : defaultAvatar}
-                                                        alt={user?.profile?.fullName + ' profile Image'}
-                                                        sx={{ width: 35, height: 35, objectFit: 'cover' }}
+                                                        src={
+                                                            userSettings?.showProfilePic
+                                                                ? user?.profile?.profileImage || defaultAvatar
+                                                                : defaultAvatar
+                                                        }
+                                                        alt={user?.profile?.fullName + " profile Image"}
+                                                        sx={(theme) => ({
+                                                            width: 44,
+                                                            height: 44,
+                                                            objectFit: "cover",
+                                                            transition: "all 0.3s ease",
+                                                            border: `1px solid ${theme.palette.divider}`,
+                                                            boxShadow: `
+                                                              0 4px 10px ${theme.palette.common.black}15
+                                                            `,
+                                                            "&:hover": {
+                                                                transform: "scale(1.05)",
+                                                                boxShadow: `
+                                                               0 6px 16px ${theme.palette.common.black}25
+                                                             `,
+                                                            },
+                                                        })}
                                                     />
                                                 </Badge>
                                             </Tooltip>

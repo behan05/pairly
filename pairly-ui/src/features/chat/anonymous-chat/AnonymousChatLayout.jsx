@@ -20,8 +20,7 @@ function AnonymousChatLayout() {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    document.title = 'Pairly - Start a Anonymous Chat';
-
+    document.title = 'Pairly - Anonymous Chat';
   }, [dispatch]);
 
   return (

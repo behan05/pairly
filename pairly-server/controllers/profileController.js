@@ -1,6 +1,7 @@
 const Profile = require('../models/Profile.model');
 const User = require('../models/User.model');
-// const deleteMediaFromCloudinary = require('../utils/cloudinary/deleteMedia');
+const { uploadProfileImage } = require('../services/media.service');
+const { replaceProfileImage } = require('../services/replaceProfileImage.service')
 
 exports.getMyProfileController = async (req, res) => {
     const userId = req.user.id;
@@ -61,7 +62,6 @@ exports.getMyProfileController = async (req, res) => {
 };
 
 exports.updateGeneralInfoController = async (req, res) => {
-
     // get user id from request object
     const userId = req.user.id;
 
@@ -135,18 +135,19 @@ exports.updateGeneralInfoController = async (req, res) => {
             pronouns,
             shortBio,
         }
+        if (req.file && req.file.buffer) {
+            const mediaResult = await uploadProfileImage(req.file);
 
-        if (req.file && req.file.path) {
-
-            // delete previous profile image
-            const userProfile = await Profile.findOne({ user: userId });
-            // if (userProfile.profileImagePublicId) {
-                await deleteMediaFromCloudinary(userProfile.profileImagePublicId);
-            // }
-
+            // delete previous profile image before update new one
+            try {
+                await replaceProfileImage(userId);
+            } catch (error) {
+                console.error('Error deleting previous profile image:', error);
+            }
+            
             // update new profile image
-            updateProfile.profileImage = req.file.path;
-            updateProfile.profileImagePublicId = req.file.filename;
+            updateProfile.profileImage = mediaResult.secure_url;
+            updateProfile.profileImagePublicId = mediaResult.public_id;
         };
 
         // Find the profile by user ID and update it.

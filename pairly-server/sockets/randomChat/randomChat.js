@@ -15,8 +15,8 @@ const Block = require('../../models/chat/Block.model');
 const PrivateChatRequest = require('../../models/chat/PrivateChatRequest.model');
 
 // utils properties
-const matchRandomUser = require('../../utils/socket/matchRandomUser');
-const disconnectMatchedUser = require('../../utils/socket/disconnectMatchedUser');
+const matchRandomUser = require('./matchUser/matchRandomUser');
+const disconnectMatchedUser = require('./disconnect/disconnectMatchedUser');
 
 // separate modules
 const requestHandler = require('./friendRequest/request');
@@ -63,13 +63,15 @@ function randomChatHandler(io, socket, userSocketMap) {
             // Find or create a Conversation document
             const conversation = await Conversation.findOne({
                 participants: { $all: [partnerUserId, socket.userId] },
-                isRandomChat: true
+                mode: 'random',
+                chatType: 'text',
             });
 
             // Create and save a new Message document
             const newConversation = conversation || new Conversation({
                 participants: [partnerUserId, socket.userId],
-                isRandomChat: true,
+                mode: 'random',
+                chatType: 'text',
                 isActive: true,
                 matchedAt: new Date()
             });

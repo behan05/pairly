@@ -1,6 +1,7 @@
 const Message = require('../../models/chat/Message.model');
 const Conversation = require('../../models/chat/Conversation.model');
 const { getIO } = require('../../sockets/socketServer');
+const { uploadChatVoice } = require('../../services/media.service');
 
 /**
  * Handles media upload for random chat.

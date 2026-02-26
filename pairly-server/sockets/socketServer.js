@@ -1,8 +1,11 @@
 const { Server } = require('socket.io');
 const privateChatHandler = require('./privateChat/privateChat');
-const verifyToken = require('../utils/socket/verifyToken');
 const { randomChatHandler } = require('./randomChat/randomChat');
+const anonymousChatHandler = require('./anonymousChat/anonymousChat');
 const User = require('../models/User.model');
+
+// socket Middleware
+const socketAuthMiddleware = require('../middlewares/socketMiddleware/socketAuthMiddleware')
 
 // count total online user
 let onlineUsersCount = new Set();
@@ -39,26 +42,12 @@ function setupSocket(server) {
 
     // === Socket.IO authentication middleware ===
     io.use(async (socket, next) => {
-        try {
-            // Extract token from client auth
-            const token = socket.handshake.auth.token;
-            if (!token) return next(new Error("Token missing"));
-
-            // Verify token and attach user info to socket
-            const user = await verifyToken(token);
-            if (!user) return next(new Error("Authentication failed"));
-
-            socket.userId = user._id;
-            socket.user = user;
-            next();
-        } catch (err) {
-            console.error("Socket auth error:", err.message);
-            next(new Error("Authentication error"));
-        }
+        await socketAuthMiddleware(socket, next);
     });
 
     // === Main connection listener ===
     io.on('connection', async (socket) => {
+
         // track socket id for this user
         const uid = String(socket.userId);
         if (!userSocketMap.has(uid)) userSocketMap.set(uid, new Set());
@@ -95,6 +84,9 @@ function setupSocket(server) {
 
         // Register random chat events
         randomChatHandler(io, socket, userSocketMap);
+
+        // Register anonymous chat events
+        anonymousChatHandler(io, socket, userSocketMap);
 
         // Register private chat events
         privateChatHandler(io, socket, onlineUsers);

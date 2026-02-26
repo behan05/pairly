@@ -6,4 +6,4 @@ function AnonymousChatWindow() {
   )
 }
 
-export default AnonymousChatWindow
+export default AnonymousChatWindow;

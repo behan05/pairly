@@ -20,36 +20,9 @@ function RandomChatLayout() {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    document.title = 'Pairly - Start a Random Chat';
+    document.title = 'Pairly - Random Chat';
 
   }, [dispatch]);
-
-  // Set a CSS variable `--vh` to represent 1% of the viewport height.
-  // This avoids mobile keyboard/100vh issues where 100vh doesn't reflect
-  // the visual viewport when the keyboard appears.
-  // React.useEffect(() => {
-  //   const setVh = () => {
-  //     const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-  //     document.documentElement.style.setProperty('--vh', `${height * 0.01}px`);
-  //   };
-
-  //   setVh();
-  //   if (window.visualViewport) {
-  //     window.visualViewport.addEventListener('resize', setVh);
-  //     window.visualViewport.addEventListener('scroll', setVh);
-  //   } else {
-  //     window.addEventListener('resize', setVh);
-  //   }
-
-  //   return () => {
-  //     if (window.visualViewport) {
-  //       window.visualViewport.removeEventListener('resize', setVh);
-  //       window.visualViewport.removeEventListener('scroll', setVh);
-  //     } else {
-  //       window.removeEventListener('resize', setVh);
-  //     }
-  //   };
-  // }, []);
 
   return (
     <Box

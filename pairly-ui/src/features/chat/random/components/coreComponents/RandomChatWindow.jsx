@@ -12,9 +12,9 @@ import { DownloadIcon, LocationOnIcon } from '@/MUI/MuiIcons';
 // Custom Components
 import RandomChatHeader from './RandomChatHeader';
 import RandomMessageInput from './RandomMessageInput';
-import NextButton from '../supportComponents/NextButton';
-import DisconnectButton from '../supportComponents/DisconnectButton';
-import CountdownTimer from '../supportComponents/CountdownTimer';
+import NextButton from '../../../common/buttons/NextButton';
+import DisconnectButton from '../../../common/buttons/DisconnectButton';
+import CountdownTimer from '../../../common/finding-users/CountdownTimer';
 import NavigateWithArrow from '@/components/private/NavigateWithArrow';
 
 // Socket and Redux actions
@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // Styled components
 import { styled } from '@mui/material/styles';
 import NotConnectedWindow from '../../../common/NotConnectedWindow';
+import ChatBgStyle from '../../../common/chat-background-effect/ChatBgStyle';
 
 /**
  * RandomChatWindow component
@@ -35,58 +36,16 @@ import NotConnectedWindow from '../../../common/NotConnectedWindow';
 function RandomChatWindow({ setShowChatWindow }) {
   const theme = useTheme();
   const isSm = useMediaQuery('(max-width:936px)');
-  const isTabletOrBelow = useMediaQuery('(max-width:775px)');
-  const isLg = useMediaQuery(theme.breakpoints.down('lg'));
   const dispatch = useDispatch();
   const { plan, status } = useSelector((state) => state?.auth?.user?.subscription);
   const hasPremiumAccess = plan !== 'free' && status === 'active';
-  const isFreeUser = !hasPremiumAccess;
-
-  const chatBgStyle = (currentTheme) => {
-    const dotCount = isTabletOrBelow ? 300 : 600;
-
-    const dotElements = Array.from({ length: dotCount }, (_, i) => (
-      <Box
-        key={i}
-        sx={{
-          position: "absolute",
-          left: `${Math.random() * 100}%`,
-          top: `${Math.random() * 100}%`,
-          width: Math.random() * 2 + 1,
-          height: Math.random() * 2 + 1,
-          borderRadius: "50%",
-          backgroundColor:
-            currentTheme === "dark"
-              ? theme.palette.text.primary
-              : theme.palette.text.secondary,
-          opacity: Math.random() * 0.4 + 0.02,
-          pointerEvents: "none",
-        }}
-      />
-    ));
-
-    return (
-      <Box
-        sx={{
-          position: "absolute",
-          inset: 0,
-          overflow: "hidden",
-          background:
-            currentTheme === "dark"
-              ? theme.palette.background.paper
-              : theme.palette.background.default,
-        }}
-      >
-        {dotElements}
-      </Box>
-    );
-  };
+  const isFreeUser = !hasPremiumAccess; // use for adsense later.
 
   // Select background image based on theme
   let bgChatImg =
     localStorage.getItem('theme') === 'dark'
-      ? chatBgStyle('dark')
-      : chatBgStyle('light');
+      ? <ChatBgStyle mode='dark' />
+      : <ChatBgStyle mode='light' />;
 
   // Redux state
   const userId = useSelector((state) => state.profile.profileData?._id);
@@ -254,24 +213,13 @@ function RandomChatWindow({ setShowChatWindow }) {
     };
   }, [messages, isTyping]);
 
-  // Ads
-  useEffect(() => {
-    if (isFreeUser && window.adsbygoogle) {
-      try {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-      } catch (e) {
-        console.error("AdSense push error", e);
-      }
-    }
-  }, [isFreeUser]);
-
   return (
     <Stack sx={{
       position: "relative",
       overflow: "hidden",
       width: "100%",
       height: '100%',
-      borderLeft: `1px solid ${theme.palette.divider}`
+      // borderLeft: `1px solid ${theme.palette.divider}`,
     }}>
       {isConnected && bgChatImg}
       {/* === Connected State: Chat Window === */}
@@ -623,7 +571,6 @@ function RandomChatWindow({ setShowChatWindow }) {
                         </Typography>
                       </Stack>
                     )}
-
                   </Box>
                 );
               })}
@@ -634,22 +581,25 @@ function RandomChatWindow({ setShowChatWindow }) {
           </Box>
 
           {/* Input area for sending messages */}
-
           <RandomMessageInput
             onFocus={() => setIsTyping(true)}
             onBlur={() => setIsTyping(false)}
-            NextButton={isSm && <NextButton
-              onClick={() => {
-                handleMenuClose();
-                handleNext();
-              }}
-            />}
-            DisconnectButton={isSm && <DisconnectButton
-              onClick={() => {
-                handleMenuClose();
-                handleDisconnect();
-              }}
-            />}
+            NextButton={isSm &&
+              <NextButton
+                onClick={() => {
+                  handleMenuClose();
+                  handleNext();
+                }}
+                text={'NEXT'}
+              />}
+            DisconnectButton={isSm &&
+              <DisconnectButton
+                onClick={() => {
+                  handleMenuClose();
+                  handleDisconnect();
+                }}
+                text={'DISCONNECT'}
+              />}
           />
         </>
       ) : (
@@ -680,7 +630,6 @@ function RandomChatWindow({ setShowChatWindow }) {
             />
           )}
         </Box>
-
       )}
     </Stack>
   );

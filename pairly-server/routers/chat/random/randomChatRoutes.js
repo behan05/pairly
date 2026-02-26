@@ -1,7 +1,7 @@
 const Routers = require('express').Router();
 const { uploadRandomChatMediaController } = require('../../../controllers/randomChatControllers/randomChatController');
 const authMiddleware = require('../../../middlewares/authMiddleware');
-// const upload = require('../../../middlewares/uploadRandomMedia');
+const upload = require('../../../middlewares/multer');
 
 /**
  * ================================
@@ -11,14 +11,14 @@ const authMiddleware = require('../../../middlewares/authMiddleware');
 
 /**
  * @route   POST /api/random-chat/media
- * @desc    Upload media (image/video) during random chat
+ * @desc    Upload media (image/video/voice chat) during random chat
  * @access  Private
  * @field   media - multipart/form-data (file field)
  */
 Routers.post(
     '/media',
     authMiddleware,
-    // upload.single('media'),
+    upload.single('media'),
     uploadRandomChatMediaController
 );
 

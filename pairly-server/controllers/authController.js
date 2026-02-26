@@ -1,11 +1,11 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/User.model');
-const generateToken = require('../utils/generateToken');
+const generateToken = require('../utils/token.util');
 const Subscription = require('../models/payment/Subscription.model');
 const LoginActivity = require('../models/LoginActivity.model');
 const { nanoid } = require('nanoid');
-const sendEmail = require('../utils/email/sendEmail');
-const generateOTP = require('../utils/email/generateEmailOTP');
+const sendEmail = require('../lib/mailer');
+const generateOTP = require('../utils/otp.util');
 const axios = require('axios');
 
 // helper email regex (reasonable strictness)

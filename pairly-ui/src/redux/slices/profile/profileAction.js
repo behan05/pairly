@@ -44,7 +44,10 @@ export function getProfile() {
 // and updates the Redux store with the new profile data
 export function updateGeneralInfo(formData) {
   return async (dispatch) => {
-    const headers = getAuthHeaders();
+    // When sending a FormData instance we need to tell `getAuthHeaders`
+    // so it doesn't force `Content-Type: application/json`. Otherwise the
+    // request will be treated as JSON by the server and multer will be
+    const headers = getAuthHeaders(true);
 
     if (!headers) {
       dispatch(setError('No token found. Please log in.'));
