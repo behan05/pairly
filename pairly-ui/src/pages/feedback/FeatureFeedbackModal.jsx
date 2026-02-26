@@ -53,7 +53,7 @@ function FeatureFeedbackModal({ open, onClose, featureTitle }) {
           borderRadius: 1,
           p: 1,
           minWidth: 280,
-          background: theme.palette.background.default,
+          background: theme.palette.background.paper,
           boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
           border: `1px solid ${theme.palette.divider}`
         },
