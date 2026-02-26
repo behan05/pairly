@@ -129,8 +129,8 @@ export const routes = createBrowserRouter([
           // Default view at /pairly
           { index: true, element: <AllChatOptions /> },
           { path: 'random-chat', element: <RandomSidebar /> },
-          { path: 'group-chat', element: <GroupChatSidebar /> },
           { path: 'anonymous-chat', element: <AnonymousChatSidebar /> },
+          { path: 'group-chat', element: <GroupChatSidebar /> },
           { path: 'invite-chat', element: <InviteChatSidebar /> },
           { path: 'topic-based-chat', element: <TopicBasedChatSidebar /> },
           { path: 'nearby-chat', element: <NearMeChatSidebar /> },

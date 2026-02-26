@@ -13,8 +13,8 @@ const { setupSocket } = require('./sockets/socketServer');
 
 // Social OAuth Provider
 const passport = require('passport');
-require('./config/passport/passportGoogle');
-require('./config/passport/passportGithub');
+require('./lib/passport/github.strategy');
+require('./lib/passport/google.strategy');
 const googleRoutes = require('./routers/auth/googleAuth');
 const githubRoutes = require('./routers/auth/githubAuth');
 
@@ -26,7 +26,7 @@ app.use(passport.initialize());
 // ===================================
 // Initialized razorpay payment gateway
 // ===================================
-require('./config/razorpay/razorpay');
+require('./lib/razorpay');
 
 // ==========================
 // Database Connection
@@ -91,7 +91,7 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Schedule daily cleanup of unverified users
-require('./cron/cleanupUnverifiedUsers.cron');
+require('./job/cleanup/cleanupUnverifiedUsers.job');
 
 // ==========================
 // Register API Routes

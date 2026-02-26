@@ -12,6 +12,9 @@ import privateChatReducer from './slices/privateChat/privateChatSlice';
 import sleepSpaceReducer from './slices/sleepSpace/sleepSpaceRequest';
 import themeReducer from "./slices/theme/themeSlice";
 
+// Anonymous chat
+import anonymousChatReducer from './slices/anonymousChat/anonymousSlice';
+
 // persist only the auth slice
 const persistConfig = {
   key: 'root',
@@ -24,6 +27,7 @@ const rootReducer = combineReducers({
   profile: profileReducer,
   settings: settingsReducer,
   randomChat: randomChatReducer,
+  anonymousChat: anonymousChatReducer,
   friendRequest: friendRequestReducer,
   moderation: moderationReducer,
   privateChat: privateChatReducer,

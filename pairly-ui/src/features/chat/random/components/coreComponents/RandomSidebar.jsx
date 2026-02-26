@@ -12,14 +12,18 @@ import {
   ArrowBackIcon,
   GroupIcon,
 } from '@/MUI/MuiIcons';
-import { keyframes } from '@emotion/react'
+
+// Action button
+import ConnectButton from '../../../common/buttons/ConnectButton';
+import DisconnectButton from '../../../common/buttons/DisconnectButton';
+import NextButton from '../../../common/buttons/NextButton';
+
+// Search Indicator Tottie
+import CountdownTimer from '../../../common/finding-users/CountdownTimer';
+import FloatShape from '../../../common/backgroud-effect/FloatShape';
 
 import ChatSidebarHeader from '../../../common/ChatSidebarHeader';
-import ConnectButton from '../supportComponents/ConnectButton';
-import DisconnectButton from '../supportComponents/DisconnectButton';
-import NextButton from '../supportComponents/NextButton';
 import SettingsAction from '@/components/private/SettingsAction';
-import CountdownTimer from '../supportComponents/CountdownTimer';
 import RandomLandingLottie from '../supportComponents/RandomLandingPageLottie';
 import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '@/services/socket';
@@ -62,21 +66,11 @@ function RandomSidebar() {
     return () => socket.off('onlineCount');
   }, []);
 
-  // Ads push on mount
-  useEffect(() => {
-    if (isFreeUser && window.adsbygoogle) {
-      try {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-      } catch (e) {
-        console.error("AdSense push error", e);
-      }
-    }
-  }, [isFreeUser]);
-
-  const floatShape = keyframes`
-           0% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-20px) rotate(180deg); }
-      100% { transform: translateY(0px) rotate(360deg); }`;
+  // Button text
+  const connectButtonText = {
+    smallScreenText: "CONNECT",
+    largeScreenText: "INITIATE RANDOM CHAT"
+  }
 
   return (
     <Box
@@ -96,34 +90,8 @@ function RandomSidebar() {
         <ChatSidebarHeader />
       </Stack>
 
-      {/* Stars Background */}
-      {Array.from({ length: 15 }).map((_, i) => {
-        const size = Math.random() * 30 + 20;
-        const duration = Math.random() * 8 + 4;
-        const delay = Math.random() * 5;
-        const rotate = Math.random() * 360;
-
-        return (
-          <Box
-            key={i}
-            sx={{
-              position: 'absolute',
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              width: size,
-              height: size,
-              borderRadius: '12px',
-              background: `linear-gradient(185deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-              opacity: 0.01,
-              transform: `rotate(${rotate}deg)`,
-              filter: 'blur(2px)',
-              animation: `${floatShape} ${duration}s ease-in-out ${delay}s infinite alternate`,
-              pointerEvents: 'none',
-              boxShadow: `0 0 ${size / 3}px ${theme.palette.primary.main}80, 0 0 ${size / 2}px ${theme.palette.secondary.main}50`,
-            }}
-          />
-        );
-      })}
+      {/* Float Shape Background */}
+      <FloatShape />
 
       {/* Back button (mobile) */}
       {isSm && showChatWindow && (
@@ -147,7 +115,7 @@ function RandomSidebar() {
         alignItems="flex-end"
         mr={1}
         mt={1}
-        >
+      >
         <Typography
           variant="overline"
           sx={{
@@ -160,7 +128,7 @@ function RandomSidebar() {
             background: `linear-gradient(90deg, ${theme.palette.text.primary}, ${theme.palette.primary.main})`,
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
-            borderBottom: `1px solid ${theme.palette.divider}`       
+            borderBottom: `1px solid ${theme.palette.divider}`
           }}
         >
           <GroupIcon sx={{ fontSize: 18 }} />
@@ -199,7 +167,7 @@ function RandomSidebar() {
               sx={{
                 color: "#00F5FF",
                 letterSpacing: 3,
-                fontSize: 20,
+                fontSize: 16,
                 textTransform: 'uppercase',
                 fontWeight: 600,
               }}
@@ -238,35 +206,31 @@ function RandomSidebar() {
               <>
                 {isConnected && (
                   <Tooltip title="Next user">
-                    <NextButton onClick={handleNext} />
+                    <NextButton
+                      onClick={handleNext}
+                      text={'NEXT'}
+                    />
                   </Tooltip>
                 )}
                 <Tooltip title="End chat">
-                  <DisconnectButton onClick={handleDisconnect} />
+                  <DisconnectButton
+                    onClick={handleDisconnect}
+                    text={'DISCONNECT'}
+                  />
                 </Tooltip>
               </>
             ) : (
               <Tooltip title="Start Chat">
-                <ConnectButton onClick={handleConnect} fullWidth={isSm} />
+                <ConnectButton
+                  onClick={handleConnect}
+                  fullWidth={isSm}
+                  textAsObject={connectButtonText}
+                />
               </Tooltip>
             )}
           </Stack>
         </Stack>
       </Box>
-
-      {/* Ads for Free User */}
-      {isFreeUser && (
-        <Box sx={{ width: '100%', mt: 2, textAlign: 'center', position: 'absolute', bottom: 0 }}>
-          <ins
-            className="adsbygoogle"
-            style={{ display: 'block' }}
-            data-ad-client="ca-pub-8711176865382424"
-            data-ad-slot="9308698789"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          ></ins>
-        </Box>
-      )}
 
       {/* Settings */}
       <SettingsAction />

@@ -10,9 +10,23 @@ const conversationSchema = new mongoose.Schema(
                 required: true,
             }
         ],
-        isRandomChat: {
-            type: Boolean,
-            default: false
+        mode: {
+            type: String,
+            enum: [
+                'random',
+                'private',
+                'group',
+                'anonymous',
+                'invite',
+                'topic',
+                'nearby'
+            ],
+            default: 'random',
+        },
+        chatType: {
+            type: String,
+            enum: ['text', 'video', 'audio'],
+            default: 'text',
         },
         matchedAt: {
             type: Date,

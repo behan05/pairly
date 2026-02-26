@@ -117,11 +117,6 @@ const ChatSidebarHeader = ({ children }) => {
       ),
       label: 'Private Chat'
     },
-    // {
-    //   path: '/pairly/virtual-standup-hall',
-    //   icon: <TheaterComedyIcon  sx={{ color: theme.palette.secondary.main }} />,
-    //   label: 'Virtual Comedy Hall'
-    // },
     {
       path: '/pairly/friend-requests',
       icon: (
@@ -137,10 +132,11 @@ const ChatSidebarHeader = ({ children }) => {
     const shareData = {
       title: 'Pairly App',
       text: `Join me on Pairly! 
-                   Create your profile 
-                   and get matched with real people for 
-                   anonymous, safe, and meaningful conversations
-                   worldwide.`,
+            Create your profile 
+            and get matched with real people for 
+            anonymous, safe, and meaningful conversations
+            worldwide.
+            `,
       url: `${window.location.origin}/pairly`
     };
 
@@ -260,8 +256,6 @@ const ChatSidebarHeader = ({ children }) => {
         position: 'sticky',
         top: 0,
         zIndex: 999,
-        backdropFilter: 'blur(4px)',
-        WebkitBackdropFilter: 'blur(4px)',
       }}
     >
 
@@ -272,15 +266,13 @@ const ChatSidebarHeader = ({ children }) => {
         alignItems="center"
       >
         {/* Logo */}
-        <Link to={'/pairly'}>
+        <Link to={"/pairly"} style={{ textDecoration: "none" }}>
           <Stack
-            component={'img'}
-            src={'/logo.png'}
+            component="img"
+            src="/logo.png"
             alt="Pairly logo"
-            maxWidth={40}
-            aria-label="Pairly logo"
             sx={{
-              ml: 1
+              width: 42,
             }}
           />
         </Link>
@@ -289,60 +281,73 @@ const ChatSidebarHeader = ({ children }) => {
         <Stack
           direction="row"
           alignItems="center"
-          gap={isSm ? 1 : 3.5}
+          gap={isSm ? 1.2 : 3}
         >
-          {navItems.map(({ path, icon, label }) => {
+          {navItems.map(({ path, icon, label }) => (
+            <Tooltip key={label} title={label} arrow>
+              <IconButton
+                component={NavLink}
+                to={path}
+                end={path === "/pairly"}
+                sx={{
+                  width: 42,
+                  height: 42,
+                  borderRadius: "14px",
+                  position: "relative",
+                  backdropFilter: "blur(12px)",
+                  background: `linear-gradient(
+                    135deg,
+                    ${theme.palette.background.paper}cc,
+                    ${theme.palette.background.default}aa)`,
+                  border: `1px solid ${theme.palette.divider}`,
+                  transition: "all 0.3s cubic-bezier(.4,0,.2,1)",
+                  "&:hover": {
+                    transform: "translateY(-3px)",
+                    boxShadow: `0 8px 25px ${theme.palette.success.main}60`,
+                    border: `1px solid ${theme.palette.success.main}`,
+                  },
+                  "&.active": {
+                    background: `linear-gradient(135deg, ${theme.palette.success.main}25, transparent)`,
+                    boxShadow: `0 0 18px ${theme.palette.success.main}55`,
+                    border: `1px solid ${theme.palette.success.main}`,
+                  },
+                }}
+              >
+                {React.cloneElement(icon, {
+                  sx: {
+                    fontSize: 22,
+                    color: theme.palette.text.primary,
+                    transition: "all 0.3s ease",
+                  },
+                })}
+              </IconButton>
+            </Tooltip>
+          ))}
 
-            return (
-              <Tooltip key={label} title={label} arrow>
-                <IconButton
-                  component={NavLink}
-                  to={path}
-                  end={path === '/pairly'}
-                  sx={{
-                    width: 34,
-                    height: 34,
-                    borderRadius: 2,
-                    transition: 'background 0.3s ease, box-shadow 0.3s ease',
-                    backdropFilter: 'blur(6px)',
-                    bgcolor: theme.palette.background.paper,
-                    border: `1px solid ${theme.palette.divider}`,
-                    '&.active': {
-                      boxShadow: `0 0 10px ${theme.palette.info.main}20`,
-                    },
-                  }}
-                >
-                  {React.cloneElement(icon, {
-                    sx: {
-                      fontSize: 22, // fixed font size
-                      color: theme.palette.text.primary,
-                      transition: 'color 0.3s ease',
-                      ...(icon.props.sx || {}),
-                    },
-                  })}
-                </IconButton>
-              </Tooltip>
-            );
-          })}
-
+          {/* Avatar */}
           <Tooltip title="Menu" arrow>
             <Avatar
               src={profileData?.profileImage || defaultAvatar}
-              alt="user profile with dropdown menu"
+              alt="User profile image"
+              imgProps={{ loading: "lazy" }}
               onClick={(e) => setMenuAnchorEl(e.currentTarget)}
               sx={{
-                p: 0.4,
-                borderRadius: 2,
-                cursor: 'pointer',
-                bgcolor: theme.palette.background.paper,
-                border: `1px solid ${theme.palette.divider}`
+                width: 42,
+                height: 42,
+                cursor: "pointer",
+                border: `1px solid ${theme.palette.divider}`,
+                backdropFilter: "blur(10px)",
+                transition: "all 0.3s ease",
+                boxShadow: `0 0 12px ${theme.palette.success.dark}`,
+                "&:hover": {
+                  transform: "scale(1.08)",
+                  boxShadow: `0 0 2px ${theme.palette.success.main}`,
+                },
               }}
             />
           </Tooltip>
         </Stack>
       </Stack>
-
-      {/* <Divider sx={{ mt: 1 }} /> */}
 
       {/* Search Bar if needed */}
       {children}

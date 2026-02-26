@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const generateToken = require('../../utils/generateToken');
+const generateToken = require('../../utils/token.util');
 const User = require('../../models/User.model');
 const { nanoid } = require('nanoid');
 

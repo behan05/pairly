@@ -755,8 +755,7 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
           mx: 1,
           mb: 1,
           p: 0.5,
-          borderRadius: 3,
-          background: theme.palette.background.default,
+          borderRadius: 1,
           border: `1px solid ${theme.palette.divider}`,
 
           position: { xs: 'fixed', sm: 'sticky' },

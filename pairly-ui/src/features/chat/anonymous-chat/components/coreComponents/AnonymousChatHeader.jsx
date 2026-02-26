@@ -6,4 +6,4 @@ function AnonymousChatHeader() {
   )
 }
 
-export default AnonymousChatHeader
+export default AnonymousChatHeader;

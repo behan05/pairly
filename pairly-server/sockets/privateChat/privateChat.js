@@ -21,13 +21,15 @@ function privateChatHandler(io, socket, onlineUsers) {
         try {
             let conversation = await Conversation.findOne({
                 participants: { $size: 2, $all: [partnerUserId, currentUserId] },
-                isRandomChat: false
+                mode: 'private',
+                chatType: 'text',
             });
 
             if (!conversation) {
                 conversation = new Conversation({
                     participants: [partnerUserId, currentUserId],
-                    isRandomChat: false,
+                    mode: 'private',
+                    chatType: 'text',
                     isActive: true,
                     matchedAt: new Date()
                 });
@@ -77,13 +79,15 @@ function privateChatHandler(io, socket, onlineUsers) {
         try {
             let conversation = await Conversation.findOne({
                 participants: { $size: 2, $all: [partnerId, currentUserId] },
-                isRandomChat: false
+                mode: 'private',
+                chatType: 'text',
             });
 
             if (!conversation) {
                 conversation = new Conversation({
                     participants: [partnerId, currentUserId],
-                    isRandomChat: false,
+                    mode: 'private',
+                    chatType: 'text',
                     isActive: true,
                     matchedAt: new Date()
                 });
