@@ -1,5 +1,5 @@
 // ───────────────────────────────────────────────────────────
-// 📦 MUI Components - Centralized Exports
+// MUI Components - Centralized Exports
 // This file imports commonly used MUI components and re-exports
 // them for cleaner, unified access across the app.
 // ───────────────────────────────────────────────────────────

@@ -40,17 +40,17 @@ export const lightPalette = {
   },
 
   text: {
-    primary: "#1E1E2F",
+    primary: "#1E1E2F",       // keep for high contrast
     secondary: "#4B4B60",
     disabled: "#8A8A8A",
   },
 
   background: {
-    default: "#F9FAFB",
-    paper: "#FFFFFF",
+    default: "#FFF9F2", // soft cream instead of bright white
+    paper: "#FFF5E6",   // slightly darker cream for cards/panels
   },
 
-  divider: "rgba(0, 0, 0, 0.12)",
+  divider: "rgba(0, 0, 0, 0.08)", // softer divider
 };
 
 export const darkPalette = {

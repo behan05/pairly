@@ -363,7 +363,10 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
           const formData = new FormData();
           formData.append('media', file.file);
           formData.append('partnerSocketId', String(partnerId));
-
+          /*
+           used this when user sends a voice message, so backend can handle it differently if needed 
+          */
+          // formData.append('flag', 'voice'); 
           const token = localStorage.getItem('token');
           if (!token) {
             toast.error('You must be logged in to send media.');

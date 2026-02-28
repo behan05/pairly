@@ -25,6 +25,9 @@ import {
   clearOutgoingRequest,
 } from '@/redux/slices/randomChat/friendRequestSlice';
 
+// when user connect first reset previous toggle due to temporary theme
+import { resetEroticMode } from '@/redux/slices/theme/themeSlice';
+
 /**
  * RandomController component
  * - Handles socket events for random chat feature
@@ -46,6 +49,8 @@ const RandomChatController = () => {
     });
 
     socket.on('random:matched', ({ partnerId, partnerProfile }) => {
+
+      dispatch(resetEroticMode()); // reset previous setting
       dispatch(setConnected(true));
       dispatch(setPartnerId(partnerId));
       dispatch(setPartnerProfile(partnerProfile));

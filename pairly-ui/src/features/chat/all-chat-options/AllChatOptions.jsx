@@ -216,16 +216,47 @@ function AllChatOptions() {
                 key={key}
                 sx={{
                     position: 'relative',
-                    borderRadius: 0,
-                    padding: '15px 15px 0 15px',
-                    transition: 'all 0.35s cubic-bezier(0.22, 1, 0.36, 1)',
-                    boxShadow: `inset 0 0 0.5rem ${theme.palette.success.dark}`,
-                    backdropFilter: "blur(40px)",
-                    background: `linear-gradient(
-                    135deg,
-                    ${theme.palette.background.paper}cc,
-                    ${theme.palette.background.default}aa
-                )`,
+                    borderRadius: 0.2,
+                    p: '15px 15px 0 15px',
+                    cursor: 'pointer',
+                    transition: 'all 0.25s ease',
+
+                    // Bottom accent line
+                    '&::after': {
+                        content: '""',
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        width: '100%',
+                        height: 2,
+                        background: `linear-gradient(90deg, transparent, ${theme.palette.success.main}, transparent)`,
+                        opacity: 0.6,
+                        transition: 'all 0.25s ease',
+                    },
+
+                    // Top accent line
+                    '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: 2,
+                        background: `linear-gradient(90deg, transparent, ${theme.palette.success.main}, transparent)`,
+                        opacity: 0.6,
+                        transition: 'all 0.25s ease',
+                    },
+
+                    // Hover effect
+                    '&:hover::after': {
+                        background: `linear-gradient(90deg, transparent, ${theme.palette.success.main}, transparent)`,
+                        opacity: 0.9,
+                    },
+
+                    '&:hover::before': {
+                        background: `linear-gradient(90deg, transparent, ${theme.palette.success.main}, transparent)`,
+                        opacity: 0.9,
+                    },
                 }}
             >
                 <Stack
@@ -272,39 +303,29 @@ function AllChatOptions() {
                     {/* Temporary  */}
                     {title.includes('Anonymous Chat') && (
                         <Stack
-                            sx={{
+                            sx={(theme) => ({
                                 position: 'absolute',
-                                top: -28,
+                                top: -23,
                                 right: 0,
-                                px: 2,
-                                py: 0.5,
-                                fontSize: 12,
-                                fontWeight: 700,
+                                px: 1.8,
+                                py: 0.4,
+                                fontSize: 11,
+                                fontWeight: 600,
                                 color: theme.palette.text.primary,
                                 textTransform: 'uppercase',
                                 letterSpacing: 0.8,
-                                borderRadius: 1,
-                                background: theme.palette.info.main,
-                                boxShadow: `0 0 8px ${theme.palette.info.main}, 0 0 16px ${theme.palette.info.light}`,
-                                animation: 'glowPulse 1.8s infinite alternate',
-                            }}
+                                borderRadius: 0.2, // match card precision
+                                background: theme.palette.info.main + "22", // soft translucent
+                                boxShadow: `0 0 6px ${theme.palette.info.main}33, 0 0 12px ${theme.palette.info.light}22`,
+                                transition: 'all 0.3s ease',
+
+                                // subtle hover glow
+                                '&:hover': {
+                                    boxShadow: `0 0 10px ${theme.palette.info.main}44, 0 0 20px ${theme.palette.info.light}33`,
+                                },
+                            })}
                         >
                             Coming Soon
-                            <style>
-                                {`
-        @keyframes glowPulse {
-          0% {
-            box-shadow: 0 0 15px ${theme.palette.info.main}, 0 0 2px ${theme.palette.info.light};
-          }
-          50% {
-            box-shadow: 0 0 3px ${theme.palette.info.main}, 0 0 3px ${theme.palette.info.light};
-          }
-          100% {
-            box-shadow: 0 0 5px ${theme.palette.info.main}, 0 0 4px ${theme.palette.info.light};
-          }
-        }
-      `}
-                            </style>
                         </Stack>
                     )}
 

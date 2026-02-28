@@ -3,7 +3,6 @@ import {
   Box,
   Stack,
   Typography,
-  TextField,
   Divider,
   List,
   ListItemButton,
@@ -12,7 +11,6 @@ import {
   useTheme
 } from '@/MUI/MuiComponents';
 import {
-  SearchIcon,
   LockIcon,
   KeyIcon,
   NotificationsIcon,
@@ -38,6 +36,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { alpha } from '@mui/material/styles';
 import UserSuggestionBox from '@/pages/feedback/UserSuggestionBox';
+import SearchInputBox from '../../../features/chat/common/SearchInputBox';
 
 function Settings() {
   const [searchValue, setSearchValue] = React.useState('');
@@ -174,14 +173,12 @@ function Settings() {
 
       {/* Search keywords */}
       <Box component={'section'} my={2.5}>
-        <TextField
-          size="small"
-          fullWidth
-          placeholder={'Search settings...'}
+        <SearchInputBox
+          placeholder={'Search Settings...'}
           value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          InputProps={{
-            startAdornment: <SearchIcon fontSize="small" sx={{ mr: 1 }} />
+          handleChange={(e) => setSearchValue(e.target.value)}
+          sx={{
+            borderRadius: 0.5
           }}
         />
       </Box>

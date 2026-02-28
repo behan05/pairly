@@ -3,7 +3,6 @@ import {
   Box,
   MenuItem,
   IconButton,
-  InputAdornment,
   Stack,
   Tooltip,
   Divider,
@@ -13,7 +12,6 @@ import {
   useMediaQuery,
   Drawer,
   Typography,
-  TextField
 } from '@/MUI/MuiComponents';
 import {
   PersonAddIcon,
@@ -28,13 +26,10 @@ import {
   StarIcon,
   MarkunreadIcon,
   DraftsIcon,
-  SearchIcon,
-  SendIcon
 } from '@/MUI/MuiIcons';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
-import TheaterComedyIcon from '@mui/icons-material/TheaterComedy';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CheckIcon from '@mui/icons-material/Check';
 
@@ -43,7 +38,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@/redux/slices/auth/authAction';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { keyframes } from '@emotion/react';
 import toCapitalCase from '@/utils/textFormatting';
 
 // friend request selector
@@ -60,6 +54,7 @@ import { USERS_API } from "@/api/config";
 import axios from 'axios';
 import { getAuthHeaders } from '@/utils/authHeaders'
 import { socket } from '@/services/socket';
+import SearchInputBox from './SearchInputBox';
 
 const ChatSidebarHeader = ({ children }) => {
   const navigate = useNavigate();
@@ -431,7 +426,13 @@ const ChatSidebarHeader = ({ children }) => {
             <Typography
               variant="subtitle1"
               fontWeight={700}
-              sx={{ letterSpacing: 0.2 }}
+              sx={{
+                letterSpacing: 0.2,
+                color: theme.palette.text.primary,
+                fontWeight: 600,
+                letterSpacing: 1.2,
+                textTransform: 'uppercase'
+              }}
             >
               {profileData?.fullName}
             </Typography>
@@ -517,63 +518,12 @@ const ChatSidebarHeader = ({ children }) => {
         </Stack>
 
         {/* Search by User ID */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "stretch",
-            mb: 2,
-          }}
-        >
-          <TextField
-            size="small"
-            fullWidth
-            placeholder="Search by user ID"
-            value={userId}
-            name="userId"
-            onChange={handleChange}
-            autoComplete="off"
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                height: 40,
-                borderRadius: '10px 0 0 10px',
-                backgroundColor: theme.palette.background.paper,
-                '& fieldset': {
-                  borderRight: 'none',
-                },
-                '&:hover fieldset': {
-                  borderColor: theme.palette.primary.main,
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: theme.palette.primary.main,
-                },
-              },
-            }}
-          />
-
-          <IconButton
-            onClick={handlePublicUserId}
-            sx={{
-              width: 40,
-              height: 40,
-              borderRadius: '0 10px 10px 0',
-              border: `1px solid ${theme.palette.divider}`,
-              borderLeft: 'none',
-              backgroundColor: theme.palette.background.paper,
-              transition: 'background-color 0.2s ease, border-color 0.2s ease',
-              '&:hover': {
-                backgroundColor: theme.palette.action.hover,
-                borderColor: theme.palette.primary.main,
-              },
-            }}
-          >
-            <SearchIcon
-              sx={{
-                fontSize: 20,
-                color: theme.palette.text.secondary,
-              }}
-            />
-          </IconButton>
-        </Box>
+        <SearchInputBox
+          placeholder={"Search by user ID"}
+          value={userId}
+          handleChange={handleChange}
+          onClick={handlePublicUserId}
+        />
 
         <Divider />
 
@@ -604,30 +554,99 @@ const ChatSidebarHeader = ({ children }) => {
               alignItems="center"
               spacing={2}
               sx={{
-                p: 0.5,
-                borderRadius: 1,
-                background: theme.palette.background.default,
-                border: `1px dashed ${theme.palette.divider}`,
-                boxShadow: `0 2px 10px ${theme.palette.primary.main}30`,
+                p: 0.9,
+                borderRadius: 0.5,
+                backgroundColor: theme.palette.background.paper,
+                border: `1px solid ${theme.palette.divider}`,
+                boxShadow: `
+                  0 0 0 1px ${theme.palette.action.hover},
+                  0 8px 24px ${theme.palette.mode === "dark"
+                    ? theme.palette.common.black + "66"
+                    : theme.palette.common.black + "14"}
+                  `,
+
+                position: "relative",
+                overflow: "hidden",
+
+                transition: "all .25s cubic-bezier(.4,.0,.2,1)",
+
+                "&:hover": {
+                  borderColor: theme.palette.success.main,
+                  boxShadow: `
+                      0 0 0 1px ${theme.palette.success.main},
+                      0 10px 30px ${theme.palette.success.main}33
+                    `,
+                },
+
+                // thin top accent line (theme driven)
+                "&::before": {
+                  content: '""',
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "2px",
+                  background: `linear-gradient(
+                   90deg,
+                   transparent,
+                   ${theme.palette.success.main},
+                   transparent
+                  )`,
+                  opacity: 0.6,
+                },
+
+                "&:hover .search-icon": {
+                  color:'success.main'
+                }
               }}
             >
-              <Stack direction="row" gap={0.5} alignItems="center" flex={1}>
+              <Stack
+                direction="row"
+                gap={0.5}
+                alignItems="center"
+                flex={1}
+              >
                 <Avatar
                   src={searchedUser?.profileImage || defaultAvatar}
                   alt={searchedUser?.fullName}
                   sx={{
                     width: 36,
                     height: 36,
-                    border: `1px solid ${theme.palette.divider}`,
+
+                    borderRadius: '50%',
                     p: 0.1,
+
+                    border: `1px solid ${theme.palette.divider}`,
+
+                    transition: "all .25s",
+
+                    ".MuiStack-root:hover &": {
+                      borderColor: theme.palette.success.main,
+                    },
                   }}
                 />
                 <Stack>
-                  <Typography variant="subtitle2" fontWeight={600}>
+                  <Typography
+                    variant="subtitle2"
+                    fontWeight={600}
+                    sx={{
+                      fontWeight: 600,
+                      letterSpacing: 0.3,
+                      color: theme.palette.text.primary,
+                    }}
+                  >
                     {toCapitalCase(searchedUser?.fullName)}
                   </Typography>
 
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{
+                      color: theme.palette.text.secondary,
+                      fontSize: "0.68rem",
+                      letterSpacing: 0.6,
+                    }}
+                  >
                     Public ID: {searchedUser?.publicId}
                   </Typography>
                 </Stack>
@@ -639,18 +658,49 @@ const ChatSidebarHeader = ({ children }) => {
                     !isRequestSent && handleFriendRequest(searchedUser?.searchUserId)
                   }
                   sx={{
-                    border: !isRequestSent
-                      ? `1px solid ${theme.palette.success.main}`
-                      : `1px solid ${theme.palette.divider}`,
-                    background: theme.palette.background.paper,
-                    transition: "all .2s",
-                    "&:hover": { transform: "scale(1.08)" },
+                    borderRadius: 0.2,
+                    backgroundColor: theme.palette.background.paper,
+                    color: isRequestSent
+                      ? theme.palette.text.disabled
+                      : theme.palette.success.main,
+
+                    position: "relative",
+                    overflow: "hidden",
+
+                    transition: "all .25s cubic-bezier(.4,.0,.2,1)",
+
+                    boxShadow: `
+                    0 0 0 1px ${theme.palette.action.hover}
+                  `,
+
+                    "&:hover": {
+                      transform: isRequestSent ? "none" : "translateY(-1px)",
+                    },
+
+                    "&::before": {
+                      content: '""',
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "2px",
+                      background: isRequestSent
+                        ? theme.palette.divider
+                        : `linear-gradient(
+                        90deg,
+                        transparent,
+                        ${theme.palette.success.main},
+                        transparent
+                      )`,
+                      opacity: 0.6,
+                    },
                   }}
                 >
                   <PersonAddIcon
+                    className='search-icon'
                     sx={{
-                      color: theme.palette.success.main,
                       fontSize: "medium",
+                      color: 'text.primary',
                     }}
                   />
                 </IconButton>

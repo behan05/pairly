@@ -151,13 +151,46 @@ function RandomSidebar() {
         <Stack
           sx={{
             position: 'relative',
-            borderRadius: 1,
-            padding: 4,
+            borderRadius: 0.2,
+            p: 3,
             cursor: 'pointer',
-            boxShadow: `inset 0 0 0.5rem ${theme.palette.success.dark}`,
+            transition: 'all 0.25s ease',
 
-            '&:hover': {
-              boxShadow: `inset 0 0 0.7rem ${theme.palette.success.dark}`,
+            // Bottom accent line
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              width: '100%',
+              height: 2,
+              background: `linear-gradient(90deg, transparent, ${theme.palette.success.main}, transparent)`,
+              opacity: 0.6,
+              transition: 'all 0.25s ease',
+            },
+
+            // Top accent line
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: 2,
+              background: `linear-gradient(90deg, transparent, ${theme.palette.success.main}, transparent)`,
+              opacity: 0.6,
+              transition: 'all 0.25s ease',
+            },
+
+            // Hover effect
+            '&:hover::after': {
+              background: `linear-gradient(90deg, transparent, ${theme.palette.success.main}, transparent)`,
+              opacity: 0.9,
+            },
+
+            '&:hover::before': {
+              background: `linear-gradient(90deg, transparent, ${theme.palette.success.main}, transparent)`,
+              opacity: 0.9,
             },
           }}
         >

@@ -5,6 +5,7 @@ const savedTheme = localStorage.getItem("theme") || "dark";
 
 const initialState = {
   themeMode: savedTheme,
+  eroticMode: false
 };
 
 const themeSlice = createSlice({
@@ -16,8 +17,16 @@ const themeSlice = createSlice({
       state.themeMode = newTheme;
       localStorage.setItem("theme", newTheme);
     },
+
+    toggleEroticMode: (state) => {
+      state.eroticMode = !state.eroticMode
+    },
+
+    resetEroticMode: (state) => {
+      state.eroticMode = false
+    },
   },
 });
 
-export const { toggleTheme } = themeSlice.actions;
+export const { toggleTheme, toggleEroticMode, resetEroticMode } = themeSlice.actions;
 export default themeSlice.reducer;
