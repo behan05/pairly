@@ -628,7 +628,6 @@ const ChatSidebarHeader = ({ children }) => {
                 <Stack>
                   <Typography
                     variant="subtitle2"
-                    fontWeight={600}
                     sx={{
                       fontWeight: 600,
                       letterSpacing: 0.3,

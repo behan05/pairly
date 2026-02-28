@@ -62,7 +62,7 @@ function FriendRequestList() {
                     color="text.secondary"
                     sx={{ mt: 3, textAlign: 'center' }}
                 >
-                    No friends yet — start connecting!
+                    No friend requests yet — start connecting!
                 </Typography>
             ) : (
                 <Box>
@@ -73,40 +73,99 @@ function FriendRequestList() {
                                 alignItems="center"
                                 justifyContent="space-between"
                                 sx={{
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    border: `1px solid ${theme.palette.divider}`,
+                                    p: 0.9,
                                     borderRadius: 0.5,
-                                    p: 0.5,
-                                    my: 0.5,
-                                    bgcolor: 'transparent',
-                                    transition: 'background-color 0.3s ease',
-                                    ':hover': {
-                                        backgroundColor: theme.palette.action.hover
+                                    backgroundColor: theme.palette.background.paper,
+                                    border: `1px solid ${theme.palette.divider}`,
+                                    boxShadow: `
+                                             0 0 0 1px ${theme.palette.action.hover},
+                                             0 8px 24px ${theme.palette.mode === "dark"
+                                            ? theme.palette.common.black + "66"
+                                            : theme.palette.common.black + "14"}
+                                            `,
+
+                                    position: "relative",
+                                    overflow: "hidden",
+
+                                    transition: "all .25s cubic-bezier(.4,.0,.2,1)",
+
+                                    "&:hover": {
+                                        borderColor: theme.palette.success.main,
+                                        boxShadow: `
+                                         0 0 0 1px ${theme.palette.success.main},
+                                         0 10px 30px ${theme.palette.success.main}33
+                                        `,
+                                    },
+                                    // thin top accent line (theme driven)
+                                    "&::before": {
+                                        content: '""',
+                                        position: "absolute",
+                                        top: 0,
+                                        left: 0,
+                                        width: "100%",
+                                        height: "2px",
+                                        background: `linear-gradient(
+                                        90deg,
+                                        transparent,
+                                        ${theme.palette.success.main},
+                                        transparent
+                                        )`,
+                                        opacity: 0.6,
+                                    },
+
+                                    "&:hover .search-icon": {
+                                        color: 'success.main'
+                                    },
+
+                                    "&:hover .icon-red": {
+                                        color: 'error.dark'
                                     }
                                 }}
                             >
                                 {/* Left: Avatar + Info */}
-                                <Stack direction="row" spacing={1.5} alignItems="center">
+                                <Stack
+                                    direction="row"
+                                    spacing={1.5}
+                                    alignItems="center"
+                                    sx={{
+                                        overflow: 'hidden'
+                                    }}
+                                >
                                     <Avatar
                                         src={request?.profileImage || defaultAvatar}
                                         alt={request?.fullName}
-                                        sx={{ width: 40, height: 40 }}
+                                        sx={{
+                                            width: 40,
+                                            height: 40,
+
+                                            borderRadius: '50%',
+                                            border: `1px solid ${theme.palette.divider}`,
+                                        }}
                                     />
                                     <Stack>
                                         <Typography
                                             variant={isSm ? 'body2' : 'body1'}
-                                            fontWeight={500}
+                                            sx={{
+                                                fontWeight: 600,
+                                                letterSpacing: 0.3,
+                                                color: theme.palette.text.primary,
+                                            }}
                                         >
                                             {textFormater(request.fullName)}{' '}
                                             <StyledText text={split(request?.gender ?? ' ')} />
                                         </Typography>
                                         <Typography
-                                            variant="body2"
+                                            variant="caption"
                                             color="text.secondary"
-                                            noWrap
-                                            sx={{ maxWidth: 180 }}
+                                            sx={{
+                                                color: theme.palette.text.secondary,
+                                                fontSize: "0.68rem",
+                                                letterSpacing: 0.6,
+                                                whileSpace: 'nowrap',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                maxWidth: '100%'
+                                            }}
                                         >
                                             sent you a friend request
                                         </Typography>
@@ -114,45 +173,106 @@ function FriendRequestList() {
                                 </Stack>
 
                                 {/* Right: Actions */}
-                                {isSm ? (
-                                    <Stack direction="row" spacing={0.5}>
-                                        <Tooltip title="Accept">
-                                            <IconButton
-                                                onClick={() => handleAcceptRequest(request.sender)}
-                                            >
-                                                <CheckCircleIcon
-                                                    sx={{ color: theme.palette.success.main }}
-                                                />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip title="Reject">
-                                            <IconButton
-                                                onClick={() => handleRejectRequest(request.sender)}
-                                            >
-                                                <CloseIcon sx={{ color: theme.palette.error.main }} />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Stack>
-                                ) : (
-                                    <Stack direction="row" spacing={1}>
-                                        <Button
-                                            variant="outlined"
-                                            size="small"
-                                            color="success"
+                                <Stack
+                                    direction="row"
+                                    spacing={0.5}
+                                >
+                                    <Tooltip title="Accept">
+                                        <IconButton
                                             onClick={() => handleAcceptRequest(request.sender)}
+                                            sx={{
+                                                borderRadius: 0.2,
+                                                backgroundColor: theme.palette.background.paper,
+                                                color: theme.palette.success.main,
+
+                                                position: "relative",
+                                                overflow: "hidden",
+
+                                                transition: "all .25s cubic-bezier(.4,.0,.2,1)",
+
+                                                boxShadow: `
+                                                    0 0 0 1px ${theme.palette.action.hover}
+                                                `,
+
+                                                "&:hover": {
+                                                    transform: "translateY(-1px)",
+                                                },
+
+                                                "&::before": {
+                                                    content: '""',
+                                                    position: "absolute",
+                                                    top: 0,
+                                                    left: 0,
+                                                    width: "100%",
+                                                    height: "2px",
+                                                    background: `linear-gradient(
+                                                    90deg,
+                                                    transparent,
+                                                    ${theme.palette.success.main},
+                                                    transparent
+                                                )`,
+                                                    opacity: 0.6,
+                                                },
+                                            }}
                                         >
-                                            Accept
-                                        </Button>
-                                        <Button
-                                            variant="outlined"
-                                            size="small"
-                                            color="error"
+                                            <CheckCircleIcon
+                                                className='search-icon'
+                                                sx={{
+                                                    fontSize: "medium",
+                                                    color: 'text.primary',
+                                                }}
+                                            />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="Reject">
+                                        <IconButton
                                             onClick={() => handleRejectRequest(request.sender)}
+                                            sx={{
+                                                borderRadius: 0.2,
+                                                backgroundColor: theme.palette.background.paper,
+                                                color: theme.palette.error.main,
+
+                                                position: "relative",
+                                                overflow: "hidden",
+
+                                                transition: "all .25s cubic-bezier(.4,.0,.2,1)",
+
+                                                boxShadow: `
+                                                    0 0 0 1px ${theme.palette.action.hover}
+                                                `,
+
+                                                "&:hover": {
+                                                    transform: "translateY(-1px)",
+                                                },
+
+                                                "&::before": {
+                                                    content: '""',
+                                                    position: "absolute",
+                                                    top: 0,
+                                                    left: 0,
+                                                    width: "100%",
+                                                    height: "2px",
+                                                    background: `linear-gradient(
+                                                    90deg,
+                                                    transparent,
+                                                    ${theme.palette.error.main},
+                                                    transparent
+                                                )`,
+                                                    opacity: 0.6,
+                                                },
+                                            }}
                                         >
-                                            Ignore
-                                        </Button>
-                                    </Stack>
-                                )}
+                                            <CloseIcon
+                                                className="icon-red"
+                                                sx={{
+                                                    fontSize: "medium",
+                                                    color: 'error.main',
+                                                }}
+                                            />
+                                        </IconButton>
+                                    </Tooltip>
+                                </Stack>
+
                             </Stack>
 
                             {/* Divider between requests */}

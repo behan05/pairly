@@ -264,7 +264,7 @@ function ToggleErotic() {
                             textAlign: 'center'
                         }}
                     >
-                        This feature is optional and requires mutual preference for matching.
+                        This feature is optional and only changes your chat background temporarily
                     </Typography>
                 </DialogContent>
 
@@ -334,7 +334,6 @@ function ToggleErotic() {
                 </DialogActions>
             </Dialog>
         </>
-
     )
 }
 
