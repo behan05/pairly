@@ -8,12 +8,14 @@ function StyledActionButton({
   text,
   redirectUrl,
   sx = {},
+  onClick,
   ...props
 }) {
   const theme = useTheme();
 
   return (
     <Button
+      onClick={onClick}
       component={Link}
       to={redirectUrl}
       startIcon={icon}

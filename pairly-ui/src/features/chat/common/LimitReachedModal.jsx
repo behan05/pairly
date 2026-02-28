@@ -1,4 +1,12 @@
-import { Dialog, DialogTitle, DialogContent, useTheme, DialogActions, Button, Typography } from '@/MUI/MuiComponents';
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    useTheme,
+    Button,
+    Typography
+} from '@/MUI/MuiComponents';
 import { useNavigate } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
 
@@ -12,25 +20,30 @@ const LimitReachedModal = ({ open, onClose, type }) => {
         : 'You’ve reached your 5 media upload limit for today.';
 
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth PaperProps={{
-            sx: {
-                borderRadius: 2,
-                p: 3,
-                maxWidth: 400,
-                boxShadow:
-                    '0 20px 30px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.05)',
-                borderColor: alpha(theme.palette.warning.main, 0.4),
-                background: `radial-gradient(circle at 30% 0%, ${alpha(
-                    theme.palette.info.main,
-                    0.9
-                )} 0%, ${theme.palette.background.paper} 50%)`,
-                transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+        <Dialog
+            open={open}
+            onClose={onClose}
+            maxWidth="xs"
+            fullWidth
+            PaperProps={{
+                sx: {
+                    borderRadius: 2,
+                    p: 3,
+                    maxWidth: 400,
+                    boxShadow:
+                        '0 20px 30px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.05)',
+                    borderColor: alpha(theme.palette.warning.main, 0.4),
+                    background: `radial-gradient(circle at 30% 0%, ${alpha(
+                        theme.palette.info.main,
+                        0.9
+                    )} 0%, ${theme.palette.background.paper} 50%)`,
+                    transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
 
-                '&:hover': {
-                    transform: 'translateX(5px) scale(1.01)',
-                }
-            },
-        }}>
+                    '&:hover': {
+                        transform: 'translateX(5px) scale(1.01)',
+                    }
+                },
+            }}>
             <DialogTitle sx={{ fontWeight: 600, textAlign: 'center' }}>
                 Daily Limit Reached
             </DialogTitle>
