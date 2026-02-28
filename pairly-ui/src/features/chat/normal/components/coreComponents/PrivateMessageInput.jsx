@@ -1,7 +1,17 @@
 import { useRef, useState, useEffect } from 'react';
 import {
-  Box, IconButton, InputBase, Menu, MenuItem, Paper, Tooltip, Typography, useTheme, useMediaQuery, Stack
-} from '../../../../../MUI/MuiComponents';
+  Box,
+  IconButton,
+  InputBase,
+  Menu,
+  MenuItem,
+  Paper,
+  Tooltip,
+  Typography,
+  useTheme,
+  useMediaQuery,
+  Stack
+} from '@/MUI/MuiComponents';
 import {
   CloseIcon,
   SendIcon,
@@ -213,6 +223,11 @@ function PrivateMessageInput() {
     formData.append('media', file);
     formData.append('conversationId', String(conversationId));
     formData.append('messageType', 'audio');
+
+    /*
+    used this when user sends a voice message, so backend can handle it differently if needed 
+    */
+    // formData.append('flag', 'voice'); 
 
     // Optimistic UI
     dispatch(

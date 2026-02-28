@@ -27,6 +27,7 @@ import {
   MusicNoteIcon,
 } from '@/MUI/MuiIcons';
 import NightsStayIcon from '@mui/icons-material/NightsStay';
+import { alpha } from "@mui/material/styles";
 
 // Components
 import TypingIndicator from '@/components/private/randomChat/TypingIndicator';
@@ -44,6 +45,9 @@ import HearTogherModel from '../hearTogetherMode/HearTogetherModel';
 
 import { updateSettingsNotification } from '@/redux/slices/settings/settingsAction';
 import { useDispatch, useSelector } from 'react-redux'
+
+// Work active tab only "Erotic mode"
+import ToggleErotic from '../../../common/erotic-toggle/ToggleErotic';
 
 function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat }) {
   const theme = useTheme();
@@ -69,8 +73,7 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
   const { allUsers: users, chatUsers, activeChat } = useSelector(state => state.privateChat);
   const { notificationSettings } = useSelector((state) => state.settings);
   const [notification, setNotification] = useState(notificationSettings?.newMessage ?? false);
-  // console.log({chatUsers});
-  
+
   useEffect(() => {
     setNotification(notificationSettings?.newMessage ?? false);
   }, [notificationSettings]);
@@ -243,8 +246,18 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
         px={isSm ? 0.5 : 2}
         py={1}
         sx={{
-          borderBottom: `1px solid ${theme.palette.divider}`,
-          backgroundColor: theme.palette.background.paper,
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+
+          backgroundColor: alpha(
+            theme.palette.background.paper,
+            0.85
+          ),
+
+          borderBottom: `1px solid ${alpha(
+            theme.palette.divider,
+            0.6
+          )}`,
         }}
       >
         {/* Back Button only for small screens */}
@@ -313,6 +326,9 @@ function PrivateChatHeader({ userId, onBack, onCloseChatWindow, clearActiveChat 
               (isPartnerTyping ? <TypingIndicator /> : <WaitingIndicator />)
               : <WaitingIndicator />}
           </Stack>
+
+          <ToggleErotic />
+
           {/* Action Menu Icon */}
           <Tooltip title='Menu'>
             <IconButton onClick={handleMenuOpen} size="small">

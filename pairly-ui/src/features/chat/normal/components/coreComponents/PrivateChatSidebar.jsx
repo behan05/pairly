@@ -24,6 +24,7 @@ import AudiotrackIcon from '@mui/icons-material/Audiotrack';
 
 // Components
 import ChatSidebarHeader from '@/features/chat/common/ChatSidebarHeader';
+import SearchInputBox from '@/features/chat/common/SearchInputBox';
 import textFormater from '@/utils/textFormatting';
 import formatMessageTime from '@/utils/formatMessageTime';
 import SettingsAction from '@/components/private/SettingsAction';
@@ -138,57 +139,15 @@ function PrivateChatSidebar() {
                     sx={{
                         display: "flex",
                         gap: 1,
-                        alignItems: "center",
                     }}
                 >
-                    <Stack flex={1}>
-                        <TextField
-                            size="small"
-                            fullWidth
-                            placeholder="Search user..."
-                            value={searchValue}
-                            onChange={(e) => setSearchValue(e.target.value)}
-                            variant="outlined"
-                            InputProps={{
-                                startAdornment: (
-                                    <SearchIcon
-                                        fontSize="small"
-                                        sx={(theme) => ({
-                                            mr: 1,
-                                            color: theme.palette.text.secondary,
-                                            transition: "0.2s ease",
-                                        })}
-                                    />
-                                ),
-                            }}
-                            sx={(theme) => ({
-                                "& .MuiOutlinedInput-root": {
-                                    borderRadius: 0, // sharp edges
-                                    backgroundColor: "transparent",
-                                    transition: "all 0.25s ease",
+                    <SearchInputBox
+                        placeholder={'Search user...'}
+                        value={searchValue}
+                        handleChange={(e) => setSearchValue(e.target.value)}
+                        sx={{ flex: 1 }}
+                    />
 
-                                    "& fieldset": {
-                                        borderColor: theme.palette.divider,
-                                        transition: "all 0.25s ease",
-                                    },
-
-                                    "&:hover fieldset": {
-                                        borderColor: theme.palette.text.primary,
-                                    },
-
-                                    "&.Mui-focused fieldset": {
-                                        borderColor: theme.palette.success.main,
-                                        borderWidth: "1px",
-                                    },
-                                },
-
-                                "& input": {
-                                    fontSize: "0.85rem",
-                                    letterSpacing: 0.5,
-                                },
-                            })}
-                        />
-                    </Stack>
                     <StyledActionButton
                         icon={<BoltIcon sx={{ color: 'success.main' }} />}
                         text='Choose Chat'
@@ -196,7 +155,7 @@ function PrivateChatSidebar() {
                         sx={{
                             px: 2,
                             py: 1,
-                            borderRadius: 0.2
+                            borderRadius: 0.2,
                         }}
                     />
                 </Box>

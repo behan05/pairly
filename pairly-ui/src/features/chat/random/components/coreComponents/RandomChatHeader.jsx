@@ -23,6 +23,7 @@ import {
   StarIcon,
   PersonAddAltOutlinedIcon
 } from '@/MUI/MuiIcons';
+import { alpha } from '@mui/material/styles';
 
 // Components
 import TypingIndicator from '@/components/private/randomChat/TypingIndicator';
@@ -34,6 +35,9 @@ import ReportUserModal from '../supportComponents/ReportUserModal';
 import PrivateChatRequestPopupModal from '../supportComponents/PrivateChatRequestPopupModal';
 import { updateSettingsNotification } from '@/redux/slices/settings/settingsAction';
 
+// Work active tab only "Erotic mode"
+import ToggleErotic from '../../../common/erotic-toggle/ToggleErotic';
+
 // Redux
 import { useDispatch, useSelector } from 'react-redux'
 // Country and State utilities
@@ -44,6 +48,7 @@ import 'react-toastify/dist/ReactToastify.css';
 // socket instance
 import { socket } from '@/services/socket';
 import { Divider } from '@mui/material';
+
 /**
  * RandomChatHeader component
  *
@@ -56,7 +61,6 @@ import { Divider } from '@mui/material';
  * @component
  * @returns {JSX.Element}
  */
-
 function RandomChatHeader() {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -226,8 +230,18 @@ function RandomChatHeader() {
         px={isSm ? 0.5 : 2}
         py={1}
         sx={{
-          borderBottom: `1px solid ${theme.palette.divider}`,
-          backgroundColor: theme.palette.background.paper,
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+
+          backgroundColor: alpha(
+            theme.palette.background.paper,
+            0.85
+          ),
+
+          borderBottom: `1px solid ${alpha(
+            theme.palette.divider,
+            0.6
+          )}`,
         }}
       >
         {/* Left Section: Avatar + Name + Location */}
@@ -240,8 +254,29 @@ function RandomChatHeader() {
         >
           <Tooltip title={<StyledText text={'Partner Profile'} />}>
             <Avatar
-              alt={partnerProfile?.fullName ?? 'Stranger'}
+              alt={partnerProfile?.fullName ?? "Stranger"}
               src={partnerProfile?.profileImage || defaultAvatar}
+              sx={(theme) => ({
+                width: 40,
+                height: 40,
+                borderRadius: "50%",
+                border: `1px solid ${theme.palette.divider}`,
+
+                boxShadow:
+                  theme.palette.mode === "dark"
+                    ? "0 4px 12px rgba(0,0,0,0.4)"
+                    : "0 2px 8px rgba(0,0,0,0.1)",
+
+                transition: "all 0.25s ease",
+
+                "&:hover": {
+                  transform: "scale(1.05)",
+                  boxShadow:
+                    theme.palette.mode === "dark"
+                      ? "0 6px 16px rgba(0,0,0,0.55)"
+                      : "0 4px 12px rgba(0,0,0,0.15)",
+                },
+              })}
             />
           </Tooltip>
           <Box>
@@ -253,7 +288,15 @@ function RandomChatHeader() {
               alignItems="center"
             >
               <Tooltip title={<StyledText text={'Partner Profile'} />}>
-                <Typography variant="subtitle1" fontWeight={600} color="text.primary">
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    fontWeight: 600,
+                    letterSpacing: 0.5,
+                    fontSize: '0.9em',
+                    color: theme.palette.text.primary,
+                  }}
+                >
                   {partnerProfile?.fullName ?? 'Stranger'}
                 </Typography>
               </Tooltip>
@@ -261,23 +304,43 @@ function RandomChatHeader() {
                 <>
                   {isPartnerPremium ? (
                     <Tooltip title="Premium User">
-                      <StarIcon
-                        sx={{
-                          color: theme.palette.warning.main,
-                          fontSize: 20,
-                          ml: 0.5,
-                        }}
-                      />
+                      <Box
+                        sx={(theme) => ({
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: 18,
+                          height: 18,
+                          ml: 0.6,
+                          borderRadius: 0.2,
+                          border: `1px solid ${theme.palette.primary.main}`,
+                          color: theme.palette.primary.main,
+                          boxShadow: `0 0 8px ${theme.palette.primary.main}44`,
+                          transition: "all .25s",
+                        })}
+                      >
+                        <StarIcon sx={{ fontSize: 14 }} />
+                      </Box>
                     </Tooltip>
                   ) : (
                     <Tooltip title="Verified User">
-                      <CheckCircleIcon
-                        sx={{
-                          color: theme.palette.success.main,
-                          fontSize: 20,
-                          ml: 0.5,
-                        }}
-                      />
+                      <Box
+                        sx={(theme) => ({
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: 18,
+                          height: 18,
+                          ml: 0.6,
+                          borderRadius: 0.2,
+                          border: `1px solid ${theme.palette.primary.main}`,
+                          color: theme.palette.primary.main,
+                          opacity: 0.8,
+                          transition: "all .25s",
+                        })}
+                      >
+                        <CheckCircleIcon sx={{ fontSize: 14 }} />
+                      </Box>
                     </Tooltip>
                   )}
                 </>
@@ -288,7 +351,8 @@ function RandomChatHeader() {
               variant="body2"
               color="text.secondary"
               sx={{
-                fontSize: isSm ? '0.8rem' : '0.9rem'
+                fontSize: "0.68rem",
+                letterSpacing: 0.6,
               }}
             >
               {fullStateName} {fullCountryName}
@@ -304,48 +368,8 @@ function RandomChatHeader() {
           gap={1.2}
         >
           {partnerTyping ? <TypingIndicator /> : <WaitingIndicator />}
-          <Tooltip title={isFriendRequestSend ? 'Request Sent' : 'Add Friend'}>
-            <IconButton
-              onClick={() => !isFriendRequestSend && handleAction('requestForPrivateChat')}
-              size="small"
-              sx={(theme) => ({
-                cursor: isFriendRequestSend ? 'not-allowed' : 'pointer',
-                pointerEvents: isFriendRequestSend ? 'none' : 'auto',
-                opacity: isFriendRequestSend ? 0.5 : 1,
 
-                backgroundColor: isFriendRequestSend
-                  ? theme.palette.action.disabledBackground
-                  : theme.palette.success.light + '20',
-
-                border: `1px solid ${isFriendRequestSend
-                  ? theme.palette.divider
-                  : theme.palette.success.main
-                  }`,
-
-                boxShadow: isFriendRequestSend
-                  ? 'none'
-                  : `0 0 6px ${theme.palette.success.main}40`,
-
-                transition: 'all 0.25s ease',
-
-                '&:hover': !isFriendRequestSend && {
-                  backgroundColor: theme.palette.success.light + '40',
-                  boxShadow: `0 0 12px ${theme.palette.success.main}80`,
-                },
-
-                '&:active': !isFriendRequestSend && {
-                  boxShadow: `0 0 4px ${theme.palette.success.main}60`,
-                },
-              })}
-            >
-
-              <PersonAddAltOutlinedIcon
-                sx={{
-                  color: isFriendRequestSend ? 'text.disabled' : 'success.main',
-                  fontSize: '1.2rem'
-                }} />
-            </IconButton>
-          </Tooltip>
+          <ToggleErotic />
 
           {/* Action Menu Icon */}
           <IconButton onClick={handleMenuOpen} size="small">
