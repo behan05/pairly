@@ -95,26 +95,26 @@ function AllChatOptions() {
             redirectTo: "/pairly/random-chat",
             buttonTextIcon: <PersonIcon sx={{ color: '#fff' }} />,
         },
-        {
-            title: "Anonymous Chat",
-            titleIcon: (
-                <GroupIcon
-                    fontSize='small'
-                    sx={{ color: '#00C896' }}
-                />
-            ),
-            subTitle: "No name. No profile.",
-            subTitleIcon: (
-                <GroupIcon
-                    fontSize='small'
-                    sx={{ color: '#00C896' }}
-                />
-            ),
-            lottie: <AnonymousChatLottie />,
-            buttonText: "Chat Anonymously",
-            redirectTo: "/pairly/anonymous-chat",
-            buttonTextIcon: <GroupIcon sx={{ color: '#fff' }} />,
-        },
+        // {
+        //     title: "Anonymous Chat",
+        //     titleIcon: (
+        //         <GroupIcon
+        //             fontSize='small'
+        //             sx={{ color: '#00C896' }}
+        //         />
+        //     ),
+        //     subTitle: "No name. No profile.",
+        //     subTitleIcon: (
+        //         <GroupIcon
+        //             fontSize='small'
+        //             sx={{ color: '#00C896' }}
+        //         />
+        //     ),
+        //     lottie: <AnonymousChatLottie />,
+        //     buttonText: "Chat Anonymously",
+        //     redirectTo: "/pairly/anonymous-chat",
+        //     buttonTextIcon: <GroupIcon sx={{ color: '#fff' }} />,
+        // },
 
         // Other chat modes can be added here in the future
         // {

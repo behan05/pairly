@@ -89,8 +89,6 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
   // Reference to hidden file input
   const fileInputRef = useRef(null);
   const inputContainerRef = useRef(null);
-  const originalStyleRef = useRef(null);
-  const pinnedRef = useRef(false);
 
   // Handle attach button click (open file menu)
   const handleAttachClick = (event) => {
@@ -407,98 +405,6 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
     },
   };
 
-  // Adding this useEffect to handle mobile keyboard resizing
-  useEffect(() => {
-    const restoreStyles = () => {
-      const el = inputContainerRef.current;
-      if (!el || !originalStyleRef.current) return;
-      const s = originalStyleRef.current;
-      el.style.position = s.position || '';
-      el.style.left = s.left || '';
-      el.style.right = s.right || '';
-      el.style.bottom = s.bottom || '';
-      el.style.width = s.width || '';
-      el.style.zIndex = s.zIndex || '';
-      el.style.marginBottom = s.marginBottom || '';
-      pinnedRef.current = false;
-    };
-
-    const applyPinned = () => {
-      const el = inputContainerRef.current;
-      if (!el || !window.visualViewport) return;
-      if (!originalStyleRef.current) {
-        originalStyleRef.current = {
-          position: el.style.position,
-          left: el.style.left,
-          right: el.style.right,
-          bottom: el.style.bottom,
-          width: el.style.width,
-          zIndex: el.style.zIndex,
-          marginBottom: el.style.marginBottom,
-        };
-      }
-
-      // Calculate keyboard height relative to layout viewport and visual viewport offset
-      const vv = window.visualViewport;
-      const keyboardHeight = Math.max(0, window.innerHeight - vv.height - (vv.offsetTop || 0));
-
-      el.style.position = 'fixed';
-      el.style.left = 0;
-      el.style.right = 0;
-      el.style.bottom = `${keyboardHeight + 8}px`;
-      el.style.width = '100%';
-      el.style.zIndex = 1500;
-      // keep a small bottom spacing so element isn't flush to keyboard
-      el.style.marginBottom = '0px';
-      pinnedRef.current = true;
-    };
-
-    const handleViewportChange = () => {
-      if (!inputContainerRef.current) return;
-      if (window.visualViewport) {
-        const offset = window.innerHeight - window.visualViewport.height;
-        if (offset > 0) {
-          applyPinned();
-        } else if (pinnedRef.current) {
-          restoreStyles();
-        } else {
-          // ensure no extra bottom margin when keyboard closed
-          inputContainerRef.current.style.marginBottom = '0px';
-        }
-      } else {
-        // fallback behavior without visualViewport: treat small window.innerHeight reductions as keyboard
-        const smallOffset = window.innerHeight < (originalStyleRef.current?.savedInnerHeight || window.screen.height - 100);
-        if (smallOffset) {
-          // approximate keyboard; pin with small bottom
-          inputContainerRef.current.style.position = 'fixed';
-          inputContainerRef.current.style.bottom = '8px';
-          pinnedRef.current = true;
-        } else if (pinnedRef.current) {
-          restoreStyles();
-        }
-      }
-    };
-
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', handleViewportChange);
-      window.visualViewport.addEventListener('scroll', handleViewportChange);
-      handleViewportChange();
-    } else {
-      // fallback for browsers without visualViewport
-      window.addEventListener('resize', handleViewportChange);
-      handleViewportChange();
-    }
-
-    return () => {
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', handleViewportChange);
-        window.visualViewport.removeEventListener('scroll', handleViewportChange);
-      } else {
-        window.removeEventListener('resize', handleViewportChange);
-      }
-    };
-  }, []);
-
   const handleLocationClick = () => {
     if (isFreeUser) {
       setPremiumFeatureName('Location exchange');
@@ -556,7 +462,6 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
       width="100%"
       zIndex={10}
       sx={{
-        transition: 'margin-bottom 0.25s ease',
         pb: isSm ? 'env(safe-area-inset-bottom)' : 0,
       }}
     >
@@ -760,12 +665,11 @@ function RandomMessageInput({ NextButton, DisconnectButton }) {
           p: 0.5,
           borderRadius: 1,
           border: `1px solid ${theme.palette.divider}`,
-
-          position: { xs: 'fixed', sm: 'sticky' },
+          width: 'calc(100% - 16px)',
+          position: 'sticky',
           bottom: 0,
-          left: 0,
-          right: 0,
           zIndex: 1200,
+          paddingBottom: `calc(0.5rem + env(safe-area-inset-bottom))`,
         }}
       >
 

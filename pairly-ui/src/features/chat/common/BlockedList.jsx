@@ -75,17 +75,45 @@ function BlockedList() {
               alignItems="center"
               justifyContent="space-between"
               sx={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                border: `1px solid ${theme.palette.divider}`,
+                p: 0.9,
                 borderRadius: 0.5,
-                p: 0.5,
-                my: 0.5,
-                bgcolor: 'transparent',
-                transition: 'background-color 0.3s ease',
-                ':hover': {
-                  backgroundColor: theme.palette.action.hover
+                backgroundColor: theme.palette.background.paper,
+                border: `1px solid ${theme.palette.divider}`,
+                boxShadow: `
+                    0 0 0 1px ${theme.palette.action.hover},
+                    0 8px 24px ${theme.palette.mode === "dark"
+                    ? theme.palette.common.black + "66"
+                    : theme.palette.common.black + "14"}
+                    `,
+
+                position: "relative",
+                overflow: "hidden",
+
+                transition: "all .25s cubic-bezier(.4,.0,.2,1)",
+
+                // thin top accent line (theme driven)
+                "&::before": {
+                  content: '""',
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "2px",
+                  background: `linear-gradient(
+                  90deg,
+                  transparent,
+                  ${theme.palette.success.main},
+                  transparent
+                  )`,
+                  opacity: 0.6,
+                },
+
+                "&:hover .search-icon": {
+                  color: 'success.main'
+                },
+
+                "&:hover .icon-red": {
+                  color: 'error.dark'
                 }
               }}
             >
@@ -95,27 +123,40 @@ function BlockedList() {
                   src={user?.profileImage || defaultAvatar}
                   alt={`${user?.fullName} profile`}
                   sx={{
-                    objectFit: 'cover',
                     width: 40,
                     height: 40,
+
+                    borderRadius: '50%',
+                    border: `1px solid ${theme.palette.divider}`,
                   }}
                 />
                 <Stack>
                   <Typography
                     variant={isSm ? 'body2' : 'body1'}
-                    fontWeight={600}
-                    color="text.primary"
+                    sx={{
+                      fontWeight: 600,
+                      letterSpacing: 0.3,
+                      color: theme.palette.text.primary,
+                    }}
                   >
                     {user?.fullName}
                   </Typography>
                   <Typography
                     variant="body2"
-                    color="text.secondary"
+                    sx={{
+                      color: theme.palette.text.secondary,
+                      fontSize: "0.68rem",
+                      letterSpacing: 0.6,
+                      whileSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      maxWidth: '100%'
+                    }}
                   >
                     Blocked on{' '}
                     {new Date(user.blockedAt).toLocaleDateString([], {
-                      day: '2-digit',
-                      month: '2-digit',
+                      day: 'numeric',
+                      month: 'short',
                       year: '2-digit',
                     })}
                   </Typography>
@@ -123,22 +164,51 @@ function BlockedList() {
               </Stack>
 
               {/* Actions */}
-              {isSm ? (
-                <Tooltip title="Unblock User">
-                  <IconButton color="success" onClick={() => handleUnblock(user)}>
-                    <LockOpenIcon sx={{ color: theme.palette.success.main }} />
-                  </IconButton>
-                </Tooltip>
-              ) : (
-                <Button
-                  variant="outlined"
-                  color='success'
-                  startIcon={<LockOpenIcon sx={{ color: theme.palette.text.primary }} />}
+              <Tooltip title="Unblock User">
+                <IconButton
                   onClick={() => handleUnblock(user)}
+                  sx={{
+                    borderRadius: 0.2,
+                    backgroundColor: theme.palette.background.paper,
+                    color: theme.palette.success.main,
+
+                    position: "relative",
+                    overflow: "hidden",
+
+                    transition: "all .25s cubic-bezier(.4,.0,.2,1)",
+
+                    boxShadow: `0 0 0 1px ${theme.palette.action.hover}`,
+
+                    "&:hover": {
+                      transform: "translateY(-1px)",
+                    },
+
+                    "&::before": {
+                      content: '""',
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "2px",
+                      background: `linear-gradient(
+                        90deg,
+                        transparent,
+                        ${theme.palette.success.main},
+                        transparent
+                        )`,
+                      opacity: 0.6,
+                    },
+                  }}
                 >
-                  Unblock
-                </Button>
-              )}
+                  <LockOpenIcon
+                    className='search-icon'
+                    sx={{
+                      fontSize: "medium",
+                      color: 'text.primary',
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
             </Stack>
           ))}
         </Box>
