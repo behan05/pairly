@@ -15,6 +15,7 @@ import {
 } from '@/MUI/MuiComponents';
 import {
   PersonAddIcon,
+  CheckCircleIcon,
   PersonIcon,
   LogoutIcon,
   HelpOutlineIcon,
@@ -427,7 +428,6 @@ const ChatSidebarHeader = ({ children }) => {
               variant="subtitle1"
               fontWeight={700}
               sx={{
-                letterSpacing: 0.2,
                 color: theme.palette.text.primary,
                 fontWeight: 600,
                 letterSpacing: 1.2,
@@ -596,7 +596,7 @@ const ChatSidebarHeader = ({ children }) => {
                 },
 
                 "&:hover .search-icon": {
-                  color:'success.main'
+                  color: 'success.main'
                 }
               }}
             >
@@ -612,9 +612,7 @@ const ChatSidebarHeader = ({ children }) => {
                   sx={{
                     width: 36,
                     height: 36,
-
                     borderRadius: '50%',
-                    p: 0.1,
 
                     border: `1px solid ${theme.palette.divider}`,
 
@@ -695,13 +693,24 @@ const ChatSidebarHeader = ({ children }) => {
                     },
                   }}
                 >
-                  <PersonAddIcon
-                    className='search-icon'
-                    sx={{
-                      fontSize: "medium",
-                      color: 'text.primary',
-                    }}
-                  />
+                  {!isRequestSent ? (
+                    <PersonAddIcon
+                      className='search-icon'
+                      sx={{
+                        fontSize: "medium",
+                        color: 'text.primary',
+                      }}
+                    />
+                  ) : (
+                    <CheckCircleIcon
+                      sx={{
+                        fontSize: "medium",
+                        color: 'text.disabled',
+                        cursor: "not-allowed"
+                      }}
+                    />
+                  )}
+
                 </IconButton>
               </Tooltip>
             </Stack>

@@ -219,6 +219,8 @@ function RandomChatWindow({ setShowChatWindow }) {
       overflow: "hidden",
       width: "100%",
       height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
       // borderLeft: `1px solid ${theme.palette.divider}`,
     }}>
       {isConnected && bgChatImg}
@@ -226,19 +228,20 @@ function RandomChatWindow({ setShowChatWindow }) {
       {isConnected ? (
         <>
           {/* Header */}
-          <RandomChatHeader />
+          <Box sx={{ flex: '0 0 auto' }}>
+            <RandomChatHeader />
+          </Box>
 
           {/* Messages Area */}
           <Box
             id="chat-messages"
-            flex={1}
             p={2}
             sx={{
               overflowY: 'auto',
               display: 'flex',
               flexDirection: 'column',
+              flex: '1 1 auto',
               minHeight: 0,
-              maxHeight: `calc(var(--vh, 1vh) * 100 - 160px)`
             }}
           >
             <Stack spacing={1.5}>
@@ -581,26 +584,28 @@ function RandomChatWindow({ setShowChatWindow }) {
           </Box>
 
           {/* Input area for sending messages */}
-          <RandomMessageInput
-            onFocus={() => setIsTyping(true)}
-            onBlur={() => setIsTyping(false)}
-            NextButton={isSm &&
-              <NextButton
-                onClick={() => {
-                  handleMenuClose();
-                  handleNext();
-                }}
-                text={'NEXT'}
-              />}
-            DisconnectButton={isSm &&
-              <DisconnectButton
-                onClick={() => {
-                  handleMenuClose();
-                  handleDisconnect();
-                }}
-                text={'DISCONNECT'}
-              />}
-          />
+          <Box sx={{ flex: '0 0 auto' }}>
+            <RandomMessageInput
+              onFocus={() => setIsTyping(true)}
+              onBlur={() => setIsTyping(false)}
+              NextButton={isSm &&
+                <NextButton
+                  onClick={() => {
+                    handleMenuClose();
+                    handleNext();
+                  }}
+                  text={'NEXT'}
+                />}
+              DisconnectButton={isSm &&
+                <DisconnectButton
+                  onClick={() => {
+                    handleMenuClose();
+                    handleDisconnect();
+                  }}
+                  text={'DISCONNECT'}
+                />}
+            />
+          </Box>
         </>
       ) : (
         // === Not Connected Placeholder ===

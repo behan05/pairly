@@ -5,7 +5,6 @@ import {
     Typography,
     useTheme,
     useMediaQuery,
-    Button,
     Tooltip,
     IconButton,
     Divider,
@@ -89,13 +88,6 @@ function FriendRequestList() {
 
                                     transition: "all .25s cubic-bezier(.4,.0,.2,1)",
 
-                                    "&:hover": {
-                                        borderColor: theme.palette.success.main,
-                                        boxShadow: `
-                                         0 0 0 1px ${theme.palette.success.main},
-                                         0 10px 30px ${theme.palette.success.main}33
-                                        `,
-                                    },
                                     // thin top accent line (theme driven)
                                     "&::before": {
                                         content: '""',
@@ -272,7 +264,6 @@ function FriendRequestList() {
                                         </IconButton>
                                     </Tooltip>
                                 </Stack>
-
                             </Stack>
 
                             {/* Divider between requests */}
