@@ -423,8 +423,8 @@ function AllChatOptions() {
 
                 <Box
                     sx={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 250px))',
+                        display: 'display',
+                        // gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 250px))',
                         gap: 1,
                         rowGap: 5,
                         p: '40px 0',
