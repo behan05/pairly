@@ -7,6 +7,13 @@ const Block = require('../../models/chat/Block.model');
 const PrivateChatRequest = require('../../models/chat/PrivateChatRequest.model');
 const ChatClearLog = require('../../models/chat/ChatClearLog.model');
 const { getIO } = require('../../sockets/socketServer');
+const {
+    uploadChatVoice,
+    uploadImage,
+    uploadAudio,
+    uploadVideo,
+    uploadDocument
+} = require('../../services/media.service');
 
 exports.listPrivateChatUsersController = async (req, res) => {
     const currentUserId = req.user.id?.toString();
@@ -48,7 +55,7 @@ exports.listPrivateChatUsersController = async (req, res) => {
         );
 
         const blockedUsers = await Block.find({
-            isRandomChat: false,
+            mode: 'private',
             $or: [
                 { blocker: currentUserId, blocked: { $in: allFriendsId } },
                 { blocked: currentUserId, blocker: { $in: allFriendsId } }
@@ -76,7 +83,7 @@ exports.listPrivateChatUsersController = async (req, res) => {
         const users = await User.find({ _id: { $in: allFriendsId } }).lean();
 
         const conversations = await Conversation.find({
-            isRandomChat: false,
+            mode: 'private',
             participants: currentUserId
         }).lean();
 
@@ -114,7 +121,7 @@ exports.listPrivateChatUsersController = async (req, res) => {
             }
         });
 
-        // ✅ FIXED unread count aggregation
+        // FIXED unread count aggregation
         const unreadCounts = await Message.aggregate([
             {
                 $match: {
@@ -204,7 +211,7 @@ exports.getUnreadCountsController = async (req, res) => {
         // Get all conversations where current user is a participant
         const conversations = await Conversation.find({
             participants: currentUserId,
-            isRandomChat: false
+            mode: 'private',
         }).lean();
 
         const conversationIds = conversations.map(c => c._id);
@@ -310,7 +317,7 @@ exports.clearPrivateChatMessageControllerById = async (req, res) => {
         // Find the conversation
         const conversation = await Conversation.findOne({
             _id: conversationId,
-            isRandomChat: false,
+            mode: 'private',
             participants: currentUserId
         });
 
@@ -364,7 +371,7 @@ exports.deletePrivateChatWithUserControllerById = async (req, res) => {
         // Find the conversation
         const conversation = await Conversation.findOne({
             _id: conversationId,
-            isRandomChat: false,
+            mode: 'private',
             participants: currentUserId
         });
 
@@ -411,7 +418,7 @@ exports.deletePrivateChatWithUserControllerById = async (req, res) => {
 
 exports.uploadPrivateChatMediaController = async (req, res) => {
     const currentUserId = req.user.id;
-    let { conversationId } = req.body;
+    let { conversationId, flag } = req.body;
 
     if (!currentUserId) {
         return res.status(401).json({
@@ -444,7 +451,7 @@ exports.uploadPrivateChatMediaController = async (req, res) => {
         // Verify conversation and membership
         const conversation = await Conversation.findOne({
             _id: conversationId,
-            isRandomChat: false,
+            mode: 'private',
             participants: currentUserId
         });
 
@@ -455,7 +462,7 @@ exports.uploadPrivateChatMediaController = async (req, res) => {
             });
         }
 
-        // Determine message type
+        // Determine the message type based on mimetype
         const getType = (mimetype) => {
             if (!mimetype) return 'file';
             if (mimetype.startsWith('image/')) return 'image';
@@ -466,19 +473,47 @@ exports.uploadPrivateChatMediaController = async (req, res) => {
 
         const messageType = getType(media.mimetype);
 
-        // Cloud URL (multer/cloud adapter should set url or path)
-        const cloudinaryUrl = media.url || media.path || null;
-        if (!cloudinaryUrl) {
-            return res.status(500).json({ success: false, error: 'Media upload failed, no URL returned' });
+        // capture upload result
+        let uploadResult;
+
+        switch (messageType) {
+            case 'image':
+                uploadResult = await uploadImage(media);
+                break;
+
+            case 'video':
+                uploadResult = await uploadVideo(media);
+                break;
+
+            case 'audio':
+                uploadResult = flag === 'voice'
+                    ? await uploadChatVoice(media)
+                    : await uploadAudio(media)
+                break;
+
+            case 'file':
+                uploadResult = await uploadDocument(media)
+                break;
+
+            default:
+                return res.status(400).json({
+                    success: 'false',
+                    error: 'Unsupported media type'
+                })
         }
 
+        const { secure_url, public_id } = uploadResult;
+
         // Create message record
+        // Set a deleteAt date for the message to expire after 30 days
+        const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
         const newMessage = await Message.create({
             conversation: conversationId,
             sender: currentUserId,
-            content: cloudinaryUrl,
+            content: secure_url,
             messageType,
-            publicMediaId: req.file.filename
+            publicMediaId: public_id,
+            deleteAt: new Date(Date.now() + THIRTY_DAYS),
         });
 
         // Emit socket event to the conversation room so clients reconcile optimistic messages

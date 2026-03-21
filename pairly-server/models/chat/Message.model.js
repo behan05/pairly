@@ -40,7 +40,12 @@ const messageSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
+messageSchema.index(
+    { deleteAt: 1 },
+    { partialFilterExpression: { deleteAt: { $ne: null } } }
+);
 
+messageSchema.index({ conversation: 1 });
 const Message = mongoose.model('Message', messageSchema);
 
 module.exports = Message;

@@ -68,20 +68,21 @@ function randomChatHandler(io, socket, userSocketMap) {
             });
 
             // Create and save a new Message document
+            // Set a deleteAt date for the message to expire after 30 days
+            const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
             const newConversation = conversation || new Conversation({
                 participants: [partnerUserId, socket.userId],
                 mode: 'random',
                 chatType: 'text',
                 isActive: true,
-                matchedAt: new Date()
+                matchedAt: new Date(),
+                deletedAt: new Date(Date.now() + THIRTY_DAYS)
             });
 
             if (!conversation) {
                 await newConversation.save();
             }
             // Create a new message
-            // Set a deleteAt date for the message to expire after 30 days
-            const THIRTY_DAYS = 1000 * 60 * 60 * 24 * 30;
             const newMessage = await new Message({
                 conversation: newConversation._id,
                 sender: socket?.userId,
@@ -89,7 +90,7 @@ function randomChatHandler(io, socket, userSocketMap) {
                 messageType: type,
                 delivered: true,
                 seen: false,
-                deleteAt: new Date(Date.now() + THIRTY_DAYS),
+                deletedAt: new Date(Date.now() + THIRTY_DAYS),
             });
 
             await newMessage.save();

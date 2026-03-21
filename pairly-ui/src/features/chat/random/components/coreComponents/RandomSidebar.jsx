@@ -153,7 +153,6 @@ function RandomSidebar() {
             position: 'relative',
             borderRadius: 0.2,
             p: 3,
-            cursor: 'pointer',
             transition: 'all 0.25s ease',
 
             // Bottom accent line

@@ -83,18 +83,20 @@ function privateChatHandler(io, socket, onlineUsers) {
                 chatType: 'text',
             });
 
+            // Set a deleteAt date for the message to expire after 30 days
+            const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
             if (!conversation) {
                 conversation = new Conversation({
                     participants: [partnerId, currentUserId],
                     mode: 'private',
                     chatType: 'text',
                     isActive: true,
-                    matchedAt: new Date()
+                    matchedAt: new Date(),
+                    deletedAt: new Date(Date.now() + THIRTY_DAYS)
                 });
                 await conversation.save();
             }
 
-            const NINETY_DAYS = 1000 * 60 * 60 * 24 * 90;
             const content = (typeof message === 'object') ? (message.text ?? message) : message;
 
             const newMessage = new Message({
@@ -104,7 +106,7 @@ function privateChatHandler(io, socket, onlineUsers) {
                 messageType: messageType ?? 'text',
                 delivered: true,
                 seen: false,
-                deleteAt: new Date(Date.now() + NINETY_DAYS)
+                deleteAt: new Date(Date.now() + THIRTY_DAYS)
             });
 
             await newMessage.save();

@@ -16,5 +16,7 @@ const chatClearLogSchema = new mongoose.Schema({
         required: true
     }
 }, { timestamps: true });
+chatClearLogSchema.index({ clearTimestamp: 1 });
+chatClearLogSchema.index({ conversation: 1 });
 
 module.exports = mongoose.model('ChatClearLog', chatClearLogSchema);

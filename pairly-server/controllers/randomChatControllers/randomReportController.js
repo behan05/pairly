@@ -74,7 +74,7 @@ exports.reportUserChatController = async (req, res) => {
             reportedUserId: partnerUserId,
             reason,
             customReason: reason === 'other' ? customReason.trim() : null,
-            isRandomChat: true
+            mode: 'random'
         });
 
         return res.status(201).json({

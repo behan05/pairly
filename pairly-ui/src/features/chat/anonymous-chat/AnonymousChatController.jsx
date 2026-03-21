@@ -30,6 +30,8 @@ function AnonymousChatController() {
     if (!socket.connected) socket.connect();
 
     socket.on('anonymous:waiting', () => {
+      console.log('waiting');
+      
       dispatch(setWaiting(true));
     });
 

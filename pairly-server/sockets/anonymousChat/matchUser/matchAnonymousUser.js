@@ -124,6 +124,7 @@ async function matchAnonymousUser(
     // -----------------------------
     waitingQueue.push(socket);
     socket.emit("anonymous:waiting");
+    return;
 }
 
 module.exports = matchAnonymousUser;
