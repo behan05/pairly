@@ -95,26 +95,26 @@ function AllChatOptions() {
             redirectTo: "/pairly/random-chat",
             buttonTextIcon: <PersonIcon sx={{ color: '#fff' }} />,
         },
-        // {
-        //     title: "Anonymous Chat",
-        //     titleIcon: (
-        //         <GroupIcon
-        //             fontSize='small'
-        //             sx={{ color: '#00C896' }}
-        //         />
-        //     ),
-        //     subTitle: "No name. No profile.",
-        //     subTitleIcon: (
-        //         <GroupIcon
-        //             fontSize='small'
-        //             sx={{ color: '#00C896' }}
-        //         />
-        //     ),
-        //     lottie: <AnonymousChatLottie />,
-        //     buttonText: "Chat Anonymously",
-        //     redirectTo: "/pairly/anonymous-chat",
-        //     buttonTextIcon: <GroupIcon sx={{ color: '#fff' }} />,
-        // },
+        {
+            title: "Anonymous Chat",
+            titleIcon: (
+                <GroupIcon
+                    fontSize='small'
+                    sx={{ color: '#00C896' }}
+                />
+            ),
+            subTitle: "No name. No profile.",
+            subTitleIcon: (
+                <GroupIcon
+                    fontSize='small'
+                    sx={{ color: '#00C896' }}
+                />
+            ),
+            lottie: <AnonymousChatLottie />,
+            buttonText: "Chat Anonymously",
+            redirectTo: "/pairly/anonymous-chat",
+            buttonTextIcon: <GroupIcon sx={{ color: '#fff' }} />,
+        },
 
         // Other chat modes can be added here in the future
         // {
@@ -218,7 +218,6 @@ function AllChatOptions() {
                     position: 'relative',
                     borderRadius: 0.2,
                     p: '15px 15px 0 15px',
-                    cursor: 'pointer',
                     transition: 'all 0.25s ease',
 
                     // Bottom accent line
@@ -314,8 +313,8 @@ function AllChatOptions() {
                                 color: theme.palette.text.primary,
                                 textTransform: 'uppercase',
                                 letterSpacing: 0.8,
-                                borderRadius: 0.2, // match card precision
-                                background: theme.palette.info.main + "22", // soft translucent
+                                borderRadius: 0.2,
+                                background: theme.palette.info.main + "22",
                                 boxShadow: `0 0 6px ${theme.palette.info.main}33, 0 0 12px ${theme.palette.info.light}22`,
                                 transition: 'all 0.3s ease',
 
@@ -423,11 +422,11 @@ function AllChatOptions() {
 
                 <Box
                     sx={{
-                        display: 'display',
-                        // gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 250px))',
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))',
                         gap: 1,
                         rowGap: 5,
-                        p: '40px 0',
+                        p: '40px',
                         width: '100%',
                         overflowX: 'hidden',
                         justifyContent: 'center',

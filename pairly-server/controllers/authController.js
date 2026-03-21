@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/User.model');
-const generateToken = require('../utils/token.util');
+const Settings = require('../models/settings.model');
+const { generateToken } = require('../utils/token.util');
 const Subscription = require('../models/payment/Subscription.model');
 const LoginActivity = require('../models/LoginActivity.model');
 const { nanoid } = require('nanoid');
@@ -208,7 +209,7 @@ const loginController = async (req, res) => {
       });
     }
 
-    const user = await User.findOne({ email }).populate('currentSubscriptionId');
+    const user = await User.findOne({ email: email.toLowerCase().trim() }).populate('currentSubscriptionId');
 
     if (!user) {
       await logLoginActivity({
@@ -328,6 +329,13 @@ const loginController = async (req, res) => {
       success: true,
       reason: null
     });
+
+    // create default settings if not exist (atomic operation)
+    await Settings.findOneAndUpdate(
+      { user: user._id },
+      { user: user._id },
+      { upsert: true, new: true }
+    );
 
     return res.status(200).json({
       success: true,

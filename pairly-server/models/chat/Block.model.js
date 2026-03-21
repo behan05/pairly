@@ -29,9 +29,18 @@ const blockSchema = new mongoose.Schema(
         },
 
         // Indicates if this block occurred in a random chat session
-        isRandomChat: {
-            type: Boolean,
-            default: false
+        mode: {
+            type: String,
+            enum: [
+                'random',
+                'private',
+                'group',
+                'anonymous',
+                'invite',
+                'topic',
+                'nearby'
+            ],
+            default: 'random',
         },
 
         // Timestamp of when the block occurred

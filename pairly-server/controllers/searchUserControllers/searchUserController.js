@@ -57,7 +57,7 @@ exports.fetchUserByPublicUserId = async (req, res) => {
             });
         }
 
-        const searchUserProfile = await Profile.findById(searchResult._id);
+        const searchUserProfile = await Profile.findOne({ user: String(searchResult._id) });
         const payload = {
             searchUserId: searchResult._id,
             fullName: searchResult?.fullName,

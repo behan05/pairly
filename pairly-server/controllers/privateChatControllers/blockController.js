@@ -83,7 +83,7 @@ exports.blockUserControllerById = async (req, res) => {
             blocked: partnerUserId,
             reason,
             customReason: reason === 'other' ? customReason.trim() : null,
-            isRandomChat: false
+            mode: 'private'
         });
 
         return res.status(201).json({
@@ -135,7 +135,7 @@ exports.unblockUserControllerById = async (req, res) => {
         const blockedUser = await Block.findOne({
             blocker: currentUserId,
             blocked: blockedUserId,
-            isRandomChat: false
+            mode: 'private'
         });
 
         if (!blockedUser) {
@@ -149,7 +149,7 @@ exports.unblockUserControllerById = async (req, res) => {
         await Block.findOneAndDelete({
             blocker: currentUserId,
             blocked: blockedUserId,
-            isRandomChat: false
+            mode: 'private'
         });
 
         // Respond with success

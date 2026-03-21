@@ -50,6 +50,7 @@ function setupSocket(server) {
 
         // track socket id for this user
         const uid = String(socket.userId);
+        
         if (!userSocketMap.has(uid)) userSocketMap.set(uid, new Set());
         userSocketMap.get(uid).add(socket.id);
 

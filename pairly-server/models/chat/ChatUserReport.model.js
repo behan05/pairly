@@ -20,9 +20,18 @@ const reportSchema = new mongoose.Schema({
         type: String,
         default: null
     },
-    isRandomChat: {
-        type: Boolean,
-        default: false
+    mode: {
+        type: String,
+        enum: [
+            'random',
+            'private',
+            'group',
+            'anonymous',
+            'invite',
+            'topic',
+            'nearby'
+        ],
+        default: 'random',
     },
     blockedAt: {
         type: Date,
