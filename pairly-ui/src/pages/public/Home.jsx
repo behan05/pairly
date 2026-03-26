@@ -157,25 +157,68 @@ function Home() {
       <Box
         sx={{
           display: 'flex',
-          mt: isSm ? '18dvh' : isMd ? '20dvh' : '18dvh',
+          minHeight: '80dvh',
+          position: 'relative',
           px: isSm ? '0%' : isLg ? '2%' : isXl ? '10%' : '20%',
           gap: 4,
-          pb: isMd ? 15 : 8,
           alignItems: 'center',
         }}
       >
+        {/* Shadow drop */}
+        <Stack
+          sx={{
+            position: 'absolute',
+            top: '-10px',
+            left: 0,
+            width: '300px',
+            height: '200px',
+            pointerEvents: 'none',
+
+            background: `radial-gradient(
+              circle,
+              ${theme.palette.primary.main}30 0%,
+              ${theme.palette.primary.dark}20 40%,
+              transparent 75%
+            )`,
+
+            filter: 'blur(60px)',
+            opacity: 0.7,
+          }}
+        />
+        <Stack
+          sx={{
+            position: 'absolute',
+            top: '-10px',
+            right: 0,
+
+            width: '280px',
+            height: '280px',
+
+            pointerEvents: 'none',
+
+            background: `radial-gradient(
+              circle,
+              ${theme.palette.primary.main}30 0%,
+              ${theme.palette.primary.dark}20 40%,
+              transparent 75%
+            )`,
+
+            filter: 'blur(60px)',
+            opacity: 0.7,
+          }}
+        />
         {/* Headline & Description */}
         <Stack spacing={4} ref={refHero}>
           <Typography
-            variant={isSm ? 'h3' : isMd ? 'h3' : 'h2'}
+            variant={'h1'}
             sx={{
               color: 'text.primary',
               fontWeight: 700,
-              fontSize: isMd ? '1.8em' : '4em',
+              fontSize: isMd ? '1.8em' : '3.5em',
               lineHeight: isSm ? 1.2 : 1,
             }}
           >
-            Pairly a mini social universe. <br /> Your space to connect, truly.
+            Pairly a mini social universe. <br /> Your space to connect truly.
           </Typography>
 
           {/* Short Description */}
@@ -183,7 +226,11 @@ function Home() {
             <Typography
               variant="h6"
               color="text.secondary"
-              sx={{ maxWidth: 800, lineHeight: 1.4, fontSize: isSm ? '20px' : '24px' }}
+              sx={{
+                maxWidth: 600,
+                lineHeight: 1.4,
+                fontSize: isSm ? '20px' : '24px'
+              }}
             >
               Pairly connects real people with genuine conversations.
             </Typography>
@@ -192,12 +239,34 @@ function Home() {
             <Typography
               variant="h6"
               color="text.secondary"
-              sx={{ maxWidth: 800, lineHeight: 1.6, fontSize: '24px' }}
+              sx={{
+                maxWidth: 600,
+                lineHeight: 1.6,
+                fontWeight: 500,
+                fontSize: '20px'
+              }}
             >
               Pairly is a{' '}
-              <Link to="nextGenerationChat">
-                next generation chat platform
-              </Link>{' '}
+              <Stack
+                component='span'
+                sx={{
+                  display: 'inline-flex',
+                  "a": {
+                    color: theme.palette.info.main,
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                    transition: 'all 0.25s ease',
+                    '&:hover': {
+                      transform: 'translateY(-2px)',
+                    },
+                  }
+                }}
+              >
+                <Link to="nextGenerationChat">
+                  next generation chat platform
+                </Link>
+              </Stack>
+              {' '}
               that connects real people worldwide in seconds. No bots just genuine conversations that protect emotions and create meaningful bonds.
             </Typography>
           )}

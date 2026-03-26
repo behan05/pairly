@@ -46,8 +46,8 @@ export const lightPalette = {
   },
 
   background: {
-    default: "#FFF9F2", // soft cream instead of bright white
-    paper: "#FFF5E6",   // slightly darker cream for cards/panels
+    default: "#e9e9e9", // soft cream instead of bright white
+    paper: "#dbdbdb",   // slightly darker cream for cards/panels
   },
 
   divider: "rgba(0, 0, 0, 0.08)", // softer divider
