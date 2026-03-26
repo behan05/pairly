@@ -1,33 +1,26 @@
 import { Button, useTheme } from '@/MUI/MuiComponents';
 import { Link } from 'react-router-dom';
 
-function StyledActionButton({
+function PrimaryButton({
   icon,
-  variant = 'outlined',
+  sx = {},
   type,
   text,
   redirectUrl,
-  sx = {},
-  onClick,
   ...props
 }) {
   const theme = useTheme();
 
   return (
     <Button
-      onClick={onClick}
       component={Link}
       to={redirectUrl}
       startIcon={icon}
       type={type}
-      variant={variant}
       disableElevation
       sx={{
         position: 'relative',
         overflow: 'hidden',
-
-        maxWidth: 'fit-content',
-        alignSelf: 'flex-end',
 
         px: 2,
         py: 1,
@@ -35,43 +28,53 @@ function StyledActionButton({
 
         fontFamily: 'monospace',
         fontSize: '0.8rem',
-        fontWeight: 600,
-        letterSpacing: '0.25em',
+        letterSpacing: '0.15em',
         textTransform: 'uppercase',
+        fontWeight: 600,
 
-        border: `1px solid rgba(0,255,180,0.4)`,
+        color: theme.palette.background.default,
+        background: theme.palette.text.primary,
 
-        color: 'rgba(0,255,180,0.9)',
-        background: 'rgba(10,15,20,0.6)',
-        backdropFilter: 'blur(10px)',
+        border: `1px solid ${theme.palette.text.primary}`,
 
-        transition: 'all 0.3s ease',
+        boxShadow: `
+          inset 0 0 10px rgba(255,255,255,0.15),
+          0 2px 6px rgba(0,0,0,0.25)
+        `,
 
-        '& .MuiButton-startIcon': {
-          color: 'rgba(0,255,180,0.9)',
-        },
+        transition: 'all 0.2s ease',
 
         '&:hover': {
-          borderColor: 'rgba(0,255,180,0.8)',
-          background: 'rgba(10,15,20,0.75)',
-          boxShadow: '0 0 25px rgba(0,255,180,0.25)',
+          background: theme.palette.text.secondary,
+          borderColor: theme.palette.text.secondary,
+          transform: 'translateY(-1px)',
         },
 
-        '&::before': {
+        '&:active': {
+          transform: 'translateY(0px) scale(0.97)',
+          boxShadow: `
+            inset 0 0 12px rgba(0,0,0,0.4)
+          `,
+        },
+
+        '&::after': {
           content: '""',
           position: 'absolute',
           top: 0,
           left: '-100%',
-          width: '100%',
+          width: '40%',
           height: '100%',
-          background:
-            'linear-gradient(90deg, transparent, rgba(0,255,180,0.2), transparent)',
-          animation: 'scan 2.8s linear infinite',
+          background: `linear-gradient(
+            120deg,
+            transparent,
+            rgba(255,255,255,0.25),
+            transparent
+          )`,
+          transition: 'left 0.4s ease',
         },
 
-        '@keyframes scan': {
-          '0%': { left: '-100%' },
-          '100%': { left: '100%' },
+        '&:hover::after': {
+          left: '120%',
         },
 
         ...sx,
@@ -83,4 +86,4 @@ function StyledActionButton({
   );
 }
 
-export default StyledActionButton;
+export default PrimaryButton;
