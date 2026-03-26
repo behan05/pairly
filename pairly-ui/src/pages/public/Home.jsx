@@ -21,7 +21,8 @@ gsap.registerPlugin(MotionPathPlugin, ScrollTrigger);
 import HowItWorks from '@/components/public/HowItWorks';
 import FAQ from '@/components/public/FAQ';
 import { Link } from 'react-router-dom';
-import HomeFeatures from '../../components/public/HomeFeatures';
+import HomeFeatures from '@/components/public/HomeFeatures';
+import ChatLottie from '@/components/public/ChatLottie';
 import python from '@/assets/svg/python.svg';
 import react from '@/assets/svg/react.svg';
 import tensorflow from '@/assets/svg/tensorflow.svg';
@@ -47,7 +48,6 @@ function Home() {
   const isMd = useMediaQuery(theme.breakpoints.down('md'));
   const isLg = useMediaQuery(theme.breakpoints.down('lg'));
   const isXl = useMediaQuery(theme.breakpoints.down('xl'));
-  const custome = useMediaQuery('(max-width:430px)');
 
   // useRef props here
   const refHero = useRef(null);
@@ -207,35 +207,33 @@ function Home() {
             opacity: 0.7,
           }}
         />
-        {/* Headline & Description */}
-        <Stack spacing={4} ref={refHero}>
-          <Typography
-            variant={'h1'}
-            sx={{
-              color: 'text.primary',
-              fontWeight: 700,
-              fontSize: isMd ? '1.8em' : '3.5em',
-              lineHeight: isSm ? 1.2 : 1,
-            }}
-          >
-            Pairly a mini social universe. <br /> Your space to connect truly.
-          </Typography>
 
-          {/* Short Description */}
-          {isSm ? (
+        {/* Headline & Description */}
+        <Box sx={{
+          display: 'flex',
+          flexDirection: isMd ? 'column' : 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          rowGap: 8
+        }}>
+          <Stack
+            flex={1}
+            spacing={4}
+            ref={refHero}
+          >
             <Typography
-              variant="h6"
-              color="text.secondary"
+              variant={'h1'}
               sx={{
-                maxWidth: 600,
-                lineHeight: 1.4,
-                fontSize: isSm ? '20px' : '24px'
+                color: 'text.primary',
+                fontWeight: 700,
+                fontSize: isSm ? '1.6em' : isMd ? '2.4em' : '3em',
+                lineHeight: isSm ? 1.2 : 1,
               }}
             >
-              Pairly connects real people with genuine conversations.
+              Pairly a mini social universe. <br /> Your space to connect truly.
             </Typography>
 
-          ) : (
+            {/* Short Description */}
             <Typography
               variant="h6"
               color="text.secondary"
@@ -269,17 +267,26 @@ function Home() {
               {' '}
               that connects real people worldwide in seconds. No bots just genuine conversations that protect emotions and create meaningful bonds.
             </Typography>
+
+            {/* CTA Buttons */}
+            <Stack direction="row" gap={2} sx={{ mt: 3, flexWrap: 'wrap' }}>
+              <StyledActionButton
+                text={'Begin Your Journey'}
+                redirectUrl={'/register'}
+              />
+              <StyledButton text={'Why Pairly?'} redirectUrl={'/about'} />
+            </Stack>
+          </Stack>
+
+          {!isMd && (
+            <Stack
+              flex={0.5}
+            >
+              <ChatLottie />
+            </Stack>
           )}
 
-          {/* CTA Buttons */}
-          <Stack direction="row" gap={2} sx={{ mt: 3, flexWrap: 'wrap' }}>
-            <StyledActionButton
-              text={'Begin Your Journey'}
-              redirectUrl={'/register'}
-            />
-            {!custome && <StyledButton text={'Why Pairly?'} redirectUrl={'/about'} />}
-          </Stack>
-        </Stack>
+        </Box>
       </Box>
 
       {/* === Features Section === */}
