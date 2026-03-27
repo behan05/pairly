@@ -1,7 +1,7 @@
 import { Button, useTheme } from '@/MUI/MuiComponents';
 import { Link } from 'react-router-dom';
 
-function StyledButton({
+function SecondaryButton({
   icon,
   variant = 'outlined',
   sx = {},
@@ -56,4 +56,4 @@ function StyledButton({
   );
 }
 
-export default StyledButton;
+export default SecondaryButton;

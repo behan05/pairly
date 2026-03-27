@@ -144,7 +144,16 @@ function Navbar() {
 
         {/* === Center Nav (hidden on mobile) === */}
         {!custome && (
-          <Stack direction="row" spacing={1} alignItems="center">
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            sx={{
+              border: `1px solid ${theme.palette.divider}`,
+              borderRadius: 2,
+              p: 0.5
+            }}
+          >
             {centerNav.map((item, index) => (
               <Stack
                 className="nav-link"
@@ -156,7 +165,7 @@ function Navbar() {
                 alignItems={'center'}
                 gap={0.5}
                 sx={{
-                  borderRadius: 0.4,
+                  borderRadius: 2,
                   p: '4px 1rem',
                   '&:hover': {
                     background: `${theme.palette.primary.dark}20`

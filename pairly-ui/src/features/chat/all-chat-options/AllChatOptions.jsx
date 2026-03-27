@@ -11,10 +11,9 @@ import {
     PersonIcon,
     LocationPinIcon
 } from '@/MUI/MuiIcons';
-import { keyframes } from '@emotion/react'
 import ChatSidebarHeader from '@/features/chat/common/ChatSidebarHeader';
 import SettingsAction from '@/components/private/SettingsAction';
-import StyledActionButton from '../../../components/common/StyledActionButton';
+import SecondaryButton from '../../../components/common/StyledButton';
 import FloatShape from '../common/backgroud-effect/FloatShape';
 
 // Lotties
@@ -218,44 +217,7 @@ function AllChatOptions() {
                     position: 'relative',
                     borderRadius: 0.2,
                     p: '15px 15px 0 15px',
-                    transition: 'all 0.25s ease',
-
-                    // Bottom accent line
-                    '&::after': {
-                        content: '""',
-                        position: 'absolute',
-                        bottom: 0,
-                        left: 0,
-                        width: '100%',
-                        height: 2,
-                        background: `linear-gradient(90deg, transparent, ${theme.palette.success.main}, transparent)`,
-                        opacity: 0.6,
-                        transition: 'all 0.25s ease',
-                    },
-
-                    // Top accent line
-                    '&::before': {
-                        content: '""',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: 2,
-                        background: `linear-gradient(90deg, transparent, ${theme.palette.success.main}, transparent)`,
-                        opacity: 0.6,
-                        transition: 'all 0.25s ease',
-                    },
-
-                    // Hover effect
-                    '&:hover::after': {
-                        background: `linear-gradient(90deg, transparent, ${theme.palette.success.main}, transparent)`,
-                        opacity: 0.9,
-                    },
-
-                    '&:hover::before': {
-                        background: `linear-gradient(90deg, transparent, ${theme.palette.success.main}, transparent)`,
-                        opacity: 0.9,
-                    },
+                    border: `1px solid ${theme.palette.divider}`,
                 }}
             >
                 <Stack
@@ -346,7 +308,7 @@ function AllChatOptions() {
                     )}
                 </Stack>
 
-                <StyledActionButton
+                <SecondaryButton
                     text={buttonText}
                     redirectUrl={redirectTo}
                     icon={buttonTextIcon}

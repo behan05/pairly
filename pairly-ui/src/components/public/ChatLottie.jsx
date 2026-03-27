@@ -1,15 +1,15 @@
 import { useMediaQuery, useTheme, Box } from '@/MUI/MuiComponents';
-import { Player } from '@lottiefiles/react-lottie-player'; // or 'lottie-react'
-import chattingIllustration from '@/assets/lottie/ChattingIllustration.json';
+import { Player } from '@lottiefiles/react-lottie-player';
+import chatIllustration from '@/assets/lottie/chat.json';
 
-function ReusableVideo() {
+function ChatLottie() {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('sm'));
   const isMd = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
   // Set max size relative to viewport to prevent scrollbar
-  const maxSize = isXs ? '80vw' : isMd ? '60vw' : '40vw';
-  const maxHeight = isXs ? '50vh' : isMd ? '55vh' : '40vh';
+  const maxSize = '40vw';
+  const maxHeight = '40vh';
 
   return (
     <Box
@@ -29,7 +29,7 @@ function ReusableVideo() {
       <Player
         autoplay
         loop
-        src={chattingIllustration}
+        src={chatIllustration}
         style={{
           width: '100%',
           height: '100%',
@@ -40,4 +40,4 @@ function ReusableVideo() {
   );
 }
 
-export default ReusableVideo;
+export default ChatLottie;
